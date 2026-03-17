@@ -20,6 +20,7 @@ Desktop IDE shell for Atomize HQ. Built on Next.js 16 + Tauri 2 — React render
 | Dead code               | Knip                                     |
 | Rust tests              | cargo-nextest                            |
 | Rust lints              | Clippy, cargo-deny, cargo-machete        |
+| LOC analysis            | tokei (code lines only, blanks excluded) |
 | Task runner             | just                                     |
 
 ---
@@ -46,6 +47,7 @@ Rust tools (one-time, global):
 cargo install cargo-deny --version 0.19.0 --locked
 cargo install cargo-nextest --version 0.9.128 --locked
 cargo install cargo-machete --version 0.9.1
+cargo install tokei
 ```
 
 ---
@@ -87,12 +89,26 @@ storybook/
 
 ## Quality Gate
 
+### Pre-push gate
+
+```bash
+just preflight    # check + LOC guards + test-all — mirrors what CI enforces
+```
+
 ### Fast checks — run before every commit
 
 ```bash
 just check        # prettier + tsc + eslint + cargo fmt + clippy
 just check-ts     # TS only
 just check-rs     # Rust only
+```
+
+### LOC guards (via tokei — code lines only, blanks/comments excluded)
+
+```bash
+just loc          # Rust + TS/TSX
+just loc-rs       # Rust only  (max 400 code lines per file)
+just loc-ts       # TS/TSX only (TSX max 200, TS max 300 — excludes tests + stories)
 ```
 
 ### Tests

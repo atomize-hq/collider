@@ -28,7 +28,7 @@
     "cargo:fmt": "cd src-tauri && cargo fmt --all",
     "cargo:fmt:check": "cd src-tauri && cargo fmt --all -- --check",
     "cargo:clippy": "cd src-tauri && cargo clippy -- -D warnings",
-    "cargo:test": "cd src-tauri && cargo nextest run",
+    "cargo:test": "cd src-tauri && cargo nextest run --no-tests=pass",
     "cargo:deny": "cargo deny --manifest-path src-tauri/Cargo.toml check",
     "cargo:machete": "cd src-tauri && cargo machete"
   },

@@ -7,6 +7,32 @@ default:
     @just --list
 
 # ══════════════════════════════════════════════════════════════════════════════
+# PREFLIGHT — mandatory gate before every push
+# Mirrors what CI enforces: static checks + LOC guards + full test suite.
+# If this passes locally, CI should pass too.
+#   just preflight
+# ══════════════════════════════════════════════════════════════════════════════
+
+# Pre-push CI gate: check + LOC guards + all automated tests
+preflight:
+    @echo ""
+    @echo "╔══════════════════════════════════════════════════╗"
+    @echo "║            PREFLIGHT — pre-push CI gate          ║"
+    @echo "╚══════════════════════════════════════════════════╝"
+    @echo ""
+    @echo "▶ step 1/3 — static checks"
+    just check
+    @echo ""
+    @echo "▶ step 2/3 — LOC guards"
+    just loc
+    @echo ""
+    @echo "▶ step 3/3 — automated tests"
+    just test-all
+    @echo ""
+    @echo "✓ Preflight passed — safe to push"
+    @echo ""
+
+# ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -62,6 +88,25 @@ check-rs:
 check: check-ts check-rs
 
 # ══════════════════════════════════════════════════════════════════════════════
+# LOC — lines-of-code guards via tokei (code lines only; blanks + comments excluded)
+#   Rust  src-tauri/src/**/*.rs   max 400 code lines
+#   TSX   src/**/*.tsx            max 200 code lines  (components / pages)
+#   TS    src/**/*.ts             max 300 code lines  (hooks / utils / lib)
+#   test and story files are excluded from the TS check
+# ══════════════════════════════════════════════════════════════════════════════
+
+# Check Rust file sizes via tokei (max 400 code lines)
+loc-rs:
+    tokei --files --output json src-tauri/src | python3 scripts/loc-check.py rs 400
+
+# Check TS/TSX file sizes via tokei (.tsx max 200, .ts max 300 — excludes tests + stories)
+loc-ts:
+    tokei --files --output json src | python3 scripts/loc-check.py ts 200 300
+
+# Check all file sizes: Rust + TS
+loc: loc-rs loc-ts
+
+# ══════════════════════════════════════════════════════════════════════════════
 # TEST — unit + component tests
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -111,9 +156,10 @@ e2e-ui:
 
 # ══════════════════════════════════════════════════════════════════════════════
 # SWEEP — deep, thorough analysis (slow, run before PR/merge)
+# Superset of preflight: adds coverage, knip, cargo-deny, machete, e2e.
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Deep TS sweep: format + types + lint + unit tests + coverage + knip
+# Deep TS sweep: format + types + lint + coverage + knip
 sweep-ts:
     @echo "── prettier ──────────────────────────────────"
     pnpm format:check
@@ -139,8 +185,8 @@ sweep-rs:
     @echo "── cargo-machete (unused deps) ───────────────"
     pnpm cargo:machete
 
-# Full sweep: deep TS + deep Rust + storybook component tests + e2e
-sweep: sweep-ts sweep-rs test-ux
+# Full sweep: deep TS + deep Rust + LOC guards + storybook component tests + e2e
+sweep: sweep-ts sweep-rs loc test-ux
 
 # ══════════════════════════════════════════════════════════════════════════════
 # BUILD — production artifacts
