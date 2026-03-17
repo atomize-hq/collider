@@ -1,0 +1,28 @@
+:root {
+  /* Background */
+  --color-background-base: #171717;
+  --color-background-surface: #202020;
+  --color-background-elevated: #2a2a2a;
+  --color-background-overlay: #303030;
+  --color-background-white-10: rgba(255, 255, 255, 0.1);
+
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #6a7282;
+  --color-text-tertiary: #b0bac8;
+  --color-text-dim: rgba(255, 255, 255, 0.3);
+  --color-text-success: #48df3a;
+  --color-text-error: #fb2c36;
+  --color-text-warning: #e8d1a2;
+  --color-text-caution: #f08000;
+  --color-text-info: #51a2ff;
+  --color-text-ai: #8a38f5;
+
+  /* StatusStrip */
+  --color-statusstrip-success: #0e5e2e;
+  --color-statusstrip-failure: #5b1d20;
+  --color-statusstrip-info: #1f4174;
+  --color-statusstrip-running: #ffffff;
+  --color-statusstrip-neutral: #ffffff;
+  --color-statusstrip-ai: #8a38f5;
+}

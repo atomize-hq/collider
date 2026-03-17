@@ -1,0 +1,46 @@
+{
+  "name": "collider",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "build:tauri": "TAURI=true next build",
+    "start": "next start",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
+    "validate:storybook-policy": "node scripts/validate-storybook-version-policy.mjs .storybook/storybook-version-policy.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.1",
+  "dependencies": {
+    "next": "^15.5.13",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^5.0.1",
+    "@eslint/eslintrc": "^3.3.5",
+    "@storybook/addon-a11y": "10.2.19",
+    "@storybook/addon-designs": "^11.1.2",
+    "@storybook/addon-vitest": "10.2.19",
+    "@storybook/nextjs-vite": "10.2.19",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@tauri-apps/cli": "^2.10.1",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^10.0.3",
+    "eslint-config-next": "^16.1.7",
+    "postcss": "^8.5.8",
+    "storybook": "10.2.19",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3"
+  }
+}
