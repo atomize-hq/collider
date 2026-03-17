@@ -5,7 +5,15 @@ import nextTs from 'eslint-config-next/typescript';
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  globalIgnores(['.next/**', 'out/**', 'next-env.d.ts']),
+  globalIgnores([
+    'node_modules/**',
+    '.next/**',
+    '.agents/**',
+    'out/**',
+    'src-tauri/**',
+    'storybook-static/**',
+    'next-env.d.ts',
+  ]),
 ]);
 
 export default eslintConfig;
