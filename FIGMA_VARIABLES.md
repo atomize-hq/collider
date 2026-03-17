@@ -23,7 +23,7 @@ The Primitives canvas (`401:1042`) on the **Primitives** page is the visual toke
 | `Background/surface` | `#202020` |
 | `Background/elevated` | `#2A2A2A` |
 | `Background/overlay` | `#303030` |
-| `Background/white-10` | `#111111` *(represents rgba(white,.1))* |
+| `Background/white-10` | `#111111` _(represents rgba(white,.1))_ |
 
 **Group: `Text`**
 | Variable name | Value |
@@ -31,7 +31,7 @@ The Primitives canvas (`401:1042`) on the **Primitives** page is the visual toke
 | `Text/primary` | `#FFFFFF` |
 | `Text/secondary` | `#6A7282` |
 | `Text/tertiary` | `#B0BAC8` |
-| `Text/white-30` | `#333333` *(represents rgba(white,.3))* |
+| `Text/white-30` | `#333333` _(represents rgba(white,.3))_ |
 | `Text/success` | `#48DF3A` |
 | `Text/error` | `#FB2C36` |
 | `Text/warning` | `#E8D1A2` |
@@ -39,15 +39,17 @@ The Primitives canvas (`401:1042`) on the **Primitives** page is the visual toke
 | `Text/purple` | `#8A38F5` |
 
 **Notes:**
+
 - Confirm final variable names with user before creating — the names above are inferred from the swatch labels
 - Need to audit remaining Primitives sections for additional color groups (e.g., borders, status strips, git status colors)
 - Git status colors used in GitFileRow/TreeRow components (`#48DF3A`, `#FB2C36`, `#F08000`, `#6A7282`) — may want a `Status/*` group
 
 **Figma API:**
+
 ```js
-const collection = figma.variables.createVariableCollection("Colors");
+const collection = figma.variables.createVariableCollection('Colors');
 const mode = collection.modes[0];
-collection.renameMode(mode.modeId, "Default");
+collection.renameMode(mode.modeId, 'Default');
 // Create each variable with figma.variables.createVariable(name, collection, "COLOR")
 // then variable.setValueForMode(mode.modeId, { r, g, b, a })
 ```
@@ -69,6 +71,7 @@ collection.renameMode(mode.modeId, "Default");
 **Goal:** Replace hardcoded hex fills in all M&A components with variable references.
 
 Components to sweep (M&A page, `78:2268`):
+
 - **ToolbarButton** — fills `#202020` / `#2A2A2A` / `#303030`, icon fills `#6A7282` / `#B0BAC8` / `#FFFFFF`
 - **GitFileRow / TreeRow** — status colors, selected state fills
 - **OutputLine** variants — text colors (`#FFFFFF`, `#FB2C36`, `#E8D1A2`, `#48DF3A`)
@@ -79,6 +82,7 @@ Components to sweep (M&A page, `78:2268`):
 - **Keycap, RunBadge, CollapseIndicator, etc.** — fill / stroke colors
 
 **Approach:**
+
 1. Query all nodes with hardcoded fills matching known palette values
 2. For each match, identify the correct variable and apply `setBoundVariable('fills', variable)`
 3. Run a post-sweep audit to confirm no hardcoded hex values remain for palette colors
@@ -101,6 +105,7 @@ Components to sweep (M&A page, `78:2268`):
 | `Code/LG/Medium` | Roboto Mono | 16px | Medium | `Text/primary` |
 
 **Notes:**
+
 - Need full typography audit of components before finalizing — above is inferred from known atoms
 - Text styles in Figma don't include color, so color binding stays on the text node via variable (Step 3)
 - Use `figma.createTextStyle()` and apply via `node.textStyleId`
@@ -121,6 +126,7 @@ Components to sweep (M&A page, `78:2268`):
 ## Step 6 — (Optional) Spacing / Sizing Tokens
 
 If desired after colors and typography are done:
+
 - Define number variables for common gap values (`4`, `7`, `8`, `10`, `12`) and padding values
 - Bind auto-layout gap/padding properties in components to these variables
 - Lower priority than colors/type — the visual impact is smaller
@@ -129,10 +135,10 @@ If desired after colors and typography are done:
 
 ## File References
 
-| File / Page | ID | Notes |
-|---|---|---|
-| Primitives page | `401:1040` | Token reference canvas |
-| Primitives Canvas | `401:1042` | 1440×3024, 16 sections |
-| COLOR / BACKGROUNDS swatches | `401:1043` | 5 swatches |
-| Molecules and Atoms page | `78:2268` | All components live here |
-| Organisms page | `105:382` | Source only, do not modify |
+| File / Page                  | ID         | Notes                      |
+| ---------------------------- | ---------- | -------------------------- |
+| Primitives page              | `401:1040` | Token reference canvas     |
+| Primitives Canvas            | `401:1042` | 1440×3024, 16 sections     |
+| COLOR / BACKGROUNDS swatches | `401:1043` | 5 swatches                 |
+| Molecules and Atoms page     | `78:2268`  | All components live here   |
+| Organisms page               | `105:382`  | Source only, do not modify |

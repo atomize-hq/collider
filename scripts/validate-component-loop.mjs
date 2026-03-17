@@ -19,9 +19,15 @@ function assert(cond, message) {
   }
 }
 
-assert(typeof data.loopVersion === 'string' && data.loopVersion.length > 0, 'loopVersion is required');
+assert(
+  typeof data.loopVersion === 'string' && data.loopVersion.length > 0,
+  'loopVersion is required'
+);
 assert(data.component && typeof data.component === 'object', 'component is required');
-assert(typeof data.component.name === 'string' && data.component.name.length > 0, 'component.name is required');
+assert(
+  typeof data.component.name === 'string' && data.component.name.length > 0,
+  'component.name is required'
+);
 assert(data.seed && typeof data.seed === 'object', 'seed is required');
 assert(data.figma && typeof data.figma === 'object', 'figma is required');
 assert(data.codeConnect && typeof data.codeConnect === 'object', 'codeConnect is required');

@@ -1,0 +1,7 @@
+#!/bin/sh
+pnpm exec lint-staged
+
+# Cargo fmt check only if .rs files are staged
+if git diff --cached --name-only | grep -q '\.rs$'; then
+  cd src-tauri && cargo fmt --all -- --check
+fi

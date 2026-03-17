@@ -19,7 +19,10 @@ function assert(cond, message) {
   }
 }
 
-assert(typeof data.ledgerVersion === 'string' && data.ledgerVersion.length > 0, 'ledgerVersion is required');
+assert(
+  typeof data.ledgerVersion === 'string' && data.ledgerVersion.length > 0,
+  'ledgerVersion is required'
+);
 assert(typeof data.scope === 'string' && data.scope.length > 0, 'scope is required');
 assert(typeof data.name === 'string' && data.name.length > 0, 'name is required');
 assert(data.links && typeof data.links === 'object', 'links are required');
