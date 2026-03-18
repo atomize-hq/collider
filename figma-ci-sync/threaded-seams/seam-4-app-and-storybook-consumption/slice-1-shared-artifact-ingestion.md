@@ -7,9 +7,9 @@
 - **Acceptance criteria**:
   - `src/app/globals.css` and `.storybook/preview.ts` both consume the generated `CT-6` CSS artifact.
   - Storybook default theme and background behavior references `CT-2` and `CT-6` rather than becoming a second token source.
-  - A lightweight Storybook proof surface demonstrates baseline generated variables resolve at runtime.
+  - A lightweight Storybook proof surface demonstrates baseline generated variables resolve at runtime and is exercised by `pnpm test:storybook`.
 - **Dependencies**: `CT-2` from `SEAM-1`; `CT-6` and any supporting asset shape from `CT-5` in `SEAM-3`
-- **Verification**: boot the app and Storybook locally; inspect the same baseline theme in both; include the proof surface under `pnpm test:storybook` if story tests are available.
+- **Verification**: boot the app and Storybook locally; inspect the same baseline theme in both; include the proof surface under `pnpm test:storybook`; manual Storybook inspection is supplemental only.
 - **Rollout/safety**: preserve the existing `src/lib/tokens/tokens.css` handoff path and make Storybook changes additive until parity is proven.
 
 #### S1.T1 — Align app and Storybook entry points to `CT-6`
@@ -20,7 +20,7 @@
   - Outputs: updates to `src/app/globals.css`, `.storybook/preview.ts`, and `.storybook/main.ts` only if Storybook asset loading needs explicit config.
 - **Implementation notes**: keep `src/lib/tokens/tokens.css` as the cutover path; do not read token source JSON directly from Storybook.
 - **Acceptance criteria**: app and Storybook import the same artifact path; preview configuration does not hard-code a parallel token table.
-- **Test notes**: run the app and `pnpm storybook`; confirm generated variables are present in both surfaces.
+- **Test notes**: run the app, `pnpm storybook`, and `pnpm test:storybook`; confirm generated variables are present in both surfaces and that the automated Storybook path covers the proof surface.
 - **Risk/rollback notes**: if Storybook asset loading needs extra setup, keep app imports untouched and land the Storybook wiring as an additive step first.
 
 Checklist:
@@ -38,7 +38,7 @@ Checklist:
   - Outputs: one story or docs entry under `storybook/**` or `src/**/*.stories.tsx` that renders live CSS variable usage.
 - **Implementation notes**: keep the surface docs-oriented and thin; read live CSS variables or computed styles instead of hard-coding expected token values.
 - **Acceptance criteria**: reviewers can see that named baseline variables resolve in Storybook from the generated artifact.
-- **Test notes**: include the surface in Storybook smoke coverage when possible; otherwise document the manual check path.
+- **Test notes**: include the surface in Storybook smoke coverage through `pnpm test:storybook`; manual `pnpm storybook` checks may supplement the run but are not an alternative acceptance path.
 - **Risk/rollback notes**: avoid turning the smoke surface into a long-lived parallel token catalog.
 
 Checklist:

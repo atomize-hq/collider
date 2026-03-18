@@ -8,9 +8,25 @@
   - `pnpm validate:tokens` and `pnpm build:tokens` exist and resolve from repo root.
   - Both CLIs share one authoritative path module for source roots and artifact destinations.
   - Validation fails closed on malformed DTCG JSON, unknown theme IDs, malformed recipe shape, and broken token references.
+  - The command contract fixes exit-code semantics, stdout/stderr ownership, and machine-readable `--json` output before downstream seams script against it.
 - **Dependencies**: `SEAM-1/CT-1`, `SEAM-1/CT-2`, `SEAM-2/CT-3`
 - **Verification**: run `pnpm validate:tokens` on valid input and at least one invalid fixture; run the build CLI smoke path to confirm it resolves the expected roots and output targets.
 - **Rollout/safety**: additive only; no consumer imports or merge gates change in this slice.
+
+#### CLI I/O contract
+
+- `pnpm validate:tokens [--json]`
+  - Exit `0`: all source contracts are valid.
+  - Exit `1`: contract/input violation such as malformed JSON, unknown theme ID, invalid recipe shape, or broken token reference.
+  - Exit `3`: unexpected tool/runtime failure.
+- `pnpm build:tokens [--json]`
+  - Exit `0`: artifacts were generated successfully.
+  - Exit `1`: upstream source validation failed and build stopped before writing artifacts.
+  - Exit `2`: the artifact path/write contract could not be satisfied, such as a missing destination path, unwritable target, or manifest mismatch in the build's own output stage.
+  - Exit `3`: unexpected transform/runtime failure.
+- Stdout is reserved for concise success summaries or a single machine-readable JSON object when `--json` is supplied.
+- Stderr is reserved for human-readable diagnostics and unexpected failure output.
+- JSON mode emits one object with stable top-level keys `ok`, `command`, `artifacts`, and `diagnostics`, so later governance code can consume it without scraping prose.
 
 #### S1.T1 — Define the build path and artifact manifest
 
@@ -37,7 +53,7 @@ Checklist:
   - Inputs: canonical token JSON from `CT-1`, theme registry from `CT-2`, recipe manifests from `CT-3`
   - Outputs: `design-tokens/build/validate-tokens.mjs` and any helper validation modules under `scripts/`
 - **Implementation notes**: reuse existing repo script patterns for deterministic diagnostics; validate JSON shape first, then theme IDs, then recipe references so failures are ordered and actionable.
-- **Acceptance criteria**: the CLI exits nonzero on malformed JSON, unknown themes, missing token IDs, and recipe references to undefined tokens; output order is deterministic.
+- **Acceptance criteria**: the CLI exits `1` on malformed JSON, unknown themes, missing token IDs, and recipe references to undefined tokens; output order is deterministic; stdout/stderr behavior matches the contract above.
 - **Test notes**: cover at least one good fixture and one bad fixture per failure class; verify repeated runs print the same diagnostics.
 - **Risk/rollback notes**: keep validators repo-local and deterministic so `SEAM-6` can later wire them into CI without special environment assumptions.
 
@@ -55,7 +71,7 @@ Checklist:
   - Inputs: `design-tokens/build/validate-tokens.mjs`, `design-tokens/build/build-tokens.mjs`
   - Outputs: additive `package.json` script entries for `validate:tokens` and `build:tokens`
 - **Implementation notes**: keep script names stable and repo-root runnable; do not add `justfile` recipes or CI steps here.
-- **Acceptance criteria**: `pnpm validate:tokens` and `pnpm build:tokens` resolve cleanly from repo root; no `justfile`/CI files are modified in this slice.
+- **Acceptance criteria**: `pnpm validate:tokens` and `pnpm build:tokens` resolve cleanly from repo root; they preserve the exit-code and output contract defined above; no `justfile`/CI files are modified in this slice.
 - **Test notes**: run both commands from repo root and from a clean shell session to prove no implicit cwd assumptions.
 - **Risk/rollback notes**: keeping gate wiring out of this slice prevents ownership overlap with `SEAM-6`.
 

@@ -8,6 +8,7 @@
   - At least one local verification path fails loudly when a required generated artifact path or required artifact field is missing, renamed, or stale.
   - The failure mode is actionable for engineers working in this seam rather than silently falling back to copied values or empty docs output.
   - The verification surface stays small enough for `SEAM-6` to promote into governance without redesigning `SEAM-4`.
+  - `pnpm test:storybook` is the required automated execution path for this conformance check; manual Storybook inspection does not satisfy the seam by itself.
 - **Dependencies**:
   - `S3a`
   - `S3b`
@@ -40,6 +41,7 @@ Checklist:
 - Validate:
   - Confirm the signal is local to this seam and does not require new CI or command wiring.
   - Confirm the failure output points engineers to the missing artifact or stale adapter condition directly.
+  - Confirm the required failure signal is reachable from `pnpm test:storybook` rather than only through a manual demo path.
 - Cleanup:
   - Remove redundant checks that overlap without improving signal quality.
   - Keep the verification surface narrow enough that `SEAM-6` can adopt it as-is or with minimal wiring.

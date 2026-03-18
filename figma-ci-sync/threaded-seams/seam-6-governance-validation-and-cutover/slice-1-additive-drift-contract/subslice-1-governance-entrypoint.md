@@ -8,6 +8,7 @@
   - One seam-owned governance entrypoint delegates to `pnpm validate:tokens` and `pnpm build:tokens` in that order.
   - Validation failure stops the sequence before any downstream drift checks run.
   - The command name and invocation order are explicit enough for later `justfile` and CI adoption without reinterpretation.
+  - The entrypoint preserves child exit codes without remapping them: `1` for contract/input violations, `2` for artifact contract failures, and `3` for unexpected runtime failures.
 - **Dependencies**:
   - `SEAM-3`
   - `CT-4`
@@ -30,9 +31,11 @@ Checklist:
   - Add the seam-owned governance script entrypoint in `package.json`.
   - Delegate to the existing `validate:tokens` and `build:tokens` commands instead of inlining logic.
   - Document the invocation order in the script naming or adjacent seam-local notes used by downstream slices.
+  - Preserve the exit code returned by the first failing child command so later gates do not have to reinterpret failure class.
 - Test:
   - Execute the entrypoint once on the happy path.
   - Execute it once with a known invalid token or recipe fixture.
 - Validate:
   - Confirm validation always runs before build.
   - Confirm invalid input stops the sequence with a deterministic non-zero exit code.
+  - Confirm the wrapper does not collapse distinct failure classes into one generic non-zero result.

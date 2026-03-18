@@ -33,12 +33,13 @@
 
 - **Contracts produced (owned)**:
   - `CT-3`: versioned recipe source contract under `design-tokens/src/recipes/*.recipe.json`, with schema and authoring rules rooted in `design-tokens/src/recipes/schema/recipe.schema.json` and `design-tokens/src/recipes/README.md`; established in `S1`, enforced in `S2`, exercised in `S3`.
+  - `SEAM-2` does not own a generated typed recipe artifact; if later seams need a typed projection, it is emitted by `CT-5` in `SEAM-3` from the canonical source recipe files.
 - **Contracts consumed**:
   - `CT-1`: required from `SEAM-1` before any recipe file can encode token references; consumed by `S1.T1` for reference syntax, by `S2.T2` for integrity checks, and by `S3.T1` for the pilot recipe.
 - **Dependency edges honored**:
   - `SEAM-1 blocks SEAM-2`: no recipe schema, validator, or pilot artifact in this plan invents token IDs or fallback names before `CT-1` is stable.
   - `SEAM-2 blocks SEAM-3`: `S1` publishes the manifest shape early so build work can target a settled contract without waiting on broader recipe rollout.
-  - `SEAM-2 blocks SEAM-4`: this plan emits only source-owned recipe artifacts; Storybook visibility stays in `SEAM-4` to avoid duplicating the docs surface.
+  - `SEAM-2 blocks SEAM-4`: this plan emits only source-owned recipe artifacts; Storybook visibility stays in `SEAM-4` to avoid duplicating the docs surface or inventing a parallel typed-output contract.
   - `SEAM-2 blocks SEAM-6`: validator logic is produced here, but merge-gate wiring is deferred to `SEAM-6`.
 - **Parallelization notes**:
   - What can proceed now: schema drafting, pilot-boundary decisions, and validator scaffolding inside `WS-A` once `SEAM-1` freezes token naming.

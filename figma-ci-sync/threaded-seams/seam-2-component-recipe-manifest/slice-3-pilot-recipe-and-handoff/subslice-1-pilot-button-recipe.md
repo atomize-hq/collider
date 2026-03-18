@@ -6,8 +6,9 @@
   - Out: recipe discovery metadata; README migration notes; generated outputs; Storybook rendering; CI gating.
 - **Acceptance criteria**:
   - `button.recipe.json` validates against the `CT-3` schema with no inline scalar token values.
-  - The recipe models only the agreed pilot boundary: `button`, `intent`, `size`, `rest`, `hover`, `focus`, `disabled`, `root`, `label`, and `icon`.
-  - Fallback precedence is explicit in the recipe so downstream seams do not infer ordering.
+  - The recipe models only the agreed pilot boundary: `button`, `intent=["primary","secondary"]`, `size=["sm","md"]`, `rest`, `hover`, `focus`, `disabled`, `root`, `label`, and `icon`.
+  - Defaults are explicit in the recipe payload as `intent=primary`, `size=md`, and `state=rest`.
+  - Fallback precedence is explicit in the recipe as `missingVariantBehavior=use-defaults` plus `hover -> rest`, `focus -> rest`, and `disabled -> rest`, so downstream seams do not infer ordering.
 - **Dependencies**:
   - `SEAM-1`
   - `CT-1`
@@ -33,10 +34,10 @@ Checklist:
 
 - Implement:
   - Author `button.recipe.json` for exactly one component: `button`.
-  - Encode `intent` and `size` as the only variant axes.
+  - Encode `intent=["primary","secondary"]` and `size=["sm","md"]` as the only variant axes.
   - Encode `rest`, `hover`, `focus`, and `disabled` as the only states.
   - Encode `root`, `label`, and `icon` as the only slots.
-  - Encode fallback precedence explicitly inside the recipe payload.
+  - Encode defaults and fallback precedence explicitly inside the recipe payload.
 - Test:
   - Validate the pilot file directly with `scripts/validate-component-recipe.mjs`.
   - Confirm the validator output is clean and deterministic for this file.

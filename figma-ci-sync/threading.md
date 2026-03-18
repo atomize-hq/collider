@@ -15,7 +15,7 @@
 - Type: config
 - Owner seam: `SEAM-1`
 - Consumers (seams): `SEAM-3`, `SEAM-4`, `SEAM-5`
-- Definition: the theme registry defines supported theme IDs and fallback behavior; v1 assumes `dark` is required and additional themes are additive.
+- Definition: `design-tokens/src/tokens/themes/registry.json` is the only theme registry; it declares supported theme IDs, `dark` as the required default theme, omitted-theme fallback to `dark`, and additive-theme fallback chains of `requested theme -> declared extends chain -> dark`. An explicitly unknown theme ID is a contract error and must not silently remap to another additive theme.
 - Versioning/compat: theme IDs become stable public names once referenced by runtime or Figma exports.
 
 ### `CT-3` — Component recipe manifest
@@ -23,7 +23,7 @@
 - Type: schema
 - Owner seam: `SEAM-2`
 - Consumers (seams): `SEAM-3`, `SEAM-4`, `SEAM-6`
-- Definition: recipe files live under `design-tokens/src/recipes/*.recipe.json` and define component ID, variant axes, states, slots, token references, and fallback rules.
+- Definition: recipe files live under `design-tokens/src/recipes/*.recipe.json` and define `recipeVersion`, `componentId`, `variantAxes`, `defaults`, `slots`, `states`, and `fallbacks`. `SEAM-2` owns only the source recipe contract plus validation rules; any later generated helper derived from recipes is a `CT-5` build artifact owned by `SEAM-3`, not a second seam-owned output here.
 - Versioning/compat: recipe shape is versioned independently from tokens; breaking changes require validator updates and pilot-component migration notes.
 
 ### `CT-4` — Token validation CLI
@@ -31,7 +31,7 @@
 - Type: config
 - Owner seam: `SEAM-3`
 - Consumers (seams): `SEAM-6`
-- Definition: `pnpm validate:tokens` validates DTCG structure, recipe shape, and token-reference integrity using repo scripts under `scripts/`.
+- Definition: `pnpm validate:tokens` validates DTCG structure, theme registry semantics, recipe shape, and token-reference integrity using repo scripts under `scripts/`. It exits `0` on success, `1` on contract/input violations, and `3` on unexpected tool/runtime failure. By default it writes concise success output to stdout, failures to stderr, and it may emit a single JSON object to stdout when invoked with `--json`.
 - Versioning/compat: validators must fail closed on malformed input and remain deterministic in local and CI environments.
 
 ### `CT-5` — Token build CLI
@@ -39,7 +39,7 @@
 - Type: config
 - Owner seam: `SEAM-3`
 - Consumers (seams): `SEAM-4`, `SEAM-5`, `SEAM-6`
-- Definition: `pnpm build:tokens` runs Style Dictionary plus any recipe transforms and emits the runtime CSS artifact, typed token output, and the Figma-facing export.
+- Definition: `pnpm build:tokens` runs Style Dictionary plus any recipe transforms and emits the committed runtime CSS artifact at `src/lib/tokens/tokens.css`, the committed typed token output at `design-tokens/dist/tokens.ts`, and the committed Figma-facing export at `design-tokens/dist/figma/tokens.json`. `design-tokens/src/**` remains the only editable source; `dist/**` and `src/lib/tokens/tokens.css` are derived outputs regenerated in place. The command exits `0` on success, `1` when upstream source validation fails, `2` when an artifact path or write contract cannot be satisfied, and `3` on transform/runtime failure; stdout is reserved for concise success summaries or `--json` output, stderr for failures.
 - Versioning/compat: the command must be deterministic; output paths stay stable once consumers import them.
 
 ### `CT-6` — Runtime CSS artifact
@@ -55,7 +55,7 @@
 - Type: config
 - Owner seam: `SEAM-5`
 - Consumers (seams): design maintainers, `SEAM-6`
-- Definition: `design-tokens/dist/figma/tokens.json` is the Figma-facing export; v1 default policy is repo-authored, read-only Figma consumption through Tokens Studio URL or similarly locked sync.
+- Definition: `design-tokens/dist/figma/tokens.json` is the Figma-facing export; v1 uses exactly one transport, `pull-url-readonly`, meaning Tokens Studio pulls the repo-hosted artifact by URL and no Figma write-back path is configured. The lock is both technical (no write credentials or automation in v1) and policy-enforced (repo PRs remain the only path to change canonical values). `parityMode` has two allowed values only, `deferred` and `required`; v1 starts at `deferred` and can move to `required` only after enterprise parity automation exists and `SEAM-6` adopts it explicitly.
 - Versioning/compat: two-way sync is opt-in and requires an explicit policy override because it changes the system-of-record model.
 
 ### `CT-8` — Drift gate contract
@@ -63,13 +63,13 @@
 - Type: permission
 - Owner seam: `SEAM-6`
 - Consumers (seams): all implementation seams
-- Definition: local and CI gates run validation, token build, artifact freshness checks, Storybook checks, and optional Figma parity checks before merge or release.
+- Definition: local and CI gates run `pnpm validate:tokens`, `pnpm build:tokens`, artifact freshness checks against the committed generated outputs, `pnpm test:storybook`, and policy-gated Figma parity checks before merge or release. While `parityMode=deferred`, the gate reports the deferral explicitly and does not fail on Figma parity; once `parityMode=required`, parity failures become blocking.
 - Versioning/compat: drift gates may tighten over time, but they cannot silently weaken without an explicit policy change in `justfile` and package scripts.
 
 ## Integration Points
 
 - Repo-authored token JSON flows from `SEAM-1` into `SEAM-3`, which produces runtime CSS and Figma exports.
-- Repo-authored recipe JSON flows from `SEAM-2` into `SEAM-3` for typed outputs and into `SEAM-4` for Storybook-visible component contracts.
+- Repo-authored recipe JSON flows from `SEAM-2` into `SEAM-3` for validation/build transforms and into `SEAM-4` for Storybook-visible component contracts.
 - `SEAM-4` consumes the runtime CSS artifact through `src/app/globals.css` and Storybook configuration so app and Storybook render against the same values.
 - `SEAM-5` consumes the Figma export artifact and sync policy so designers pull approved values without becoming the canonical authoring surface.
 - `SEAM-6` wires the validators and freshness checks into `package.json`, `justfile`, CI, and any sync-ledger enforcement scripts.
@@ -105,6 +105,7 @@ Why this is the critical path:
 
 ## Thin Contract-Definition Items
 
-- Decide the canonical source root before implementation starts: `design-tokens/` top-level is the default assumption, but it can be swapped if the repo later adopts workspaces.
-- Decide the Figma sync posture before implementation starts: default to read-only consumer mode unless the team explicitly accepts the risk of bidirectional sync.
-- Decide the v1 recipe pilot set before implementation starts: keep it small enough that recipe shape can be verified without inventing a full component library.
+- Canonical source root for v1 is top-level `design-tokens/`; command names stay stable even if repo topology changes later.
+- Generated artifacts under `design-tokens/dist/**` and `src/lib/tokens/tokens.css` are committed, derived outputs regenerated from `design-tokens/src/**`.
+- Figma sync posture for v1 is `pull-url-readonly`, with `parityMode` fixed to `deferred` until enterprise parity automation is real and explicitly adopted.
+- The v1 recipe pilot set is `button` only.

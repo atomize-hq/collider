@@ -12,7 +12,7 @@
 ## Primary Interfaces (Contracts)
 
 - Inputs: stable token IDs from `SEAM-1`; component metadata from Storybook stories or design-system docs; validation precedent from `scripts/validate-component-loop.mjs`.
-- Outputs: recipe files under `design-tokens/src/recipes/*.recipe.json`; schema validators for recipe shape and token references; optional typed recipe output consumed by Storybook or code-generation flows.
+- Outputs: recipe files under `design-tokens/src/recipes/*.recipe.json`; schema validators for recipe shape and token references. Any later typed helper derived from recipes is a downstream `SEAM-3` build artifact, not a separate seam-owned output here.
 
 ## Key Invariants / Rules
 
@@ -35,7 +35,7 @@
 
 - Recipe files validate structurally and fail when they reference missing token IDs.
 - At least one pilot component can be described entirely through recipe metadata without inventing extra ad hoc config.
-- Storybook or another docs surface can render the pilot recipe shape for inspection.
+- Storybook or another docs surface can render the pilot recipe shape for inspection by consuming the source contract directly or a downstream `SEAM-3` artifact, never a second seam-owned output from `SEAM-2`.
 
 ## Risks / Unknowns
 

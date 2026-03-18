@@ -11,7 +11,7 @@
   - In: v1 sync-mode selection; operational docs under `src/figma/**`; one pilot sync ledger for a team-owned Figma test file; optional ledger/parity validation hooks under `scripts/validate-sync-ledger.mjs`.
   - Out: token or theme authoring; build-pipeline internals in `SEAM-3`; runtime or Storybook consumption; `package.json`, `justfile`, or CI gate wiring owned by `SEAM-6`; making bidirectional Figma authoring the default workflow.
 - **Touch surface**: `design-tokens/dist/figma/**`, `src/figma/**`, `scripts/validate-sync-ledger.mjs`
-- **Verification**: maintainers can point Tokens Studio at the canonical export, pull it into one Figma test file without manual value entry, and inspect a ledger that states whether parity is deferred, advisory, or ready for enforcement.
+- **Verification**: maintainers can point Tokens Studio at the canonical export, pull it into one Figma test file without manual value entry, and inspect a ledger that states whether parity is `deferred` or `required`.
 - **Threading constraints**
   - Upstream blockers: `SEAM-1`, `SEAM-3`
   - Downstream blocked seams: `SEAM-6`
@@ -27,7 +27,7 @@
 ## Threading Alignment
 
 - **Contracts produced (owned)**:
-  - `CT-7`: the Figma-facing export contract centered on `design-tokens/dist/figma/tokens.json`, with the v1 sync posture and pilot operational state recorded under `src/figma/README.md` and `src/figma/sync-ledger.json`. `S1` publishes the baseline contract, `S2` proves it against a real pilot file, and `S3` sharpens the optional parity branch that `SEAM-6` will later consume.
+  - `CT-7`: the Figma-facing export contract centered on `design-tokens/dist/figma/tokens.json`, with the v1 sync posture and pilot operational state recorded under `src/figma/README.md` and `src/figma/sync-ledger.json`. `S1` publishes the baseline contract, `S2` proves it against a real pilot file, and `S3` sharpens the `deferred` versus `required` parity branch that `SEAM-6` will later consume.
 - **Contracts consumed**:
   - `CT-2`: required from `SEAM-1`; `S1.T1` uses stable theme IDs and fallback rules to define the Figma sync posture, and `S2.T2` records how those theme IDs materialize into the pilot Figma file.
   - `CT-5`: required from `SEAM-3`; `S1.T1` anchors policy to `design-tokens/dist/figma/tokens.json`, `S2.T1` and `S2.T2` prove the pilot pull flow against the generated artifact, and `S3.T2` defines how future governance treats that artifact in parity checks.
@@ -37,3 +37,11 @@
 - **Parallelization notes**:
   - What can proceed now: `S1` can start as soon as `CT-5` has a stable artifact path and `CT-2` has settled theme IDs; `S3.T1` can begin once `S1.T2` seeds the ledger shape, even while the pilot import work in `S2` is still underway.
   - What must wait: `S2` waits for the actual generated Figma export from `SEAM-3`; any change to export serialization or artifact paths stays in `SEAM-3`; all `package.json`, `justfile`, and CI enforcement work stays in `SEAM-6`.
+
+## V1 Figma Policy Decisions
+
+- The only v1 sync transport is `pull-url-readonly`: Tokens Studio pulls `design-tokens/dist/figma/tokens.json` by URL, and no plugin push or write-back workflow is configured.
+- The lock is both technical and policy-enforced: the v1 setup omits write credentials/automation, and canonical value changes still require repo PRs.
+- `parityMode` has two allowed values only, `deferred` and `required`.
+- V1 starts at `parityMode=deferred`.
+- Promotion to `parityMode=required` requires all of the following: enterprise Figma API access is available, the pilot sync ledger is stable, and `SEAM-6` owns a deterministic parity check in a merge gate.

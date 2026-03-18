@@ -8,8 +8,17 @@
 - Success criteria: one canonical repo source for token values and component recipes; `src/lib/tokens/tokens.css` becomes generated or generated-from-source; Storybook and app runtime consume the same outputs; Figma can pull the canonical export without manual value copying; `just preflight` or equivalent CI gates fail on drift.
 - Constraints: the repo is currently single-package; `just preflight`, `just check`, and LOC limits are hard gates; the current app surface is dark-themed; Storybook is already part of the contract layer; Figma access may be limited to plugin-based sync rather than enterprise REST write access.
 - External systems / dependencies: Figma, Tokens Studio, Style Dictionary, `@tokens-studio/sd-transforms`, Storybook, CI, optional Chromatic, optional Figma Variables REST API.
-- Known unknowns / risks: final source-directory layout; strict read-only versus Git-mediated Figma sync; which components should be the initial recipe pilots; whether generated artifacts are committed or regenerated on every build; the availability of enterprise Figma API access.
+- Known unknowns / risks: final source-directory layout if the repo later adopts workspaces; when additive themes beyond `dark` are worth standardizing; the availability of enterprise Figma API access if parity promotion is revisited after v1.
 - Assumptions: canonical editing happens in the repo; v1 can start with the current dark theme and add more themes later; the existing `scripts/validate-component-loop.mjs` and `scripts/validate-sync-ledger.mjs` patterns can be extended rather than replaced; the runtime import path should change as little as possible during initial cutover.
+
+## Decision Snapshot
+
+- Canonical source of truth is `design-tokens/src/**`; generated outputs under `design-tokens/dist/**` and `src/lib/tokens/tokens.css` are derived artifacts, committed to git, and refreshed by `pnpm build:tokens` as defined in `threading.md` (`CT-5`, `CT-6`) and `seam-3-token-build-and-distribution.md`.
+- Local workflow runs `pnpm validate:tokens` before `pnpm build:tokens`; governance and CI rerun both and fail if committed generated artifacts are missing, stale, or hand-edited.
+- V1 Figma sync uses a single pull-only Tokens Studio URL flow against `design-tokens/dist/figma/tokens.json`; Figma does not push values back to the repo in v1. This matches `threading.md` (`CT-7`) and `threaded-seams/seam-5-figma-sync-rail/slice-1-sync-contract-and-policy-baseline.md`.
+- V1 parity policy has two allowed states only: `deferred` and `required`. It starts at `deferred` and can move to `required` only after enterprise Figma API access exists, the pilot sync ledger is stable, and `SEAM-6` owns a deterministic parity gate. See `threaded-seams/seam-5-figma-sync-rail/seam.md`.
+- The v1 recipe pilot is `button` only, with `intent` and `size` axes, `root` / `label` / `icon` slots, and `rest` / `hover` / `focus` / `disabled` states, per `threaded-seams/seam-2-component-recipe-manifest/slice-1-manifest-contract-and-pilot-boundary.md`.
+- Theme fallback is explicit: omitted theme selection resolves to `dark`, while an explicitly unknown theme ID is a contract error rather than a silent fallback. See `threading.md` (`CT-2`) and `threaded-seams/seam-1-canonical-token-source/slice-1-contract-publication/subslice-3-theme-registry-contract.md`.
 
 ## Capability Inventory
 
@@ -22,8 +31,8 @@
 - Validation and drift-detection scripts for tokens, recipes, and generated artifacts.
 - Preflight and CI wiring so token drift fails before app or Storybook builds.
 
-## Open Questions
+## Deferred Questions
 
-- Should v1 enforce read-only Figma consumption by default, or is Git-based bidirectional Tokens Studio sync acceptable if guarded by team policy?
-- Which component set is the correct v1 pilot for the recipe manifest in this repo: token-only, a minimal set of primitives, or a specific user-facing component?
-- Is enterprise Figma Variables REST parity checking required for launch, or can it remain a deferred hardening step behind the plugin-based flow?
+- Does `design-tokens/` stay top-level permanently, or does it move behind a workspace/package boundary later while keeping the same command names?
+- Which additive theme, if any, should follow `dark` once the v1 cutover is stable?
+- When enterprise Figma API access becomes available, is the team ready to promote parity from `deferred` to `required` without reopening the source-of-truth model?

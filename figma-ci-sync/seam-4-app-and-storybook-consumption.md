@@ -37,6 +37,7 @@
 - The app boots with generated tokens through the existing CSS import path.
 - Storybook renders the same baseline theme values as the app.
 - A pilot story or docs surface makes at least one recipe visible and reviewable.
+- `pnpm test:storybook` is the required automated verification path for this seam; manual `pnpm storybook` review complements it but does not replace it.
 
 ## Risks / Unknowns
 
@@ -47,3 +48,4 @@
 
 - Keep the import path stable where possible.
 - Roll in Storybook token visibility before making recipe validation mandatory for all components.
+- Do not accept manual-only Storybook verification as sufficient seam closure.

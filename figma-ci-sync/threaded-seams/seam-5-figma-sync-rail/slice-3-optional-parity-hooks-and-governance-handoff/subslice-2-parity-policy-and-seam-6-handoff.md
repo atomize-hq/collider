@@ -5,7 +5,7 @@
   - In: `src/figma/parity-policy.md`; parity posture alignment across `src/figma/parity-policy.md`, `src/figma/README.md`, and `src/figma/sync-ledger.json`; explicit handoff notes for `SEAM-6`.
   - Out: validator implementation changes beyond consuming the settled contract, CI workflow updates, or mandatory enterprise REST integration.
 - **Acceptance criteria**:
-  - `src/figma/parity-policy.md` names whether parity is `deferred`, `advisory`, or `required` and states the trigger for changing that branch.
+  - `src/figma/parity-policy.md` names whether parity is `deferred` or `required` and states the trigger for changing that branch.
   - The parity-policy doc references the ledger and validator as the only seam-owned inputs governance should read.
   - `SEAM-6` can adopt the handoff without adding new Figma-specific assumptions.
 - **Dependencies**:
@@ -39,3 +39,4 @@ Checklist:
 - Validate:
   - Confirm `src/figma/parity-policy.md`, `src/figma/README.md`, and `src/figma/sync-ledger.json` all declare the same parity posture.
   - Confirm `SEAM-6` can consume only the ledger and validator command without inventing new Figma policy.
+  - Confirm the policy starts at `deferred` and only promotes to `required` after enterprise parity automation exists and governance explicitly opts in.
