@@ -5,10 +5,98 @@
       "themeId": "dark"
     }
   },
-  "placeholder": {
-    "backgroundBase": {
-      "$value": "#171717",
-      "$type": "color"
+  "semantic": {
+    "color": {
+      "background": {
+        "base": {
+          "$value": "{core.color.neutral.950}",
+          "$type": "color"
+        },
+        "surface": {
+          "$value": "{core.color.neutral.900}",
+          "$type": "color"
+        },
+        "elevated": {
+          "$value": "{core.color.neutral.850}",
+          "$type": "color"
+        },
+        "overlay": {
+          "$value": "{core.color.neutral.800}",
+          "$type": "color"
+        },
+        "white-10": {
+          "$value": "{core.color.white-alpha.10}",
+          "$type": "color"
+        }
+      },
+      "text": {
+        "primary": {
+          "$value": "{core.color.white}",
+          "$type": "color"
+        },
+        "secondary": {
+          "$value": "{core.color.neutral.500}",
+          "$type": "color"
+        },
+        "tertiary": {
+          "$value": "{core.color.neutral.300}",
+          "$type": "color"
+        },
+        "dim": {
+          "$value": "{core.color.white-alpha.30}",
+          "$type": "color"
+        },
+        "success": {
+          "$value": "{core.color.green.500}",
+          "$type": "color"
+        },
+        "error": {
+          "$value": "{core.color.red.500}",
+          "$type": "color"
+        },
+        "warning": {
+          "$value": "{core.color.amber.300}",
+          "$type": "color"
+        },
+        "caution": {
+          "$value": "{core.color.orange.500}",
+          "$type": "color"
+        },
+        "info": {
+          "$value": "{core.color.blue.500}",
+          "$type": "color"
+        },
+        "ai": {
+          "$value": "{core.color.violet.500}",
+          "$type": "color"
+        }
+      },
+      "status-strip": {
+        "success": {
+          "$value": "{core.color.green.800}",
+          "$type": "color"
+        },
+        "failure": {
+          "$value": "{core.color.red.800}",
+          "$type": "color"
+        },
+        "info": {
+          "$value": "{core.color.blue.800}",
+          "$type": "color"
+        },
+        "running": {
+          "$value": "{core.color.white}",
+          "$type": "color"
+        },
+        "neutral": {
+          "$value": "{core.color.white}",
+          "$type": "color"
+        },
+        "ai": {
+          "$value": "{core.color.violet.500}",
+          "$type": "color"
+        }
+      }
     }
   }
 }

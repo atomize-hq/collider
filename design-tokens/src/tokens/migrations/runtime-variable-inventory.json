@@ -1,0 +1,117 @@
+{
+  "inventoryVersion": "1",
+  "runtimeCssSource": "src/lib/tokens/tokens.css",
+  "stableRuntimeImportPath": "src/app/globals.css",
+  "stableRuntimeImportRule": "@import '../lib/tokens/tokens.css';",
+  "notes": [
+    "Repo-authored runtime variable inventory for v1 cutover planning.",
+    "src/app/globals.css preserves the stable runtime import path during v1 cutover."
+  ],
+  "entries": [
+    {
+      "legacyVar": "--color-background-base",
+      "value": "#171717",
+      "normalizedCategory": "background"
+    },
+    {
+      "legacyVar": "--color-background-surface",
+      "value": "#202020",
+      "normalizedCategory": "background"
+    },
+    {
+      "legacyVar": "--color-background-elevated",
+      "value": "#2a2a2a",
+      "normalizedCategory": "background"
+    },
+    {
+      "legacyVar": "--color-background-overlay",
+      "value": "#303030",
+      "normalizedCategory": "background"
+    },
+    {
+      "legacyVar": "--color-background-white-10",
+      "value": "rgba(255, 255, 255, 0.1)",
+      "normalizedCategory": "background"
+    },
+    {
+      "legacyVar": "--color-text-primary",
+      "value": "#ffffff",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-text-secondary",
+      "value": "#6a7282",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-text-tertiary",
+      "value": "#b0bac8",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-text-dim",
+      "value": "rgba(255, 255, 255, 0.3)",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-text-success",
+      "value": "#48df3a",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-text-error",
+      "value": "#fb2c36",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-text-warning",
+      "value": "#e8d1a2",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-text-caution",
+      "value": "#f08000",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-text-info",
+      "value": "#51a2ff",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-text-ai",
+      "value": "#8a38f5",
+      "normalizedCategory": "text"
+    },
+    {
+      "legacyVar": "--color-statusstrip-success",
+      "value": "#0e5e2e",
+      "normalizedCategory": "status-strip"
+    },
+    {
+      "legacyVar": "--color-statusstrip-failure",
+      "value": "#5b1d20",
+      "normalizedCategory": "status-strip"
+    },
+    {
+      "legacyVar": "--color-statusstrip-info",
+      "value": "#1f4174",
+      "normalizedCategory": "status-strip"
+    },
+    {
+      "legacyVar": "--color-statusstrip-running",
+      "value": "#ffffff",
+      "normalizedCategory": "status-strip"
+    },
+    {
+      "legacyVar": "--color-statusstrip-neutral",
+      "value": "#ffffff",
+      "normalizedCategory": "status-strip"
+    },
+    {
+      "legacyVar": "--color-statusstrip-ai",
+      "value": "#8a38f5",
+      "normalizedCategory": "status-strip"
+    }
+  ]
+}

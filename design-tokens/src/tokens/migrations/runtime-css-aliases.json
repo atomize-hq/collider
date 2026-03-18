@@ -1,0 +1,133 @@
+{
+  "aliasMapVersion": "1",
+  "sourceInventoryPath": "design-tokens/src/tokens/migrations/runtime-variable-inventory.json",
+  "defaultThemeId": "dark",
+  "entries": [
+    {
+      "legacyVar": "--color-background-base",
+      "canonicalTokenId": "semantic.color.background.base",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-background-surface",
+      "canonicalTokenId": "semantic.color.background.surface",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-background-elevated",
+      "canonicalTokenId": "semantic.color.background.elevated",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-background-overlay",
+      "canonicalTokenId": "semantic.color.background.overlay",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-background-white-10",
+      "canonicalTokenId": "semantic.color.background.white-10",
+      "themeId": "dark",
+      "action": "rename-with-migration"
+    },
+    {
+      "legacyVar": "--color-text-primary",
+      "canonicalTokenId": "semantic.color.text.primary",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-text-secondary",
+      "canonicalTokenId": "semantic.color.text.secondary",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-text-tertiary",
+      "canonicalTokenId": "semantic.color.text.tertiary",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-text-dim",
+      "canonicalTokenId": "semantic.color.text.dim",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-text-success",
+      "canonicalTokenId": "semantic.color.text.success",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-text-error",
+      "canonicalTokenId": "semantic.color.text.error",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-text-warning",
+      "canonicalTokenId": "semantic.color.text.warning",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-text-caution",
+      "canonicalTokenId": "semantic.color.text.caution",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-text-info",
+      "canonicalTokenId": "semantic.color.text.info",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-text-ai",
+      "canonicalTokenId": "semantic.color.text.ai",
+      "themeId": "dark",
+      "action": "preserve"
+    },
+    {
+      "legacyVar": "--color-statusstrip-success",
+      "canonicalTokenId": "semantic.color.status-strip.success",
+      "themeId": "dark",
+      "action": "alias"
+    },
+    {
+      "legacyVar": "--color-statusstrip-failure",
+      "canonicalTokenId": "semantic.color.status-strip.failure",
+      "themeId": "dark",
+      "action": "alias"
+    },
+    {
+      "legacyVar": "--color-statusstrip-info",
+      "canonicalTokenId": "semantic.color.status-strip.info",
+      "themeId": "dark",
+      "action": "alias"
+    },
+    {
+      "legacyVar": "--color-statusstrip-running",
+      "canonicalTokenId": "semantic.color.status-strip.running",
+      "themeId": "dark",
+      "action": "alias"
+    },
+    {
+      "legacyVar": "--color-statusstrip-neutral",
+      "canonicalTokenId": "semantic.color.status-strip.neutral",
+      "themeId": "dark",
+      "action": "alias"
+    },
+    {
+      "legacyVar": "--color-statusstrip-ai",
+      "canonicalTokenId": "semantic.color.status-strip.ai",
+      "themeId": "dark",
+      "action": "alias"
+    }
+  ]
+}
