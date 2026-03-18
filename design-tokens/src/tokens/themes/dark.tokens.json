@@ -1,4 +1,10 @@
 {
+  "$description": "Required v1 dark theme tokens.",
+  "$extensions": {
+    "com.atomizehq.collider": {
+      "themeId": "dark"
+    }
+  },
   "placeholder": {
     "backgroundBase": {
       "$value": "#171717",
