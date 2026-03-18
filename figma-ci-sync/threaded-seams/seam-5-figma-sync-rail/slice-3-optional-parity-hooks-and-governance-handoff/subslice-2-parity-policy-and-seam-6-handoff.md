@@ -12,13 +12,13 @@
   - `S1`
   - `S2`
   - `S3a`
-  - `SEAM-6`
+- **Downstream consumer/handoff target**: `SEAM-6`
 - **Verification**:
   - Review `src/figma/parity-policy.md` against `src/figma/README.md` and `src/figma/sync-ledger.json` to confirm they declare the same parity branch.
   - Review the handoff with the future governance owner and confirm they can describe which command and files they would wire into a gate.
 - **Rollout/safety**:
   - Keep the policy branch singular and explicit.
-  - Keep governance promotion later and outside this seam.
+  - Keep governance promotion later and outside this seam; `SEAM-6` reviews the handoff outputs but does not block this documentation slice from landing.
 
 #### S3.T2 — Publish the parity posture and `SEAM-6` handoff
 

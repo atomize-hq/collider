@@ -35,8 +35,8 @@
   - `SEAM-3 blocks SEAM-5`: every slice assumes the generated export already exists and treats build output shape as an input, not something `SEAM-5` is allowed to redefine.
   - `SEAM-5 blocks SEAM-6`: `S1` publishes the default sync mode and pilot ledger, while `S3` makes the parity branch explicit enough that governance can later enforce it without inventing new policy.
 - **Parallelization notes**:
-  - What can proceed now: `S1` can start as soon as `CT-5` has a stable artifact path and `CT-2` has settled theme IDs; `S3.T1` can begin once `S1.T2` seeds the ledger shape, even while the pilot import work in `S2` is still underway.
-  - What must wait: `S2` waits for the actual generated Figma export from `SEAM-3`; any change to export serialization or artifact paths stays in `SEAM-3`; all `package.json`, `justfile`, and CI enforcement work stays in `SEAM-6`.
+  - What can proceed now: `S1` can start as soon as `CT-5` has a stable artifact path and `CT-2` has settled theme IDs; `S3a` can begin once `S1.T2` seeds the ledger schema, even while the pilot import work in `S2` is still underway.
+  - What must wait: `S2` waits for the actual generated Figma export from `SEAM-3`; `S3b` waits for both the validator contract from `S3a` and the observed pilot state from `S2`; any change to export serialization or artifact paths stays in `SEAM-3`; all `package.json`, `justfile`, and CI enforcement work stays in `SEAM-6`, which is a downstream consumer rather than a prerequisite for `S3b`.
 
 ## V1 Figma Policy Decisions
 

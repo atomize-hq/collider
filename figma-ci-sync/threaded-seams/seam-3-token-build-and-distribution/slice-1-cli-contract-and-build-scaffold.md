@@ -26,7 +26,75 @@
   - Exit `3`: unexpected transform/runtime failure.
 - Stdout is reserved for concise success summaries or a single machine-readable JSON object when `--json` is supplied.
 - Stderr is reserved for human-readable diagnostics and unexpected failure output.
-- JSON mode emits one object with stable top-level keys `ok`, `command`, `artifacts`, and `diagnostics`, so later governance code can consume it without scraping prose.
+- JSON mode emits exactly one UTF-8 JSON object to stdout with the stable top-level keys `ok`, `command`, `artifacts`, and `diagnostics`.
+- Top-level schema:
+  - `ok`: boolean. `true` only for exit `0`; `false` for exits `1`, `2`, or `3`.
+  - `command`: string literal `validate:tokens` or `build:tokens`.
+  - `artifacts`: array, never `null`. `validate:tokens` always returns `[]`. `build:tokens` returns one entry per committed output on success and `[]` on any failure so downstream code never has to reason about partial writes.
+  - `diagnostics`: array, never `null`. Success returns `[]`. Failure returns one or more diagnostic objects sorted in the same deterministic order as the human-readable stderr output.
+- `artifacts[]` entry schema for `build:tokens` success:
+  - `id`: `runtime-css`, `typed-tokens`, or `figma-tokens`.
+  - `path`: repo-relative output path.
+  - `kind`: `css`, `typescript`, or `json`.
+  - `status`: `written` or `unchanged`.
+- `diagnostics[]` entry schema for failures:
+  - `severity`: `error` or `fatal`.
+  - `code`: stable machine-readable identifier such as `INVALID_THEME_ID` or `ARTIFACT_PATH_UNWRITABLE`.
+  - `message`: non-empty human-readable summary.
+  - `path`: optional repo-relative file path associated with the problem.
+  - `rule`: optional contract identifier such as `CT-2` or `CT-3`.
+  - `line`: optional 1-based line number when the failure points at a source file location.
+  - `column`: optional 1-based column number; only present when `line` is present.
+- Canonical success example for `pnpm build:tokens --json`:
+
+```json
+{
+  "ok": true,
+  "command": "build:tokens",
+  "artifacts": [
+    {
+      "id": "runtime-css",
+      "path": "src/lib/tokens/tokens.css",
+      "kind": "css",
+      "status": "written"
+    },
+    {
+      "id": "typed-tokens",
+      "path": "design-tokens/dist/tokens.ts",
+      "kind": "typescript",
+      "status": "written"
+    },
+    {
+      "id": "figma-tokens",
+      "path": "design-tokens/dist/figma/tokens.json",
+      "kind": "json",
+      "status": "written"
+    }
+  ],
+  "diagnostics": []
+}
+```
+
+- Canonical failure example for `pnpm validate:tokens --json`:
+
+```json
+{
+  "ok": false,
+  "command": "validate:tokens",
+  "artifacts": [],
+  "diagnostics": [
+    {
+      "severity": "error",
+      "code": "INVALID_THEME_ID",
+      "message": "Theme registry references an unknown extends target `night`.",
+      "path": "design-tokens/src/tokens/themes/registry.json",
+      "rule": "CT-2",
+      "line": 14,
+      "column": 11
+    }
+  ]
+}
+```
 
 #### S1.T1 — Define the build path and artifact manifest
 

@@ -38,10 +38,13 @@ Checklist:
 - **Outcome**: the repo has a concrete record of which theme IDs and import results the pilot file actually materialized.
 - **Inputs/outputs**:
   - Inputs: `CT-2` theme IDs; the pilot-file setup from `S2.T1`; `src/figma/sync-ledger.json`.
-  - Outputs: updates to `src/figma/sync-ledger.json` that record the pilot file URL or key, the imported theme-to-mode mapping, the artifact revision or commit SHA used for the pull, and any remaining `drift` entries.
+  - Outputs: updates to `src/figma/sync-ledger.json` that fill `links.figmaFile`, `status.themeIds`, `status.themeMapping`, `status.artifactGitSha`, `status.lastSuccessfulPullAt`, and any remaining `drift` entries.
 - **Implementation notes**: record enough detail that a later maintainer can tell whether a pull succeeded against the right artifact revision; keep any manual exceptions in `drift` instead of leaving them implicit in chat or screenshots.
+  - Use `status.artifactGitSha` as the only revision field for the reviewed pull. Do not add a second `artifactRevision`, `artifactCommit`, or duplicated SHA field elsewhere in the ledger.
+  - `status.themeMapping` must use one object per theme with the shape `{ "themeId": "<ct-2-theme-id>", "figmaMode": "<Tokens Studio mode name>" }`.
+  - Every unresolved manual exception must become one `drift[]` object with `code`, `severity`, `message`, and `status=open`; resolved items may stay in the ledger only if they flip to `status=resolved`.
 - **Acceptance criteria**:
-  - The ledger records the exact pilot file and artifact revision used for the successful pull.
+  - The ledger records the exact pilot file and the `status.artifactGitSha` value used for the successful pull.
   - The ledger shows how the required `dark` theme and any additive themes map into the pilot file.
   - Any unresolved manual step or mismatch is listed explicitly in `drift`.
 - **Test notes**: perform at least one successful pull, then intentionally change the referenced artifact revision or theme mapping in the ledger to confirm review catches the inconsistency.

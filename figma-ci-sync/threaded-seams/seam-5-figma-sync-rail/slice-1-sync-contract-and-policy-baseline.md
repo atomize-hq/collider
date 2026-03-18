@@ -41,13 +41,33 @@ Checklist:
 - **Outcome**: the seam has a machine-readable record of the pilot Figma file, artifact source, and current policy status.
 - **Inputs/outputs**:
   - Inputs: `src/figma/README.md`; the generated Figma export from `CT-5`; the existing structural expectations in `scripts/validate-sync-ledger.mjs`.
-  - Outputs: `src/figma/sync-ledger.json` with `ledgerVersion`, `scope`, `name`, `links`, `status`, and `drift`, plus explicit `status` fields for `syncMode`, `artifactPath`, `themeIds`, and `parityMode`.
-- **Implementation notes**: keep the ledger narrow and explicit; it should record one pilot file and one artifact source, not become a generic asset registry. Reuse the current validator shape and add only the fields needed to make `CT-7` concrete.
+  - Outputs: `src/figma/sync-ledger.json` with the fixed root keys `ledgerVersion`, `scope`, `name`, `links`, `status`, and `drift`.
+- **Implementation notes**: keep the ledger narrow and explicit; it should record one pilot file and one artifact source, not become a generic asset registry. Reuse the current validator shape and extend it to the following exact v1 schema:
+  - `ledgerVersion`: required string literal `"1"`.
+  - `scope`: required string literal `"figma-pilot"`.
+  - `name`: required non-empty string naming the pilot file entry.
+  - `links`: required object with exactly these seam-owned keys:
+    - `figmaFile`: required string URL or `figma://file/<key>` reference for the pilot file.
+    - `artifact`: required repo-relative string `design-tokens/dist/figma/tokens.json`.
+    - `policy`: required repo-relative string `src/figma/README.md`.
+    - `parityPolicy`: required repo-relative string `src/figma/parity-policy.md`.
+  - `status`: required object with exactly these keys:
+    - `syncMode`: required string literal `pull-url-readonly`.
+    - `artifactPath`: required repo-relative string `design-tokens/dist/figma/tokens.json`.
+    - `artifactGitSha`: required 40-character lowercase Git commit SHA for the repo revision used by the last reviewed pull. The contract stores the revision in this separate field and does not duplicate it under another name.
+    - `themeIds`: required non-empty array of unique theme IDs from `CT-2`; it must include `dark`.
+    - `themeMapping`: required non-empty array of objects shaped as `{ "themeId": string, "figmaMode": string }`, one per imported theme.
+    - `parityMode`: required string literal `deferred` or `required`.
+    - `parityDeferredReason`: required non-empty string when `parityMode=deferred`; forbidden when `parityMode=required`.
+    - `lastSuccessfulPullAt`: required ISO-8601 UTC timestamp string when a pull has succeeded, otherwise `null`.
+    - `canonicalSource`: required string literal `repo-pr`.
+  - `drift`: required array. The happy path uses `[]`. Each exception entry is an object with required `code`, `severity`, `message`, and `status` keys plus optional `field`; `severity` is `info|warn|error`, `status` is `open|resolved`, and `field` is a dotted ledger path such as `status.themeMapping`.
   - Use `syncMode=pull-url-readonly` and `parityMode=deferred|required` only; v1 seeds the ledger at `parityMode=deferred`.
 - **Acceptance criteria**:
   - The ledger validates with the current script shape.
   - The ledger names the pilot Figma file or URL, the canonical artifact path, and the current parity branch.
   - The happy-path ledger keeps `drift` empty and records known exceptions explicitly when the pilot file is not yet fully aligned.
+  - The ledger stores the reviewed artifact revision in `status.artifactGitSha` and never as a second competing revision field.
   - The ledger never uses `advisory` or `ready for enforcement`; the allowed parity vocabulary is `deferred` or `required` only.
 - **Test notes**: run the validator once on the happy path and once with a missing required field to prove failures are visible.
 - **Risk/rollback notes**: if the ledger shape changes later, preserve backward compatibility long enough for `SEAM-6` to consume the new fields deliberately rather than via silent breakage.

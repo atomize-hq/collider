@@ -31,7 +31,7 @@
 - Type: config
 - Owner seam: `SEAM-3`
 - Consumers (seams): `SEAM-6`
-- Definition: `pnpm validate:tokens` validates DTCG structure, theme registry semantics, recipe shape, and token-reference integrity using repo scripts under `scripts/`. It exits `0` on success, `1` on contract/input violations, and `3` on unexpected tool/runtime failure. By default it writes concise success output to stdout, failures to stderr, and it may emit a single JSON object to stdout when invoked with `--json`.
+- Definition: `pnpm validate:tokens` validates DTCG structure, theme registry semantics, recipe shape, and token-reference integrity using repo scripts under `scripts/`. It exits `0` on success, `1` on contract/input violations, and `3` on unexpected tool/runtime failure. By default it writes concise success output to stdout, failures to stderr, and when invoked with `--json` it emits exactly one JSON object to stdout shaped as `{ ok: boolean, command: "validate:tokens", artifacts: [], diagnostics: Diagnostic[] }`, where every `Diagnostic` has required `severity`, `code`, and `message` fields plus optional `path`, `rule`, `line`, and `column`.
 - Versioning/compat: validators must fail closed on malformed input and remain deterministic in local and CI environments.
 
 ### `CT-5` — Token build CLI
@@ -39,7 +39,7 @@
 - Type: config
 - Owner seam: `SEAM-3`
 - Consumers (seams): `SEAM-4`, `SEAM-5`, `SEAM-6`
-- Definition: `pnpm build:tokens` runs Style Dictionary plus any recipe transforms and emits the committed runtime CSS artifact at `src/lib/tokens/tokens.css`, the committed typed token output at `design-tokens/dist/tokens.ts`, and the committed Figma-facing export at `design-tokens/dist/figma/tokens.json`. `design-tokens/src/**` remains the only editable source; `dist/**` and `src/lib/tokens/tokens.css` are derived outputs regenerated in place. The command exits `0` on success, `1` when upstream source validation fails, `2` when an artifact path or write contract cannot be satisfied, and `3` on transform/runtime failure; stdout is reserved for concise success summaries or `--json` output, stderr for failures.
+- Definition: `pnpm build:tokens` runs Style Dictionary plus any recipe transforms and emits the committed runtime CSS artifact at `src/lib/tokens/tokens.css`, the committed typed token output at `design-tokens/dist/tokens.ts`, and the committed Figma-facing export at `design-tokens/dist/figma/tokens.json`. `design-tokens/src/**` remains the only editable source; `dist/**` and `src/lib/tokens/tokens.css` are derived outputs regenerated in place. The command exits `0` on success, `1` when upstream source validation fails, `2` when an artifact path or write contract cannot be satisfied, and `3` on transform/runtime failure; stdout is reserved for concise success summaries or `--json` output, stderr for failures. In `--json` mode it emits exactly one object shaped as `{ ok: boolean, command: "build:tokens", artifacts: BuildArtifact[], diagnostics: Diagnostic[] }`, where `artifacts` is `[]` on any failure and on success contains exactly three entries with IDs `runtime-css`, `typed-tokens`, and `figma-tokens`, each carrying `path`, `kind`, and `status`.
 - Versioning/compat: the command must be deterministic; output paths stay stable once consumers import them.
 
 ### `CT-6` — Runtime CSS artifact
@@ -55,7 +55,7 @@
 - Type: config
 - Owner seam: `SEAM-5`
 - Consumers (seams): design maintainers, `SEAM-6`
-- Definition: `design-tokens/dist/figma/tokens.json` is the Figma-facing export; v1 uses exactly one transport, `pull-url-readonly`, meaning Tokens Studio pulls the repo-hosted artifact by URL and no Figma write-back path is configured. The lock is both technical (no write credentials or automation in v1) and policy-enforced (repo PRs remain the only path to change canonical values). `parityMode` has two allowed values only, `deferred` and `required`; v1 starts at `deferred` and can move to `required` only after enterprise parity automation exists and `SEAM-6` adopts it explicitly.
+- Definition: `design-tokens/dist/figma/tokens.json` is the Figma-facing export; v1 uses exactly one transport, `pull-url-readonly`, meaning Tokens Studio pulls the repo-hosted artifact by URL and no Figma write-back path is configured. The lock is both technical (no write credentials or automation in v1) and policy-enforced (repo PRs remain the only path to change canonical values). The seam-owned pilot ledger at `src/figma/sync-ledger.json` has fixed root keys `ledgerVersion`, `scope`, `name`, `links`, `status`, and `drift`; `ledgerVersion="1"`, `scope="figma-pilot"`, `status.syncMode="pull-url-readonly"`, `status.artifactPath="design-tokens/dist/figma/tokens.json"`, `status.artifactGitSha` stores the reviewed commit SHA for the pull, `status.themeIds` and `status.themeMapping` record imported themes, and `status.parityMode` has two allowed values only, `deferred` and `required`. When `parityMode=deferred`, `status.parityDeferredReason` is required; when `parityMode=required`, that field is forbidden. `drift` is always an array of explicit exception objects; the happy path uses `[]`.
 - Versioning/compat: two-way sync is opt-in and requires an explicit policy override because it changes the system-of-record model.
 
 ### `CT-8` — Drift gate contract
