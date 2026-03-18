@@ -1,0 +1,8 @@
+{
+  "placeholder": {
+    "durationQuick": {
+      "$value": "150ms",
+      "$type": "duration"
+    }
+  }
+}

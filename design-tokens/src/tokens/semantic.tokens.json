@@ -1,0 +1,8 @@
+{
+  "placeholder": {
+    "textPrimary": {
+      "$value": "#ffffff",
+      "$type": "color"
+    }
+  }
+}
