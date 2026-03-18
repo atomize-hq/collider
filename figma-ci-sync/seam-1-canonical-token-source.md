@@ -12,11 +12,12 @@
 ## Primary Interfaces (Contracts)
 
 - Inputs: the current hand-authored variables in `src/lib/tokens/tokens.css`; existing runtime consumers that already depend on those names; approved design values from Figma or design references.
-- Outputs: canonical token source files under `design-tokens/src/tokens/**/*.tokens.json`; stable token IDs; theme definitions such as `themes/dark.tokens.json`; the single theme registry at `design-tokens/src/tokens/themes/registry.json`.
+- Outputs: canonical token source files under `design-tokens/src/tokens/**/*.tokens.json`; stable token IDs; theme definitions such as `themes/dark.tokens.json`; the single theme registry at `design-tokens/src/tokens/themes/registry.json`; the maintainer-facing authoring policy at `design-tokens/src/tokens/AUTHORING.md`.
 
 ## Key Invariants / Rules
 
 - Scalar values only; component recipes do not live in token files.
+- `design-tokens/src/tokens/AUTHORING.md` is the concrete file-backed policy for token-file ownership, allowed references, and authoring boundaries.
 - Semantic tokens can reference base tokens, but runtime CSS is generated output, not canonical input.
 - The current dark theme remains the minimum supported runtime theme through initial cutover.
 - Omitted theme selection resolves to `dark`.
