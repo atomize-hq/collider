@@ -1,0 +1,51 @@
+{
+  "registryVersion": "1",
+  "metadataEnums": {
+    "pilotStatus": ["active", "deferred"],
+    "handoffStatus": ["source-ready", "ready-for-build", "ready-for-docs"]
+  },
+  "components": [
+    {
+      "componentId": "button",
+      "pilotStatus": "active",
+      "handoffStatus": "source-ready",
+      "variantAxes": [
+        {
+          "name": "intent",
+          "values": ["primary", "secondary"]
+        },
+        {
+          "name": "size",
+          "values": ["sm", "md"]
+        }
+      ],
+      "defaults": {
+        "variants": {
+          "intent": "primary",
+          "size": "md"
+        },
+        "state": "rest"
+      },
+      "slots": ["root", "label", "icon"],
+      "states": ["rest", "hover", "focus", "disabled"],
+      "fallbacks": {
+        "missingVariantBehavior": "use-defaults",
+        "stateFallbacks": {
+          "hover": "rest",
+          "focus": "rest",
+          "disabled": "rest"
+        }
+      }
+    },
+    {
+      "componentId": "input",
+      "pilotStatus": "deferred",
+      "handoffStatus": "source-ready"
+    },
+    {
+      "componentId": "card",
+      "pilotStatus": "deferred",
+      "handoffStatus": "source-ready"
+    }
+  ]
+}
