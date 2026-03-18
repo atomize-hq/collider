@@ -11,6 +11,7 @@ It tells downstream seams what they must preserve during the initial runtime cut
 - This is not an app or Storybook migration checklist for `SEAM-4`.
 - This is not a cutover runbook, validator contract, or gate definition for `SEAM-6`.
 - This does not duplicate the full runtime inventory or alias-map payload.
+- This does not own public token-ID or theme-ID change classification; use `design-tokens/src/tokens/CHANGE_POLICY.md` for that policy.
 
 ## Stable Import-Path Rule
 
@@ -36,7 +37,7 @@ Generated-artifact adoption, runtime cleanup, or gate promotion must not silentl
 A runtime-name change is never treated as opportunistic cleanup.
 If a legacy variable is going to disappear, the alias map must mark that case as `rename-with-migration`, and a later seam must own the explicit migration handling before removal becomes valid.
 
-This keeps token-source policy aligned with `CT-1` versioning rules: renames and removals are migration events, not incidental output churn.
+This keeps runtime compatibility policy aligned with `CT-1` versioning rules and `design-tokens/src/tokens/CHANGE_POLICY.md`: renames and removals are migration events, not incidental output churn.
 
 ## Compatibility Action Semantics
 

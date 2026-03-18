@@ -8,7 +8,7 @@ This guide is limited to token authoring boundaries:
 - which cross-file references are allowed,
 - which concerns are explicitly out of scope for token files.
 
-This guide does not define validator behavior, CI enforcement, runtime traceability examples, or rename/removal policy. Runtime CSS such as `src/lib/tokens/tokens.css` is generated output, not canonical input. Component recipes belong under `design-tokens/src/recipes/**`, not under `design-tokens/src/tokens/**`.
+This guide does not define validator behavior, CI enforcement, runtime traceability examples, or rename/removal policy. Use `design-tokens/src/tokens/CHANGE_POLICY.md` for public token-ID and theme-ID change rules. Runtime CSS such as `src/lib/tokens/tokens.css` is generated output, not canonical input. Component recipes belong under `design-tokens/src/recipes/**`, not under `design-tokens/src/tokens/**`.
 
 ## Canonical File Ownership
 
