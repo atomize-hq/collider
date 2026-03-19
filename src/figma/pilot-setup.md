@@ -6,7 +6,8 @@ This runbook proves the `CT-7` pilot pull path for the existing team-owned Figma
 
 - Pilot file: `Collider Copy pilot` (`figma://file/23PLdynlRYoBYQx9teoC8A`)
 - Canonical artifact path: `design-tokens/dist/figma/tokens.json`
-- Canonical artifact URL: `https://raw.githubusercontent.com/atomize-hq/collider/main/design-tokens/dist/figma/tokens.json`
+- Published artifact URL: `https://raw.githubusercontent.com/atomize-hq/collider/main/design-tokens/dist/figma/tokens.json`
+- Local proof URL: `http://127.0.0.1:4173/design-tokens/dist/figma/tokens.json`
 - Required theme baseline from `CT-2`: `dark`
 
 ## Preconditions
@@ -15,6 +16,17 @@ This runbook proves the `CT-7` pilot pull path for the existing team-owned Figma
 - Open a clean or reset version of the pilot file before starting the walkthrough.
 - Keep the repo as the only source of truth. Do not edit token values in Figma or push token changes from the plugin.
 - If you need to refresh the committed artifact before the walkthrough, run the normal repo token build flow first and review the resulting diff before continuing.
+- If the published artifact URL returns `404` because `main` is behind the reviewed revision or the repo artifact is not publicly reachable from the current environment, use the local proof URL instead of inventing a second sync mode.
+
+## Optional Local URL Fallback
+
+Use this fallback when the published raw GitHub URL is not reachable from the current repo state but you still need to complete the pilot proof on the same machine as Figma.
+
+1. From the repo root, serve the generated artifact over localhost:
+   `python3 -m http.server 4173 --bind 127.0.0.1`
+2. Confirm the artifact is reachable before opening Figma:
+   `curl http://127.0.0.1:4173/design-tokens/dist/figma/tokens.json`
+3. Keep this server running while Tokens Studio performs the pull.
 
 ## Configure URL Sync
 
@@ -23,9 +35,9 @@ This runbook proves the `CT-7` pilot pull path for the existing team-owned Figma
 3. Under the sync provider section, choose `Add new`.
 4. Select the `URL` sync provider.
 5. Enter these values:
-   - `Name`: `collider-main-figma-tokens`
-   - `URL`: `https://raw.githubusercontent.com/atomize-hq/collider/main/design-tokens/dist/figma/tokens.json`
-   - `Headers`: leave empty for the raw GitHub URL flow
+   - `Name`: `collider-figma-tokens`
+   - `URL`: use the published artifact URL when it is reachable; otherwise use the local proof URL
+   - `Headers`: leave empty for both the raw GitHub URL flow and the localhost proof flow
 6. Save the provider configuration.
 7. If the plugin prompts you to sync provider data into the file, choose `Pull`. Do not choose `Push`.
 
@@ -54,7 +66,7 @@ After the pull and export attempt, update [`src/figma/sync-ledger.json`](./sync-
 - Keep `status.themeIds` as `["dark"]`.
 - Keep `status.themeMapping` as `[{"themeId":"dark","figmaMode":"dark"}]` unless the observed export label in Figma differs, in which case record the observed value and add a matching drift note.
 - Set `status.lastSuccessfulPullAt` to a UTC ISO-8601 timestamp only after the pull and export succeed.
-- Add one `drift[]` entry for each unresolved issue, such as provider errors, blocked access, plugin UI mismatch, or materialization that does not match the seeded mapping.
+- Add one `drift[]` entry for each unresolved issue, such as provider errors, blocked access, a published URL that still returns `404`, plugin UI mismatch, or materialization that does not match the seeded mapping.
 
 ## If the Proof Is Blocked
 
