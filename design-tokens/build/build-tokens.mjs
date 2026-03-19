@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import process from 'node:process';
+import { getBuildWriteTargets } from './paths.mjs';
 import { preflightBuildArtifacts } from '../../scripts/lib/token-build-preflight.mjs';
 import {
   buildTokenArtifacts,
-  getBuildWriteTargets,
   isArtifactWriteContractError,
 } from '../../scripts/lib/token-artifacts.mjs';
 import { formatDiagnostic, runTokenValidation } from '../../scripts/lib/token-validation.mjs';

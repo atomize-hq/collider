@@ -3,10 +3,9 @@ import path from 'node:path';
 import prettier from 'prettier';
 import StyleDictionary from 'style-dictionary';
 import {
-  buildArtifacts,
-  buildWriteTargets,
   figmaTokensPath,
   generatedFileBanner,
+  getBuildArtifacts,
   runtimeCssPath,
   stagedRuntimeCssPath,
   toRepoRelative,
@@ -24,7 +23,7 @@ const typedFileBanner = `// ${generatedFileBanner.slice(3, -3).trim()}`;
 
 export async function buildTokenArtifacts(options = {}) {
   const graph = loadBuildGraph(options);
-  const artifactManifest = options.artifacts ?? buildArtifacts;
+  const artifactManifest = options.artifacts ?? getBuildArtifacts(options);
   const before = captureArtifactContents(artifactManifest);
   const cssContents = await buildRuntimeCssArtifact(graph.materializedTokens, options);
   const publishedRuntimeCss = buildPublishedRuntimeCss({
@@ -188,39 +187,4 @@ export function isArtifactWriteContractError(error) {
     error.name === 'ArtifactWriteContractError' &&
     Array.isArray(error.diagnostics)
   );
-}
-
-export function getBuildWriteTargets(options = {}) {
-  const runtimeCssStagePath = options.stagedRuntimeCssPath ?? stagedRuntimeCssPath;
-  const runtimeCssDestinationPath = options.runtimeCssPath ?? runtimeCssPath;
-  const typedTokensDestinationPath = options.typedTokensPath ?? typedTokensPath;
-  const figmaTokensDestinationPath = options.figmaTokensPath ?? figmaTokensPath;
-
-  return buildWriteTargets.map((artifact) => {
-    if (artifact.id === 'runtime-css-stage') {
-      return {
-        ...artifact,
-        absPath: runtimeCssStagePath,
-      };
-    }
-    if (artifact.id === 'runtime-css') {
-      return {
-        ...artifact,
-        absPath: runtimeCssDestinationPath,
-      };
-    }
-    if (artifact.id === 'typed-tokens') {
-      return {
-        ...artifact,
-        absPath: typedTokensDestinationPath,
-      };
-    }
-    if (artifact.id === 'figma-tokens') {
-      return {
-        ...artifact,
-        absPath: figmaTokensDestinationPath,
-      };
-    }
-    return artifact;
-  });
 }
