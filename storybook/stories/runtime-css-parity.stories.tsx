@@ -1,6 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect, within } from 'storybook/test';
 
+import {
+  createRuntimeCssParityDiagnostics,
+  formatStorybookArtifactConformanceDiagnostics,
+  loadGeneratedTokenArtifact,
+  resolveGeneratedTokenStyleValue,
+  type StorybookArtifactConformanceDiagnostic,
+} from '@/lib/tokens/storybook-artifact-conformance';
+
 function RuntimeCssParityProbe() {
   return (
     <div
@@ -74,36 +82,42 @@ type Story = StoryObj<typeof meta>;
 
 export const BaselineTheme: Story = {
   play: async ({ canvasElement }) => {
+    const { artifact, diagnostics } = await loadGeneratedTokenArtifact();
+    if (artifact) {
+      diagnostics.push(...createRuntimeCssParityDiagnostics(artifact));
+    }
+    assertNoConformanceDiagnostics(diagnostics);
+    if (!artifact) {
+      throw new Error('Storybook artifact conformance failed before runtime parity assertions.');
+    }
+
     const canvas = within(canvasElement);
     const panel = await canvas.findByTestId('runtime-panel');
     const copy = await canvas.findByTestId('runtime-copy');
     const rootStyles = window.getComputedStyle(document.documentElement);
+    const expectedPanelBackground = resolveGeneratedTokenStyleValue(
+      artifact,
+      'semantic.color.background.surface',
+      'backgroundColor'
+    );
+    const expectedCopyColor = resolveGeneratedTokenStyleValue(
+      artifact,
+      'semantic.color.text.secondary',
+      'color'
+    );
 
     expect(rootStyles.getPropertyValue('--color-background-surface').trim()).not.toBe('');
     expect(rootStyles.getPropertyValue('--color-text-secondary').trim()).not.toBe('');
 
-    expect(window.getComputedStyle(panel).backgroundColor).toBe(
-      resolveCssVariableValue('--color-background-surface', 'backgroundColor')
-    );
-    expect(window.getComputedStyle(copy).color).toBe(
-      resolveCssVariableValue('--color-text-secondary', 'color')
-    );
+    expect(window.getComputedStyle(panel).backgroundColor).toBe(expectedPanelBackground);
+    expect(window.getComputedStyle(copy).color).toBe(expectedCopyColor);
   },
 };
 
-function resolveCssVariableValue(
-  variableName: string,
-  property: 'backgroundColor' | 'color'
-): string {
-  const probe = document.createElement('div');
-  probe.style.setProperty(
-    property === 'backgroundColor' ? 'background-color' : 'color',
-    `var(${variableName})`
-  );
-  document.body.appendChild(probe);
+function assertNoConformanceDiagnostics(diagnostics: StorybookArtifactConformanceDiagnostic[]) {
+  if (diagnostics.length === 0) {
+    return;
+  }
 
-  const computedValue = window.getComputedStyle(probe)[property];
-  probe.remove();
-
-  return computedValue;
+  throw new Error(formatStorybookArtifactConformanceDiagnostics(diagnostics));
 }
