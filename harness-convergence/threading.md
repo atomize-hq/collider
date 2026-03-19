@@ -121,6 +121,16 @@ Figma-specific rules:
 - if `promotion.parityMode="deferred"`, `E-promotion-complete` is not allowed for claims that depend on required Figma parity
 - the detailed consumer-claim matrix lives in `threaded-seams/seam-6b-verification-and-promotion-convergence/slice-3-promotion-governance-adoption/subslice-1-s3a-claim-matrix-consumers.md`; this file keeps only seam-level invariants, including that informational status is broader than promotion authority
 
+### Governance Ownership
+
+- release/governance maintainer owns parity-mode changes and gate-enforcement authority for Figma-dependent promotion claims
+- design-system tooling maintainer owns the technical evidence needed to clear tooling, freshness, carrier, or hardened-rail blockers
+- design maintainers may confirm design-side readiness, but they do not inherit transport, OAuth, credential, scope, or tenancy ownership
+- `rest-variables-oauth` remains the only approved hardening target before `promotion.parityMode` may move to `required`
+- `SEAM-6B` consumes `SEAM-5B` hardening evidence and success markers; it does not redefine publish-mode, transport, or credential ownership
+- any unresolved blocker owner, missing clearing condition, or ambiguous approval path forces the affected state to remain deferred or blocked
+- the detailed ownership and blocker tables live in `threaded-seams/seam-6b-verification-and-promotion-convergence/slice-3-promotion-governance-adoption/subslice-2-s3b-governance-ownership.md`
+
 ## Integration Points
 
 - inherited canonical source flows through inherited build outputs into the Figma artifact
@@ -150,6 +160,7 @@ Why this is the critical path:
 - `WS-HIST`: reference-only workstream; reads historical pack outputs and keeps old seams 1 through 4 treated as evidence instead of reopening them
 - `WS-5B`: owns publish-mode, transport, credential-model, and temporary-carrier rules for the new Figma rail
 - `WS-6B`: owns ledger shape, verification semantics, and promotion policy that consumes `SEAM-5B`
+- governance adoption for parity decisions stays in `WS-6B`; any transport, credential, scope, tenancy, or OAuth implementation work remains `WS-5B`
 
 ## Thin Contract-Definition Items
 
