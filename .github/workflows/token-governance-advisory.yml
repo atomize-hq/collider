@@ -1,0 +1,57 @@
+name: Token Governance (Advisory)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  advisory-token-governance:
+    name: Advisory token governance
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.11.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run advisory token governance
+        shell: bash
+        run: |
+          set +e
+          pnpm govern:tokens
+          status=$?
+          set -e
+
+          if [ "$status" -ne 0 ]; then
+            echo "::warning title=Advisory token governance::pnpm govern:tokens reported token drift or validation failures. Review the logs above; this workflow remains advisory until SEAM-6 S3."
+            {
+              echo "## Advisory token governance"
+              echo
+              echo "- Status: signal detected"
+              echo "- Command: \`pnpm govern:tokens\`"
+              echo "- Effect: advisory only; this workflow does not block merge until SEAM-6 S3."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          {
+            echo "## Advisory token governance"
+            echo
+            echo "- Status: clean"
+            echo "- Command: \`pnpm govern:tokens\`"
+            echo "- Effect: advisory only; this workflow does not block merge until SEAM-6 S3."
+          } >> "$GITHUB_STEP_SUMMARY"

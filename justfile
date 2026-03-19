@@ -33,6 +33,16 @@ preflight:
     @echo ""
 
 # ══════════════════════════════════════════════════════════════════════════════
+# TOKENS — advisory governance surface
+# Runs the seam-owned governance command without affecting preflight yet.
+# `SEAM-6` S3 will promote this path into `just preflight`.
+# ══════════════════════════════════════════════════════════════════════════════
+
+# Advisory token governance path (validation + build + freshness; not in preflight yet)
+token-governance:
+    pnpm govern:tokens
+
+# ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers
 # ══════════════════════════════════════════════════════════════════════════════
 

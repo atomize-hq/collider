@@ -95,6 +95,12 @@ storybook/
 just preflight    # check + LOC guards + test-all — mirrors what CI enforces
 ```
 
+### Advisory token governance
+
+```bash
+just token-governance  # advisory validate + build + freshness path; not part of preflight until SEAM-6 S3
+```
+
 ### Fast checks — run before every commit
 
 ```bash

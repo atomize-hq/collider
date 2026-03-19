@@ -10,7 +10,7 @@ import {
 } from '../../../scripts/lib/token-governance.mjs';
 
 describe('runTokenGovernance', () => {
-  it('runs validate before build on success', () => {
+  it('runs validate, freshness, and build in order on success', () => {
     const calls: string[] = [];
     const exitCode = runTokenGovernance({
       runScript(scriptName: string) {
@@ -34,6 +34,19 @@ describe('runTokenGovernance', () => {
 
     expect(exitCode).toBe(1);
     expect(calls).toEqual(['validate:tokens']);
+  });
+
+  it('preserves artifact freshness failure exit code', () => {
+    const calls: string[] = [];
+    const exitCode = runTokenGovernance({
+      runScript(scriptName: string) {
+        calls.push(scriptName);
+        return scriptName === 'validate-token-artifacts' ? 1 : 0;
+      },
+    });
+
+    expect(exitCode).toBe(1);
+    expect(calls).toEqual(['validate:tokens', 'validate-token-artifacts']);
   });
 
   it('preserves build failure exit code', () => {
