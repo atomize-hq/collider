@@ -15,6 +15,14 @@ export const recipeFilesGlob = 'design-tokens/src/recipes/*.recipe.json';
 export const themeRegistryPath = path.join(tokenSourceRoot, 'themes/registry.json');
 export const recipeSchemaPath = path.join(recipeSourceRoot, 'schema/recipe.schema.json');
 export const pilotComponentsPath = path.join(recipeSourceRoot, 'pilot-components.json');
+export const runtimeInventoryPath = path.join(
+  tokenSourceRoot,
+  'migrations/runtime-variable-inventory.json'
+);
+export const runtimeAliasMapPath = path.join(
+  tokenSourceRoot,
+  'migrations/runtime-css-aliases.json'
+);
 
 export const distRoot = path.join(designTokensRoot, 'dist');
 export const stagedRuntimeCssPath = path.join(distRoot, 'css/tokens.css');
@@ -29,8 +37,8 @@ export const buildArtifacts = [
   {
     id: 'runtime-css',
     kind: 'css',
-    relPath: 'design-tokens/dist/css/tokens.css',
-    absPath: stagedRuntimeCssPath,
+    relPath: 'src/lib/tokens/tokens.css',
+    absPath: runtimeCssPath,
   },
   {
     id: 'typed-tokens',
@@ -44,6 +52,16 @@ export const buildArtifacts = [
     relPath: 'design-tokens/dist/figma/tokens.json',
     absPath: figmaTokensPath,
   },
+];
+
+export const buildWriteTargets = [
+  {
+    id: 'runtime-css-stage',
+    kind: 'css',
+    relPath: 'design-tokens/dist/css/tokens.css',
+    absPath: stagedRuntimeCssPath,
+  },
+  ...buildArtifacts,
 ];
 
 export function toRepoRelative(filePath) {

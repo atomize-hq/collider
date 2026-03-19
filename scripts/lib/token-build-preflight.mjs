@@ -1,10 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { buildArtifacts, repoRoot as defaultRepoRoot } from '../../design-tokens/build/paths.mjs';
+import {
+  buildWriteTargets,
+  repoRoot as defaultRepoRoot,
+} from '../../design-tokens/build/paths.mjs';
 
 export function preflightBuildArtifacts(options = {}) {
   const repoRoot = options.repoRoot ?? defaultRepoRoot;
-  const artifacts = options.artifacts ?? buildArtifacts;
+  const artifacts = options.artifacts ?? buildWriteTargets;
   const diagnostics = [];
   const seenIds = new Set();
   const seenPaths = new Set();

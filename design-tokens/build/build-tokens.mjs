@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 import process from 'node:process';
 import { preflightBuildArtifacts } from '../../scripts/lib/token-build-preflight.mjs';
-import { buildTokenArtifacts } from '../../scripts/lib/token-artifacts.mjs';
+import {
+  buildTokenArtifacts,
+  getBuildWriteTargets,
+  isArtifactWriteContractError,
+} from '../../scripts/lib/token-artifacts.mjs';
 import { formatDiagnostic, runTokenValidation } from '../../scripts/lib/token-validation.mjs';
 
 const args = process.argv.slice(2);
@@ -19,7 +23,9 @@ try {
     process.exit(1);
   }
 
-  const pathDiagnostics = preflightBuildArtifacts();
+  const pathDiagnostics = preflightBuildArtifacts({
+    artifacts: getBuildWriteTargets(),
+  });
   if (pathDiagnostics.length > 0) {
     emitResult('build:tokens', pathDiagnostics, jsonMode);
     process.exit(2);
@@ -43,6 +49,11 @@ try {
   }
   process.exit(0);
 } catch (error) {
+  if (isArtifactWriteContractError(error)) {
+    emitResult('build:tokens', error.diagnostics, jsonMode);
+    process.exit(2);
+  }
+
   const message = error instanceof Error ? error.message : String(error);
   emitResult(
     'build:tokens',

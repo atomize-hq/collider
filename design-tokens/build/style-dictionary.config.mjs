@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { expandTypesMap, register } from '@tokens-studio/sd-transforms';
-import { distRoot } from './paths.mjs';
+import { stagedRuntimeCssPath } from './paths.mjs';
 
 let hooksRegistered = false;
 
@@ -15,7 +15,9 @@ export function ensureStyleDictionaryHooksRegistered(StyleDictionary) {
   hooksRegistered = true;
 }
 
-export function createStyleDictionaryConfig(tokens) {
+export function createStyleDictionaryConfig(tokens, options = {}) {
+  const cssBuildPath = options.cssBuildPath ?? path.dirname(stagedRuntimeCssPath);
+
   return {
     usesDtcg: true,
     tokens,
@@ -27,7 +29,7 @@ export function createStyleDictionaryConfig(tokens) {
       css: {
         transformGroup: 'tokens-studio',
         transforms: ['name/kebab'],
-        buildPath: withTrailingSeparator(path.join(distRoot, 'css')),
+        buildPath: withTrailingSeparator(cssBuildPath),
         files: [
           {
             destination: 'tokens.css',
