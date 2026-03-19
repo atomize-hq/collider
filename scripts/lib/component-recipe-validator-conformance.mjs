@@ -187,6 +187,7 @@ function collectTokenIds(node, trail, ids) {
 function tokenIdPrefix(filePath) {
   if (filePath.endsWith('/core.tokens.json')) return ['core'];
   if (filePath.endsWith('/semantic.tokens.json')) return ['semantic'];
+  if (filePath.endsWith('/motion.tokens.json')) return ['motion'];
   return [];
 }
 

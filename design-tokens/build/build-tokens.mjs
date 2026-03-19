@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import process from 'node:process';
 import { preflightBuildArtifacts } from '../../scripts/lib/token-build-preflight.mjs';
+import { buildTokenArtifacts } from '../../scripts/lib/token-artifacts.mjs';
 import { formatDiagnostic, runTokenValidation } from '../../scripts/lib/token-validation.mjs';
 
 const args = process.argv.slice(2);
@@ -24,19 +25,23 @@ try {
     process.exit(2);
   }
 
-  emitResult(
-    'build:tokens',
-    [
-      {
-        severity: 'fatal',
-        code: 'BUILD_NOT_IMPLEMENTED',
-        message: 'Token artifact generation is scaffolded but not implemented until Slice 2.',
-        rule: 'CT-5',
-      },
-    ],
-    jsonMode
-  );
-  process.exit(3);
+  const build = await buildTokenArtifacts();
+  if (jsonMode) {
+    process.stdout.write(
+      `${JSON.stringify({
+        ok: true,
+        command: 'build:tokens',
+        artifacts: build.artifacts,
+        diagnostics: [],
+      })}\n`
+    );
+  } else {
+    const summary = build.artifacts
+      .map((artifact) => `${artifact.id}=${artifact.status}`)
+      .join(', ');
+    console.log(`✓ Built token artifacts (${summary})`);
+  }
+  process.exit(0);
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
   emitResult(

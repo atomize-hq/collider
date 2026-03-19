@@ -29,8 +29,8 @@ export const buildArtifacts = [
   {
     id: 'runtime-css',
     kind: 'css',
-    relPath: 'src/lib/tokens/tokens.css',
-    absPath: runtimeCssPath,
+    relPath: 'design-tokens/dist/css/tokens.css',
+    absPath: stagedRuntimeCssPath,
   },
   {
     id: 'typed-tokens',
@@ -43,15 +43,6 @@ export const buildArtifacts = [
     kind: 'json',
     relPath: 'design-tokens/dist/figma/tokens.json',
     absPath: figmaTokensPath,
-  },
-];
-
-export const stagedArtifacts = [
-  {
-    id: 'staged-runtime-css',
-    kind: 'css',
-    relPath: 'design-tokens/dist/css/tokens.css',
-    absPath: stagedRuntimeCssPath,
   },
 ];
 
