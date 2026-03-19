@@ -18,6 +18,8 @@ export const governanceSteps = [
     kind: 'node-script',
     scriptPath: 'scripts/validate-token-artifacts.mjs',
   },
+  { id: 'validate:sync-ledger', kind: 'pnpm-script', scriptName: 'validate:sync-ledger' },
+  { id: 'validate:figma-parity', kind: 'pnpm-script', scriptName: 'validate:figma-parity' },
 ];
 
 export function runTokenGovernance(options = {}) {

@@ -1,0 +1,27 @@
+{
+  "ledgerVersion": "1",
+  "scope": "figma-pilot",
+  "name": "Validator fixture required parity",
+  "links": {
+    "figmaFile": "figma://file/fixture-valid-required-sync-ledger",
+    "artifact": "design-tokens/dist/figma/tokens.json",
+    "policy": "src/figma/README.md",
+    "parityPolicy": "src/figma/parity-policy.md"
+  },
+  "status": {
+    "syncMode": "pull-url-readonly",
+    "artifactPath": "design-tokens/dist/figma/tokens.json",
+    "artifactGitSha": "3333333333333333333333333333333333333333",
+    "themeIds": ["dark"],
+    "themeMapping": [
+      {
+        "themeId": "dark",
+        "figmaMode": "dark"
+      }
+    ],
+    "parityMode": "required",
+    "lastSuccessfulPullAt": "2026-03-18T02:03:04Z",
+    "canonicalSource": "repo-pr"
+  },
+  "drift": []
+}

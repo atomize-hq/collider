@@ -11,7 +11,7 @@ import {
 import { runtimeCssManualEditExitCode } from '../../../scripts/lib/token-runtime-css-drift-guard.mjs';
 
 describe('runTokenGovernance', () => {
-  it('runs validate, guard, build, compatibility, and freshness in order on success', () => {
+  it('runs the full governance chain in order on success', () => {
     const calls: string[] = [];
     const exitCode = runTokenGovernance({
       runScript(scriptName: string) {
@@ -35,6 +35,8 @@ describe('runTokenGovernance', () => {
       'build:tokens',
       'scripts/validate-token-runtime-compatibility.mjs',
       'scripts/validate-token-artifacts.mjs',
+      'validate:sync-ledger',
+      'validate:figma-parity',
     ]);
   });
 
@@ -135,6 +137,35 @@ describe('runTokenGovernance', () => {
       'scripts/validate-token-runtime-compatibility.mjs',
     ]);
   });
+
+  it('propagates a required-parity failure after the shared ledger gate', () => {
+    const calls: string[] = [];
+    const exitCode = runTokenGovernance({
+      runScript(scriptName: string) {
+        calls.push(scriptName);
+        return scriptName === 'validate:figma-parity' ? 1 : 0;
+      },
+      runRuntimeCssDriftGuard() {
+        calls.push('runtime-css-drift-guard');
+        return { ok: true, exitCode: 0 };
+      },
+      runNodeScript(args: string[]) {
+        calls.push(args[0]);
+        return 0;
+      },
+    });
+
+    expect(exitCode).toBe(1);
+    expect(calls).toEqual([
+      'validate:tokens',
+      'runtime-css-drift-guard',
+      'build:tokens',
+      'scripts/validate-token-runtime-compatibility.mjs',
+      'scripts/validate-token-artifacts.mjs',
+      'validate:sync-ledger',
+      'validate:figma-parity',
+    ]);
+  });
 });
 
 describe('runTokenGovernanceCli', () => {
@@ -176,6 +207,12 @@ describe('governance package contract', () => {
     };
 
     expect(packageJson.scripts?.['govern:tokens']).toBe('node scripts/govern-tokens.mjs');
+    expect(packageJson.scripts?.['validate:sync-ledger']).toBe(
+      'node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json'
+    );
+    expect(packageJson.scripts?.['validate:figma-parity']).toBe(
+      'node scripts/validate-figma-parity.mjs'
+    );
   });
 
   it('exposes the ordered post-cutover governance steps', () => {
@@ -185,6 +222,8 @@ describe('governance package contract', () => {
       'build:tokens',
       'runtime-compatibility',
       'artifact-freshness',
+      'validate:sync-ledger',
+      'validate:figma-parity',
     ]);
   });
 
