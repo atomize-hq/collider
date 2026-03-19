@@ -204,3 +204,11 @@ Why it is invalid:
 ## Pilot Boundary Registry
 
 [pilot-components.json](/Users/spensermcconnell/__Active_Code/atomize-hq/collider/design-tokens/src/recipes/pilot-components.json) is the machine-readable registry for the v1 pilot boundary. It is not a recipe discovery index and it must not duplicate token-bearing recipe payload data.
+
+## Discovery Index and Downstream Handoff
+
+[index.json](/Users/spensermcconnell/__Active_Code/atomize-hq/collider/design-tokens/src/recipes/index.json) is the canonical discovery entrypoint for normative recipe source files in this directory. It is metadata-only and must stay limited to `schemaVersion`, `recipes`, `componentId`, `sourceFile`, and discovery `status`.
+
+`SEAM-2` owns the recipe source files and this discovery metadata only. `SEAM-3` consumes the source recipe files and may derive typed or generated build artifacts from them. `SEAM-4` renders downstream docs and artifacts from upstream contracts and must not become a second source of recipe truth.
+
+Breaking `CT-3` contract changes require validator updates plus downstream consumer migration work. Do not silently change the source recipe shape or move discovery responsibilities into build or Storybook surfaces.

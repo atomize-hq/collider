@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1",
+  "recipes": [
+    {
+      "componentId": "button",
+      "sourceFile": "button.recipe.json",
+      "status": "pilot"
+    }
+  ]
+}

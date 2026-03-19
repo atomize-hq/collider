@@ -35,16 +35,24 @@ export function createActivePilotRegistry(pilot) {
 
 export function buildTokenInventory() {
   const ids = new Set();
-  const tokenFiles = resolveFiles('design-tokens/src/tokens/**/*.tokens.json');
+  const tokenFiles = resolveTokenFiles('design-tokens/src/tokens/**/*.tokens.json');
 
   for (const filePath of tokenFiles) {
-    collectTokenIds(readJson(filePath, true), [], ids);
+    collectTokenIds(readJson(filePath, true), tokenIdPrefix(filePath), ids);
   }
 
   return ids;
 }
 
 export function validatePilotConformance(recipe, activePilots, tokenInventory, rules) {
+  return (
+    validatePilotContract(recipe, activePilots) ??
+    validateTokenLeaves(recipe.slots, '$.slots', tokenInventory, rules) ??
+    validateTokenLeaves(recipe.states, '$.states', tokenInventory, rules)
+  );
+}
+
+export function validatePilotContract(recipe, activePilots) {
   const pilot = activePilots.get(recipe.componentId);
   if (!pilot) {
     return diag(
@@ -160,10 +168,7 @@ export function validatePilotConformance(recipe, activePilots, tokenInventory, r
     }
   }
 
-  return (
-    validateTokenLeaves(recipe.slots, '$.slots', tokenInventory, rules) ??
-    validateTokenLeaves(recipe.states, '$.states', tokenInventory, rules)
-  );
+  return null;
 }
 
 function collectTokenIds(node, trail, ids) {
@@ -179,7 +184,22 @@ function collectTokenIds(node, trail, ids) {
   }
 }
 
-function validateTokenLeaves(node, jsonPath, tokenInventory, rules) {
+function tokenIdPrefix(filePath) {
+  if (filePath.endsWith('/core.tokens.json')) return ['core'];
+  if (filePath.endsWith('/semantic.tokens.json')) return ['semantic'];
+  return [];
+}
+
+function resolveTokenFiles(pattern) {
+  const nestedFiles = resolveFiles(pattern);
+  const rootPattern = pattern.replace('/**/*.tokens.json', '/*.tokens.json');
+  const rootFiles = rootPattern === pattern ? [] : resolveFiles(rootPattern);
+  return [...new Set([...nestedFiles, ...rootFiles])].sort((left, right) =>
+    left.localeCompare(right)
+  );
+}
+
+export function validateTokenLeaves(node, jsonPath, tokenInventory, rules) {
   if (typeof node === 'string') {
     if (!rules.tokenReference.test(node)) {
       return diag(

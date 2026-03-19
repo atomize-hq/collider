@@ -1,0 +1,20 @@
+{
+  "registryVersion": "1",
+  "defaultThemeId": "dark",
+  "terminalFallbackThemeId": "dark",
+  "unknownThemeIdBehavior": "error",
+  "themes": [
+    {
+      "id": "dark",
+      "file": "dark.tokens.json",
+      "required": true,
+      "extends": null
+    },
+    {
+      "id": "midnight",
+      "file": "midnight.tokens.json",
+      "required": false,
+      "extends": "night"
+    }
+  ]
+}
