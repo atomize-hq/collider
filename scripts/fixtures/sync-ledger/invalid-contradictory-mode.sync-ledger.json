@@ -1,0 +1,28 @@
+{
+  "ledgerVersion": "1",
+  "scope": "figma-pilot",
+  "name": "Validator fixture contradictory mode",
+  "links": {
+    "figmaFile": "figma://file/fixture-invalid-contradictory",
+    "artifact": "design-tokens/dist/figma/tokens.json",
+    "policy": "src/figma/README.md",
+    "parityPolicy": "src/figma/parity-policy.md"
+  },
+  "status": {
+    "syncMode": "pull-url-readonly",
+    "artifactPath": "design-tokens/dist/figma/tokens.json",
+    "artifactGitSha": "2222222222222222222222222222222222222222",
+    "themeIds": ["dark"],
+    "themeMapping": [
+      {
+        "themeId": "dark",
+        "figmaMode": "dark"
+      }
+    ],
+    "parityMode": "required",
+    "parityDeferredReason": "This fixture should fail because required parity cannot carry a deferred reason.",
+    "lastSuccessfulPullAt": "2026-03-18T01:02:03Z",
+    "canonicalSource": "figma-writeback"
+  },
+  "drift": []
+}

@@ -1,0 +1,28 @@
+{
+  "ledgerVersion": "1",
+  "scope": "figma-pilot",
+  "name": "Validator fixture pilot",
+  "links": {
+    "figmaFile": "figma://file/fixture-valid-sync-ledger",
+    "artifact": "design-tokens/dist/figma/tokens.json",
+    "policy": "src/figma/README.md",
+    "parityPolicy": "src/figma/parity-policy.md"
+  },
+  "status": {
+    "syncMode": "pull-url-readonly",
+    "artifactPath": "design-tokens/dist/figma/tokens.json",
+    "artifactGitSha": "1111111111111111111111111111111111111111",
+    "themeIds": ["dark"],
+    "themeMapping": [
+      {
+        "themeId": "dark",
+        "figmaMode": "dark"
+      }
+    ],
+    "parityMode": "deferred",
+    "parityDeferredReason": "Parity remains deferred until enterprise automation and SEAM-6 governance adoption are in place.",
+    "lastSuccessfulPullAt": "2026-03-18T00:00:00Z",
+    "canonicalSource": "repo-pr"
+  },
+  "drift": []
+}
