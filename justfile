@@ -97,11 +97,11 @@ check: check-ts check-rs
 
 # Check Rust file sizes via tokei (max 400 code lines)
 loc-rs:
-    tokei --files --output json src-tauri/src | python3 scripts/loc-check.py rs 400
+    tokei --files --output json src-tauri/src | node scripts/validate-loc.mjs rs 400
 
 # Check TS/TSX file sizes via tokei (.tsx max 200, .ts max 300 — excludes tests + stories)
 loc-ts:
-    tokei --files --output json src | python3 scripts/loc-check.py ts 200 300
+    tokei --files --output json src | node scripts/validate-loc.mjs ts 200 300
 
 # Check all file sizes: Rust + TS
 loc: loc-rs loc-ts
