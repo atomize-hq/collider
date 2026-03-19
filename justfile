@@ -8,37 +8,40 @@ default:
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PREFLIGHT — mandatory gate before every push
-# Mirrors what CI enforces: static checks + LOC guards + full test suite.
+# Mirrors what CI enforces: token governance + static checks + LOC guards + full test suite.
 # If this passes locally, CI should pass too.
 #   just preflight
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Pre-push CI gate: check + LOC guards + all automated tests
+# Pre-push CI gate: token governance + check + LOC guards + all automated tests
 preflight:
     @echo ""
     @echo "╔══════════════════════════════════════════════════╗"
     @echo "║            PREFLIGHT — pre-push CI gate          ║"
     @echo "╚══════════════════════════════════════════════════╝"
     @echo ""
-    @echo "▶ step 1/3 — static checks"
+    @echo "▶ step 1/4 — token governance"
+    pnpm govern:tokens
+    @echo ""
+    @echo "▶ step 2/4 — static checks"
     just check
     @echo ""
-    @echo "▶ step 2/3 — LOC guards"
+    @echo "▶ step 3/4 — LOC guards"
     just loc
     @echo ""
-    @echo "▶ step 3/3 — automated tests"
+    @echo "▶ step 4/4 — automated tests"
     just test-all
     @echo ""
     @echo "✓ Preflight passed — safe to push"
     @echo ""
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TOKENS — advisory governance surface
-# Runs the seam-owned governance command without affecting preflight yet.
-# `SEAM-6` S3 will promote this path into `just preflight`.
+# TOKENS — governance surface
+# Runs the same seam-owned governance command that preflight uses.
+# Use this when you want to exercise only the token gate.
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Advisory token governance path (validation + build + freshness; not in preflight yet)
+# Manual token governance path (same command used by preflight)
 token-governance:
     pnpm govern:tokens
 

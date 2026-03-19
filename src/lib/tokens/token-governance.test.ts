@@ -187,6 +187,16 @@ describe('governance package contract', () => {
       'artifact-freshness',
     ]);
   });
+
+  it('runs govern:tokens first in just preflight before downstream checks', () => {
+    const justfile = fs.readFileSync(path.join(repoRoot, 'justfile'), 'utf8');
+    const preflightRecipe = extractRecipe(justfile, 'preflight');
+    const orderedCommands = ['pnpm govern:tokens', 'just check', 'just loc', 'just test-all'];
+
+    expect(preflightRecipe).toContain('▶ step 1/4 — token governance');
+    expect(preflightRecipe).toContain('▶ step 4/4 — automated tests');
+    expectCommandOrder(preflightRecipe, orderedCommands);
+  });
 });
 
 function createWritableBuffer() {
@@ -200,4 +210,18 @@ function createWritableBuffer() {
       return buffer;
     },
   };
+}
+
+function extractRecipe(justfile: string, recipeName: string) {
+  const recipeMatch = justfile.match(new RegExp(`^${recipeName}:\\n((?:    .*\\n)+)`, 'm'));
+
+  expect(recipeMatch?.[1]).toBeDefined();
+  return recipeMatch![1];
+}
+
+function expectCommandOrder(block: string, commands: string[]) {
+  const indexes = commands.map((command) => block.indexOf(command));
+
+  expect(indexes.every((index) => index >= 0)).toBe(true);
+  expect(indexes).toEqual([...indexes].sort((left, right) => left - right));
 }
