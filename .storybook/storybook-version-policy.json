@@ -1,0 +1,32 @@
+{
+  "policyVersion": "1.0.0",
+  "baselineDate": "2026-03-17",
+  "framework": "@storybook/nextjs-vite",
+  "storybookVersion": "10.2.19",
+  "requiredAddons": [
+    "@storybook/addon-vitest",
+    "@storybook/addon-a11y",
+    "@storybook/addon-designs",
+    "@chromatic-com/storybook"
+  ],
+  "requiredImports": {
+    "test": "storybook/test",
+    "previewApi": "storybook/preview-api",
+    "actions": "storybook/actions"
+  },
+  "disallowedLegacyPackages": [
+    "@storybook/addon-interactions",
+    "@storybook/experimental-addon-test",
+    "@storybook/test-runner",
+    "@storybook/test"
+  ],
+  "configFiles": [".storybook/main.ts", ".storybook/preview.ts"],
+  "validationCommands": [
+    "node scripts/validate-storybook-version-policy.mjs .storybook/storybook-version-policy.json",
+    "node scripts/validate-storybook-story-inventory.mjs storybook/story-inventory.json"
+  ],
+  "notes": [
+    "Keep all Storybook packages on the same exact release line.",
+    "Review and intentionally update this file on every Storybook upgrade."
+  ]
+}

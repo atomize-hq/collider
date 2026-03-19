@@ -39,7 +39,6 @@ next-env.d.ts
 
 # storybook
 /storybook-static/
-.storybook
 .claude
 .agents
 .codex-artifacts/
