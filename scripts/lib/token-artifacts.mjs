@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import prettier from 'prettier';
 import StyleDictionary from 'style-dictionary';
 import {
   buildArtifacts,
@@ -33,7 +34,7 @@ export async function buildTokenArtifacts(options = {}) {
     runtimeAliasMapPath: options.runtimeAliasMapPath,
     runtimeInventoryPath: options.runtimeInventoryPath,
   });
-  const typedModule = generateTypedTokenModule(graph);
+  const typedModule = await generateTypedTokenModule(graph);
   const figmaDocument = serializeJson(createFigmaTokenDocument(graph));
 
   const statuses = {
@@ -65,7 +66,7 @@ export async function buildTokenArtifacts(options = {}) {
   };
 }
 
-export function generateTypedTokenModule(graph) {
+export async function generateTypedTokenModule(graph) {
   const sections = [
     typedFileBanner,
     '',
@@ -81,7 +82,12 @@ export function generateTypedTokenModule(graph) {
     '',
   ];
 
-  return sections.join(newline);
+  const prettierConfig = (await prettier.resolveConfig(typedTokensPath)) ?? {};
+
+  return prettier.format(sections.join(newline), {
+    ...prettierConfig,
+    filepath: typedTokensPath,
+  });
 }
 
 export function serializeJson(value) {

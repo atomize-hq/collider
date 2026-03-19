@@ -10,6 +10,7 @@ const categoryLabels = new Map([
   ['text', 'Text'],
   ['status-strip', 'StatusStrip'],
 ]);
+const supportedActions = new Set(['preserve', 'alias', 'rename-with-migration']);
 
 export function buildPublishedRuntimeCss(options) {
   const {
@@ -93,6 +94,11 @@ function renderCompatibilityAliases(inventory, aliasMap, themeId, stagedVariable
     if (aliasEntry.themeId !== themeId) {
       throw new Error(
         `token build setup: alias-map entry "${entry.legacyVar}" targets theme "${aliasEntry.themeId}", expected "${themeId}"`
+      );
+    }
+    if (!supportedActions.has(aliasEntry.action)) {
+      throw new Error(
+        `token build setup: alias-map entry "${entry.legacyVar}" has unsupported action "${aliasEntry.action}"`
       );
     }
 
