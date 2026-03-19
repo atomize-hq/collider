@@ -17,6 +17,7 @@ This runbook proves the `CT-7B` `plugin-import-manual` path for the existing tea
 - Refresh the generated artifact before the walkthrough and review the resulting diff before continuing:
   `pnpm build:tokens`
 - Use a repo-owned or OSS-backed importer/plugin if available. Tokens Studio is not the intended permanent rail.
+- If this walkthrough requires Tokens Studio as temporary carriage, treat it as an exception path and follow [`src/figma/tokens-studio-carrier-policy.md`](./tokens-studio-carrier-policy.md). Do not treat that exception as proof that the hardened rail exists.
 
 ## Local Proof Server
 
@@ -66,7 +67,7 @@ After the materialization attempt, update [`src/figma/publish-proof.json`](./pub
 - Record `materialization.attemptedAt` as a UTC ISO-8601 timestamp.
 - Record `materialization.notes` whenever the attempt fails. Notes are optional for passed runs.
 - Record `carrier.used` as `true` only if Tokens Studio temporarily carried the approved artifact.
-- If `carrier.used` is `true`, fill `carrier.reason` and `carrier.exitExpectation`. Otherwise keep both fields as `null`.
+- If `carrier.used` is `true`, record `mode` as `tokens-studio-carried` and fill `carrier.reason` and `carrier.exitExpectation` per [`src/figma/tokens-studio-carrier-policy.md`](./tokens-studio-carrier-policy.md). Otherwise keep both fields as `null`.
 - Validate the result locally:
   `pnpm validate:publish-proof`
 - If you maintain [`src/figma/sync-ledger.json`](./sync-ledger.json) for branch-local historical evidence, treat it as legacy evidence only. Its current root shape is not the `CT-7B` proof contract and is expected to be replaced downstream by `SEAM-6B`.

@@ -25,6 +25,8 @@ This README is the live implementation-facing `CT-7B` contract for the repo-to-F
 - `plugin-import-manual` may be used to prove the rail before the hardened path exists.
 - `rest-variables-oauth` is the only target that may later support required parity or long-term deterministic automation.
 - `tokens-studio-carried` must be treated as temporary and replaceable. It cannot become the permanent harness dependency.
+- Proof-only publish validity may come from a verified proof attempt through `plugin-import-manual` or an explicitly recorded temporary carrier exception while parity remains deferred.
+- Required parity is downstream `SEAM-6B` work and may not be considered until the prerequisites in `src/figma/rest-variables-oauth.md` are satisfied.
 - Any future bidirectional sync or alternate artifact boundary requires an explicit new planning decision.
 
 ## Theme Baseline
@@ -44,6 +46,8 @@ This README is the live implementation-facing `CT-7B` contract for the repo-to-F
 ## Related Docs
 
 - `src/figma/pilot-setup.md` is the operator runbook for the current proof walkthrough.
+- `src/figma/rest-variables-oauth.md` defines the only approved hardened rail and its ownership, scope, and success-marker requirements.
+- `src/figma/tokens-studio-carrier-policy.md` defines the only allowed temporary-carrier exception path.
 - `src/figma/parity-policy.md` records parity posture and downstream governance ownership boundaries.
 - `src/figma/sync-ledger.json` remains legacy branch-local evidence until `SEAM-6B` replaces it with the `CT-8B` ledger contract.
 
