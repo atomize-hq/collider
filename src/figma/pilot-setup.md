@@ -1,6 +1,6 @@
 # Pilot Plugin Setup
 
-This runbook proves the `CT-7` pilot plugin-import path for the existing team-owned Figma file. [`src/figma/README.md`](./README.md) remains the normative policy source; this file is only the step-by-step operator path for the pilot proof.
+This runbook proves the `CT-7B` `plugin-import-manual` path for the existing team-owned Figma file. [`src/figma/README.md`](./README.md) is the live rail policy, and [`src/figma/publish-proof-contract.md`](./publish-proof-contract.md) defines the seam-owned proof facts this walkthrough must capture.
 
 ## Pilot Inputs
 
@@ -49,20 +49,22 @@ Use this server when the plugin/importer accepts a URL input and you want to mat
 
 - The repo currently publishes one Figma-facing artifact as a single `tokens.json` file and one required theme baseline, `dark`.
 - For this pilot, the required proof is narrow: confirm that the canonical artifact can be materialized for the `dark` baseline without manual token entry.
-- Keep the ledger mapping at `{"themeId":"dark","figmaMode":"dark"}` as the approved baseline until a maintainer completes the live Figma walkthrough and observes a different visible label that must be recorded explicitly.
+- Keep the observed theme mapping at `{"themeId":"dark","figmaMode":"dark"}` as the approved baseline until a maintainer completes the live Figma walkthrough and observes a different visible label that must be recorded explicitly.
 
-## Update the Ledger After the Walkthrough
+## Record The Proof After The Walkthrough
 
-After the pull and export attempt, update [`src/figma/sync-ledger.json`](./sync-ledger.json):
+After the materialization attempt, capture the seam-owned proof facts from [`src/figma/publish-proof-contract.md`](./publish-proof-contract.md):
 
-- Set `status.artifactGitSha` to the reviewed repo revision from `git rev-parse HEAD`.
-- Keep `status.themeIds` as `["dark"]`.
-- Keep `status.themeMapping` as `[{"themeId":"dark","figmaMode":"dark"}]` unless the observed export label in Figma differs, in which case record the observed value and add a matching drift note.
-- Set `status.lastSuccessfulPullAt` to a UTC ISO-8601 timestamp only after the pull and export succeed.
-- Add one `drift[]` entry for each unresolved issue, such as importer errors, blocked access, plugin UI mismatch, or materialization that does not match the seeded mapping.
+- Record `mode` as `plugin-import-manual` unless this walkthrough explicitly used `tokens-studio-carried` as temporary carriage.
+- Record `artifact.path` as `design-tokens/dist/figma/tokens.json`.
+- Record `artifact.revision` from `git rev-parse HEAD` after confirming the artifact revision under review.
+- Record `destination.figmaFile` as the pilot file reference used for the walkthrough.
+- Record `materializationOutcome` as `passed` or `failed`.
+- Record `tokensStudioCarrier` as `true` only if Tokens Studio temporarily carried the approved artifact.
+- If you maintain [`src/figma/sync-ledger.json`](./sync-ledger.json) for branch-local historical evidence, treat it as legacy evidence only. Its current root shape is not the `CT-7B` proof contract and is expected to be replaced downstream by `SEAM-6B`.
 
 ## If the Proof Is Blocked
 
-- Leave `status.lastSuccessfulPullAt` as `null`.
-- Add an open `drift[]` entry describing exactly what blocked the proof.
-- Do not invent a success timestamp or remove existing drift until the walkthrough is actually completed in Figma.
+- Record `materializationOutcome` as `failed`.
+- Capture exactly what blocked the attempt, including importer errors, access issues, plugin UI mismatch, or artifact/materialization drift.
+- Do not invent a passed proof or downstream governance status until the walkthrough is actually completed in Figma.
