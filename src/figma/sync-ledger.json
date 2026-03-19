@@ -11,7 +11,7 @@
   "status": {
     "syncMode": "pull-url-readonly",
     "artifactPath": "design-tokens/dist/figma/tokens.json",
-    "artifactGitSha": "f3874d8ffab0204dd42e25791bd8ec2f91987941",
+    "artifactGitSha": "a991bb07ba5ee167c186047e9b374bb76e770912",
     "themeIds": ["dark"],
     "themeMapping": [
       {
@@ -24,5 +24,13 @@
     "lastSuccessfulPullAt": null,
     "canonicalSource": "repo-pr"
   },
-  "drift": []
+  "drift": [
+    {
+      "code": "pilot-pull-proof-pending",
+      "severity": "warn",
+      "message": "The pilot Figma file is linked and the dark baseline mapping is seeded, but the Tokens Studio URL pull and export walkthrough has not been re-verified from this repo environment against artifact SHA a991bb07ba5ee167c186047e9b374bb76e770912. Leave lastSuccessfulPullAt null until a maintainer completes src/figma/pilot-setup.md in Figma.",
+      "status": "open",
+      "field": "status.lastSuccessfulPullAt"
+    }
+  ]
 }
