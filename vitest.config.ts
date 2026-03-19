@@ -17,7 +17,7 @@ export default defineConfig({
         test: {
           name: 'unit',
           environment: 'node',
-          include: ['src/**/*.test.{ts,tsx}'],
+          include: ['src/**/*.test.{ts,tsx}', 'storybook/**/*.test.{ts,tsx}'],
           exclude: ['node_modules', 'src-tauri'],
         },
       },
