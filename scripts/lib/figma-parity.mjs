@@ -6,27 +6,45 @@ export const figmaParityUsage =
   'Usage: node scripts/validate-figma-parity.mjs [path-to-sync-ledger.json]';
 
 export function evaluateFigmaParity(ledger) {
-  const parityMode = ledger.status.parityMode;
+  const parityMode = ledger.promotion.parityMode;
 
   if (parityMode === 'deferred') {
     return {
       ok: true,
       parityMode,
-      message: `[FIGMA_PARITY_DEFERRED] ${ledger.status.parityDeferredReason}`,
+      message: `[FIGMA_PARITY_DEFERRED] ${ledger.promotion.parityDeferredReason}`,
     };
   }
 
   const errors = [];
-  if (ledger.status.lastSuccessfulPullAt === null) {
+  if (ledger.publish.mode !== 'rest-variables-oauth') {
     errors.push(
-      '[FIGMA_PARITY_REQUIRES_LAST_SUCCESSFUL_PULL] status.lastSuccessfulPullAt must be non-null when status.parityMode is required'
+      '[FIGMA_PARITY_REQUIRES_HARDENED_RAIL] publish.mode must be rest-variables-oauth when promotion.parityMode is required'
     );
   }
 
-  for (const [index, entry] of ledger.drift.entries()) {
-    if (entry.status === 'open') {
+  if (ledger.verification.materializationStatus !== 'passed') {
+    errors.push(
+      '[FIGMA_PARITY_REQUIRES_PASSED_MATERIALIZATION] verification.materializationStatus must be passed when promotion.parityMode is required'
+    );
+  }
+
+  if (ledger.verification.lastVerifiedRevision !== ledger.artifact.revision) {
+    errors.push(
+      '[FIGMA_PARITY_REQUIRES_CURRENT_REVISION] verification.lastVerifiedRevision must match artifact.revision when promotion.parityMode is required'
+    );
+  }
+
+  if (ledger.promotion.highestEarnedLevel !== 'E-promotion-complete') {
+    errors.push(
+      '[FIGMA_PARITY_REQUIRES_COMPLETE_PROMOTION] promotion.highestEarnedLevel must be E-promotion-complete when promotion.parityMode is required'
+    );
+  }
+
+  for (const [index, entry] of ledger.exceptions.entries()) {
+    if (entry.blocking === true && entry.status === 'open') {
       errors.push(
-        `[FIGMA_PARITY_OPEN_DRIFT] drift[${index}].status for ${entry.code} must not remain open when status.parityMode is required`
+        `[FIGMA_PARITY_OPEN_BLOCKING_EXCEPTION] exceptions[${index}].status for ${entry.code} must not remain open when promotion.parityMode is required`
       );
     }
   }

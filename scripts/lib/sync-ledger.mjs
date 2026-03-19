@@ -3,30 +3,39 @@ import path from 'node:path';
 
 export const syncLedgerUsage =
   'Usage: node scripts/validate-sync-ledger.mjs <path-to-sync-ledger.json>';
-export const topLevelKeys = ['ledgerVersion', 'scope', 'name', 'links', 'status', 'drift'];
-export const linkKeys = ['figmaFile', 'artifact', 'policy', 'parityPolicy'];
-export const baseStatusKeys = [
-  'syncMode',
-  'artifactPath',
-  'artifactGitSha',
-  'themeIds',
-  'themeMapping',
-  'parityMode',
-  'lastSuccessfulPullAt',
-  'canonicalSource',
+export const topLevelKeys = [
+  'ledgerVersion',
+  'artifact',
+  'publish',
+  'verification',
+  'promotion',
+  'exceptions',
 ];
-export const driftRequiredKeys = ['code', 'severity', 'message', 'status'];
-export const driftOptionalKeys = ['field'];
+export const artifactKeys = ['path', 'revision'];
+export const publishKeys = ['mode', 'tokensStudioCarrier', 'figmaFile'];
+export const verificationKeys = ['materializationStatus', 'lastVerifiedRevision'];
+export const basePromotionKeys = ['parityMode', 'highestEarnedLevel'];
+export const exceptionRequiredKeys = ['code', 'message', 'blocking', 'status'];
+export const exceptionOptionalKeys = ['field'];
 export const syncLedgerArtifactPath = 'design-tokens/dist/figma/tokens.json';
-export const syncLedgerPolicyPath = 'src/figma/README.md';
-export const syncLedgerParityPolicyPath = 'src/figma/parity-policy.md';
+export const publishModes = new Set([
+  'plugin-import-manual',
+  'rest-variables-oauth',
+  'tokens-studio-carried',
+]);
+export const materializationStatuses = new Set(['not-run', 'passed', 'failed']);
 export const parityModes = new Set(['deferred', 'required']);
-export const driftSeverities = new Set(['info', 'warn', 'error']);
-export const driftStatuses = new Set(['open', 'resolved']);
-export const syncModes = new Set(['plugin-import-manual', 'rest-variables-oauth']);
+export const earnedLevels = new Set([
+  'A-source-valid',
+  'B-projection-valid',
+  'C-consumption-valid',
+  'D-publish-valid',
+  'E-promotion-complete',
+]);
+export const exceptionStatuses = new Set(['open', 'resolved']);
 
 const shaPattern = /^[a-f0-9]{40}$/;
-const utcIsoPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/;
+const publishValidLevels = new Set(['D-publish-valid', 'E-promotion-complete']);
 
 export function readSyncLedger(target) {
   const absPath = path.resolve(target);
@@ -54,212 +63,150 @@ export function validateSyncLedger(data) {
   }
 
   validateExactKeys(errors, data, topLevelKeys, 'ledger');
-  requireLiteral(errors, data.ledgerVersion, '1', 'ledgerVersion');
-  requireLiteral(errors, data.scope, 'figma-pilot', 'scope');
-  requireNonEmptyString(errors, data.name, 'name');
-
-  validateLinks(errors, data.links);
-  validateStatus(errors, data.status, data.links);
-  validateDrift(errors, data.drift);
+  requireLiteral(errors, data.ledgerVersion, '2', 'ledgerVersion');
+  validateArtifact(errors, data.artifact);
+  validatePublish(errors, data.publish);
+  validateVerification(errors, data.verification);
+  validatePromotion(errors, data.promotion);
+  validateExceptions(errors, data.exceptions);
+  validateLedgerGuardrails(errors, data);
 
   return errors;
 }
 
-function validateLinks(errors, links) {
-  if (!assertPlainObject(errors, links, 'links must be an object')) {
+function validateArtifact(errors, artifact) {
+  if (!assertPlainObject(errors, artifact, 'artifact must be an object')) {
     return;
   }
 
-  validateExactKeys(errors, links, linkKeys, 'links');
-  requireNonEmptyString(errors, links.figmaFile, 'links.figmaFile');
-  requireLiteral(errors, links.artifact, syncLedgerArtifactPath, 'links.artifact');
-  requireLiteral(errors, links.policy, syncLedgerPolicyPath, 'links.policy');
-  requireLiteral(errors, links.parityPolicy, syncLedgerParityPolicyPath, 'links.parityPolicy');
+  validateKeySpec(errors, artifact, { required: artifactKeys, optional: [] }, 'artifact');
+  requireLiteral(errors, artifact.path, syncLedgerArtifactPath, 'artifact.path');
+  requireSha(errors, artifact.revision, 'artifact.revision');
 }
 
-function validateStatus(errors, status, links) {
-  if (!assertPlainObject(errors, status, 'status must be an object')) {
+function validatePublish(errors, publish) {
+  if (!assertPlainObject(errors, publish, 'publish must be an object')) {
     return;
   }
 
-  const statusKeySpec =
-    status.parityMode === 'deferred'
-      ? { required: [...baseStatusKeys, 'parityDeferredReason'], optional: [] }
-      : { required: baseStatusKeys, optional: ['parityDeferredReason'] };
+  validateKeySpec(errors, publish, { required: publishKeys, optional: [] }, 'publish');
 
-  validateKeySpec(errors, status, statusKeySpec, 'status');
-  if (!syncModes.has(status.syncMode)) {
+  if (!publishModes.has(publish.mode)) {
     errors.push(
-      '[CT-7_INVALID_SYNC_MODE] status.syncMode must be plugin-import-manual or rest-variables-oauth'
+      '[CT-8B_INVALID_PUBLISH_MODE] publish.mode must be plugin-import-manual, rest-variables-oauth, or tokens-studio-carried'
     );
   }
-  requireLiteral(errors, status.artifactPath, syncLedgerArtifactPath, 'status.artifactPath');
+
+  if (typeof publish.tokensStudioCarrier !== 'boolean') {
+    errors.push(
+      '[CT-8B_INVALID_TOKENS_STUDIO_CARRIER] publish.tokensStudioCarrier must be a boolean'
+    );
+  }
+
+  requireNonEmptyString(errors, publish.figmaFile, 'publish.figmaFile');
 
   if (
-    typeof links?.artifact === 'string' &&
-    typeof status.artifactPath === 'string' &&
-    links.artifact !== status.artifactPath
+    typeof publish.tokensStudioCarrier === 'boolean' &&
+    typeof publish.mode === 'string' &&
+    publish.tokensStudioCarrier !== (publish.mode === 'tokens-studio-carried')
   ) {
     errors.push(
-      `[CT-7_STATUS_ARTIFACT_MISMATCH] links.artifact and status.artifactPath must match ${syncLedgerArtifactPath}`
-    );
-  }
-
-  if (typeof status.artifactGitSha !== 'string' || !shaPattern.test(status.artifactGitSha)) {
-    errors.push(
-      '[CT-7_INVALID_ARTIFACT_GIT_SHA] status.artifactGitSha must be a 40-character lowercase git SHA'
-    );
-  }
-
-  validateThemeIds(errors, status.themeIds);
-  validateThemeMapping(errors, status.themeMapping, status.themeIds);
-
-  if (!parityModes.has(status.parityMode)) {
-    errors.push('[CT-7_INVALID_PARITY_MODE] status.parityMode must be deferred or required');
-  }
-
-  if (status.parityMode === 'deferred') {
-    requireNonEmptyString(errors, status.parityDeferredReason, 'status.parityDeferredReason');
-  } else if (status.parityMode === 'required' && status.parityDeferredReason !== undefined) {
-    errors.push(
-      '[CT-7_FORBIDDEN_PARITY_DEFERRED_REASON] status.parityDeferredReason must be omitted when status.parityMode is required'
-    );
-  }
-
-  if (
-    status.lastSuccessfulPullAt !== null &&
-    (typeof status.lastSuccessfulPullAt !== 'string' ||
-      !utcIsoPattern.test(status.lastSuccessfulPullAt) ||
-      Number.isNaN(Date.parse(status.lastSuccessfulPullAt)))
-  ) {
-    errors.push(
-      '[CT-7_INVALID_LAST_SUCCESSFUL_PULL_AT] status.lastSuccessfulPullAt must be null or an ISO-8601 UTC timestamp'
-    );
-  }
-
-  requireLiteral(errors, status.canonicalSource, 'repo-pr', 'status.canonicalSource');
-
-  if (
-    syncModes.has(status.syncMode) &&
-    status.canonicalSource !== undefined &&
-    status.canonicalSource !== 'repo-pr'
-  ) {
-    errors.push(
-      '[CT-7_CANONICAL_SOURCE_CONTRADICTION] the selected sync mode requires status.canonicalSource to remain repo-pr'
+      '[CT-8B_INVALID_TOKENS_STUDIO_CARRIER_COMBINATION] publish.tokensStudioCarrier must be true only when publish.mode is tokens-studio-carried'
     );
   }
 }
 
-function validateThemeIds(errors, themeIds) {
-  if (!Array.isArray(themeIds) || themeIds.length === 0) {
-    errors.push('[CT-7_INVALID_THEME_IDS] status.themeIds must be a non-empty array');
+function validateVerification(errors, verification) {
+  if (!assertPlainObject(errors, verification, 'verification must be an object')) {
     return;
   }
 
-  const seen = new Set();
-  for (const [index, themeId] of themeIds.entries()) {
-    if (typeof themeId !== 'string' || themeId.length === 0) {
-      errors.push(`[CT-7_INVALID_THEME_ID] status.themeIds[${index}] must be a non-empty string`);
-      continue;
-    }
+  validateKeySpec(
+    errors,
+    verification,
+    { required: verificationKeys, optional: [] },
+    'verification'
+  );
 
-    if (seen.has(themeId)) {
-      errors.push(
-        `[CT-7_DUPLICATE_THEME_ID] status.themeIds contains duplicate themeId ${themeId}`
-      );
-    }
-    seen.add(themeId);
+  if (!materializationStatuses.has(verification.materializationStatus)) {
+    errors.push(
+      '[CT-8B_INVALID_MATERIALIZATION_STATUS] verification.materializationStatus must be not-run, passed, or failed'
+    );
   }
 
-  if (!seen.has('dark')) {
-    errors.push('[CT-7_MISSING_DARK_THEME] status.themeIds must include dark');
+  if (verification.materializationStatus === 'not-run') {
+    if (verification.lastVerifiedRevision !== null) {
+      errors.push(
+        '[CT-8B_NOT_RUN_REQUIRES_NULL_REVISION] verification.lastVerifiedRevision must be null when verification.materializationStatus is not-run'
+      );
+    }
+    return;
+  }
+
+  requireSha(errors, verification.lastVerifiedRevision, 'verification.lastVerifiedRevision');
+}
+
+function validatePromotion(errors, promotion) {
+  if (!assertPlainObject(errors, promotion, 'promotion must be an object')) {
+    return;
+  }
+
+  const promotionKeySpec =
+    promotion.parityMode === 'deferred'
+      ? { required: [...basePromotionKeys, 'parityDeferredReason'], optional: [] }
+      : { required: basePromotionKeys, optional: ['parityDeferredReason'] };
+
+  validateKeySpec(errors, promotion, promotionKeySpec, 'promotion');
+
+  if (!parityModes.has(promotion.parityMode)) {
+    errors.push('[CT-8B_INVALID_PARITY_MODE] promotion.parityMode must be deferred or required');
+  }
+
+  if (!earnedLevels.has(promotion.highestEarnedLevel)) {
+    errors.push(
+      '[CT-8B_INVALID_EARNED_LEVEL] promotion.highestEarnedLevel must be A-source-valid, B-projection-valid, C-consumption-valid, D-publish-valid, or E-promotion-complete'
+    );
+  }
+
+  if (promotion.parityMode === 'deferred') {
+    requireNonEmptyString(errors, promotion.parityDeferredReason, 'promotion.parityDeferredReason');
+  } else if (promotion.parityMode === 'required' && promotion.parityDeferredReason !== undefined) {
+    errors.push(
+      '[CT-8B_FORBIDDEN_PARITY_DEFERRED_REASON] promotion.parityDeferredReason must be omitted when promotion.parityMode is required'
+    );
   }
 }
 
-function validateThemeMapping(errors, themeMapping, themeIds) {
-  if (!Array.isArray(themeMapping) || themeMapping.length === 0) {
-    errors.push('[CT-7_INVALID_THEME_MAPPING] status.themeMapping must be a non-empty array');
+function validateExceptions(errors, exceptions) {
+  if (!Array.isArray(exceptions)) {
+    errors.push('[CT-8B_INVALID_EXCEPTIONS] exceptions must be an array');
     return;
   }
 
-  const mappedThemeIds = new Set();
-  for (const [index, entry] of themeMapping.entries()) {
-    if (!assertPlainObject(errors, entry, `status.themeMapping[${index}] must be an object`)) {
-      continue;
-    }
-
-    validateExactKeys(errors, entry, ['themeId', 'figmaMode'], `status.themeMapping[${index}]`);
-
-    if (typeof entry.themeId !== 'string' || entry.themeId.length === 0) {
-      errors.push(
-        `[CT-7_INVALID_THEME_MAPPING_THEME_ID] status.themeMapping[${index}].themeId must be a non-empty string`
-      );
-    }
-
-    if (typeof entry.figmaMode !== 'string' || entry.figmaMode.length === 0) {
-      errors.push(
-        `[CT-7_INVALID_THEME_MAPPING_MODE] status.themeMapping[${index}].figmaMode must be a non-empty string`
-      );
-    }
-
-    if (typeof entry.themeId === 'string') {
-      if (mappedThemeIds.has(entry.themeId)) {
-        errors.push(
-          `[CT-7_DUPLICATE_THEME_MAPPING] status.themeMapping contains duplicate themeId ${entry.themeId}`
-        );
-      }
-      mappedThemeIds.add(entry.themeId);
-    }
-  }
-
-  if (Array.isArray(themeIds)) {
-    const themeIdSet = new Set(themeIds.filter((themeId) => typeof themeId === 'string'));
-    for (const themeId of themeIdSet) {
-      if (!mappedThemeIds.has(themeId)) {
-        errors.push(
-          `[CT-7_THEME_MAPPING_MISMATCH] status.themeMapping is missing themeId ${themeId}`
-        );
-      }
-    }
-
-    for (const themeId of mappedThemeIds) {
-      if (!themeIdSet.has(themeId)) {
-        errors.push(
-          `[CT-7_THEME_MAPPING_MISMATCH] status.themeMapping contains unmapped themeId ${themeId}`
-        );
-      }
-    }
-  }
-}
-
-function validateDrift(errors, drift) {
-  if (!Array.isArray(drift)) {
-    errors.push('[CT-7_INVALID_DRIFT] drift must be an array');
-    return;
-  }
-
-  for (const [index, entry] of drift.entries()) {
-    if (!assertPlainObject(errors, entry, `drift[${index}] must be an object`)) {
+  for (const [index, entry] of exceptions.entries()) {
+    if (!assertPlainObject(errors, entry, `exceptions[${index}] must be an object`)) {
       continue;
     }
 
     validateKeySpec(
       errors,
       entry,
-      { required: driftRequiredKeys, optional: driftOptionalKeys },
-      `drift[${index}]`
+      { required: exceptionRequiredKeys, optional: exceptionOptionalKeys },
+      `exceptions[${index}]`
     );
-    requireNonEmptyString(errors, entry.code, `drift[${index}].code`);
-    requireNonEmptyString(errors, entry.message, `drift[${index}].message`);
+    requireNonEmptyString(errors, entry.code, `exceptions[${index}].code`);
+    requireNonEmptyString(errors, entry.message, `exceptions[${index}].message`);
 
-    if (!driftSeverities.has(entry.severity)) {
+    if (typeof entry.blocking !== 'boolean') {
       errors.push(
-        `[CT-7_INVALID_DRIFT_SEVERITY] drift[${index}].severity must be info, warn, or error`
+        `[CT-8B_INVALID_EXCEPTION_BLOCKING] exceptions[${index}].blocking must be a boolean`
       );
     }
 
-    if (!driftStatuses.has(entry.status)) {
-      errors.push(`[CT-7_INVALID_DRIFT_STATUS] drift[${index}].status must be open or resolved`);
+    if (!exceptionStatuses.has(entry.status)) {
+      errors.push(
+        `[CT-8B_INVALID_EXCEPTION_STATUS] exceptions[${index}].status must be open or resolved`
+      );
     }
 
     if (
@@ -267,9 +214,71 @@ function validateDrift(errors, drift) {
       (typeof entry.field !== 'string' || entry.field.length === 0)
     ) {
       errors.push(
-        `[CT-7_INVALID_DRIFT_FIELD] drift[${index}].field must be a non-empty string when present`
+        `[CT-8B_INVALID_EXCEPTION_FIELD] exceptions[${index}].field must be a non-empty string when present`
       );
     }
+  }
+}
+
+function validateLedgerGuardrails(errors, ledger) {
+  const { artifact, publish, verification, promotion, exceptions } = ledger;
+
+  if (
+    promotion?.parityMode === 'required' &&
+    publish?.mode !== undefined &&
+    publish.mode !== 'rest-variables-oauth'
+  ) {
+    errors.push(
+      '[CT-8B_REQUIRED_PARITY_REQUIRES_HARDENED_RAIL] publish.mode must be rest-variables-oauth when promotion.parityMode is required'
+    );
+  }
+
+  if (
+    promotion?.highestEarnedLevel === 'E-promotion-complete' &&
+    promotion?.parityMode !== 'required'
+  ) {
+    errors.push(
+      '[CT-8B_EARNED_LEVEL_REQUIRES_REQUIRED_PARITY] promotion.highestEarnedLevel cannot be E-promotion-complete when promotion.parityMode is deferred'
+    );
+  }
+
+  if (
+    publishValidLevels.has(promotion?.highestEarnedLevel) &&
+    verification?.materializationStatus !== 'passed'
+  ) {
+    errors.push(
+      '[CT-8B_PUBLISH_VALID_REQUIRES_PASSED_MATERIALIZATION] promotion.highestEarnedLevel requires verification.materializationStatus to be passed'
+    );
+  }
+
+  if (
+    publishValidLevels.has(promotion?.highestEarnedLevel) &&
+    verification?.lastVerifiedRevision !== null &&
+    artifact?.revision !== undefined &&
+    verification.lastVerifiedRevision !== artifact.revision
+  ) {
+    errors.push(
+      '[CT-8B_PUBLISH_VALID_REQUIRES_CURRENT_REVISION] verification.lastVerifiedRevision must match artifact.revision when promotion.highestEarnedLevel is D-publish-valid or E-promotion-complete'
+    );
+  }
+
+  if (
+    publishValidLevels.has(promotion?.highestEarnedLevel) &&
+    verification?.lastVerifiedRevision === null
+  ) {
+    errors.push(
+      '[CT-8B_PUBLISH_VALID_REQUIRES_VERIFIED_REVISION] verification.lastVerifiedRevision must be present when promotion.highestEarnedLevel is D-publish-valid or E-promotion-complete'
+    );
+  }
+
+  if (
+    promotion?.highestEarnedLevel === 'E-promotion-complete' &&
+    Array.isArray(exceptions) &&
+    exceptions.some((entry) => entry.blocking === true && entry.status === 'open')
+  ) {
+    errors.push(
+      '[CT-8B_COMPLETE_PROMOTION_FORBIDS_OPEN_BLOCKING_EXCEPTIONS] promotion.highestEarnedLevel cannot be E-promotion-complete while blocking exceptions remain open'
+    );
   }
 }
 
@@ -291,7 +300,7 @@ function validateExactKeys(errors, value, expectedKeys, label) {
     actualKeys.some((key, index) => key !== sortedExpectedKeys[index])
   ) {
     errors.push(
-      `[CT-7_INVALID_KEYS] ${label} must contain exactly: ${sortedExpectedKeys.join(', ')}`
+      `[CT-8B_INVALID_KEYS] ${label} must contain exactly: ${sortedExpectedKeys.join(', ')}`
     );
   }
 }
@@ -304,26 +313,32 @@ function validateKeySpec(errors, value, keySpec, label) {
 
   for (const key of requiredKeys) {
     if (!actualKeys.includes(key)) {
-      errors.push(`[CT-7_MISSING_REQUIRED_KEY] ${label}.${key} is required`);
+      errors.push(`[CT-8B_MISSING_REQUIRED_KEY] ${label}.${key} is required`);
     }
   }
 
   for (const key of actualKeys) {
     if (!allowedKeys.includes(key)) {
-      errors.push(`[CT-7_UNEXPECTED_KEY] ${label}.${key} is not allowed`);
+      errors.push(`[CT-8B_UNEXPECTED_KEY] ${label}.${key} is not allowed`);
     }
   }
 }
 
 function requireLiteral(errors, actual, expected, label) {
   if (actual !== expected) {
-    errors.push(`[CT-7_INVALID_LITERAL] ${label} must be ${expected}`);
+    errors.push(`[CT-8B_INVALID_LITERAL] ${label} must be ${expected}`);
   }
 }
 
 function requireNonEmptyString(errors, value, label) {
   if (typeof value !== 'string' || value.length === 0) {
-    errors.push(`[CT-7_INVALID_STRING] ${label} must be a non-empty string`);
+    errors.push(`[CT-8B_INVALID_STRING] ${label} must be a non-empty string`);
+  }
+}
+
+function requireSha(errors, value, label) {
+  if (typeof value !== 'string' || !shaPattern.test(value)) {
+    errors.push(`[CT-8B_INVALID_SHA] ${label} must be a 40-character lowercase git SHA`);
   }
 }
 

@@ -1,36 +1,30 @@
 {
-  "ledgerVersion": "1",
-  "scope": "figma-pilot",
-  "name": "Collider Copy pilot",
-  "links": {
-    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A",
-    "artifact": "design-tokens/dist/figma/tokens.json",
-    "policy": "src/figma/README.md",
-    "parityPolicy": "src/figma/parity-policy.md"
+  "ledgerVersion": "2",
+  "artifact": {
+    "path": "design-tokens/dist/figma/tokens.json",
+    "revision": "5a567cd7d07860135ab0bfb1d8f2873ef1eec836"
   },
-  "status": {
-    "syncMode": "plugin-import-manual",
-    "artifactPath": "design-tokens/dist/figma/tokens.json",
-    "artifactGitSha": "5a567cd7d07860135ab0bfb1d8f2873ef1eec836",
-    "themeIds": ["dark"],
-    "themeMapping": [
-      {
-        "themeId": "dark",
-        "figmaMode": "dark"
-      }
-    ],
+  "publish": {
+    "mode": "plugin-import-manual",
+    "tokensStudioCarrier": false,
+    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
+  },
+  "verification": {
+    "materializationStatus": "not-run",
+    "lastVerifiedRevision": null
+  },
+  "promotion": {
     "parityMode": "deferred",
-    "parityDeferredReason": "Parity remains deferred because enterprise Figma parity automation is not yet available, the pilot sync ledger is not yet stable enough for governance promotion, and SEAM-6 has not yet promoted a deterministic parity gate.",
-    "lastSuccessfulPullAt": null,
-    "canonicalSource": "repo-pr"
+    "parityDeferredReason": "Parity remains deferred because the hardened Variables API rail and release-governed promotion gate are not yet in place for Collider.",
+    "highestEarnedLevel": "C-consumption-valid"
   },
-  "drift": [
+  "exceptions": [
     {
-      "code": "pilot-pull-proof-pending",
-      "severity": "warn",
-      "message": "The pilot Figma file is linked and the dark baseline mapping is seeded, but the plugin-based import/materialization walkthrough has not been re-verified from this repo environment against artifact SHA 5a567cd7d07860135ab0bfb1d8f2873ef1eec836. Tokens Studio is no longer the intended permanent rail. Leave lastSuccessfulPullAt null until a maintainer completes the plugin-based Figma walkthrough.",
+      "code": "figma-proof-pending",
+      "message": "The current artifact revision has not yet been re-verified through the plugin-import-manual proof rail from this repo environment.",
+      "blocking": true,
       "status": "open",
-      "field": "status.lastSuccessfulPullAt"
+      "field": "verification.materializationStatus"
     }
   ]
 }

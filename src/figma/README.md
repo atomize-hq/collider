@@ -1,59 +1,37 @@
-# Figma Publish Rail Contract
+# Figma Sync Policy
 
-This README is the live implementation-facing `CT-7B` contract for the repo-to-Figma rail in Collider.
+This directory documents Collider's live Figma convergence posture under `CT-7B` and `CT-8B`.
 
-## Canonical Source Boundary
+## Canonical Source
 
-- Canonical design-system meaning may be edited only in `design-tokens/src/tokens/**/*.tokens.json`, `design-tokens/src/tokens/themes/registry.json`, and `design-tokens/src/recipes/*.recipe.json`.
-- Figma, Storybook, generated CSS, typed artifacts, and sync ledgers are downstream-only surfaces.
-- No Figma write-back, plugin edit, or importer state may redefine canonical repo values.
+- The repo remains the only canonical source of token values.
+- `design-tokens/src/**` is the editable source tree.
+- `design-tokens/dist/figma/tokens.json` is the only approved Figma-facing artifact.
+- Figma consumes repo-approved values. It does not author canonical values.
 
-## Approved Source Artifact
+## Publish Rail (`CT-7B`)
 
-- `design-tokens/dist/figma/tokens.json` is the only approved source artifact for the repo-to-Figma rail.
-- No alternate hand-maintained JSON source, plugin-exported snapshot, or Figma-originated value dump may replace or supplement this artifact as rail input.
-- All rail proofs and hardened publish attempts must point back to this exact artifact path.
+- `plugin-import-manual` is the default proof rail for current convergence work.
+- `rest-variables-oauth` is the only approved hardening target before parity can become required.
+- `tokens-studio-carried` is optional temporary carriage only. It is never a permanent required rail.
+- No Figma write-back or bidirectional sync is allowed by this policy.
 
-## Allowed Publish Modes
+## Verification Ledger (`CT-8B`)
 
-- `plugin-import-manual` is the default proof target. A plugin or importer materializes the approved artifact into a Figma file without manual value transcription.
-- `rest-variables-oauth` is the only approved hardening target. A repo-owned OAuth app writes the same approved artifact through the Figma Variables REST API.
-- `tokens-studio-carried` is allowed only as optional temporary carriage. If used, it still carries the approved artifact and does not become a required or terminal rail.
+- `src/figma/sync-ledger.json` is the machine-readable v2 ledger for the current branch.
+- `node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json` validates the ledger contract.
+- `node scripts/validate-figma-parity.mjs` reads the same ledger for required-parity checks.
+- This README is operator guidance only. The JSON ledger and validator define the contract.
 
-## Rail Rules
+## Current Posture
 
-- `plugin-import-manual` may be used to prove the rail before the hardened path exists.
-- `rest-variables-oauth` is the only target that may later support required parity or long-term deterministic automation.
-- `tokens-studio-carried` must be treated as temporary and replaceable. It cannot become the permanent harness dependency.
-- Proof-only publish validity may come from a verified proof attempt through `plugin-import-manual` or an explicitly recorded temporary carrier exception while parity remains deferred.
-- Required parity is downstream `SEAM-6B` work and may not be considered until the prerequisites in `src/figma/rest-variables-oauth.md` are satisfied.
-- Any future bidirectional sync or alternate artifact boundary requires an explicit new planning decision.
-
-## Theme Baseline
-
-- The theme baseline remains derived from `design-tokens/src/tokens/themes/registry.json`.
-- `dark` is the required proof baseline for the current pilot path.
-- Omitted theme selection falls back to `dark`.
-- Unknown theme IDs are contract errors and must not silently remap.
-
-## Publish-Proof Handoff
-
-- `src/figma/publish-proof-contract.md` defines the seam-owned publish-proof facts that `SEAM-6B` may later embed into `CT-8B`.
-- `src/figma/publish-proof.json` is the current machine-readable proof record for the pilot attempt owned by `SEAM-5B`.
-- This handoff owns publish semantics only: mode, artifact identity, artifact revision, destination file reference, materialization outcome, and temporary-carrier state.
-- This README does not define the `CT-8B` ledger root keys or promotion ladder.
-
-## Related Docs
-
-- `src/figma/pilot-setup.md` is the operator runbook for the current proof walkthrough.
-- `src/figma/rest-variables-oauth.md` defines the only approved hardened rail and its ownership, scope, and success-marker requirements.
-- `src/figma/tokens-studio-carrier-policy.md` defines the only allowed temporary-carrier exception path.
-- `src/figma/parity-policy.md` records parity posture and downstream governance ownership boundaries.
-- `src/figma/sync-ledger.json` remains legacy branch-local evidence until `SEAM-6B` replaces it with the `CT-8B` ledger contract.
+- The live ledger is currently `promotion.parityMode="deferred"`.
+- Deferred parity may still earn `D-publish-valid` when the current artifact revision is materialized successfully.
+- `E-promotion-complete` requires `promotion.parityMode="required"`, the hardened rail, current verification, and no open blocking exceptions.
 
 ## Operational Rules
 
-- Treat plugin settings as consumption details, not as source-of-truth switches.
+- Treat plugin settings as a transport detail, not a source-of-truth switch.
 - Canonical token changes still go through repo PRs.
-- Prefer a repo-owned or OSS-backed importer/plugin for `plugin-import-manual` proof work.
-- Keep rail semantics centralized in this README and link here instead of restating `CT-7B` elsewhere.
+- Record any unresolved parity blockers in `exceptions`.
+- Keep parity-policy decisions centralized in `src/figma/parity-policy.md` instead of duplicating them across runbooks.

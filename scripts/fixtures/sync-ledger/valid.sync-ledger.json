@@ -1,28 +1,22 @@
 {
-  "ledgerVersion": "1",
-  "scope": "figma-pilot",
-  "name": "Validator fixture pilot",
-  "links": {
-    "figmaFile": "figma://file/fixture-valid-sync-ledger",
-    "artifact": "design-tokens/dist/figma/tokens.json",
-    "policy": "src/figma/README.md",
-    "parityPolicy": "src/figma/parity-policy.md"
+  "ledgerVersion": "2",
+  "artifact": {
+    "path": "design-tokens/dist/figma/tokens.json",
+    "revision": "1111111111111111111111111111111111111111"
   },
-  "status": {
-    "syncMode": "plugin-import-manual",
-    "artifactPath": "design-tokens/dist/figma/tokens.json",
-    "artifactGitSha": "1111111111111111111111111111111111111111",
-    "themeIds": ["dark"],
-    "themeMapping": [
-      {
-        "themeId": "dark",
-        "figmaMode": "dark"
-      }
-    ],
+  "publish": {
+    "mode": "plugin-import-manual",
+    "tokensStudioCarrier": false,
+    "figmaFile": "figma://file/fixture-valid-sync-ledger"
+  },
+  "verification": {
+    "materializationStatus": "passed",
+    "lastVerifiedRevision": "1111111111111111111111111111111111111111"
+  },
+  "promotion": {
     "parityMode": "deferred",
-    "parityDeferredReason": "Parity remains deferred until enterprise automation and SEAM-6 governance adoption are in place.",
-    "lastSuccessfulPullAt": "2026-03-18T00:00:00Z",
-    "canonicalSource": "repo-pr"
+    "parityDeferredReason": "Parity remains deferred until the hardened Variables API rail and governance gate are in place.",
+    "highestEarnedLevel": "D-publish-valid"
   },
-  "drift": []
+  "exceptions": []
 }

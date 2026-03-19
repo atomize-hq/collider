@@ -1,34 +1,38 @@
 # Figma Parity Policy
 
-This file is the boundary document between the live `CT-7B` rail contract and downstream `SEAM-6B` governance. [`src/figma/README.md`](./README.md) owns the publish-rail policy, while `SEAM-6B` owns the later `CT-8B` verification, promotion, and merge-gate contract.
+This file is the canonical parity-policy surface for Collider's `CT-8B` ledger.
 
 ## Current Posture
 
-- The current parity posture is `parityMode=deferred`.
-- Deferred remains the default until the hardened rail prerequisites are satisfied and `SEAM-6B` adopts them into downstream verification and promotion logic.
+- The current parity posture is `promotion.parityMode="deferred"`.
+- Parity remains deferred until the hardened `rest-variables-oauth` rail and the release-governed promotion gate are both in place.
 
-## Proof-Only Publish Validity
+## Allowed States
 
-- Proof-only publish validity may come from a verified `plugin-import-manual` attempt for the current artifact revision.
-- A `tokens-studio-carried` attempt may support proof-only work only when it is explicitly recorded as a temporary carrier exception.
-- Proof-only publish validity does not, by itself, authorize required parity or promotion-complete claims.
+- `deferred` and `required` are the only allowed parity states.
+- `A-source-valid`, `B-projection-valid`, `C-consumption-valid`, `D-publish-valid`, and `E-promotion-complete` are the only allowed earned levels.
+- `E-promotion-complete` is forbidden while parity remains deferred.
 
-## Required-Parity Prerequisites
+## Promotion Trigger
 
-- `rest-variables-oauth` is the only approved hardening target before required parity may be considered.
-- The hardening path must satisfy the ownership, tenancy, scope, and success-marker requirements in [`src/figma/rest-variables-oauth.md`](./rest-variables-oauth.md).
-- Any Tokens Studio usage must follow [`src/figma/tokens-studio-carrier-policy.md`](./tokens-studio-carrier-policy.md) and must not remain as a permanent dependency.
-- `SEAM-6B` decides when those upstream facts are sufficient for required parity. This file does not define that downstream threshold.
+Promotion from deferred to required is allowed only when all of the following are true:
 
-## Handoff To `SEAM-6B`
+- the active publish rail is `rest-variables-oauth`
+- the current artifact revision is recorded in `artifact.revision`
+- `verification.materializationStatus="passed"` for that same revision
+- no open blocking exceptions remain
+- release or governance ownership is explicit for the enforcing gate
 
-- `SEAM-6B` owns the machine-readable verification and promotion contract (`CT-8B`).
-- `src/figma/publish-proof-contract.md` owns the seam-local publish-proof facts that `SEAM-6B` may later embed into `CT-8B`.
-- `src/figma/sync-ledger.json` and `node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json` remain legacy branch-local evidence only.
-- This file does not define `CT-8B` root keys, earned promotion levels, or merge-gate behavior.
+## Seam-Owned Inputs
+
+- `src/figma/sync-ledger.json`
+- `node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json`
+- `node scripts/validate-figma-parity.mjs`
+
+The ledger is the machine-readable truth for the current branch. This policy explains how to interpret `promotion.*` and `exceptions`; it does not replace the JSON contract.
 
 ## Non-Goals
 
 - No Figma write-back or bidirectional sync is introduced here.
-- No OAuth app implementation, destination provisioning, or merge-gate automation is implemented here.
-- No CI, `package.json`, or `justfile` ownership moves into this slice.
+- No CI or package-script ownership moves into this policy document.
+- No transport or credential work that belongs to `CT-7B` is redefined here.

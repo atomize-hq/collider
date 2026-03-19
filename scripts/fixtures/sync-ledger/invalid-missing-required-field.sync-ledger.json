@@ -1,27 +1,21 @@
 {
-  "ledgerVersion": "1",
-  "scope": "figma-pilot",
-  "name": "Validator fixture missing required field",
-  "links": {
-    "figmaFile": "figma://file/fixture-invalid-missing-required",
-    "artifact": "design-tokens/dist/figma/tokens.json",
-    "policy": "src/figma/README.md",
-    "parityPolicy": "src/figma/parity-policy.md"
+  "ledgerVersion": "2",
+  "artifact": {
+    "path": "design-tokens/dist/figma/tokens.json"
   },
-  "status": {
-    "syncMode": "plugin-import-manual",
-    "artifactPath": "design-tokens/dist/figma/tokens.json",
-    "themeIds": ["dark"],
-    "themeMapping": [
-      {
-        "themeId": "dark",
-        "figmaMode": "dark"
-      }
-    ],
+  "publish": {
+    "mode": "plugin-import-manual",
+    "tokensStudioCarrier": false,
+    "figmaFile": "figma://file/fixture-invalid-missing-required"
+  },
+  "verification": {
+    "materializationStatus": "not-run",
+    "lastVerifiedRevision": null
+  },
+  "promotion": {
     "parityMode": "deferred",
-    "parityDeferredReason": "This fixture intentionally omits artifactGitSha to exercise missing-field validation.",
-    "lastSuccessfulPullAt": null,
-    "canonicalSource": "repo-pr"
+    "parityDeferredReason": "This fixture intentionally omits artifact.revision to exercise missing-field validation.",
+    "highestEarnedLevel": "C-consumption-valid"
   },
-  "drift": []
+  "exceptions": []
 }
