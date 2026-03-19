@@ -3,7 +3,7 @@
 - **User/system value**: give downstream governance one explicit parity branch and one bounded set of seam-owned inputs to wire later.
 - **Scope (in/out)**:
   - In: `src/figma/parity-policy.md`; parity posture alignment across `src/figma/parity-policy.md`, `src/figma/README.md`, and `src/figma/sync-ledger.json`; explicit handoff notes for `SEAM-6`.
-  - Out: validator implementation changes beyond consuming the settled contract, CI workflow updates, or mandatory enterprise REST integration.
+  - Out: validator implementation changes beyond consuming the settled contract, CI workflow updates, or mandatory API integration.
 - **Acceptance criteria**:
   - `src/figma/parity-policy.md` names whether parity is `deferred` or `required` and states the trigger for changing that branch.
   - The parity-policy doc references the ledger and validator as the only seam-owned inputs governance should read.

@@ -6,7 +6,7 @@
   - Out: `package.json`, `justfile`, CI wiring, parity-policy branch prose, or live Figma API reachability.
 - **Acceptance criteria**:
   - `scripts/validate-sync-ledger.mjs` exits non-zero when required `CT-7` fields are missing.
-  - The validator rejects contradictory states such as `syncMode=pull-url-readonly` paired with `canonicalSource` metadata claiming Figma authored the latest canonical change.
+  - The validator rejects contradictory states such as `syncMode=plugin-import-manual` paired with `canonicalSource` metadata claiming Figma authored the latest canonical change.
   - Happy-path ledgers still validate deterministically from the command line.
 - **Dependencies**:
   - `S1`
@@ -28,7 +28,7 @@
 - **Validator assertions owned here**:
   - Require `ledgerVersion="1"` and `scope="figma-pilot"`.
   - Require `links.figmaFile`, `links.artifact`, `links.policy`, and `links.parityPolicy`.
-  - Require `status.syncMode="pull-url-readonly"`, `status.artifactPath="design-tokens/dist/figma/tokens.json"`, `status.artifactGitSha`, `status.themeIds`, `status.themeMapping`, `status.parityMode`, `status.lastSuccessfulPullAt|nullable`, and `status.canonicalSource="repo-pr"`.
+  - Require `status.syncMode="plugin-import-manual|rest-variables-oauth"`, `status.artifactPath="design-tokens/dist/figma/tokens.json"`, `status.artifactGitSha`, `status.themeIds`, `status.themeMapping`, `status.parityMode`, `status.lastSuccessfulPullAt|nullable`, and `status.canonicalSource="repo-pr"`.
   - Require `status.parityDeferredReason` when `status.parityMode="deferred"` and reject it when `status.parityMode="required"`.
   - Require every `drift[]` entry to carry `code`, `severity`, `message`, and `status`, and reject unknown `severity` or `status` values.
 

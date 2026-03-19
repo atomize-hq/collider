@@ -3,11 +3,11 @@
 - **User/system value**: freeze one safe v1 Figma sync posture and one exact repo artifact path so designers, maintainers, and downstream governance work from the same contract instead of ad hoc plugin settings.
 - **Scope (in/out)**:
   - In: the default read-only or equivalently locked sync mode; operational policy docs under `src/figma/**`; a seed sync ledger that records the pilot file, artifact path, and policy branch.
-  - Out: pilot-file execution inside Figma; enterprise REST parity automation; CI or preflight wiring.
+  - Out: pilot-file execution inside Figma; API-backed parity automation; CI or preflight wiring.
 - **Acceptance criteria**:
   - `CT-7` names `design-tokens/dist/figma/tokens.json` as the canonical Figma-facing artifact.
   - The operational doc states that repo JSON remains canonical and that bidirectional sync needs an explicit policy override.
-  - The operational doc fixes the v1 transport to `pull-url-readonly` and states that the lock is both technical and policy-enforced.
+  - The operational doc fixes the v1 proof transport to `plugin-import-manual` and states that the lock is both technical and policy-enforced.
   - The seam uses `parityMode=deferred|required` only; v1 starts at `deferred`.
   - A machine-readable pilot ledger exists and passes `scripts/validate-sync-ledger.mjs`.
 - **Dependencies**: `SEAM-1/CT-2`, `SEAM-3/CT-5`
@@ -20,11 +20,11 @@
 - **Inputs/outputs**:
   - Inputs: `design-tokens/dist/figma/tokens.json` from `CT-5`; theme IDs and fallback behavior from `CT-2`; the scope-brief assumption that the repo stays canonical.
   - Outputs: `src/figma/README.md` describing the default sync mode, allowed override path, artifact location, theme expectations, and refresh workflow.
-- **Implementation notes**: name one default transport only, `pull-url-readonly`, meaning Tokens Studio pulls the repo-hosted artifact by URL and no write-back path is configured. Document the approval path for any later bidirectional override, but do not define that override as v1 behavior. Treat the lock as both technical (no write credentials/automation) and policy-enforced (repo PRs remain canonical).
+- **Implementation notes**: name one default short-term transport only, `plugin-import-manual`, meaning a Figma plugin or importer materializes the repo-owned artifact and no write-back path is configured. Document the preferred long-term rail, `rest-variables-oauth`, as a later hardening path rather than v1 behavior. Tokens Studio may be mentioned only as a replaceable temporary carrier, not as the permanent contract. Treat the lock as both technical (no canonical write credentials/automation in v1) and policy-enforced (repo PRs remain canonical).
 - **Acceptance criteria**:
   - The doc states that Figma is a consumer and not the source of truth.
   - The doc names the canonical artifact path and required theme baseline.
-  - The doc names `pull-url-readonly` as the only v1 transport and states that `parityMode` starts at `deferred`.
+  - The doc names `plugin-import-manual` as the default v1 proof transport, names `rest-variables-oauth` as the preferred long-term hardened rail, and states that `parityMode` starts at `deferred`.
   - The doc makes the policy branch explicit enough that `SEAM-6` can consume it later without rewriting it.
 - **Test notes**: walk through the doc with one maintainer who did not author it and confirm they can explain the allowed and forbidden sync behaviors.
 - **Risk/rollback notes**: policy drift is the main risk; keep all Figma sync rules in this doc and link other docs back to it rather than duplicating prose.
@@ -52,7 +52,7 @@ Checklist:
     - `policy`: required repo-relative string `src/figma/README.md`.
     - `parityPolicy`: required repo-relative string `src/figma/parity-policy.md`.
   - `status`: required object with exactly these keys:
-    - `syncMode`: required string literal `pull-url-readonly`.
+    - `syncMode`: required string literal `plugin-import-manual` or `rest-variables-oauth`.
     - `artifactPath`: required repo-relative string `design-tokens/dist/figma/tokens.json`.
     - `artifactGitSha`: required 40-character lowercase Git commit SHA for the repo revision used by the last reviewed pull. The contract stores the revision in this separate field and does not duplicate it under another name.
     - `themeIds`: required non-empty array of unique theme IDs from `CT-2`; it must include `dark`.
@@ -62,7 +62,7 @@ Checklist:
     - `lastSuccessfulPullAt`: required ISO-8601 UTC timestamp string when a pull has succeeded, otherwise `null`.
     - `canonicalSource`: required string literal `repo-pr`.
   - `drift`: required array. The happy path uses `[]`. Each exception entry is an object with required `code`, `severity`, `message`, and `status` keys plus optional `field`; `severity` is `info|warn|error`, `status` is `open|resolved`, and `field` is a dotted ledger path such as `status.themeMapping`.
-  - Use `syncMode=pull-url-readonly` and `parityMode=deferred|required` only; v1 seeds the ledger at `parityMode=deferred`.
+  - Use `syncMode=plugin-import-manual|rest-variables-oauth` and `parityMode=deferred|required` only; v1 seeds the ledger at `syncMode=plugin-import-manual` and `parityMode=deferred`.
 - **Acceptance criteria**:
   - The ledger validates with the current script shape.
   - The ledger names the pilot Figma file or URL, the canonical artifact path, and the current parity branch.

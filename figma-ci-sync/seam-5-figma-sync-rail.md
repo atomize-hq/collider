@@ -6,7 +6,7 @@
 
 ## Scope
 
-- In: Tokens Studio sync mode selection; Figma-facing export shape; sync policy documentation; optional parity hooks for enterprise Figma Variables API users.
+- In: plugin-based Figma import mode selection for the short-term proof; Figma-facing export shape; sync policy documentation; optional parity hooks for a later OAuth-app-backed Variables API rail.
 - Out: canonical token authoring in Figma; broad design-process changes unrelated to token sync; runtime consumption logic.
 
 ## Primary Interfaces (Contracts)
@@ -29,7 +29,7 @@
 
 - `design-tokens/dist/figma/**`
 - `scripts/validate-sync-ledger.mjs`
-- Figma/Tokens Studio operational docs
+- Figma operational docs
 
 ## Verification
 
@@ -44,5 +44,5 @@
 
 ## Rollout / Safety
 
-- Start with one Figma test file and one sync transport.
-- Gate enterprise-only parity enforcement behind a separate enablement decision.
+- Start with one Figma test file and one plugin-based import transport.
+- Gate any later API-driven parity enforcement behind a separate enablement decision.

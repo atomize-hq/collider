@@ -11,7 +11,7 @@
   - In: v1 sync-mode selection; operational docs under `src/figma/**`; one pilot sync ledger for a team-owned Figma test file; optional ledger/parity validation hooks under `scripts/validate-sync-ledger.mjs`.
   - Out: token or theme authoring; build-pipeline internals in `SEAM-3`; runtime or Storybook consumption; `package.json`, `justfile`, or CI gate wiring owned by `SEAM-6`; making bidirectional Figma authoring the default workflow.
 - **Touch surface**: `design-tokens/dist/figma/**`, `src/figma/**`, `scripts/validate-sync-ledger.mjs`
-- **Verification**: maintainers can point Tokens Studio at the canonical export, pull it into one Figma test file without manual value entry, and inspect a ledger that states whether parity is `deferred` or `required`.
+- **Verification**: maintainers can use the chosen plugin/import rail to materialize the canonical export into one Figma test file without manual value entry, and inspect a ledger that states whether parity is `deferred` or `required`.
 - **Threading constraints**
   - Upstream blockers: `SEAM-1`, `SEAM-3`
   - Downstream blocked seams: `SEAM-6`
@@ -40,8 +40,10 @@
 
 ## V1 Figma Policy Decisions
 
-- The only v1 sync transport is `pull-url-readonly`: Tokens Studio pulls `design-tokens/dist/figma/tokens.json` by URL, and no plugin push or write-back workflow is configured.
+- The default v1 proof transport is `plugin-import-manual`: a Figma plugin or importer materializes `design-tokens/dist/figma/tokens.json` into the pilot file, and no write-back workflow is configured.
 - The lock is both technical and policy-enforced: the v1 setup omits write credentials/automation, and canonical value changes still require repo PRs.
 - `parityMode` has two allowed values only, `deferred` and `required`.
 - V1 starts at `parityMode=deferred`.
-- Promotion to `parityMode=required` requires all of the following: enterprise Figma API access is available, the pilot sync ledger is stable, and `SEAM-6` owns a deterministic parity check in a merge gate.
+- The preferred long-term hardened transport is `rest-variables-oauth`: a repo-owned OAuth app writes the approved artifact through the Figma Variables API once access, scopes, and governance are in place.
+- Tokens Studio is not part of the permanent seam contract and may be used only as a temporary pilot carrier if needed.
+- Promotion to `parityMode=required` requires all of the following: a supported API-backed Variables rail is available, the pilot sync ledger is stable, and `SEAM-6` owns a deterministic parity check in a merge gate.

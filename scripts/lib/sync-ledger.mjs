@@ -23,6 +23,7 @@ export const syncLedgerParityPolicyPath = 'src/figma/parity-policy.md';
 export const parityModes = new Set(['deferred', 'required']);
 export const driftSeverities = new Set(['info', 'warn', 'error']);
 export const driftStatuses = new Set(['open', 'resolved']);
+export const syncModes = new Set(['plugin-import-manual', 'rest-variables-oauth']);
 
 const shaPattern = /^[a-f0-9]{40}$/;
 const utcIsoPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/;
@@ -87,7 +88,11 @@ function validateStatus(errors, status, links) {
       : { required: baseStatusKeys, optional: ['parityDeferredReason'] };
 
   validateKeySpec(errors, status, statusKeySpec, 'status');
-  requireLiteral(errors, status.syncMode, 'pull-url-readonly', 'status.syncMode');
+  if (!syncModes.has(status.syncMode)) {
+    errors.push(
+      '[CT-7_INVALID_SYNC_MODE] status.syncMode must be plugin-import-manual or rest-variables-oauth'
+    );
+  }
   requireLiteral(errors, status.artifactPath, syncLedgerArtifactPath, 'status.artifactPath');
 
   if (
@@ -135,12 +140,12 @@ function validateStatus(errors, status, links) {
   requireLiteral(errors, status.canonicalSource, 'repo-pr', 'status.canonicalSource');
 
   if (
-    status.syncMode === 'pull-url-readonly' &&
+    syncModes.has(status.syncMode) &&
     status.canonicalSource !== undefined &&
     status.canonicalSource !== 'repo-pr'
   ) {
     errors.push(
-      '[CT-7_CANONICAL_SOURCE_CONTRADICTION] pull-url-readonly sync requires status.canonicalSource to remain repo-pr'
+      '[CT-7_CANONICAL_SOURCE_CONTRADICTION] the selected sync mode requires status.canonicalSource to remain repo-pr'
     );
   }
 }

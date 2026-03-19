@@ -9,7 +9,7 @@
     "parityPolicy": "src/figma/parity-policy.md"
   },
   "status": {
-    "syncMode": "pull-url-readonly",
+    "syncMode": "plugin-import-manual",
     "artifactPath": "design-tokens/dist/figma/tokens.json",
     "artifactGitSha": "2222222222222222222222222222222222222222",
     "themeIds": ["dark"],

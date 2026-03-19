@@ -15,7 +15,7 @@ This file is the canonical parity-policy surface for `CT-7`.
 ## Promotion Trigger
 
 - Promotion to `required` is allowed only when all of the following are true:
-  - Enterprise Figma API access exists for parity automation.
+  - A supported OAuth-app-backed Variables rail exists for parity automation.
   - The pilot sync ledger is stable enough to serve as governance input.
   - `SEAM-6` owns a deterministic parity check in a merge gate.
 
@@ -32,4 +32,4 @@ This file is the canonical parity-policy surface for `CT-7`.
 
 - No Figma write-back or bidirectional sync is introduced here.
 - No CI, `package.json`, or `justfile` ownership moves into this seam.
-- No enterprise parity automation or REST integration is implemented here.
+- No parity automation or REST integration is implemented here yet.

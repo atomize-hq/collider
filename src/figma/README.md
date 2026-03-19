@@ -11,9 +11,11 @@ This directory defines the v1 Figma sync posture for Collider.
 
 ## V1 Transport
 
-- The only supported v1 transport is `pull-url-readonly`.
-- In this mode, Tokens Studio pulls `design-tokens/dist/figma/tokens.json` from a repo-hosted URL or equivalent published artifact path.
-- No Figma write-back path, write credentials, or automation is configured in v1.
+- The default v1 proof transport is `plugin-import-manual`.
+- In this mode, a Figma plugin or importer materializes `design-tokens/dist/figma/tokens.json` into the pilot file.
+- Tokens Studio is not required by this policy and may be used only as a temporary pilot carrier.
+- No Figma write-back path, canonical write credentials, or canonical automation is configured in v1.
+- The preferred long-term hardened rail is `rest-variables-oauth`, where a repo-owned OAuth app writes approved variables through the Figma Variables API once access, scopes, and governance are in place.
 - Any future bidirectional sync requires an explicit policy override and a separate governance change.
 
 ## Theme Baseline
@@ -33,4 +35,5 @@ This directory defines the v1 Figma sync posture for Collider.
 
 - Treat plugin settings as a consumption detail, not a source-of-truth switch.
 - Canonical token changes still go through repo PRs.
+- Short-term proof should prefer a repo-owned or OSS-backed importer/plugin over a SaaS-specific token carrier.
 - Keep parity-branch decisions centralized in `src/figma/parity-policy.md` and link downstream docs there instead of duplicating branch logic.

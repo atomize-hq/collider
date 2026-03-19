@@ -8,6 +8,7 @@ These files are planning aids; they are not normative contracts.
 - Start here: `scope_brief.md`
 - Seam overview: `seam_map.md`
 - Threading (contracts + dependencies + workstreams): `threading.md`
+- Target-state harness model: `target-state-harness.md`
 
 Extraction strategy: `integration-first`, with a second domain pass for scalar tokens and component recipe contracts.
 
