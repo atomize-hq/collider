@@ -1,0 +1,22 @@
+{
+  "proofVersion": "1",
+  "mode": "plugin-import-manual",
+  "artifact": {
+    "path": "design-tokens/dist/figma/tokens.json",
+    "gitSha": "9eb468797849e18fde38273a385ca2ad4e2bdd1a"
+  },
+  "destination": {
+    "name": "Collider Copy pilot",
+    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
+  },
+  "materialization": {
+    "status": "failed",
+    "attemptedAt": "2026-03-19T20:46:09Z",
+    "notes": "The live Figma materialization walkthrough was not executed from this Codex environment. A maintainer still needs to run the plugin/importer against the pilot file and replace this blocked proof with a passed record for the current artifact revision."
+  },
+  "carrier": {
+    "used": false,
+    "reason": null,
+    "exitExpectation": null
+  }
+}

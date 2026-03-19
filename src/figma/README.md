@@ -37,6 +37,7 @@ This README is the live implementation-facing `CT-7B` contract for the repo-to-F
 ## Publish-Proof Handoff
 
 - `src/figma/publish-proof-contract.md` defines the seam-owned publish-proof facts that `SEAM-6B` may later embed into `CT-8B`.
+- `src/figma/publish-proof.json` is the current machine-readable proof record for the pilot attempt owned by `SEAM-5B`.
 - This handoff owns publish semantics only: mode, artifact identity, artifact revision, destination file reference, materialization outcome, and temporary-carrier state.
 - This README does not define the `CT-8B` ledger root keys or promotion ladder.
 

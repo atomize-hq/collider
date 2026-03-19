@@ -14,7 +14,8 @@ This runbook proves the `CT-7B` `plugin-import-manual` path for the existing tea
 - Use the existing pilot Figma file instead of creating a new proof file.
 - Open a clean or reset version of the pilot file before starting the walkthrough.
 - Keep the repo as the only source of truth. Do not edit token values in Figma or push token changes from the plugin.
-- If you need to refresh the committed artifact before the walkthrough, run the normal repo token build flow first and review the resulting diff before continuing.
+- Refresh the generated artifact before the walkthrough and review the resulting diff before continuing:
+  `pnpm build:tokens`
 - Use a repo-owned or OSS-backed importer/plugin if available. Tokens Studio is not the intended permanent rail.
 
 ## Local Proof Server
@@ -53,18 +54,25 @@ Use this server when the plugin/importer accepts a URL input and you want to mat
 
 ## Record The Proof After The Walkthrough
 
-After the materialization attempt, capture the seam-owned proof facts from [`src/figma/publish-proof-contract.md`](./publish-proof-contract.md):
+After the materialization attempt, update [`src/figma/publish-proof.json`](./publish-proof.json) using the schema from [`src/figma/publish-proof-contract.md`](./publish-proof-contract.md):
 
+- Keep `proofVersion` as `"1"`.
 - Record `mode` as `plugin-import-manual` unless this walkthrough explicitly used `tokens-studio-carried` as temporary carriage.
 - Record `artifact.path` as `design-tokens/dist/figma/tokens.json`.
-- Record `artifact.revision` from `git rev-parse HEAD` after confirming the artifact revision under review.
-- Record `destination.figmaFile` as the pilot file reference used for the walkthrough.
-- Record `materializationOutcome` as `passed` or `failed`.
-- Record `tokensStudioCarrier` as `true` only if Tokens Studio temporarily carried the approved artifact.
+- Record `artifact.gitSha` from `git rev-parse HEAD` after confirming the artifact revision under review.
+- Keep `destination.name` as `Collider Copy pilot`.
+- Keep `destination.figmaFile` as `figma://file/23PLdynlRYoBYQx9teoC8A`.
+- Record `materialization.status` as `passed` or `failed`.
+- Record `materialization.attemptedAt` as a UTC ISO-8601 timestamp.
+- Record `materialization.notes` whenever the attempt fails. Notes are optional for passed runs.
+- Record `carrier.used` as `true` only if Tokens Studio temporarily carried the approved artifact.
+- If `carrier.used` is `true`, fill `carrier.reason` and `carrier.exitExpectation`. Otherwise keep both fields as `null`.
+- Validate the result locally:
+  `pnpm validate:publish-proof`
 - If you maintain [`src/figma/sync-ledger.json`](./sync-ledger.json) for branch-local historical evidence, treat it as legacy evidence only. Its current root shape is not the `CT-7B` proof contract and is expected to be replaced downstream by `SEAM-6B`.
 
 ## If the Proof Is Blocked
 
-- Record `materializationOutcome` as `failed`.
-- Capture exactly what blocked the attempt, including importer errors, access issues, plugin UI mismatch, or artifact/materialization drift.
+- Record `materialization.status` as `failed`.
+- Capture exactly what blocked the attempt in `materialization.notes`, including importer errors, access issues, plugin UI mismatch, or artifact/materialization drift.
 - Do not invent a passed proof or downstream governance status until the walkthrough is actually completed in Figma.

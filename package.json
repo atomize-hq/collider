@@ -16,6 +16,7 @@
     "validate:tokens": "node design-tokens/build/validate-tokens.mjs",
     "build:tokens": "node design-tokens/build/build-tokens.mjs",
     "validate:sync-ledger": "node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json",
+    "validate:publish-proof": "node scripts/validate-publish-proof.mjs",
     "validate:figma-parity": "node scripts/validate-figma-parity.mjs",
     "govern:tokens": "node scripts/govern-tokens.mjs",
     "prepare": "husky",
