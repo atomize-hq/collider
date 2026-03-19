@@ -1,8 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 
 export const syncLedgerUsage =
   'Usage: node scripts/validate-sync-ledger.mjs <path-to-sync-ledger.json>';
+export const syncLedgerStates = new Set([
+  'declared',
+  'verified-current',
+  'verified-stale',
+  'blocked-exception',
+  'incomplete',
+]);
 export const topLevelKeys = [
   'ledgerVersion',
   'artifact',
@@ -54,6 +62,16 @@ export function loadAndValidateSyncLedger(target) {
   };
 }
 
+export function validateSyncLedgerWithState(target) {
+  const { absPath, data, errors } = loadAndValidateSyncLedger(target);
+  return {
+    absPath,
+    data,
+    errors,
+    evaluation: errors.length === 0 ? evaluateSyncLedgerConformance(data) : null,
+  };
+}
+
 export function validateSyncLedger(data) {
   const errors = [];
 
@@ -72,6 +90,125 @@ export function validateSyncLedger(data) {
   validateLedgerGuardrails(errors, data);
 
   return errors;
+}
+
+export function evaluateSyncLedgerConformance(ledger) {
+  const openBlockingExceptions = getOpenBlockingExceptions(ledger.exceptions);
+  const evidence = {
+    'artifact.path': ledger.artifact.path,
+    'artifact.revision': ledger.artifact.revision,
+    'publish.mode': ledger.publish.mode,
+    'publish.tokensStudioCarrier': ledger.publish.tokensStudioCarrier,
+    'verification.materializationStatus': ledger.verification.materializationStatus,
+    'verification.lastVerifiedRevision': ledger.verification.lastVerifiedRevision,
+    'promotion.parityMode': ledger.promotion.parityMode,
+    'promotion.highestEarnedLevel': ledger.promotion.highestEarnedLevel,
+    'exceptions.openBlockingCount': openBlockingExceptions.length,
+  };
+
+  if (openBlockingExceptions.length > 0) {
+    return {
+      state: 'blocked-exception',
+      promotable: false,
+      blockers: openBlockingExceptions.map((entry, index) => ({
+        code: entry.code,
+        field: entry.field ?? `exceptions[${index}]`,
+        message: entry.message,
+      })),
+      evidence,
+    };
+  }
+
+  if (ledger.verification.materializationStatus === 'not-run') {
+    return {
+      state: 'declared',
+      promotable: false,
+      blockers: [],
+      evidence,
+    };
+  }
+
+  if (ledger.verification.materializationStatus === 'failed') {
+    return {
+      state: 'incomplete',
+      promotable: false,
+      blockers: [
+        {
+          code: 'verification-materialization-failed',
+          field: 'verification.materializationStatus',
+          message:
+            'verification.materializationStatus is failed, so the current artifact revision is not verified.',
+        },
+      ],
+      evidence,
+    };
+  }
+
+  if (ledger.verification.lastVerifiedRevision !== ledger.artifact.revision) {
+    return {
+      state: 'verified-stale',
+      promotable: false,
+      blockers: [
+        {
+          code: 'verification-stale-revision',
+          field: 'verification.lastVerifiedRevision',
+          message:
+            'verification.lastVerifiedRevision does not match artifact.revision for the active ledger.',
+        },
+      ],
+      evidence,
+    };
+  }
+
+  return {
+    state: 'verified-current',
+    promotable: true,
+    blockers: [],
+    evidence,
+  };
+}
+
+export function runValidateSyncLedgerCli(options = {}) {
+  const args = options.args ?? process.argv.slice(2);
+  const stdout = options.stdout ?? process.stdout;
+  const stderr = options.stderr ?? process.stderr;
+  const runValidation = options.runValidation ?? validateSyncLedgerWithState;
+
+  if (args.length !== 1) {
+    writeLine(stderr, syncLedgerUsage);
+    return 1;
+  }
+
+  try {
+    const { absPath, errors, evaluation } = runValidation(args[0]);
+
+    if (errors.length > 0) {
+      for (const error of errors) {
+        writeLine(stderr, error);
+      }
+      return 1;
+    }
+
+    writeLine(stdout, `✓ Sync ledger is structurally valid: ${absPath}`);
+    writeLine(
+      stdout,
+      `[FIGMA_SYNC_LEDGER_STATE] state=${evaluation.state} promotable=${evaluation.promotable}`
+    );
+    writeLine(stdout, `[FIGMA_SYNC_LEDGER_EVIDENCE] ${formatEvidenceLine(evaluation.evidence)}`);
+
+    for (const blocker of evaluation.blockers) {
+      writeLine(
+        stdout,
+        `[FIGMA_SYNC_LEDGER_BLOCKER] code=${blocker.code} field=${blocker.field} message=${blocker.message}`
+      );
+    }
+
+    return 0;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    writeLine(stderr, `[UNEXPECTED_RUNTIME_FAILURE] ${message}`);
+    return 3;
+  }
 }
 
 function validateArtifact(errors, artifact) {
@@ -282,6 +419,14 @@ function validateLedgerGuardrails(errors, ledger) {
   }
 }
 
+function getOpenBlockingExceptions(exceptions) {
+  if (!Array.isArray(exceptions)) {
+    return [];
+  }
+
+  return exceptions.filter((entry) => entry.blocking === true && entry.status === 'open');
+}
+
 function assertPlainObject(errors, value, message) {
   if (!isPlainObject(value)) {
     errors.push(message);
@@ -340,6 +485,16 @@ function requireSha(errors, value, label) {
   if (typeof value !== 'string' || !shaPattern.test(value)) {
     errors.push(`[CT-8B_INVALID_SHA] ${label} must be a 40-character lowercase git SHA`);
   }
+}
+
+function formatEvidenceLine(evidence) {
+  return Object.entries(evidence)
+    .map(([key, value]) => `${key}=${value}`)
+    .join(' ');
+}
+
+function writeLine(stream, message) {
+  stream.write(`${message}\n`);
 }
 
 function isPlainObject(value) {

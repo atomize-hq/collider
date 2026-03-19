@@ -19,9 +19,11 @@ This directory documents Collider's live Figma convergence posture under `CT-7B`
 ## Verification Ledger (`CT-8B`)
 
 - `src/figma/sync-ledger.json` is the machine-readable v2 ledger for the current branch.
-- `node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json` validates the ledger contract.
+- `node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json` validates the ledger contract and prints the evaluated state for the current artifact revision.
 - `node scripts/validate-figma-parity.mjs` reads the same ledger for required-parity checks.
 - This README is operator guidance only. The JSON ledger and validator define the contract.
+- Evaluated states are `declared`, `verified-current`, `verified-stale`, `blocked-exception`, and `incomplete`.
+- Only `verified-current` is publish-valid for the active revision. Carrier-only Tokens Studio usage may still be `verified-current`, but it never becomes the permanent required rail.
 
 ## Current Posture
 

@@ -7,7 +7,11 @@ import {
   runValidateFigmaParityCli,
   validateFigmaParity,
 } from '../../../scripts/lib/figma-parity.mjs';
-import { loadAndValidateSyncLedger } from '../../../scripts/lib/sync-ledger.mjs';
+import {
+  evaluateSyncLedgerConformance,
+  loadAndValidateSyncLedger,
+  runValidateSyncLedgerCli,
+} from '../../../scripts/lib/sync-ledger.mjs';
 
 const syncLedgerFixtureDir = path.join(repoRoot, 'scripts/fixtures/sync-ledger');
 
@@ -67,6 +71,31 @@ describe('loadAndValidateSyncLedger', () => {
   });
 });
 
+describe('evaluateSyncLedgerConformance', () => {
+  it.each([
+    ['declared.sync-ledger.json', 'declared', false],
+    ['valid.sync-ledger.json', 'verified-current', true],
+    ['stale.sync-ledger.json', 'verified-stale', false],
+    ['blocked.sync-ledger.json', 'blocked-exception', false],
+    ['incomplete.sync-ledger.json', 'incomplete', false],
+  ])('classifies %s as %s', (fixtureName, expectedState, expectedPromotable) => {
+    const ledger = readFixture(fixtureName);
+    const result = evaluateSyncLedgerConformance(ledger);
+
+    expect(result.state).toBe(expectedState);
+    expect(result.promotable).toBe(expectedPromotable);
+    expect(result.evidence['artifact.revision']).toBe(ledger.artifact.revision);
+    expect(result.evidence['publish.mode']).toBe(ledger.publish.mode);
+  });
+
+  it('records carrier-only usage without changing the verified-current state', () => {
+    const result = evaluateSyncLedgerConformance(readFixture('valid-carried.sync-ledger.json'));
+
+    expect(result.state).toBe('verified-current');
+    expect(result.evidence['publish.tokensStudioCarrier']).toBe(true);
+  });
+});
+
 describe('validateFigmaParity', () => {
   it('accepts a required ledger with the hardened rail and no blocking exceptions', () => {
     const result = validateFigmaParity({
@@ -76,7 +105,9 @@ describe('validateFigmaParity', () => {
     expect(result).toEqual({
       ok: true,
       parityMode: 'required',
-      message: '✓ Figma parity requirements are satisfied for the current sync ledger.',
+      state: 'verified-current',
+      message:
+        '✓ Figma parity requirements are satisfied for the current sync ledger (state=verified-current).',
     });
   });
 
@@ -116,6 +147,59 @@ describe('validateFigmaParity', () => {
       '[FIGMA_PARITY_REQUIRES_HARDENED_RAIL] publish.mode must be rest-variables-oauth when promotion.parityMode is required'
     );
   });
+
+  it('fails required parity when the current verification is stale', () => {
+    const staleLedger = readFixture('valid-required.sync-ledger.json');
+    const result = evaluateFigmaParity({
+      ...staleLedger,
+      verification: {
+        ...staleLedger.verification,
+        lastVerifiedRevision: 'ffffffffffffffffffffffffffffffffffffffff',
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.state).toBe('verified-stale');
+    expect(result.errors).toContain(
+      '[FIGMA_PARITY_REQUIRES_VERIFIED_CURRENT_STATE] evaluated sync ledger state must be verified-current when promotion.parityMode is required (received verified-stale)'
+    );
+  });
+
+  it('fails required parity when Tokens Studio remains active as the carrier', () => {
+    const carrierLedger = readFixture('valid-required.sync-ledger.json');
+    const result = evaluateFigmaParity({
+      ...carrierLedger,
+      publish: {
+        ...carrierLedger.publish,
+        mode: 'tokens-studio-carried',
+        tokensStudioCarrier: true,
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toContain(
+      '[FIGMA_PARITY_FORBIDS_TOKENS_STUDIO_CARRIER] publish.tokensStudioCarrier must be false when promotion.parityMode is required'
+    );
+  });
+});
+
+describe('runValidateSyncLedgerCli', () => {
+  it('prints the evaluated conformance state and evidence without failing deferred states', () => {
+    const stdout = createWritableBuffer();
+    const stderr = createWritableBuffer();
+    const exitCode = runValidateSyncLedgerCli({
+      args: [fixturePath('stale.sync-ledger.json')],
+      stdout,
+      stderr,
+    });
+
+    expect(exitCode).toBe(0);
+    expect(stdout.read()).toContain('[FIGMA_SYNC_LEDGER_STATE] state=verified-stale');
+    expect(stdout.read()).toContain(
+      'verification.lastVerifiedRevision=1212121212121212121212121212121212121212'
+    );
+    expect(stderr.read()).toBe('');
+  });
 });
 
 describe('runValidateFigmaParityCli', () => {
@@ -130,6 +214,7 @@ describe('runValidateFigmaParityCli', () => {
 
     expect(exitCode).toBe(0);
     expect(stdout.read()).toContain('[FIGMA_PARITY_DEFERRED]');
+    expect(stdout.read()).toContain('state=verified-current');
     expect(stdout.read()).toContain(
       'Parity remains deferred until the hardened Variables API rail'
     );
