@@ -2,18 +2,20 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {
-  createBuildArtifactPathOverrides,
+  createBuildArtifactPathOverrides as createBuildArtifactPathOverridesDefault,
   getArtifactContractRule,
-  getBuildArtifacts,
-  getBuildWriteTargets,
+  getBuildArtifacts as getBuildArtifactsDefault,
+  getBuildWriteTargets as getBuildWriteTargetsDefault,
 } from '../../design-tokens/build/paths.mjs';
-import { preflightBuildArtifacts } from './token-build-preflight.mjs';
-import { buildTokenArtifacts } from './token-artifacts.mjs';
+import { preflightBuildArtifacts as preflightBuildArtifactsDefault } from './token-build-preflight.mjs';
+import { buildTokenArtifacts as buildTokenArtifactsDefault } from './token-artifacts.mjs';
 
 export const rebuildHint = 'Rebuild generated token artifacts with `pnpm build:tokens`.';
 
 export async function runTokenArtifactFreshnessCheck(options = {}) {
-  const committedArtifacts = sortArtifactsByRelPath(getBuildArtifacts());
+  const committedArtifacts = sortArtifactsByRelPath(
+    options.artifacts ?? getBuildArtifactsDefault()
+  );
   const missingArtifacts = committedArtifacts.filter(
     (artifact) => !fs.existsSync(artifact.absPath)
   );
@@ -21,7 +23,16 @@ export async function runTokenArtifactFreshnessCheck(options = {}) {
     return { ok: false, diagnostics: createFreshnessDiagnostics({ missingArtifacts }) };
   }
 
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'collider-token-artifacts-'));
+  const createTempDir = options.createTempDir ?? defaultCreateTempDir;
+  const removeTempDir = options.removeTempDir ?? defaultRemoveTempDir;
+  const createBuildArtifactPathOverrides =
+    options.createBuildArtifactPathOverrides ?? createBuildArtifactPathOverridesDefault;
+  const preflightBuildArtifacts = options.preflightBuildArtifacts ?? preflightBuildArtifactsDefault;
+  const buildTokenArtifacts = options.buildTokenArtifacts ?? buildTokenArtifactsDefault;
+  const getBuildArtifacts = options.getBuildArtifacts ?? getBuildArtifactsDefault;
+  const getBuildWriteTargets = options.getBuildWriteTargets ?? getBuildWriteTargetsDefault;
+
+  const tempDir = createTempDir();
   try {
     const buildOverrides = createBuildArtifactPathOverrides(tempDir);
     const pathDiagnostics = preflightBuildArtifacts({
@@ -46,7 +57,7 @@ export async function runTokenArtifactFreshnessCheck(options = {}) {
 
     return { ok: true, diagnostics: [] };
   } finally {
-    fs.rmSync(tempDir, { recursive: true, force: true });
+    removeTempDir(tempDir);
   }
 }
 
@@ -91,4 +102,12 @@ function createFreshnessDiagnostic(artifact, code, message) {
     path: artifact.relPath,
     rule: getArtifactContractRule(artifact.id),
   };
+}
+
+function defaultCreateTempDir() {
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'collider-token-artifacts-'));
+}
+
+function defaultRemoveTempDir(tempDir) {
+  fs.rmSync(tempDir, { recursive: true, force: true });
 }
