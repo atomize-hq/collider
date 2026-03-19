@@ -119,6 +119,7 @@ Figma-specific rules:
 - `rest-variables-oauth` is the expected rail before `promotion.parityMode` can safely move to `required`
 - `tokens-studio-carried` can support proof work, but it cannot by itself justify permanent `required` parity
 - if `promotion.parityMode="deferred"`, `E-promotion-complete` is not allowed for claims that depend on required Figma parity
+- the detailed consumer-claim matrix lives in `threaded-seams/seam-6b-verification-and-promotion-convergence/slice-3-promotion-governance-adoption/subslice-1-s3a-claim-matrix-consumers.md`; this file keeps only seam-level invariants, including that informational status is broader than promotion authority
 
 ## Integration Points
 
