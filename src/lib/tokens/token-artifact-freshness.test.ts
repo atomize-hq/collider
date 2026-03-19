@@ -96,7 +96,11 @@ describe('runTokenArtifactFreshnessCheck', () => {
     try {
       const result = await runTokenArtifactFreshnessCheck({
         artifacts: fixture.artifacts,
-        buildTokenArtifacts: async (overrides) => {
+        buildTokenArtifacts: async (overrides: {
+          runtimeCssPath: string;
+          typedTokensPath: string;
+          figmaTokensPath: string;
+        }) => {
           writeArtifacts(createStagedArtifacts(overrides), {
             'src/lib/tokens/tokens.css': 'runtime-css-stale\n',
             'design-tokens/dist/tokens.ts': 'typed-tokens-fresh\n',
