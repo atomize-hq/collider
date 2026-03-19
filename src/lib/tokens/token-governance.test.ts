@@ -3,24 +3,39 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { repoRoot } from '../../../design-tokens/build/paths.mjs';
 import {
-  governanceScripts,
+  governanceSteps,
   governanceUsage,
   runTokenGovernance,
   runTokenGovernanceCli,
 } from '../../../scripts/lib/token-governance.mjs';
+import { runtimeCssManualEditExitCode } from '../../../scripts/lib/token-runtime-css-drift-guard.mjs';
 
 describe('runTokenGovernance', () => {
-  it('runs validate, freshness, and build in order on success', () => {
+  it('runs validate, guard, build, compatibility, and freshness in order on success', () => {
     const calls: string[] = [];
     const exitCode = runTokenGovernance({
       runScript(scriptName: string) {
         calls.push(scriptName);
         return 0;
       },
+      runRuntimeCssDriftGuard() {
+        calls.push('runtime-css-drift-guard');
+        return { ok: true, exitCode: 0 };
+      },
+      runNodeScript(args: string[]) {
+        calls.push(args[0]);
+        return 0;
+      },
     });
 
     expect(exitCode).toBe(0);
-    expect(calls).toEqual(governanceScripts);
+    expect(calls).toEqual([
+      'validate:tokens',
+      'runtime-css-drift-guard',
+      'build:tokens',
+      'scripts/validate-token-runtime-compatibility.mjs',
+      'scripts/validate-token-artifacts.mjs',
+    ]);
   });
 
   it('short-circuits when validation fails', () => {
@@ -30,23 +45,48 @@ describe('runTokenGovernance', () => {
         calls.push(scriptName);
         return scriptName === 'validate:tokens' ? 1 : 0;
       },
+      runRuntimeCssDriftGuard() {
+        calls.push('runtime-css-drift-guard');
+        return { ok: true, exitCode: 0 };
+      },
+      runNodeScript(args: string[]) {
+        calls.push(args[0]);
+        return 0;
+      },
     });
 
     expect(exitCode).toBe(1);
     expect(calls).toEqual(['validate:tokens']);
   });
 
-  it('preserves artifact freshness failure exit code', () => {
+  it('fails on direct runtime css edits before build can overwrite them', () => {
     const calls: string[] = [];
+    const stderr = createWritableBuffer();
     const exitCode = runTokenGovernance({
+      stderr,
       runScript(scriptName: string) {
         calls.push(scriptName);
-        return scriptName === 'validate-token-artifacts' ? 1 : 0;
+        return 0;
+      },
+      runRuntimeCssDriftGuard() {
+        calls.push('runtime-css-drift-guard');
+        return {
+          ok: false,
+          exitCode: runtimeCssManualEditExitCode,
+          message:
+            'Direct edits to src/lib/tokens/tokens.css are not allowed after cutover. Recover by running `pnpm build:tokens` from canonical sources or follow the rollback steps in figma-ci-sync/threaded-seams/seam-6-governance-validation-and-cutover/runtime-css-cutover-runbook.md.',
+        };
+      },
+      runNodeScript(args: string[]) {
+        calls.push(args[0]);
+        return 0;
       },
     });
 
-    expect(exitCode).toBe(1);
-    expect(calls).toEqual(['validate:tokens', 'validate-token-artifacts']);
+    expect(exitCode).toBe(runtimeCssManualEditExitCode);
+    expect(calls).toEqual(['validate:tokens', 'runtime-css-drift-guard']);
+    expect(stderr.read()).toContain('`pnpm build:tokens`');
+    expect(stderr.read()).toContain('runtime-css-cutover-runbook.md');
   });
 
   it('preserves build failure exit code', () => {
@@ -56,10 +96,44 @@ describe('runTokenGovernance', () => {
         calls.push(scriptName);
         return scriptName === 'build:tokens' ? 2 : 0;
       },
+      runRuntimeCssDriftGuard() {
+        calls.push('runtime-css-drift-guard');
+        return { ok: true, exitCode: 0 };
+      },
+      runNodeScript(args: string[]) {
+        calls.push(args[0]);
+        return 0;
+      },
     });
 
     expect(exitCode).toBe(2);
-    expect(calls).toEqual(governanceScripts);
+    expect(calls).toEqual(['validate:tokens', 'runtime-css-drift-guard', 'build:tokens']);
+  });
+
+  it('runs compatibility before freshness and preserves the first failing node-script exit code', () => {
+    const calls: string[] = [];
+    const exitCode = runTokenGovernance({
+      runScript(scriptName: string) {
+        calls.push(scriptName);
+        return 0;
+      },
+      runRuntimeCssDriftGuard() {
+        calls.push('runtime-css-drift-guard');
+        return { ok: true, exitCode: 0 };
+      },
+      runNodeScript(args: string[]) {
+        calls.push(args[0]);
+        return args[0] === 'scripts/validate-token-runtime-compatibility.mjs' ? 2 : 0;
+      },
+    });
+
+    expect(exitCode).toBe(2);
+    expect(calls).toEqual([
+      'validate:tokens',
+      'runtime-css-drift-guard',
+      'build:tokens',
+      'scripts/validate-token-runtime-compatibility.mjs',
+    ]);
   });
 });
 
@@ -102,6 +176,16 @@ describe('governance package contract', () => {
     };
 
     expect(packageJson.scripts?.['govern:tokens']).toBe('node scripts/govern-tokens.mjs');
+  });
+
+  it('exposes the ordered post-cutover governance steps', () => {
+    expect(governanceSteps.map((step) => step.id)).toEqual([
+      'validate:tokens',
+      'runtime-css-drift-guard',
+      'build:tokens',
+      'runtime-compatibility',
+      'artifact-freshness',
+    ]);
   });
 });
 

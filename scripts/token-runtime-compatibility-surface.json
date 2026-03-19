@@ -1,0 +1,27 @@
+{
+  "surfaceVersion": "1",
+  "runtimeCssPath": "src/lib/tokens/tokens.css",
+  "requiredCustomProperties": [
+    "--color-background-base",
+    "--color-background-surface",
+    "--color-background-elevated",
+    "--color-background-overlay",
+    "--color-background-white-10",
+    "--color-text-primary",
+    "--color-text-secondary",
+    "--color-text-tertiary",
+    "--color-text-dim",
+    "--color-text-success",
+    "--color-text-error",
+    "--color-text-warning",
+    "--color-text-caution",
+    "--color-text-info",
+    "--color-text-ai",
+    "--color-statusstrip-success",
+    "--color-statusstrip-failure",
+    "--color-statusstrip-info",
+    "--color-statusstrip-running",
+    "--color-statusstrip-neutral",
+    "--color-statusstrip-ai"
+  ]
+}

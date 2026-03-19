@@ -1,29 +1,44 @@
 import { spawnSync } from 'node:child_process';
 import process from 'node:process';
 import { repoRoot } from '../../design-tokens/build/paths.mjs';
+import { runRuntimeCssDriftGuard } from './token-runtime-css-drift-guard.mjs';
 
-export const governanceScripts = ['validate:tokens', 'validate-token-artifacts', 'build:tokens'];
 export const governanceUsage = 'Usage: pnpm govern:tokens';
+export const governanceSteps = [
+  { id: 'validate:tokens', kind: 'pnpm-script', scriptName: 'validate:tokens' },
+  { id: 'runtime-css-drift-guard', kind: 'guard' },
+  { id: 'build:tokens', kind: 'pnpm-script', scriptName: 'build:tokens' },
+  {
+    id: 'runtime-compatibility',
+    kind: 'node-script',
+    scriptPath: 'scripts/validate-token-runtime-compatibility.mjs',
+  },
+  {
+    id: 'artifact-freshness',
+    kind: 'node-script',
+    scriptPath: 'scripts/validate-token-artifacts.mjs',
+  },
+];
 
 export function runTokenGovernance(options = {}) {
-  const runScript = options.runScript ?? runGovernanceScript;
+  const runScript = options.runScript ?? runPnpmScript;
+  const runNodeScript = options.runNodeScript ?? runNodeCommand;
+  const runGuard = options.runRuntimeCssDriftGuard ?? runRuntimeCssDriftGuard;
+  const stderr = options.stderr ?? process.stderr;
 
-  for (const scriptName of governanceScripts) {
-    const exitCode = runScript(scriptName);
+  for (const step of governanceSteps) {
+    const exitCode = runGovernanceStep(step, {
+      runScript,
+      runNodeScript,
+      runGuard,
+      stderr,
+    });
     if (exitCode !== 0) {
       return exitCode;
     }
   }
 
   return 0;
-}
-
-export function runGovernanceScript(scriptName, options = {}) {
-  if (scriptName === 'validate-token-artifacts') {
-    return runNodeCommand(['scripts/validate-token-artifacts.mjs'], options);
-  }
-
-  return runPnpmScript(scriptName, options);
 }
 
 export function runTokenGovernanceCli(options = {}) {
@@ -76,6 +91,28 @@ function runNodeCommand(args, options = {}) {
   }
 
   return result.status;
+}
+
+function runGovernanceStep(step, options) {
+  if (step.kind === 'pnpm-script') {
+    return options.runScript(step.scriptName);
+  }
+
+  if (step.kind === 'node-script') {
+    return options.runNodeScript([step.scriptPath]);
+  }
+
+  if (step.kind === 'guard') {
+    const result = options.runGuard();
+    if (result.ok) {
+      return 0;
+    }
+
+    writeLine(options.stderr, result.message);
+    return result.exitCode;
+  }
+
+  throw new Error(`unknown governance step kind: ${step.kind}`);
 }
 
 function createSpawnOptions(options = {}) {

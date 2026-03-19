@@ -1,0 +1,78 @@
+import { describe, expect, it } from 'vitest';
+import {
+  parseGitStatusOutput,
+  runRuntimeCssDriftGuard,
+  runtimeCssCutoverRunbookRelPath,
+  runtimeCssManualEditExitCode,
+  runtimeCssRelPath,
+  tokenSourceRelPath,
+} from '../../../scripts/lib/token-runtime-css-drift-guard.mjs';
+
+describe('parseGitStatusOutput', () => {
+  it('tracks runtime css and token source dirtiness independently', () => {
+    expect(
+      parseGitStatusOutput(
+        ` M ${runtimeCssRelPath}\nM  ${tokenSourceRelPath}/semantic.tokens.json\n`
+      )
+    ).toEqual({
+      runtimeCssDirty: true,
+      tokenSourceDirty: true,
+    });
+  });
+});
+
+describe('runRuntimeCssDriftGuard', () => {
+  it('passes when neither runtime css nor token sources are dirty', () => {
+    expect(
+      runRuntimeCssDriftGuard({
+        readGitStatus() {
+          return { runtimeCssDirty: false, tokenSourceDirty: false };
+        },
+      })
+    ).toEqual({ ok: true, exitCode: 0 });
+  });
+
+  it('fails when only runtime css is dirty', () => {
+    const result = runRuntimeCssDriftGuard({
+      readGitStatus() {
+        return { runtimeCssDirty: true, tokenSourceDirty: false };
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.exitCode).toBe(runtimeCssManualEditExitCode);
+    expect(result.message).toContain(runtimeCssRelPath);
+    expect(result.message).toContain('`pnpm build:tokens`');
+    expect(result.message).toContain(runtimeCssCutoverRunbookRelPath);
+  });
+
+  it('passes when only token sources are dirty', () => {
+    expect(
+      runRuntimeCssDriftGuard({
+        readGitStatus() {
+          return { runtimeCssDirty: false, tokenSourceDirty: true };
+        },
+      })
+    ).toEqual({ ok: true, exitCode: 0 });
+  });
+
+  it('passes when runtime css and token sources are both dirty', () => {
+    expect(
+      runRuntimeCssDriftGuard({
+        readGitStatus() {
+          return { runtimeCssDirty: true, tokenSourceDirty: true };
+        },
+      })
+    ).toEqual({ ok: true, exitCode: 0 });
+  });
+
+  it('surfaces git read failures', () => {
+    expect(() =>
+      runRuntimeCssDriftGuard({
+        readGitStatus() {
+          throw new Error('git unavailable');
+        },
+      })
+    ).toThrow('git unavailable');
+  });
+});
