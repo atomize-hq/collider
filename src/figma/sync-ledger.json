@@ -20,7 +20,7 @@
       }
     ],
     "parityMode": "deferred",
-    "parityDeferredReason": "V1 uses a read-only pilot sync rail and does not promote Figma parity to a required gate until enterprise automation and SEAM-6 governance adoption exist.",
+    "parityDeferredReason": "Parity remains deferred because enterprise Figma parity automation is not yet available, the pilot sync ledger is not yet stable enough for governance promotion, and SEAM-6 has not yet promoted a deterministic parity gate.",
     "lastSuccessfulPullAt": null,
     "canonicalSource": "repo-pr"
   },

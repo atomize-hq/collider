@@ -25,12 +25,12 @@ This directory defines the v1 Figma sync posture for Collider.
 
 ## Parity Posture
 
-- V1 starts at `parityMode=deferred`.
-- The current parity branch and promotion trigger live in `src/figma/parity-policy.md`.
-- The pilot sync state lives in `src/figma/sync-ledger.json`.
+- `src/figma/parity-policy.md` is the canonical parity-policy document.
+- `src/figma/sync-ledger.json` is the machine-readable status for the current branch.
+- This README is operator guidance for the pull flow and pilot file, not a second source of parity policy.
 
 ## Operational Rules
 
 - Treat plugin settings as a consumption detail, not a source-of-truth switch.
 - Canonical token changes still go through repo PRs.
-- Keep Figma sync policy centralized here and link downstream docs back to this file instead of duplicating policy prose.
+- Keep parity-branch decisions centralized in `src/figma/parity-policy.md` and link downstream docs there instead of duplicating branch logic.
