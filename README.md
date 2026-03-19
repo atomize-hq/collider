@@ -92,13 +92,13 @@ storybook/
 ### Pre-push gate
 
 ```bash
-just preflight    # check + LOC guards + test-all — mirrors what CI enforces
+just preflight    # token governance + check + LOC guards + test-all — mirrors what CI enforces
 ```
 
-### Advisory token governance
+### Token governance shortcut
 
 ```bash
-just token-governance  # advisory validate + build + freshness path; not part of preflight until SEAM-6 S3
+just token-governance  # runs the same mandatory governance path used by preflight and CI
 ```
 
 ### Fast checks — run before every commit
