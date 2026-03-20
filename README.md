@@ -82,7 +82,7 @@ src-tauri/          Rust crate (Tauri backend)
 
 storybook/
   stories/          Standalone stories
-  story-specs/      Story specification docs
+  component-specs/  Repo-owned component proof contracts
 ```
 
 ---
