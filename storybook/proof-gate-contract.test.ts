@@ -13,10 +13,15 @@ import {
   storybookProofGateUsage,
 } from '../scripts/lib/storybook-proof-gate.mjs';
 import {
+  createStorybookProofCoverageReport,
   readStorybookProofCoverageReport,
   writeStorybookProofCoverageReport,
 } from '../scripts/lib/storybook-proof-coverage.mjs';
 import { loadAndValidateStorybookProofStructure } from '../scripts/lib/storybook-proof-structure.mjs';
+
+type ProofStructureResult = ReturnType<typeof loadAndValidateStorybookProofStructure>;
+type ProofCoverageReport = ReturnType<typeof createStorybookProofCoverageReport>;
+type ProofCoverageReadResult = ReturnType<typeof readStorybookProofCoverageReport>;
 
 describe('runStorybookProofGate', () => {
   it('runs structure validation before coverage generation and passes on ready pilot data', async () => {
@@ -32,7 +37,7 @@ describe('runStorybookProofGate', () => {
         calls.push('validate:storybook-proof-structure');
         return proofStructureResult;
       },
-      createCoverageReport(result) {
+      createCoverageReport(result: ProofStructureResult) {
         calls.push('generate:storybook-proof-coverage');
         return {
           proofCoverageVersion: '1',
@@ -58,12 +63,12 @@ describe('runStorybookProofGate', () => {
           ],
         };
       },
-      writeCoverageReport(report) {
+      writeCoverageReport(report: ProofCoverageReport) {
         calls.push('enforce:storybook-proof-gate');
         const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'storybook-proof-gate-pass-'));
         return writeStorybookProofCoverageReport(report, path.join(tempDir, 'proof-coverage.json'));
       },
-      readCoverageReport(target) {
+      readCoverageReport(target: string): ProofCoverageReadResult {
         return readStorybookProofCoverageReport(target);
       },
     });
@@ -136,7 +141,7 @@ describe('runStorybookProofGate', () => {
           ],
         };
       },
-      writeCoverageReport(report) {
+      writeCoverageReport(report: ProofCoverageReport) {
         return writeStorybookProofCoverageReport(report, path.join(tempDir, 'proof-coverage.json'));
       },
     });
