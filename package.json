@@ -13,6 +13,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "validate:storybook-policy": "node scripts/validate-storybook-version-policy.mjs .storybook/storybook-version-policy.json",
+    "validate:storybook-story-inventory": "node scripts/validate-storybook-story-inventory.mjs",
     "validate:tokens": "node design-tokens/build/validate-tokens.mjs",
     "build:tokens": "node design-tokens/build/build-tokens.mjs",
     "validate:sync-ledger": "node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json",

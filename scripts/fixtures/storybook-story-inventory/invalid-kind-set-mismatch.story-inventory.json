@@ -1,0 +1,19 @@
+{
+  "inventoryVersion": "1",
+  "components": [
+    {
+      "componentId": "proof-contract-pilot",
+      "validatorKinds": ["default", "docs"],
+      "implementedStoryRefs": [
+        {
+          "kind": "default",
+          "storyId": "contracts-pilot-recipe--button-recipe"
+        },
+        {
+          "kind": "workflow",
+          "storyId": "foundations-runtime-css-parity--baseline-theme"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "inventoryVersion": "1",
+  "components": [
+    {
+      "componentId": "proof-contract-pilot",
+      "validatorKinds": ["default", "visual-review"],
+      "implementedStoryRefs": [
+        {
+          "kind": "default",
+          "storyId": "contracts-pilot-recipe--button-recipe"
+        },
+        {
+          "kind": "visual-review",
+          "storyId": "contracts-generated-tokens--token-registry"
+        }
+      ]
+    }
+  ]
+}

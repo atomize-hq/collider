@@ -1,0 +1,14 @@
+{
+  "inventoryVersion": "1",
+  "components": [
+    {
+      "validatorKinds": ["default"],
+      "implementedStoryRefs": [
+        {
+          "kind": "default",
+          "storyId": "contracts-pilot-recipe--button-recipe"
+        }
+      ]
+    }
+  ]
+}
