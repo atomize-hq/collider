@@ -7,7 +7,7 @@ These diagrams are for rapid human review. They show the actual product and syst
 ```mermaid
 flowchart LR
   A["Repo author updates canonical tokens, recipes, or proof metadata"] --> B["Build projections and Storybook proof stories"]
-  B --> C["`storybook/story-inventory.json` selects required proof coverage"]
+  B --> C["storybook/story-inventory.json selects required proof coverage"]
   C --> D["Published Storybook proof surface"]
   D --> E["Chromatic branch review produces build URL and diff status"]
   D --> F["Storybook Connect metadata points Figma users at the published proof surface"]
@@ -15,7 +15,7 @@ flowchart LR
   E --> H["Reusable-component promotion evaluator"]
   F --> H
   G --> H
-  I["`src/figma/sync-ledger.json` parity state"] --> H
+  I["src/figma/sync-ledger.json parity state"] --> H
   H --> J["Merge, handoff, or release claim with explicit earned level"]
 ```
 
