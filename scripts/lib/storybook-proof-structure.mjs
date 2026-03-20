@@ -5,12 +5,18 @@ import { createRequire } from 'node:module';
 import ts from 'typescript';
 
 import { repoRoot } from '../../design-tokens/build/paths.mjs';
-import { loadAndValidateStoryInventory } from './storybook-story-inventory.mjs';
+import {
+  allowedStorybookValidatorKinds,
+  loadAndValidateStoryInventory,
+} from './storybook-story-inventory.mjs';
 import { loadAndValidateComponentTierPolicy } from './storybook-tier-policy.mjs';
 import { validateComponentSpec } from './storybook-component-spec.mjs';
 
 const require = createRequire(import.meta.url);
 const { storyNameFromExport, toId } = require('storybook/internal/csf');
+const validatorKindOrder = new Map(
+  allowedStorybookValidatorKinds.map((kind, index) => [kind, index])
+);
 
 export const storybookProofStructureUsage =
   'Usage: node scripts/validate-storybook-proof-structure.mjs [path-to-repo-root]';
@@ -42,6 +48,7 @@ export function loadAndValidateStorybookProofStructure(options = {}) {
   ) {
     return {
       data: {
+        componentFacts: null,
         componentSpecs: specLoadResult.records,
         componentTierPolicy: tierPolicyResult.data,
         inventory: inventoryResult.data,
@@ -58,6 +65,7 @@ export function loadAndValidateStorybookProofStructure(options = {}) {
   if (storyIndex.errors.length > 0) {
     return {
       data: {
+        componentFacts: null,
         componentSpecs: specLoadResult.records,
         componentTierPolicy: tierPolicyResult.data,
         inventory: inventoryResult.data,
@@ -68,18 +76,19 @@ export function loadAndValidateStorybookProofStructure(options = {}) {
     };
   }
 
-  errors.push(
-    ...validateProofStructure({
-      componentSpecs: specLoadResult.records,
-      componentTierPolicy: tierPolicyResult.data,
-      inventory: inventoryResult.data,
-      rootDir: context.rootDir,
-      storyIndex: storyIndex.data,
-    })
-  );
+  const proofStructureInputs = {
+    componentSpecs: specLoadResult.records,
+    componentTierPolicy: tierPolicyResult.data,
+    inventory: inventoryResult.data,
+    rootDir: context.rootDir,
+    storyIndex: storyIndex.data,
+  };
+
+  errors.push(...validateProofStructure(proofStructureInputs));
 
   return {
     data: {
+      componentFacts: errors.length === 0 ? buildProofCoverageFacts(proofStructureInputs) : null,
       componentSpecs: specLoadResult.records,
       componentTierPolicy: tierPolicyResult.data,
       inventory: inventoryResult.data,
@@ -334,6 +343,35 @@ function validateProofStructure({
   return errors;
 }
 
+function buildProofCoverageFacts({ componentSpecs, componentTierPolicy, inventory }) {
+  const specsByComponentId = new Map(
+    componentSpecs.map((specRecord) => [specRecord.data.componentId, specRecord.data])
+  );
+
+  return [...inventory.components]
+    .sort((left, right) => left.componentId.localeCompare(right.componentId))
+    .map((component) => {
+      const componentSpec = specsByComponentId.get(component.componentId);
+      const tierMinimumKinds =
+        componentTierPolicy.tiers?.[componentSpec.tier]?.minimumRequiredKinds.map(
+          (entry) => entry.kind
+        ) ?? [];
+
+      return {
+        componentId: component.componentId,
+        generatedArtifactRefs: { ...componentSpec.generatedArtifactRefs },
+        implementedKinds: sortValidatorKinds(
+          component.implementedStoryRefs.map((storyRef) => storyRef.kind)
+        ),
+        requiredKinds: sortValidatorKinds([
+          ...tierMinimumKinds,
+          ...componentSpec.requiredStoryKinds,
+        ]),
+        tier: componentSpec.tier,
+      };
+    });
+}
+
 function validateDuplicateComponentIds(inventory, specRecords, rootDir) {
   const errors = [];
   const inventorySources = new Map();
@@ -562,6 +600,12 @@ function pushComponentIdSource(componentIdSources, componentId, source) {
   const sources = componentIdSources.get(componentId) ?? [];
   sources.push(source);
   componentIdSources.set(componentId, sources);
+}
+
+function sortValidatorKinds(kinds) {
+  return [...new Set(kinds)].sort((left, right) => {
+    return validatorKindOrder.get(left) - validatorKindOrder.get(right);
+  });
 }
 
 function toRootRelative(rootDir, absPath) {
