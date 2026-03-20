@@ -17,6 +17,7 @@
     "validate:storybook-story-inventory": "node scripts/validate-storybook-story-inventory.mjs",
     "validate:storybook-proof-structure": "node scripts/validate-storybook-proof-structure.mjs",
     "generate:storybook-proof-coverage": "node scripts/generate-storybook-proof-coverage.mjs",
+    "govern:storybook-proof": "node scripts/govern-storybook-proof.mjs",
     "validate:tokens": "node design-tokens/build/validate-tokens.mjs",
     "build:tokens": "node design-tokens/build/build-tokens.mjs",
     "validate:sync-ledger": "node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json",

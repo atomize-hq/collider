@@ -19,6 +19,13 @@ if (args.length > 1) {
 }
 
 try {
+  await main();
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+}
+
+async function main() {
   const rootDir = process.env.STORYBOOK_PROOF_ROOT_DIR;
   const proofStructureResult = loadAndValidateStorybookProofStructure(rootDir ? { rootDir } : {});
 
@@ -31,13 +38,10 @@ try {
 
   const report = createStorybookProofCoverageReport(proofStructureResult);
   const outputPath = args[0] ?? defaultStorybookProofCoveragePath;
-  const absPath = writeStorybookProofCoverageReport(report, outputPath, {
+  const absPath = await writeStorybookProofCoverageReport(report, outputPath, {
     rootDir: proofStructureResult.rootDir,
   });
 
   console.log(`✓ Storybook proof coverage report written: ${absPath}`);
   console.log(formatStorybookProofCoverageSummary(report));
-} catch (error) {
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
 }

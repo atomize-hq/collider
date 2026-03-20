@@ -230,10 +230,16 @@ describe('governance package contract', () => {
   it('runs govern:tokens first in just preflight before downstream checks', () => {
     const justfile = fs.readFileSync(path.join(repoRoot, 'justfile'), 'utf8');
     const preflightRecipe = extractRecipe(justfile, 'preflight');
-    const orderedCommands = ['pnpm govern:tokens', 'just check', 'just loc', 'just test-all'];
+    const orderedCommands = [
+      'pnpm govern:tokens',
+      'just storybook-proof',
+      'just check',
+      'just loc',
+      'just test-all',
+    ];
 
-    expect(preflightRecipe).toContain('▶ step 1/4 — token governance');
-    expect(preflightRecipe).toContain('▶ step 4/4 — automated tests');
+    expect(preflightRecipe).toContain('▶ step 1/5 — token governance');
+    expect(preflightRecipe).toContain('▶ step 5/5 — automated tests');
     expectCommandOrder(preflightRecipe, orderedCommands);
   });
 });

@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import prettier from 'prettier';
+
 import { repoRoot } from '../../design-tokens/build/paths.mjs';
 
 export const defaultStorybookProofCoveragePath = 'artifacts/storybook/proof-coverage.json';
@@ -41,18 +43,32 @@ export function createStorybookProofCoverageReport(proofStructureResult) {
   };
 }
 
-export function writeStorybookProofCoverageReport(
+export async function writeStorybookProofCoverageReport(
   report,
   outputPath = defaultStorybookProofCoveragePath,
   options = {}
 ) {
   const rootDir = options.rootDir ?? repoRoot;
   const absPath = path.isAbsolute(outputPath) ? outputPath : path.resolve(rootDir, outputPath);
+  const formattedReport = await prettier.format(JSON.stringify(report), { filepath: absPath });
 
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, `${JSON.stringify(report, null, 2)}\n`);
+  fs.writeFileSync(absPath, formattedReport);
 
   return absPath;
+}
+
+export function readStorybookProofCoverageReport(
+  target = defaultStorybookProofCoveragePath,
+  options = {}
+) {
+  const rootDir = options.rootDir ?? repoRoot;
+  const absPath = path.isAbsolute(target) ? target : path.resolve(rootDir, target);
+
+  return {
+    absPath,
+    data: JSON.parse(fs.readFileSync(absPath, 'utf8')),
+  };
 }
 
 export function formatStorybookProofCoverageSummary(report) {

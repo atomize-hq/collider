@@ -2,16 +2,6 @@
 
 ## Open remediations
 
-- **REM-001**
-  - Source gate: contract
-  - Related seam/slice/thread/contract: `SEAM-7B`, `CT-9B`, `THR-02`, `THR-04`, `THR-08`
-  - Severity: blocking
-  - Finding: the repo has proof stories and validators, but it does not yet have a repo-owned proof inventory or reusable-component metadata contract that later seams can consume.
-  - Required fix: publish `CT-9B` with concrete `storybook/story-inventory.json` and `storybook/component-specs/**` schema, plus required story-kind policy by component tier.
-  - Owner: future `WS-7B`
-  - Status: open
-  - Must close before: `SEAM-8B` may enter detailed decomposition
-
 - **REM-002**
   - Source gate: review
   - Related seam/slice/thread/contract: `SEAM-8B`, `CT-10B`, `THR-03`, `THR-06`
@@ -44,4 +34,12 @@
 
 ## Resolved remediations
 
-- None yet.
+- **REM-001**
+  - Source gate: contract
+  - Related seam/slice/thread/contract: `SEAM-7B`, `CT-9B`, `THR-02`, `THR-04`, `THR-08`
+  - Severity: blocking
+  - Finding: the repo had proof stories and validators, but it did not yet have a repo-owned proof inventory or reusable-component metadata contract that later seams could consume.
+  - Required fix: publish `CT-9B` with concrete `storybook/story-inventory.json` and `storybook/component-specs/**` schema, plus required story-kind policy by component tier.
+  - Owner: `WS-7B`
+  - Status: resolved
+  - Resolution evidence: `pnpm govern:storybook-proof`, `artifacts/storybook/proof-coverage.json`, `harness-future-rails/governance/seam-7b-closeout.md`

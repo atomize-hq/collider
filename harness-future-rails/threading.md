@@ -94,8 +94,8 @@ Reasoning:
   - **Consumer seam(s)**: `SEAM-8B`
   - **Carried contract IDs**: `CT-9B`
   - **Purpose**: ensure branch-aware visual review consumes an explicit proof inventory instead of ad hoc story selection
-  - **State**: identified
-  - **Satisfied by**: none yet
+  - **State**: published
+  - **Satisfied by**: `storybook/story-inventory.json`, `storybook/component-tier-policy.json`, `artifacts/storybook/proof-coverage.json`, `pnpm govern:storybook-proof`
   - **Revalidation trigger**: any change to `storybook/story-inventory.json`, component-tier rules, or required story-kind policy
   - **Notes**: `SEAM-8B` should not freeze required visual-review coverage before this thread is published
 
@@ -114,8 +114,8 @@ Reasoning:
   - **Consumer seam(s)**: `SEAM-9B`
   - **Carried contract IDs**: `CT-9B`
   - **Purpose**: carry reusable-component identity and required coverage metadata into mapping/link projections
-  - **State**: identified
-  - **Satisfied by**: none yet
+  - **State**: published
+  - **Satisfied by**: `storybook/component-specs/button.json`, `artifacts/storybook/proof-coverage.json`, `pnpm govern:storybook-proof`
   - **Revalidation trigger**: any change to component identity schema, supported variants, or required mapping hooks
   - **Notes**: this thread is what keeps Code Connect and Storybook Connect from inventing identity out of vendor state
 
@@ -154,8 +154,8 @@ Reasoning:
   - **Consumer seam(s)**: `SEAM-10B`
   - **Carried contract IDs**: `CT-9B`
   - **Purpose**: keep promotion grounded on explicit proof coverage instead of story existence alone
-  - **State**: identified
-  - **Satisfied by**: none yet
+  - **State**: published
+  - **Satisfied by**: `artifacts/storybook/proof-coverage.json`, `pnpm govern:storybook-proof`
   - **Revalidation trigger**: any change to required story kinds or component tier policy
   - **Notes**: promotion may read proof coverage, but `SEAM-10B` does not own the proof inventory contract
 

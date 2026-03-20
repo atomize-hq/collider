@@ -1,10 +1,6 @@
 {
   "proofCoverageVersion": "1",
-  "summary": {
-    "componentCount": 1,
-    "readyCount": 1,
-    "failingCount": 0
-  },
+  "summary": { "componentCount": 1, "readyCount": 1, "failingCount": 0 },
   "components": [
     {
       "componentId": "button",

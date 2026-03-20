@@ -8,28 +8,31 @@ default:
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PREFLIGHT — mandatory gate before every push
-# Mirrors what CI enforces: token governance + static checks + LOC guards + full test suite.
+# Mirrors what CI enforces: token governance + Storybook proof gate + static checks + LOC guards + full test suite.
 # If this passes locally, CI should pass too.
 #   just preflight
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Pre-push CI gate: token governance + check + LOC guards + all automated tests
+# Pre-push CI gate: token governance + Storybook proof gate + check + LOC guards + all automated tests
 preflight:
     @echo ""
     @echo "╔══════════════════════════════════════════════════╗"
     @echo "║            PREFLIGHT — pre-push CI gate          ║"
     @echo "╚══════════════════════════════════════════════════╝"
     @echo ""
-    @echo "▶ step 1/4 — token governance"
+    @echo "▶ step 1/5 — token governance"
     pnpm govern:tokens
     @echo ""
-    @echo "▶ step 2/4 — static checks"
+    @echo "▶ step 2/5 — storybook proof gate"
+    just storybook-proof
+    @echo ""
+    @echo "▶ step 3/5 — static checks"
     just check
     @echo ""
-    @echo "▶ step 3/4 — LOC guards"
+    @echo "▶ step 4/5 — LOC guards"
     just loc
     @echo ""
-    @echo "▶ step 4/4 — automated tests"
+    @echo "▶ step 5/5 — automated tests"
     just test-all
     @echo ""
     @echo "✓ Preflight passed — safe to push"
@@ -44,6 +47,10 @@ preflight:
 # Manual token governance path (same command used by preflight)
 token-governance:
     pnpm govern:tokens
+
+# Manual Storybook proof ratchet (same command used by preflight and CI)
+storybook-proof:
+    pnpm govern:storybook-proof
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers

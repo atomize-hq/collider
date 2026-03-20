@@ -47,9 +47,35 @@ jobs:
       - name: Run token governance
         run: pnpm govern:tokens
 
+  storybook-proof:
+    name: Storybook Proof
+    needs: governance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Storybook proof gate
+        run: pnpm govern:storybook-proof
+
   quality:
     name: Quality
-    needs: governance
+    needs: [governance, storybook-proof]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
