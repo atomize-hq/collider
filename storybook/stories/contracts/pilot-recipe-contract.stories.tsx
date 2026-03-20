@@ -17,6 +17,19 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+export const ButtonRecipe: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const firstAxis = docsModel.variantAxes[0];
+
+    await expect(canvas.getByRole('heading', { name: docsModel.componentId })).toBeVisible();
+    await expect(canvas.getByText(docsModel.sourceFile)).toBeVisible();
+    await expect(canvas.getByRole('heading', { name: 'Variant Axes' })).toBeVisible();
+    await expect(canvas.getByText(firstAxis.name)).toBeVisible();
+    await expect(canvas.getByText(firstAxis.values.join(', '))).toBeVisible();
+  },
+};
+
 export const Documentation: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

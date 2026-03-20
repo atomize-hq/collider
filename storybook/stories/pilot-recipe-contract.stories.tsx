@@ -127,7 +127,7 @@ function PilotRecipeContractDocs() {
 }
 
 const meta = {
-  title: 'Contracts/Pilot Recipe',
+  title: 'Legacy/Pilot Recipe Contract',
   component: PilotRecipeContractDocs,
   parameters: {
     layout: 'fullscreen',

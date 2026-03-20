@@ -11,13 +11,32 @@ import {
 const fixtureDir = path.join(repoRoot, 'scripts/fixtures/storybook-story-inventory');
 
 describe('loadAndValidateStoryInventory', () => {
-  it('accepts the committed empty baseline inventory', () => {
+  it('accepts the committed pilot inventory', () => {
     const result = loadAndValidateStoryInventory(
       path.join(repoRoot, 'storybook/story-inventory.json')
     );
 
     expect(result.errors).toEqual([]);
-    expect(result.data.components).toEqual([]);
+    expect(result.data.components).toEqual([
+      {
+        componentId: 'button',
+        validatorKinds: ['default', 'workflow', 'docs'],
+        implementedStoryRefs: [
+          {
+            kind: 'default',
+            storyId: 'contracts-pilot-recipe--button-recipe',
+          },
+          {
+            kind: 'workflow',
+            storyId: 'foundations-runtime-css-parity--baseline-theme',
+          },
+          {
+            kind: 'docs',
+            storyId: 'contracts-generated-tokens--token-registry',
+          },
+        ],
+      },
+    ]);
   });
 
   it('accepts the valid sample fixture that uses current Storybook story ids', () => {
