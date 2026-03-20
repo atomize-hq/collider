@@ -61,6 +61,36 @@ describe('validateComponentSpec', () => {
     ]);
   });
 
+  it('keeps the committed button pilot proof metadata reviewer-clear', () => {
+    const spec = readButtonSpec();
+
+    expect(spec.componentId).toBe('button');
+    expect(spec.tier).toBe('pilot');
+    expect(spec.requiredStoryKinds).toEqual(['default', 'workflow', 'docs']);
+    expect(spec.ownedStoryRefs).toEqual([
+      {
+        storyId: 'contracts-pilot-recipe--button-recipe',
+        kinds: ['default'],
+      },
+      {
+        storyId: 'contracts-pilot-recipe--documentation',
+        kinds: ['docs'],
+      },
+    ]);
+    expect(spec.generatedArtifactRefs).toEqual({
+      tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+      recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
+      runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+    });
+    expect(spec.downstreamHooks).toEqual({
+      codeEntrypoint: null,
+      figmaComponentRef: null,
+      supportedVariantsSource: 'design-tokens/dist/tokens.ts',
+      slotNamesSource: 'design-tokens/dist/tokens.ts',
+      exampleStoryIds: ['contracts-pilot-recipe--button-recipe'],
+    });
+  });
+
   it('reports a missing component id', () => {
     const spec = omitKey(readButtonSpec(), 'componentId');
 

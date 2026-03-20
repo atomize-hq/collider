@@ -2,7 +2,7 @@
   "specVersion": "1",
   "componentId": "button",
   "tier": "pilot",
-  "requiredStoryKinds": ["default", "docs"],
+  "requiredStoryKinds": ["default", "workflow", "docs"],
   "ownedStoryRefs": [
     {
       "storyId": "contracts-pilot-recipe--button-recipe",
