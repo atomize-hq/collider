@@ -1,8 +1,8 @@
 {
   "specVersion": "1",
   "componentId": "button",
-  "tier": "primitive",
-  "requiredStoryKinds": ["default", "workflow", "docs"],
+  "tier": "interactive",
+  "requiredStoryKinds": ["default", "docs"],
   "ownedStoryRefs": [
     {
       "storyId": "contracts-pilot-recipe--button-recipe",
@@ -16,7 +16,7 @@
   "generatedArtifactRefs": {
     "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
     "recipeDocs": "storybook/stories/pilot-recipe-contract.stories.tsx",
-    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+    "runtimeParity": null
   },
   "downstreamHooks": {
     "codeEntrypoint": null,

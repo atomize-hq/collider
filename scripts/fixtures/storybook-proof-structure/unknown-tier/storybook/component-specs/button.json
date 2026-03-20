@@ -1,7 +1,7 @@
 {
   "specVersion": "1",
   "componentId": "button",
-  "tier": "primitive",
+  "tier": "pilot",
   "requiredStoryKinds": ["default", "workflow", "docs"],
   "ownedStoryRefs": [
     {

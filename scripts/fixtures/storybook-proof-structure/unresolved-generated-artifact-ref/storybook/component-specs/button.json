@@ -2,21 +2,17 @@
   "specVersion": "1",
   "componentId": "button",
   "tier": "primitive",
-  "requiredStoryKinds": ["default", "workflow", "docs"],
+  "requiredStoryKinds": ["default", "docs"],
   "ownedStoryRefs": [
     {
       "storyId": "contracts-pilot-recipe--button-recipe",
       "kinds": ["default"]
-    },
-    {
-      "storyId": "contracts-pilot-recipe--documentation",
-      "kinds": ["docs"]
     }
   ],
   "generatedArtifactRefs": {
-    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "tokenDocs": "storybook/stories/missing-generated-docs.stories.tsx",
     "recipeDocs": "storybook/stories/pilot-recipe-contract.stories.tsx",
-    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+    "runtimeParity": null
   },
   "downstreamHooks": {
     "codeEntrypoint": null,

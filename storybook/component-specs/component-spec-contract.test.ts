@@ -65,7 +65,7 @@ describe('validateComponentSpec', () => {
     const spec = readButtonSpec();
 
     expect(spec.componentId).toBe('button');
-    expect(spec.tier).toBe('pilot');
+    expect(spec.tier).toBe('primitive');
     expect(spec.requiredStoryKinds).toEqual(['default', 'workflow', 'docs']);
     expect(spec.ownedStoryRefs).toEqual([
       {

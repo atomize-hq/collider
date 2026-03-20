@@ -1,0 +1,41 @@
+{
+  "inventoryVersion": "1",
+  "components": [
+    {
+      "componentId": "button",
+      "validatorKinds": ["default", "workflow", "docs"],
+      "implementedStoryRefs": [
+        {
+          "kind": "default",
+          "storyId": "contracts-pilot-recipe--button-recipe"
+        },
+        {
+          "kind": "workflow",
+          "storyId": "foundations-runtime-css-parity--baseline-theme"
+        },
+        {
+          "kind": "docs",
+          "storyId": "contracts-generated-tokens--token-registry"
+        }
+      ]
+    },
+    {
+      "componentId": "button",
+      "validatorKinds": ["default", "workflow", "docs"],
+      "implementedStoryRefs": [
+        {
+          "kind": "default",
+          "storyId": "contracts-pilot-recipe--button-recipe"
+        },
+        {
+          "kind": "workflow",
+          "storyId": "foundations-runtime-css-parity--baseline-theme"
+        },
+        {
+          "kind": "docs",
+          "storyId": "contracts-generated-tokens--token-registry"
+        }
+      ]
+    }
+  ]
+}
