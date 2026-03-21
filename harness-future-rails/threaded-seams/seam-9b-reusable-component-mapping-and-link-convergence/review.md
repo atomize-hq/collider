@@ -70,10 +70,10 @@ flowchart LR
 
 ## Pre-Exec Gate Disposition
 
-- **Review gate**: passed. The active seam still has reviewer-visible failure modes around identity ownership, missing pilot metadata, and Storybook link provenance.
-- **Contract gate**: passed. Ownership stays aligned with `threading.md`: `SEAM-9B` owns `CT-11B`, consumes revalidated `CT-9B` and `CT-10B`, and preserves `THR-07` as the only unpublished outbound thread.
-- **Revalidation gate**: passed. `SEAM-8B` landed `CT-10B`, recorded a ready seam-exit handoff in `../../governance/seam-8b-closeout.md`, and the current repo surfaces still match the seam's planned consumption boundary.
-- **Opened remediations**: none for pre-exec gating. `REM-003` stays open as the active seam's landing and closeout obligation.
+- **Review gate**: pending. This bundle captures the falsification surfaces and likely mismatch hotspots needed for the explicit pre-exec review decision.
+- **Contract gate**: pending. Ownership currently stays aligned with `threading.md`: `SEAM-9B` owns `CT-11B`, consumes `CT-9B` and `CT-10B`, and preserves `THR-07` as the only unpublished outbound thread.
+- **Revalidation gate**: pending. `SEAM-8B` landed `CT-10B`, recorded a ready seam-exit handoff in `../../governance/seam-8b-closeout.md`, and the current repo surfaces match the planned consumption boundary, but the gate remains a promotion-time decision.
+- **Opened remediations**: none from this pre-exec review. `REM-003` stays open as the active seam's landing and closeout obligation.
 
 ## Planned Seam-Exit Gate Focus
 

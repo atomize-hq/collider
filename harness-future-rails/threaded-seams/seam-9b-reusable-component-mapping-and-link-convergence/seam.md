@@ -1,7 +1,7 @@
 ---
 seam_id: SEAM-9B
 seam_slug: reusable-component-mapping-and-link-convergence
-status: exec-ready
+status: decomposed
 execution_horizon: active
 plan_version: v2
 basis:
@@ -22,16 +22,16 @@ basis:
     - Any repo-owned mapping or link metadata appearing outside `storybook/connect/**` and `figma/code-connect/**`, or any consumer reading vendor UI instead of repo-owned `CT-10B` or future `CT-11B` fields.
 gates:
   pre_exec:
-    review: passed
-    contract: passed
-    revalidation: passed
+    review: pending
+    contract: pending
+    revalidation: pending
   post_exec:
     landing: pending
     closeout: pending
 seam_exit_gate:
   required: true
   planned_location: S4
-  status: planned
+  status: pending
 open_remediations:
   - REM-003
 ---
@@ -62,6 +62,7 @@ open_remediations:
 ## Review Bundle
 
 - `review.md` is the authoritative artifact for `gates.pre_exec.review`
+- `../../review_surfaces.md` is supportive orientation only and does not replace the seam-local gate artifact
 
 ## Seam-Exit Gate Plan
 
@@ -105,4 +106,4 @@ open_remediations:
   - Reconfirm that no repo-owned mapping generator or validation path has already diverged from the planned `storybook/connect/**` and `figma/code-connect/**` surfaces.
 - **Parallelization notes**:
   - **What can proceed now**: `S1` can define the repo-owned identity, authority boundary, and current-versus-incomplete link rules; pilot metadata inventory for `S2` can be reviewed against current component specs and the published `CT-10B` contract boundary.
-  - **What must wait**: only landing and closeout work that publishes `CT-11B` surfaces and advances `THR-07` remains outside the current `exec-ready` posture.
+  - **What must wait**: promotion out of `decomposed` still requires explicit pre-exec review, contract, and revalidation gate decisions against the then-current basis; landing and closeout work that publishes `CT-11B` surfaces and advances `THR-07` remains later.

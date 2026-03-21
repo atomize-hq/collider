@@ -2,10 +2,11 @@
 seam_id: SEAM-9B
 seam_slug: reusable-component-mapping-and-link-convergence
 type: integration
-status: exec-ready
+status: decomposed
 execution_horizon: active
 plan_version: v2
 basis:
+  currentness: current
   source_scope_ref: scope_brief.md
   source_scope_version: v1
   upstream_closeouts:
@@ -18,9 +19,9 @@ basis:
     - THR-04
 gates:
   pre_exec:
-    review: passed
-    contract: passed
-    revalidation: passed
+    review: pending
+    contract: pending
+    revalidation: pending
   post_exec:
     landing: pending
     closeout: pending

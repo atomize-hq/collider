@@ -3,11 +3,11 @@
 ## Open remediations
 
 - **REM-003**
-  - Source gate: contract
+  - Source gate: closeout
   - Related seam/slice/thread/contract: `SEAM-9B`, `CT-11B`, `THR-07`
   - Severity: important
-  - Finding: the repo has no repo-owned reusable-component mapping or link contract for future Code Connect and Storybook Connect style rails.
-  - Required fix: define the repo-owned identity and projection rules that can generate mapping and link metadata without vendor-authored truth.
+  - Finding: the repo-owned `CT-11B` contract, pilot projection outputs, and validation/reporting entrypoints are now landed, but `artifacts/harness/reusable-component-mapping-status.json` still reports the live pilot mapping incomplete because `publishedStorybookUrl` cannot be derived from current repo-owned `CT-10B` evidence while `artifacts/chromatic/status.json` is absent locally.
+  - Required fix: restore current repo-owned `CT-10B` publication evidence or equivalent recorded status that the mapping generator may consume directly, rerun `pnpm generate:component-mapping` and `pnpm validate:reusable-component-mapping`, and close `REM-003` only once the pilot mapping status is complete and `THR-07` can be published.
   - Owner: `WS-9B`
   - Status: open
   - Must close before: `SEAM-9B` closeout may claim `CT-11B` published or advance `THR-07`
