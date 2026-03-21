@@ -2,7 +2,7 @@
 seam_id: SEAM-9B
 seam_slug: reusable-component-mapping-and-link-convergence
 type: integration
-status: decomposed
+status: exec-ready
 execution_horizon: active
 plan_version: v2
 basis:
@@ -19,9 +19,9 @@ basis:
     - THR-04
 gates:
   pre_exec:
-    review: pending
-    contract: pending
-    revalidation: pending
+    review: passed
+    contract: passed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
@@ -65,4 +65,4 @@ open_remediations:
   - Risk: Storybook links drift because published URLs and component specs are maintained separately.
   - De-risk plan: consume `CT-10B` build URLs and `CT-9B` identities through one projection path.
 - **Rollout / safety**: start with a narrow pilot component family and fail closed on incomplete mapping fields before broadening to the full reusable-component catalog.
-- **Downstream decomposition context**: this seam is now active because `SEAM-8B` landed `CT-10B`, recorded a ready seam-exit handoff, and published the field boundary that Storybook-link execution consumes. The first execution slice should freeze the repo-owned `CT-11B` identity and projection contract against the now-current `CT-9B` and `CT-10B` basis without letting vendor payloads redefine identity.
+- **Downstream decomposition context**: this seam remains the active execution target and is now `exec-ready` because `SEAM-8B` landed `CT-10B`, recorded a ready seam-exit handoff, and published the field boundary that Storybook-link execution consumes. The remaining blocker is post-exec and already explicit in `REM-003`: `THR-07` cannot publish until current repo-owned `CT-10B` evidence is available again for the live pilot mapping outputs.

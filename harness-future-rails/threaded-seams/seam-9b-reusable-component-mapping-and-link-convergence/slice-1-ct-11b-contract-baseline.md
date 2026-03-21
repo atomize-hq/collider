@@ -3,7 +3,7 @@ slice_id: S1
 seam_id: SEAM-9B
 slice_kind: delivery
 execution_horizon: active
-status: decomposed
+status: exec-ready
 plan_version: v2
 basis:
   currentness: current
