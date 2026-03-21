@@ -20,6 +20,7 @@
     "validate:storybook-proof-structure": "node scripts/validate-storybook-proof-structure.mjs",
     "generate:storybook-proof-coverage": "node scripts/generate-storybook-proof-coverage.mjs",
     "generate:component-mapping": "node scripts/generate-component-mapping.mjs",
+    "validate:reusable-component-mapping": "node scripts/validate-reusable-component-mapping.mjs",
     "govern:storybook-proof": "node scripts/govern-storybook-proof.mjs",
     "validate:tokens": "node design-tokens/build/validate-tokens.mjs",
     "build:tokens": "node design-tokens/build/build-tokens.mjs",

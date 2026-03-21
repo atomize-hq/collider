@@ -14,7 +14,7 @@
     { "name": "intent", "values": ["primary", "secondary"] },
     { "name": "size", "values": ["sm", "md"] }
   ],
-  "slotNames": ["icon", "label", "root"],
+  "slotNames": ["icon", "label"],
   "exampleStoryIds": [
     "contracts-pilot-recipe--button-recipe",
     "foundations-runtime-css-parity--baseline-theme",
@@ -25,12 +25,16 @@
     "foundations-runtime-css-parity--baseline-theme",
     "contracts-generated-tokens--token-registry"
   ],
-  "publishedStorybookUrl": null,
-  "publishedStorybookRevisionGitSha": null,
-  "publishedStorybookComponentIds": null,
-  "publishedStorybookStoryIds": null,
-  "storyLinkStatus": "missing-status-artifact",
-  "blockingFields": ["publishedStorybookUrl"],
+  "publishedStorybookUrl": "https://example.invalid/chromatic/builds/1111111111111111111111111111111111111111",
+  "publishedStorybookRevisionGitSha": "1111111111111111111111111111111111111111",
+  "publishedStorybookComponentIds": ["button"],
+  "publishedStorybookStoryIds": [
+    "contracts-pilot-recipe--button-recipe",
+    "foundations-runtime-css-parity--baseline-theme",
+    "contracts-generated-tokens--token-registry"
+  ],
+  "storyLinkStatus": "resolved",
+  "blockingFields": [],
   "sources": {
     "componentSpec": "storybook/component-specs/button.json",
     "proofCoverage": "artifacts/storybook/proof-coverage.json",

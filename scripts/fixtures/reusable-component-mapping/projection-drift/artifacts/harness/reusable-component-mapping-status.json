@@ -1,0 +1,32 @@
+{
+  "mappingStatusVersion": "1",
+  "generatedAt": "2026-03-21T14:26:34.037Z",
+  "summary": {
+    "componentCount": 1,
+    "completeCount": 0,
+    "incompleteCount": 0,
+    "invalidCount": 1
+  },
+  "components": [
+    {
+      "componentId": "button",
+      "state": "invalid",
+      "linkState": "resolved-current",
+      "issues": [],
+      "drift": [
+        "[CT-11B_MAPPING_DRIFT] componentId \"button\" expected.slotNames does not match figmaCodeConnect",
+        "[CT-11B_MAPPING_DRIFT] componentId \"button\" storybookConnect.slotNames does not match figmaCodeConnect"
+      ],
+      "sourcePaths": {
+        "componentSpec": "storybook/component-specs/button.json",
+        "storyInventory": "storybook/story-inventory.json",
+        "proofCoverage": "artifacts/storybook/proof-coverage.json",
+        "chromaticStatus": "artifacts/chromatic/status.json"
+      },
+      "outputPaths": {
+        "figmaCodeConnect": "figma/code-connect/button.json",
+        "storybookConnect": "storybook/connect/button.json"
+      }
+    }
+  ]
+}

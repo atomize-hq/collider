@@ -29,7 +29,7 @@
   "publishedStorybookRevisionGitSha": null,
   "publishedStorybookComponentIds": null,
   "publishedStorybookStoryIds": null,
-  "storyLinkStatus": "missing-status-artifact",
+  "storyLinkStatus": "invalid-status-artifact",
   "blockingFields": ["publishedStorybookUrl"],
   "sources": {
     "componentSpec": "storybook/component-specs/button.json",

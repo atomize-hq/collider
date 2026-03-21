@@ -46,6 +46,12 @@ describe('createComponentMappingArtifacts', () => {
     expect(artifacts.components[0]?.storybookConnect.publishedStorybookUrl).toBe(
       'https://example.invalid/chromatic/builds/1111111111111111111111111111111111111111'
     );
+    expect(artifacts.components[0]?.storybookConnect.publishedStorybookRevisionGitSha).toBe(
+      '1111111111111111111111111111111111111111'
+    );
+    expect(artifacts.components[0]?.storybookConnect.publishedStorybookComponentIds).toEqual([
+      'button',
+    ]);
     expect(artifacts.components[0]?.storybookConnect.storyLinkStatus).toBe('resolved');
     expect(artifacts.components[0]?.storybookConnect.blockingFields).toEqual([]);
   });
@@ -141,32 +147,42 @@ describe('writeComponentMappingArtifacts', () => {
     const figmaCodeConnect = readJson(workspace, 'figma/code-connect/button.json');
     const completeness = readJson(
       workspace,
-      'artifacts/harness/component-mapping-completeness.json'
+      'artifacts/harness/reusable-component-mapping-status.json'
     );
 
     expect(storybookConnect).toMatchObject({
       projectionKind: 'storybook-connect',
       componentId: 'button',
+      componentSpecPath: 'storybook/component-specs/button.json',
+      storyInventoryPath: 'storybook/story-inventory.json',
+      proofCoveragePath: 'artifacts/storybook/proof-coverage.json',
+      chromaticStatusPath: 'artifacts/chromatic/status.json',
+      supportedVariantsSource: 'design-tokens/dist/tokens.ts',
+      slotNamesSource: 'design-tokens/dist/tokens.ts',
       storyLinkStatus: 'resolved',
+      publishedStorybookRevisionGitSha: '1111111111111111111111111111111111111111',
     });
     expect(figmaCodeConnect).toMatchObject({
       projectionKind: 'figma-code-connect',
       componentId: 'button',
+      componentSpecPath: 'storybook/component-specs/button.json',
       figma: {
         componentRef: 'figma://file/23PLdynlRYoBYQx9teoC8A#component=button',
       },
     });
     expect(completeness).toMatchObject({
-      completenessVersion: '1',
+      mappingStatusVersion: '1',
       summary: {
         componentCount: 1,
         completeCount: 1,
         incompleteCount: 0,
+        invalidCount: 0,
       },
       components: [
         {
           componentId: 'button',
-          status: 'complete',
+          state: 'complete',
+          linkState: 'resolved-current',
         },
       ],
     });

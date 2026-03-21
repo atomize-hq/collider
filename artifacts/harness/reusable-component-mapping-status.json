@@ -1,0 +1,31 @@
+{
+  "mappingStatusVersion": "1",
+  "generatedAt": "2026-03-21T14:27:48.795Z",
+  "summary": {
+    "componentCount": 1,
+    "completeCount": 0,
+    "incompleteCount": 1,
+    "invalidCount": 0
+  },
+  "components": [
+    {
+      "componentId": "button",
+      "state": "incomplete",
+      "linkState": "unresolved",
+      "issues": [
+        "[CT-11B_MAPPING_INCOMPLETE_FIELD] componentId \"button\" requires publishedStorybookUrl before the mapping is complete"
+      ],
+      "drift": [],
+      "sourcePaths": {
+        "componentSpec": "storybook/component-specs/button.json",
+        "storyInventory": "storybook/story-inventory.json",
+        "proofCoverage": "artifacts/storybook/proof-coverage.json",
+        "chromaticStatus": "artifacts/chromatic/status.json"
+      },
+      "outputPaths": {
+        "figmaCodeConnect": "figma/code-connect/button.json",
+        "storybookConnect": "storybook/connect/button.json"
+      }
+    }
+  ]
+}

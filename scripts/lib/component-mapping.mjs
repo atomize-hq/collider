@@ -20,12 +20,14 @@ import {
 import { validateComponentSpec } from './storybook-component-spec.mjs';
 
 export const componentMappingVersion = '1';
-export const componentMappingCompletenessVersion = '1';
+export const componentMappingStatusVersion = '1';
+export const componentMappingCompletenessVersion = componentMappingStatusVersion;
 export const componentMappingRootDirEnvVar = 'COMPONENT_MAPPING_ROOT_DIR';
 export const defaultStorybookConnectDir = 'storybook/connect';
 export const defaultFigmaCodeConnectDir = 'figma/code-connect';
-export const defaultComponentMappingCompletenessPath =
-  'artifacts/harness/component-mapping-completeness.json';
+export const defaultReusableComponentMappingStatusPath =
+  'artifacts/harness/reusable-component-mapping-status.json';
+export const defaultComponentMappingCompletenessPath = defaultReusableComponentMappingStatusPath;
 
 const defaultComponentSpecsDir = 'storybook/component-specs';
 const defaultRecipeIndexPath = 'design-tokens/src/recipes/index.json';
@@ -74,7 +76,7 @@ export function createComponentMappingArtifacts(options = {}) {
   );
 
   return {
-    completenessReport: createCompletenessReport(components),
+    statusReport: createComponentMappingStatusReport(components),
     components,
     rootDir,
   };
@@ -90,7 +92,7 @@ export async function writeComponentMappingArtifacts(artifacts, options = {}) {
     rootDir,
     options.figmaCodeConnectDir ?? defaultFigmaCodeConnectDir
   );
-  const completenessPath = path.resolve(
+  const statusPath = path.resolve(
     rootDir,
     options.completenessPath ?? defaultComponentMappingCompletenessPath
   );
@@ -111,7 +113,7 @@ export async function writeComponentMappingArtifacts(artifacts, options = {}) {
     );
   }
 
-  const completenessReportPath = await writeJson(completenessPath, artifacts.completenessReport);
+  const completenessReportPath = await writeJson(statusPath, artifacts.statusReport);
   return {
     completenessReportPath,
     outputPaths,
@@ -172,13 +174,22 @@ function createComponentMappingRecord(context) {
   const sharedRecord = {
     mappingVersion: componentMappingVersion,
     componentId: context.componentId,
+    componentSpecPath: path.posix.join(defaultComponentSpecsDir, componentSpecRecord.filename),
+    storyInventoryPath: defaultStoryInventoryPath,
+    proofCoveragePath: defaultStorybookProofCoveragePath,
+    chromaticStatusPath: defaultChromaticStatusPath,
     codeEntrypoint: componentSpecRecord.data.downstreamHooks.codeEntrypoint,
     figmaComponentRef: componentSpecRecord.data.downstreamHooks.figmaComponentRef,
+    supportedVariantsSource: componentSpecRecord.data.downstreamHooks.supportedVariantsSource,
+    slotNamesSource: componentSpecRecord.data.downstreamHooks.slotNamesSource,
     supportedVariants: recipeProjection.supportedVariants,
     slotNames: recipeProjection.slotNames,
     exampleStoryIds,
     implementedStoryIds,
     publishedStorybookUrl: storyLink.publishedStorybookUrl,
+    publishedStorybookRevisionGitSha: storyLink.publishedStorybookRevisionGitSha,
+    publishedStorybookComponentIds: storyLink.publishedStorybookComponentIds,
+    publishedStorybookStoryIds: storyLink.publishedStorybookStoryIds,
     storyLinkStatus: storyLink.storyLinkStatus,
     blockingFields,
     sources: {
@@ -187,8 +198,7 @@ function createComponentMappingRecord(context) {
       storyInventory: defaultStoryInventoryPath,
       supportedVariantsSource: componentSpecRecord.data.downstreamHooks.supportedVariantsSource,
       slotNamesSource: componentSpecRecord.data.downstreamHooks.slotNamesSource,
-      chromaticStatus:
-        context.chromaticStatus.kind === 'present' ? defaultChromaticStatusPath : null,
+      chromaticStatus: defaultChromaticStatusPath,
     },
   };
 
@@ -215,22 +225,36 @@ function createComponentMappingRecord(context) {
   };
 }
 
-function createCompletenessReport(components) {
+function createComponentMappingStatusReport(components) {
   const completeCount = components.filter((component) => component.status === 'complete').length;
+  const incompleteCount = components.filter(
+    (component) => component.status === 'incomplete'
+  ).length;
 
   return {
-    completenessVersion: componentMappingCompletenessVersion,
+    mappingStatusVersion: componentMappingStatusVersion,
     generatedAt: new Date().toISOString(),
     summary: {
       componentCount: components.length,
       completeCount,
-      incompleteCount: components.length - completeCount,
+      incompleteCount,
+      invalidCount: 0,
     },
     components: components.map((component) => ({
       componentId: component.componentId,
-      status: component.status,
-      storyLinkStatus: component.storyLinkStatus,
-      blockingFields: [...component.blockingFields],
+      state: component.status,
+      linkState: normalizeLinkState(component.storyLinkStatus),
+      issues: component.blockingFields.map(
+        (field) =>
+          `[CT-11B_MAPPING_INCOMPLETE_FIELD] componentId "${component.componentId}" requires ${field} before the mapping is complete`
+      ),
+      drift: [],
+      sourcePaths: {
+        componentSpec: component.storybookConnect.componentSpecPath,
+        storyInventory: component.storybookConnect.storyInventoryPath,
+        proofCoverage: component.storybookConnect.proofCoveragePath,
+        chromaticStatus: component.storybookConnect.chromaticStatusPath,
+      },
       outputPaths: {
         figmaCodeConnect: `${defaultFigmaCodeConnectDir}/${component.componentId}.json`,
         storybookConnect: `${defaultStorybookConnectDir}/${component.componentId}.json`,
@@ -271,6 +295,9 @@ function resolvePublishedStorybookLink(input) {
   if (input.chromaticStatus.kind === 'missing') {
     return {
       publishedStorybookUrl: null,
+      publishedStorybookRevisionGitSha: null,
+      publishedStorybookComponentIds: null,
+      publishedStorybookStoryIds: null,
       storyLinkStatus: 'missing-status-artifact',
     };
   }
@@ -278,6 +305,9 @@ function resolvePublishedStorybookLink(input) {
   if (input.chromaticStatus.kind === 'invalid') {
     return {
       publishedStorybookUrl: null,
+      publishedStorybookRevisionGitSha: null,
+      publishedStorybookComponentIds: null,
+      publishedStorybookStoryIds: null,
       storyLinkStatus: input.chromaticStatus.storyLinkStatus,
     };
   }
@@ -288,6 +318,9 @@ function resolvePublishedStorybookLink(input) {
   if (!selectedComponentIds.has(input.componentId)) {
     return {
       publishedStorybookUrl: null,
+      publishedStorybookRevisionGitSha: null,
+      publishedStorybookComponentIds: null,
+      publishedStorybookStoryIds: null,
       storyLinkStatus: 'component-not-in-published-scope',
     };
   }
@@ -296,12 +329,20 @@ function resolvePublishedStorybookLink(input) {
   if (!input.exampleStoryIds.every((storyId) => selectedStoryIds.has(storyId))) {
     return {
       publishedStorybookUrl: null,
+      publishedStorybookRevisionGitSha: null,
+      publishedStorybookComponentIds: null,
+      publishedStorybookStoryIds: null,
       storyLinkStatus: 'story-scope-mismatch',
     };
   }
 
   return {
     publishedStorybookUrl: input.chromaticStatus.data.build.url,
+    publishedStorybookRevisionGitSha: input.chromaticStatus.data.revision.gitSha,
+    publishedStorybookComponentIds: [
+      ...input.chromaticStatus.data.proofInventory.selectedComponentIds,
+    ],
+    publishedStorybookStoryIds: [...input.chromaticStatus.data.proofInventory.selectedStoryIds],
     storyLinkStatus: 'resolved',
   };
 }
@@ -414,4 +455,17 @@ function findByComponentId(collection, componentId) {
 
 function sameOrderedArray(left, right) {
   return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+
+function normalizeLinkState(storyLinkStatus) {
+  switch (storyLinkStatus) {
+    case 'resolved':
+      return 'resolved-current';
+    case 'stale-status-artifact':
+      return 'stale';
+    case 'invalid-status-artifact':
+      return 'invalid-provenance';
+    default:
+      return 'unresolved';
+  }
 }

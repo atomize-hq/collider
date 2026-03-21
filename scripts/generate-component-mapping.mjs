@@ -28,5 +28,5 @@ async function main() {
   const output = await writeComponentMappingArtifacts(artifacts);
 
   console.log(`✓ Component mapping artifacts written: ${output.outputPaths.length + 1} files`);
-  console.log(`Completeness report: ${output.completenessReportPath}`);
+  console.log(`Status report: ${output.completenessReportPath}`);
 }
