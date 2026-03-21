@@ -222,7 +222,7 @@ jobs:
       - name: Upload Storybook static build
         uses: actions/upload-artifact@v4
         with:
-          name: storybook-static
+          name: storybook-static-${{ github.sha }}
           path: storybook-static
           if-no-files-found: error
 
@@ -255,10 +255,24 @@ jobs:
       - name: Download Storybook static build
         uses: actions/download-artifact@v4
         with:
-          name: storybook-static
+          name: storybook-static-${{ github.sha }}
           path: storybook-static
 
       - name: Publish branch-aware Chromatic review
+        id: publish_chromatic_review
+        continue-on-error: true
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
         run: pnpm chromatic:review
+
+      - name: Upload chromatic review status artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromatic-status-${{ github.sha }}
+          path: artifacts/chromatic/status.json
+          if-no-files-found: error
+
+      - name: Fail on chromatic review publication error
+        if: steps.publish_chromatic_review.outcome == 'failure'
+        run: exit 1
