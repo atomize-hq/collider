@@ -1,0 +1,86 @@
+{
+  "statusVersion": "1",
+  "generatedAt": "2026-03-21T20:05:00.000Z",
+  "changeClass": "token-only",
+  "railSummaries": {
+    "ct8b": {
+      "contractId": "CT-8B",
+      "threadId": "THR-05",
+      "sourcePath": "src/figma/sync-ledger.json",
+      "sourceVersionOrRevision": "ledgerVersion:2|artifactRevision:5a567cd7d07860135ab0bfb1d8f2873ef1eec836",
+      "freshness": "current",
+      "outcome": "deferred",
+      "claimRelevant": true
+    },
+    "ct9b": {
+      "contractId": "CT-9B",
+      "threadId": "THR-08",
+      "sourcePath": "artifacts/storybook/proof-coverage.json",
+      "sourceVersionOrRevision": "inventoryVersion:1|proofCoverageVersion:1",
+      "freshness": "current",
+      "outcome": "not-applicable",
+      "claimRelevant": false
+    },
+    "ct10b": {
+      "contractId": "CT-10B",
+      "threadId": "THR-06",
+      "sourcePath": "artifacts/chromatic/status.json",
+      "sourceVersionOrRevision": "statusVersion:1|revision:e4a9f4f4e0a9dd75744a80cfe6a323882855c16e",
+      "freshness": "current",
+      "outcome": "not-applicable",
+      "claimRelevant": false
+    },
+    "ct11b": {
+      "contractId": "CT-11B",
+      "threadId": "THR-07",
+      "sourcePath": "artifacts/harness/reusable-component-mapping-status.json",
+      "sourceVersionOrRevision": "mappingStatusVersion:1",
+      "freshness": "current",
+      "outcome": "not-applicable",
+      "claimRelevant": false
+    }
+  },
+  "claimProfiles": {
+    "reusable-component-advancement": {
+      "changeClasses": ["reusable-component-advancement"],
+      "readsRails": ["ct8b", "ct9b", "ct10b", "ct11b"],
+      "enforcementMode": "informational",
+      "informationalOnly": false,
+      "mayPromoteToBlockingInS3": true
+    },
+    "token-only": {
+      "changeClasses": ["token-only"],
+      "readsRails": ["ct8b"],
+      "enforcementMode": "informational",
+      "informationalOnly": true,
+      "mayPromoteToBlockingInS3": false
+    },
+    "docs-only": {
+      "changeClasses": ["docs-only"],
+      "readsRails": ["ct9b"],
+      "enforcementMode": "informational",
+      "informationalOnly": true,
+      "mayPromoteToBlockingInS3": false
+    },
+    "proof-only": {
+      "changeClasses": ["proof-only"],
+      "readsRails": ["ct9b", "ct10b"],
+      "enforcementMode": "informational",
+      "informationalOnly": true,
+      "mayPromoteToBlockingInS3": false
+    },
+    "other": {
+      "changeClasses": ["other"],
+      "readsRails": [],
+      "enforcementMode": "informational",
+      "informationalOnly": true,
+      "mayPromoteToBlockingInS3": false
+    }
+  },
+  "highestEarnedClaim": {
+    "profileId": "token-only",
+    "claimId": "token-only-informational"
+  },
+  "reasonCodes": [],
+  "enforcementMode": "informational"
+}
