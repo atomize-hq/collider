@@ -58,7 +58,7 @@ describe('reusable component promotion contract docs', () => {
     expect(contractDoc).toContain('may not re-decide `review.requiredForClaim`');
   });
 
-  it('pins the S1 policy baseline and keeps mapping current without activating blocking', () => {
+  it('pins the S3 consumer policy while keeping non-reusable profiles advisory', () => {
     expect(policyDoc).toContain('`reusable-component-advancement` is the only profile');
     expect(policyDoc).toContain('`token-only` stays on a narrower informational profile');
     expect(policyDoc).toContain('`docs-only` stays on a narrower informational profile');
@@ -68,7 +68,11 @@ describe('reusable component promotion contract docs', () => {
     expect(policyDoc).toContain(
       'Mapping is a current upstream input because `THR-07` is published'
     );
-    expect(policyDoc).toContain('Consumer ratchets remain owned by `S3`');
+    expect(policyDoc).toContain(
+      '`ci` may block only when the requested change class is explicitly `reusable-component-advancement`.'
+    );
+    expect(policyDoc).toContain('`unknown` is allowed only as an advisory input.');
+    expect(policyDoc).toContain('`local` is advisory-only.');
     expect(policyDoc).toContain('Do not treat mapping as deferred planning-only input');
   });
 });

@@ -22,6 +22,7 @@
     "generate:storybook-proof-coverage": "node scripts/generate-storybook-proof-coverage.mjs",
     "generate:component-mapping": "node scripts/generate-component-mapping.mjs",
     "generate:reusable-component-status": "node scripts/generate-reusable-component-status.mjs",
+    "govern:reusable-component-promotion": "node scripts/govern-reusable-component-promotion.mjs",
     "validate:reusable-component-mapping": "node scripts/validate-reusable-component-mapping.mjs",
     "validate:reusable-component-status": "node scripts/validate-reusable-component-status.mjs",
     "govern:storybook-proof": "node scripts/govern-storybook-proof.mjs",

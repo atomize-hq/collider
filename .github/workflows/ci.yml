@@ -282,3 +282,45 @@ jobs:
       - name: Fail on chromatic review publication error
         if: ${{ always() && steps.publish_chromatic_review.outcome == 'failure' }}
         run: exit 1
+
+  reusable-component-promotion:
+    name: Reusable Component Promotion
+    needs: chromatic-review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download chromatic review status artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chromatic-status-${{ github.sha }}
+          path: artifacts/chromatic
+
+      - name: Run reusable component promotion gate
+        env:
+          REUSABLE_COMPONENT_PROMOTION_CONSUMER: ci
+          REUSABLE_COMPONENT_PROMOTION_CHANGE_CLASS: unknown
+        run: pnpm govern:reusable-component-promotion
+
+      - name: Upload reusable component promotion artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reusable-component-status-${{ github.sha }}
+          path: artifacts/harness/reusable-component-status.json
+          if-no-files-found: error

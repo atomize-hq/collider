@@ -52,6 +52,10 @@ token-governance:
 storybook-proof:
     pnpm govern:storybook-proof
 
+# Manual reusable-component promotion gate (consumer policy stays outside preflight for now)
+reusable-component-promotion:
+    pnpm govern:reusable-component-promotion
+
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers
 # ══════════════════════════════════════════════════════════════════════════════

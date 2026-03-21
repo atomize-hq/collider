@@ -2,17 +2,18 @@
 
 ## Open remediations
 
+## Resolved remediations
+
 - **REM-004**
   - Source gate: closeout
   - Related seam/slice/thread/contract: `SEAM-10B`, `CT-12B`, `THR-05`, `THR-06`, `THR-07`, `THR-08`
   - Severity: follow-up
   - Finding: the current promotion model stops at Figma parity and does not yet define how future rails become required for reusable-component advancement.
   - Required fix: publish claim-level policy that consumes upstream proof, review, mapping, and parity status without broadening those requirements to unrelated changes.
-  - Owner: future `WS-10B`
-  - Status: open
+  - Owner: `WS-10B`
+  - Status: resolved
   - Must close before: the pack can claim a complete reusable-component harness
-
-## Resolved remediations
+  - Resolution evidence: `storybook/reusable-component-promotion-contract.md`, `storybook/reusable-component-promotion-policy.md`, `scripts/lib/reusable-component-status-contract.mjs`, `scripts/lib/reusable-component-status.mjs`, `scripts/lib/reusable-component-status-validator.mjs`, `scripts/lib/reusable-component-promotion-gate.mjs`, `scripts/generate-reusable-component-status.mjs`, `scripts/validate-reusable-component-status.mjs`, `scripts/govern-reusable-component-promotion.mjs`, `artifacts/harness/reusable-component-status.json`, `pnpm validate:reusable-component-status`, `pnpm govern:reusable-component-promotion`, `pnpm vitest run --project unit storybook/reusable-component-promotion-contract.test.ts storybook/reusable-component-promotion-gate.test.ts`, `harness-future-rails/governance/seam-10b-closeout.md`
 
 - **REM-003**
   - Source gate: closeout

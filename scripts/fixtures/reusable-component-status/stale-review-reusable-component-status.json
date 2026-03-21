@@ -81,6 +81,6 @@
     "profileId": "reusable-component-advancement",
     "claimId": "reusable-component-proof-ready"
   },
-  "reasonCodes": ["ct8b-parity-deferred", "ct10b-review-stale"],
+  "reasonCodes": ["ct8b-parity-deferred", "ct10b-review-informational", "ct10b-review-stale"],
   "enforcementMode": "informational"
 }

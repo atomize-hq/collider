@@ -81,6 +81,6 @@
     "profileId": "reusable-component-advancement",
     "claimId": "reusable-component-reviewed"
   },
-  "reasonCodes": ["ct8b-parity-deferred", "ct11b-mapping-invalid"],
+  "reasonCodes": ["ct8b-parity-deferred", "ct10b-review-informational", "ct11b-mapping-invalid"],
   "enforcementMode": "informational"
 }

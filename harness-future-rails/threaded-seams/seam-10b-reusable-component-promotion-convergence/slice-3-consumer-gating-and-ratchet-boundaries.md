@@ -36,16 +36,16 @@ candidate_subslices: []
 
 ### S3 - Consumer Gating And Ratchet Boundaries
 
-- **User/system value**: merge, handoff, and release consumers can adopt `CT-12B` safely because they know which claims are informational, which may block, and which must stay deferred until the upstream mapping handoff is real.
+- **User/system value**: merge, handoff, and release consumers can adopt `CT-12B` safely because they know which claims are informational, which may block, and which must stay deferred until parity and release-governed enforcement are current.
 - **Scope (in/out)**:
   - In: consumer entrypoints for local, CI, PR or handoff, and release policy; allowed enforcement boundaries by change class; ratchet rules for moving from informational to blocking claims; stale-trigger and revalidation behavior when upstream rails drift.
-  - Out: implementing net-new upstream status rails, forcing reusable-component requirements onto narrower change classes, or declaring mapping-dependent blocking policy current before `THR-07` is published.
+  - Out: implementing net-new upstream status rails, forcing reusable-component requirements onto narrower change classes, or treating parity-deferred release readiness as fully promotable.
 - **Acceptance criteria**:
   - Every consumer can point to one allowed `CT-12B` claim surface and one fallback posture when the claim is advisory or deferred.
   - Blocking policy is scoped to reusable-component advancement and cannot silently spread to unrelated changes.
-  - Mapping-dependent blocking rules stay disabled until the active seam handoff makes `CT-11B` current basis.
+  - Mapping-dependent blocking rules are allowed only while the published `THR-07` handoff and `CT-11B` field boundary remain current basis.
   - Revalidation and stale-trigger behavior is explicit when upstream proof, review, parity, or mapping semantics drift.
-- **Dependencies**: requires `S1` and `S2`, published review optionality semantics from `THR-06`, published proof coverage from `THR-08`, and the future `THR-07` handoff before mapping-complete blocking is legal.
+- **Dependencies**: requires `S1` and `S2`, published review optionality semantics from `THR-06`, published proof coverage from `THR-08`, and the March 21, 2026 `THR-07` handoff recorded in `../../governance/seam-9b-closeout.md`.
 - **Verification**: review against [review.md](./review.md#r1---change-class-aware-promotion-decision-flow) and [review.md](./review.md#r3---informational-versus-blocking-ratchet).
 - **Rollout/safety**: stage consumers from advisory to blocking deliberately; prefer explicit deferral over broad fail-open or fail-closed behavior when upstream mapping evidence is not yet current.
 - **Review surface refs**: [review.md](./review.md#r1---change-class-aware-promotion-decision-flow), [review.md](./review.md#r3---informational-versus-blocking-ratchet)
@@ -67,7 +67,7 @@ Checklist:
 - Implement: define the allowed consumer reads and actions.
 - Test: compare consumer behaviors for advisory and blocked outcomes.
 - Validate: confirm consumer boundaries do not bypass `CT-12B`.
-- Cleanup: remove any consumer rule that assumes unpublished mapping truth.
+- Cleanup: remove any consumer rule that assumes mapping is still unpublished or planning-only.
 
 #### S3.T2 - Freeze Ratchet Preconditions, Stale Triggers, And Revalidation Rules
 
@@ -78,12 +78,12 @@ Checklist:
 - **Thread/contract refs**: consumes `THR-07`; supports `CT-12B`.
 - **Implementation notes**: require a published `THR-07` handoff plus stable `CT-11B` fields before any mapping-complete blocking claim activates; treat stale upstream semantics as a demotion back to informational or blocked, not as silent carry-forward.
 - **Acceptance criteria**: the ratchet cannot activate early, and stale-trigger behavior is explicit for proof, review, mapping, and parity drift.
-- **Test notes**: compare a ready-to-ratchet case against a `THR-07`-still-identified case and a stale-upstream case.
+- **Test notes**: compare a ready-to-ratchet case against a stale-upstream case and a parity-deferred release case.
 - **Risk/rollback notes**: never let pack-closeout or release pressure turn provisional mapping semantics into current blocking policy.
 
 Checklist:
 
 - Implement: define the ratchet prerequisites and revalidation branches.
 - Test: model ready, deferred, and stale cases.
-- Validate: confirm `THR-07` publication is required before mapping-complete blocking activates.
+- Validate: confirm `THR-07` publication remains recorded and current before mapping-complete blocking stays active.
 - Cleanup: remove any ratchet rule that depends on unrecorded post-exec truth.

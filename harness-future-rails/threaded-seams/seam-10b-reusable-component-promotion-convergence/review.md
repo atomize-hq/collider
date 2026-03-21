@@ -14,7 +14,7 @@ This artifact feeds `gates.pre_exec.review`.
 
 - Can the planned `CT-12B` contract still let a merge, handoff, or release consumer claim full reusable-component readiness when mapping completeness goes stale, drifts from the published `CT-11B` boundary, or stops matching the March 21, 2026 `THR-07` handoff?
 - Could the promotion policy accidentally broaden proof, review, mapping, and parity requirements onto token-only, docs-only, or proof-only changes because change classes are not explicit in the claim matrix?
-- Does the proposed status artifact duplicate or reinterpret upstream `CT-8B`, `CT-9B`, `CT-10B`, or future `CT-11B` facts instead of naming which published revision and outcome it consumed?
+- Does the proposed status artifact duplicate or reinterpret upstream `CT-8B`, `CT-9B`, `CT-10B`, or published `CT-11B` facts instead of naming which published revision and outcome it consumed?
 
 ## R1 - Change-Class-Aware Promotion Decision Flow
 
@@ -71,7 +71,7 @@ stateDiagram-v2
 ## Pre-Exec Gate Disposition
 
 - **Review gate**: pending. The review bundle is authoritative, but the next seam still requires human review against the actual `SEAM-9B` handoff before promotion.
-- **Contract gate concerns**: `CT-12B` must stay additive to upstream status contracts, keep change-class scoping explicit, and avoid making mapping-dependent claims authoritative before `CT-11B` is published.
+- **Contract gate concerns**: `CT-12B` must stay additive to upstream status contracts, keep change-class scoping explicit, and avoid letting current mapping publication silently broaden blocking policy beyond the named consumer ratchets.
 - **Revalidation prerequisites**: `../../governance/seam-9b-closeout.md` must remain the current published handoff for `THR-07`; `CT-8B`, `CT-9B`, `CT-10B`, and `CT-11B` field-consumption boundaries must remain unchanged from `threading.md`.
 - **Opened remediations**: none from this pre-exec review. `REM-004` remains the active seam-owned follow-up.
 

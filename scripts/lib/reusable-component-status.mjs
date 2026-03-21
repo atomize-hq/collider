@@ -294,6 +294,7 @@ function summarizeCt10b(context) {
   )
     ? 'stale'
     : 'current';
+  const reviewRequiredForClaim = status.data.data.review.requiredForClaim === true;
   const outcome = !context.claimRelevant
     ? 'not-applicable'
     : !structural.ok
@@ -310,15 +311,18 @@ function summarizeCt10b(context) {
     sourceVersionOrRevision: `statusVersion:${status.data.data.statusVersion}|revision:${status.data.data.revision.gitSha}`,
     reasonCodes: !context.claimRelevant
       ? []
-      : !structural.ok
-        ? ['ct10b-review-invalid']
-        : freshness === 'stale'
-          ? ['ct10b-review-stale']
-          : outcome === 'deferred'
-            ? ['ct10b-review-deferred']
-            : outcome === 'unsatisfied'
-              ? ['ct10b-review-not-yet-earned']
-              : [],
+      : [
+          reviewRequiredForClaim ? 'ct10b-review-claim-required' : 'ct10b-review-informational',
+          ...(!structural.ok
+            ? ['ct10b-review-invalid']
+            : freshness === 'stale'
+              ? ['ct10b-review-stale']
+              : outcome === 'deferred'
+                ? ['ct10b-review-deferred']
+                : outcome === 'unsatisfied'
+                  ? ['ct10b-review-not-yet-earned']
+                  : []),
+        ],
   });
 }
 
@@ -341,27 +345,33 @@ function summarizeCt11b(context) {
   }
 
   const summary = mapping.data.data.summary ?? {};
+  const components = Array.isArray(mapping.data.data.components)
+    ? mapping.data.data.components
+    : [];
   const invalid = Number(summary.invalidCount ?? 0) > 0;
   const incomplete = Number(summary.incompleteCount ?? 0) > 0;
   const complete =
     Number(summary.completeCount ?? 0) > 0 && Number(summary.componentCount ?? 0) > 0;
+  const stale = components.some((component) => component?.linkState === 'stale');
   const outcome = !context.claimRelevant
     ? 'not-applicable'
-    : invalid || incomplete || !complete
+    : stale || invalid || incomplete || !complete
       ? 'unsatisfied'
       : 'satisfied';
 
   return buildRail(base, {
-    freshness: 'current',
+    freshness: stale ? 'stale' : 'current',
     outcome,
     sourceVersionOrRevision: `mappingStatusVersion:${mapping.data.data.mappingStatusVersion ?? unavailableSourceVersion}`,
     reasonCodes: !context.claimRelevant
       ? []
-      : invalid
-        ? ['ct11b-mapping-invalid']
-        : incomplete || !complete
-          ? ['ct11b-mapping-incomplete']
-          : [],
+      : stale
+        ? ['ct11b-mapping-stale']
+        : invalid
+          ? ['ct11b-mapping-invalid']
+          : incomplete || !complete
+            ? ['ct11b-mapping-incomplete']
+            : [],
   });
 }
 
