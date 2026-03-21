@@ -2,16 +2,6 @@
 
 ## Open remediations
 
-- **REM-003**
-  - Source gate: closeout
-  - Related seam/slice/thread/contract: `SEAM-9B`, `CT-11B`, `THR-07`
-  - Severity: important
-  - Finding: the repo-owned `CT-11B` contract, pilot projection outputs, and validation/reporting entrypoints are now landed, but `artifacts/harness/reusable-component-mapping-status.json` still reports the live pilot mapping incomplete because `publishedStorybookUrl` cannot be derived from current repo-owned `CT-10B` evidence. The latest `chromatic-review` CI run on March 21, 2026 for `e4a9f4f4e0a9dd75744a80cfe6a323882855c16e` failed before status emission because `CHROMATIC_PROJECT_TOKEN` was empty, so neither `artifacts/chromatic/status.json` nor a downloadable `chromatic-status-e4a9f4f4e0a9dd75744a80cfe6a323882855c16e` artifact exists.
-  - Required fix: restore the `CHROMATIC_PROJECT_TOKEN` secret or otherwise restore current repo-owned `CT-10B` publication evidence, then rerun the `chromatic-review` owner until `artifacts/chromatic/status.json` or `chromatic-status-<sha>` exists. After that, restore the artifact locally if needed, rerun `pnpm generate:component-mapping` and `pnpm validate:reusable-component-mapping`, and close `REM-003` only once the pilot mapping status is complete and `THR-07` can be published.
-  - Owner: `WS-9B`
-  - Status: open
-  - Must close before: `SEAM-9B` closeout may claim `CT-11B` published or advance `THR-07`
-
 - **REM-004**
   - Source gate: closeout
   - Related seam/slice/thread/contract: `SEAM-10B`, `CT-12B`, `THR-05`, `THR-06`, `THR-07`, `THR-08`
@@ -23,6 +13,17 @@
   - Must close before: the pack can claim a complete reusable-component harness
 
 ## Resolved remediations
+
+- **REM-003**
+  - Source gate: closeout
+  - Related seam/slice/thread/contract: `SEAM-9B`, `CT-11B`, `THR-07`
+  - Severity: important
+  - Finding: the repo-owned `CT-11B` contract, pilot projection outputs, and validation/reporting entrypoints were landed, but the pilot mapping remained incomplete until current repo-owned `CT-10B` publication evidence existed for the same proof scope.
+  - Required fix: restore the `CHROMATIC_PROJECT_TOKEN` secret or otherwise restore current repo-owned `CT-10B` publication evidence, rerun the `chromatic-review` owner until `artifacts/chromatic/status.json` or `chromatic-status-<sha>` exists, then regenerate and validate the mapping outputs until `THR-07` is publishable.
+  - Owner: `WS-9B`
+  - Status: resolved
+  - Must close before: `SEAM-9B` closeout may claim `CT-11B` published or advance `THR-07`
+  - Resolution evidence: `chromatic-status-e4a9f4f4e0a9dd75744a80cfe6a323882855c16e` from GitHub Actions run `23382758983`, `artifacts/chromatic/status.json`, `pnpm restore:chromatic-status --sha e4a9f4f4e0a9dd75744a80cfe6a323882855c16e`, `pnpm validate:chromatic-status`, `pnpm generate:component-mapping`, `pnpm validate:reusable-component-mapping`, `storybook/connect/button.json`, `figma/code-connect/button.json`, `artifacts/harness/reusable-component-mapping-status.json`, `harness-future-rails/governance/seam-9b-closeout.md`
 
 - **REM-002**
   - Source gate: review

@@ -1,8 +1,8 @@
 ---
 seam_id: SEAM-9B
 seam_slug: reusable-component-mapping-and-link-convergence
-status: exec-ready
-execution_horizon: active
+status: landed
+execution_horizon: future
 plan_version: v2
 basis:
   currentness: current
@@ -26,14 +26,13 @@ gates:
     contract: passed
     revalidation: passed
   post_exec:
-    landing: pending
-    closeout: pending
+    landing: passed
+    closeout: passed
 seam_exit_gate:
   required: true
   planned_location: S4
-  status: pending
-open_remediations:
-  - REM-003
+  status: passed
+open_remediations: []
 ---
 
 # SEAM-9B - Reusable Component Mapping and Link Convergence
@@ -67,9 +66,9 @@ open_remediations:
 ## Seam-Exit Gate Plan
 
 - **Planned location**: `S4` -> `slice-4-seam-exit-gate.md`
-- **Why this seam needs an explicit exit gate**: `SEAM-10B` cannot promote mapping completeness from prose or vendor UIs; it needs a closeout-backed statement that `CT-11B` is published, which fields are authoritative, and whether Storybook links were resolved from published `CT-10B` reality or remain blocked. That post-exec handoff is still blocked by `REM-003`, not by pre-exec ambiguity.
+- **Why this seam needed an explicit exit gate**: `SEAM-10B` could not promote mapping completeness from prose or vendor UIs; it needed a closeout-backed statement that `CT-11B` is published, which fields are authoritative, and whether Storybook links were resolved from published `CT-10B` reality or remained blocked. `S4` now records that ready handoff and closes `REM-003`.
 - **Expected contracts to publish**: `CT-11B` at repo-owned mapping/link projection surfaces plus validation or generator entrypoints that make completeness inspectable.
-- **Expected threads to publish / advance**: `THR-07` must move toward `published`; inbound `THR-03` and `THR-04` remain `revalidated` while the active seam basis stays current.
+- **Expected threads to publish / advance**: `THR-07` is now `published`; inbound `THR-03` and `THR-04` remain `revalidated` while the landed seam basis stays current.
 - **Likely downstream stale triggers**: any change to component identity fields, Figma reference shape, Storybook link resolution rules, or `CT-10B` build URL semantics.
 - **Expected closeout evidence**: pilot projection artifacts, validator output, publication-ready field definitions, and a clear statement of which `CT-11B` fields downstream promotion may consume directly.
 
@@ -95,15 +94,15 @@ open_remediations:
 - **Threads touched**:
   - `THR-03`: `revalidated`; `S1` freezes the Storybook link field and provenance rules against the published `CT-10B` boundary, `S2` consumes the current review contract for pilot outputs, and `S4` records the downstream stale triggers that would force revalidation again.
   - `THR-04`: `revalidated`; `S1` and `S2` consume the stable component identity and downstream hook fields already published by `SEAM-7B`.
-  - `THR-07`: `identified`; `S1`, `S3`, and `S4` advance it by freezing the mapping contract, validating completeness, and publishing closeout-backed handoff evidence for `SEAM-10B`, but it stays unpublished until `REM-003` closes.
+  - `THR-07`: `published`; `S1`, `S3`, and `S4` froze the mapping contract, validated completeness, restored the required `CT-10B` evidence, and published closeout-backed handoff evidence for `SEAM-10B`.
 - **Dependency edges honored**:
   - `SEAM-7B` no longer blocks planning depth: `CT-9B` is landed and available as current identity basis.
   - `SEAM-8B` no longer blocks execution: `CT-10B` is landed, its seam-exit handoff is ready, and Storybook link semantics are current basis.
-  - `SEAM-9B` blocks `SEAM-10B`: promotion policy cannot require mapping completeness until `CT-11B` is published and inspectable.
+  - `SEAM-9B` no longer blocks downstream promotion readiness: `CT-11B` is published and inspectable, and `THR-07` is now recorded as `published`.
 - **Revalidation requirements**:
   - Reconfirm that the `SEAM-8B` closeout, `storybook/chromatic-review-contract.md`, and `storybook/chromatic-review-policy.md` still expose the same `CT-10B` field boundary this seam consumes.
   - Reconfirm that `storybook/component-specs/button.json` or other pilot specs still carry the same identity shape and downstream hook semantics assumed here.
   - Reconfirm that no repo-owned mapping generator or validation path has already diverged from the planned `storybook/connect/**` and `figma/code-connect/**` surfaces.
 - **Parallelization notes**:
-  - **What can proceed now**: the seam is `exec-ready`; implementation or closeout work may proceed against the current basis without reopening upstream handoff questions. `S1` through `S3` may execute against the current component specs and published `CT-10B` contract boundary.
-  - **What must wait**: `THR-07` publication and downstream promotion readiness still depend on resolving `REM-003` so the live pilot mapping can consume current repo-owned `CT-10B` evidence.
+  - **What can proceed now**: this seam is landed basis; downstream promotion planning may proceed against the recorded `CT-11B` handoff without reopening upstream mapping ownership or Storybook-link provenance questions.
+  - **What must wait**: no seam-local blocker remains. Any next-step work belongs to `SEAM-10B` and must consume the published `CT-11B` boundary rather than redefining it.

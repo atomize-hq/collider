@@ -2,14 +2,14 @@
 
 ## Execution Horizon
 
-- Active seam: `SEAM-9B`
+- Active seam: none
 - Next seam: `SEAM-10B`
 - Future seams: none
 
 Reasoning:
 
-- `SEAM-9B` is active because `SEAM-8B` landed `CT-10B`, recorded a realized `seam_exit_gate` with `promotion_readiness: ready`, and published the handoff that mapping and link execution needs.
-- `SEAM-10B` is next because it is the nearest direct consumer of `CT-11B` once the active mapping seam publishes inspectable completeness outputs.
+- `SEAM-9B` is now landed basis because `CT-11B` is published, `THR-07` is published, and the recorded seam-exit handoff is `promotion_readiness: ready`.
+- `SEAM-10B` is next because it is the nearest direct consumer of the now-published `CT-11B` handoff.
 - No future seams remain because the pack now exposes only the current execution target and its immediate downstream consumer.
 
 ## Contract Registry
@@ -144,10 +144,10 @@ Reasoning:
   - **Consumer seam(s)**: `SEAM-10B`
   - **Carried contract IDs**: `CT-11B`
   - **Purpose**: carry reusable-component mapping and link completeness into final promotion policy
-  - **State**: identified
-  - **Satisfied by**: none yet
+  - **State**: published
+  - **Satisfied by**: `storybook/reusable-component-mapping-contract.md`, `storybook/reusable-component-mapping-projection-policy.md`, `scripts/lib/component-mapping.mjs`, `scripts/validate-reusable-component-mapping.mjs`, `artifacts/chromatic/status.json`, `storybook/connect/button.json`, `figma/code-connect/button.json`, `artifacts/harness/reusable-component-mapping-status.json`, `harness-future-rails/governance/seam-9b-closeout.md`
   - **Revalidation trigger**: any change to component identity, Figma reference shape, or story URL projection rules
-  - **Notes**: this is what makes mapping/link quality inspectable instead of anecdotal. Current publication is blocked by missing repo-owned `CT-10B` evidence: the latest `chromatic-review` CI run on March 21, 2026 failed with `[CHROMATIC_REVIEW_TOKEN_MISSING]`, so no `chromatic-status-<sha>` artifact exists for restoration or downstream closeout.
+  - **Notes**: this is what makes mapping/link quality inspectable instead of anecdotal. Publication is now backed by restored repo-owned `CT-10B` evidence from the March 21, 2026 `chromatic-review` rerun for `e4a9f4f4e0a9dd75744a80cfe6a323882855c16e`; downstream consumers must still revalidate if the `CT-10B` URL or proof-scope semantics drift.
 
 - **Thread ID**: `THR-08`
   - **Producer seam**: `SEAM-7B`
@@ -195,5 +195,5 @@ Why this is the critical path:
 
 - `WS-7B` is landed basis and no longer occupies the forward execution window.
 - `WS-8B` is landed basis and no longer occupies the forward execution window.
-- `WS-9B` is the active workstream because inbound `THR-03` and `THR-04` are revalidated and `CT-11B` is now the nearest missing contract on the critical path.
-- `WS-10B` is next and may review claim scoping against published proof and visual-review inputs, but it should not finalize required-rail policy until `CT-11B` exists as an inspectable output.
+- `WS-9B` is landed basis and no longer occupies the forward execution window.
+- `WS-10B` is next and may now consume published proof, visual-review, and mapping inputs, but it must still preserve the recorded `CT-8B`, `CT-9B`, `CT-10B`, and `CT-11B` field boundaries when it formalizes promotion policy.

@@ -43,10 +43,12 @@ describe('evaluateReusableComponentMapping', () => {
     });
   });
 
-  it('marks the repo-root pilot projections incomplete when the Storybook link is unresolved', () => {
+  it('marks the pilot projections incomplete when the Storybook link is unresolved', () => {
+    const workspace = copyFixtureWorkspace('incomplete-link');
+
     const result = evaluateReusableComponentMapping({
       now: fixedNow,
-      rootDir: repoRoot,
+      rootDir: workspace,
     });
 
     expect(result.ok).toBe(true);

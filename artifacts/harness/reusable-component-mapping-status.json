@@ -1,20 +1,18 @@
 {
   "mappingStatusVersion": "1",
-  "generatedAt": "2026-03-21T18:50:58.261Z",
+  "generatedAt": "2026-03-21T19:18:58.221Z",
   "summary": {
     "componentCount": 1,
-    "completeCount": 0,
-    "incompleteCount": 1,
+    "completeCount": 1,
+    "incompleteCount": 0,
     "invalidCount": 0
   },
   "components": [
     {
       "componentId": "button",
-      "state": "incomplete",
-      "linkState": "unresolved",
-      "issues": [
-        "[CT-11B_MAPPING_INCOMPLETE_FIELD] componentId \"button\" requires publishedStorybookUrl before the mapping is complete"
-      ],
+      "state": "complete",
+      "linkState": "resolved-current",
+      "issues": [],
       "drift": [],
       "sourcePaths": {
         "componentSpec": "storybook/component-specs/button.json",

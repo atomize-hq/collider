@@ -1,0 +1,43 @@
+{
+  "statusVersion": "1",
+  "branch": {
+    "name": "main"
+  },
+  "revision": {
+    "gitSha": "e4a9f4f4e0a9dd75744a80cfe6a323882855c16e"
+  },
+  "proofInventory": {
+    "inventoryVersion": "1",
+    "path": "storybook/story-inventory.json",
+    "selectedComponentIds": ["button"],
+    "selectedStoryIds": [
+      "contracts-pilot-recipe--button-recipe",
+      "foundations-runtime-css-parity--baseline-theme",
+      "contracts-generated-tokens--token-registry"
+    ]
+  },
+  "build": {
+    "url": "https://www.chromatic.com/build?appId=69b96940ff7216b1df881d31&number=1"
+  },
+  "review": {
+    "diffOutcome": "changed",
+    "mode": "informational",
+    "requiredForClaim": false,
+    "scope": {
+      "componentIds": ["button"],
+      "componentTiers": {
+        "button": "primitive"
+      },
+      "storyIds": [
+        "contracts-pilot-recipe--button-recipe",
+        "foundations-runtime-css-parity--baseline-theme",
+        "contracts-generated-tokens--token-registry"
+      ]
+    }
+  },
+  "check": {
+    "conclusion": "neutral",
+    "name": "chromatic-review"
+  },
+  "generatedAt": "2026-03-21T19:13:48.123Z"
+}

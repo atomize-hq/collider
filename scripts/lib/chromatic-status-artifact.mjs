@@ -134,11 +134,11 @@ export async function runChromaticStatusRestore(options = {}) {
         runId: artifact.workflow_run.id,
       });
 
-      const downloadedArtifactPath = path.join(tempDir, chromaticStatusArtifactPath);
+      const downloadedArtifactPath = resolveDownloadedChromaticStatusPath(tempDir);
       if (!fs.existsSync(downloadedArtifactPath)) {
         return {
           error: new Error(
-            `[CT-10B_CHROMATIC_STATUS_DOWNLOAD_INVALID] ${artifact.name} did not contain ${chromaticStatusArtifactPath}`
+            `[CT-10B_CHROMATIC_STATUS_DOWNLOAD_INVALID] ${artifact.name} did not contain status.json or ${chromaticStatusArtifactPath}`
           ),
           exitCode: 1,
           gitSha,
@@ -220,4 +220,19 @@ function defaultDownloadArtifact({ artifactName, destDir, repoSlug, runId }) {
       stdio: 'pipe',
     }
   );
+}
+
+function resolveDownloadedChromaticStatusPath(tempDir) {
+  const candidatePaths = [
+    path.join(tempDir, chromaticStatusArtifactPath),
+    path.join(tempDir, 'status.json'),
+  ];
+
+  for (const candidatePath of candidatePaths) {
+    if (fs.existsSync(candidatePath)) {
+      return candidatePath;
+    }
+  }
+
+  return path.join(tempDir, chromaticStatusArtifactPath);
 }

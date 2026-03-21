@@ -98,6 +98,43 @@ describe('runChromaticStatusRestore', () => {
     });
   });
 
+  it('accepts the GitHub download layout where status.json is extracted at the artifact root', async () => {
+    const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'chromatic-status-restore-'));
+    const fixture = JSON.parse(
+      fs.readFileSync(path.join(fixtureDir, 'valid-passed.chromatic-status.json'), 'utf8')
+    );
+    fixture.generatedAt = new Date().toISOString();
+
+    const result = await runChromaticStatusRestore({
+      cwd: workspace,
+      gitSha: validGitSha,
+      listArtifacts: async () => ({
+        artifacts: [
+          {
+            expired: false,
+            name: buildChromaticStatusArtifactName(validGitSha),
+            workflow_run: { id: 78 },
+          },
+        ],
+      }),
+      downloadArtifact: async ({ destDir }: { destDir: string }) => {
+        fs.writeFileSync(path.join(destDir, 'status.json'), JSON.stringify(fixture, null, 2));
+      },
+      now: new Date(),
+      repoSlug: 'atomize-hq/collider',
+    });
+
+    expect(result.exitCode).toBe(0);
+    expect(result.sourceRunId).toBe(78);
+    expect(
+      JSON.parse(fs.readFileSync(path.join(workspace, 'artifacts/chromatic/status.json'), 'utf8'))
+    ).toMatchObject({
+      revision: {
+        gitSha: validGitSha,
+      },
+    });
+  });
+
   it('fails with a machine-readable error when no matching artifact exists', async () => {
     const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'chromatic-status-restore-'));
     const result = await runChromaticStatusRestore({

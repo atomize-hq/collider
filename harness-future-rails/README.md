@@ -12,7 +12,7 @@ This directory contains seam, threading, review-surface, and governance artifact
 
 Execution horizon:
 
-- Active seam: `SEAM-9B`
+- Active seam: none
 - Next seam: `SEAM-10B`
 
 Upstream basis:
