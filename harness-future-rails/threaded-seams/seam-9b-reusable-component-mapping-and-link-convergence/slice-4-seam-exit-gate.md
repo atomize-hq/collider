@@ -29,7 +29,6 @@ contracts_consumed:
   - CT-10B
 open_remediations:
   - REM-003
-candidate_subslices: []
 ---
 
 ### S4 - seam-exit-gate
