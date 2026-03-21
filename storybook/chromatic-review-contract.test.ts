@@ -5,9 +5,11 @@ import { describe, expect, it } from 'vitest';
 import { repoRoot } from '../design-tokens/build/paths.mjs';
 
 const contractPath = path.join(repoRoot, 'storybook/chromatic-review-contract.md');
+const policyPath = path.join(repoRoot, 'storybook/chromatic-review-policy.md');
 const fixtureDir = path.join(repoRoot, 'scripts/fixtures/chromatic-status');
 const storyInventoryPath = path.join(repoRoot, 'storybook/story-inventory.json');
 const proofCoveragePath = path.join(repoRoot, 'artifacts/storybook/proof-coverage.json');
+const buttonSpecPath = path.join(repoRoot, 'storybook/component-specs/button.json');
 
 const requiredRootKeys = [
   'statusVersion',
@@ -52,6 +54,32 @@ describe('chromatic review contract doc', () => {
     expect(contract).toContain(
       'No raw provider payload, response blob, or vendor-only nested shape may appear in `CT-10B`.'
     );
+    expect(contract).toContain('`review.requiredForClaim`');
+    expect(contract).toContain('`review.scope.componentIds`');
+    expect(contract).toContain('`review.scope.storyIds`');
+    expect(contract).toContain('`review.scope.componentTiers`');
+    expect(contract).toContain(
+      '`review.mode` is restricted to `informational` and `claim-required`.'
+    );
+    expect(contract).toContain(
+      '`review.requiredForClaim` is reserved for future reusable-component promotion consumption in `SEAM-10B`.'
+    );
+  });
+});
+
+describe('chromatic review policy doc', () => {
+  it('pins CT-9B as the only scope source and keeps SEAM-8B non-blocking', () => {
+    const policy = fs.readFileSync(policyPath, 'utf8');
+
+    expect(policy).toContain('The only allowed source of review scope is landed `CT-9B`.');
+    expect(policy).toContain('`SEAM-8B` remains non-blocking and non-universal.');
+    expect(policy).toContain('Claim-level ratcheting remains owned by `SEAM-10B`.');
+    expect(policy).toContain('`review.mode` is limited to `informational` and `claim-required`.');
+    expect(policy).toContain(
+      'Deferred, skipped, or out-of-scope runs do not create a third review mode.'
+    );
+    expect(policy).toContain('`componentIds`: `["button"]`');
+    expect(policy).toContain('`componentTiers`: `{ "button": "primitive" }`');
   });
 });
 
@@ -81,6 +109,10 @@ describe('chromatic status fixtures', () => {
     const proofCoverage = JSON.parse(fs.readFileSync(proofCoveragePath, 'utf8')) as {
       components: Array<{ componentId: string }>;
     };
+    const buttonSpec = JSON.parse(fs.readFileSync(buttonSpecPath, 'utf8')) as {
+      componentId: string;
+      tier: string;
+    };
     const buttonInventoryEntry = storyInventory.components.find(
       (component) => component.componentId === 'button'
     );
@@ -90,6 +122,9 @@ describe('chromatic status fixtures', () => {
       (story) => story.storyId
     );
     const expectedComponentIds = proofCoverage.components.map((component) => component.componentId);
+    const expectedComponentTiers = {
+      [buttonSpec.componentId]: buttonSpec.tier,
+    };
 
     for (const fixtureName of validFixtureNames) {
       const fixture = loadFixture(fixtureName).data;
@@ -98,6 +133,9 @@ describe('chromatic status fixtures', () => {
       expect(fixture.proofInventory.inventoryVersion).toBe(storyInventory.inventoryVersion);
       expect(fixture.proofInventory.selectedComponentIds).toEqual(expectedComponentIds);
       expect(fixture.proofInventory.selectedStoryIds).toEqual(expectedStoryIds);
+      expect(fixture.review.scope.componentIds).toEqual(expectedComponentIds);
+      expect(fixture.review.scope.storyIds).toEqual(expectedStoryIds);
+      expect(fixture.review.scope.componentTiers).toEqual(expectedComponentTiers);
     }
   });
 });
@@ -207,9 +245,53 @@ function validateReview(errors: string[], review: unknown) {
     return;
   }
 
-  validateKeys(errors, review, ['mode', 'diffOutcome'], [], 'review');
+  validateKeys(errors, review, ['mode', 'requiredForClaim', 'scope', 'diffOutcome'], [], 'review');
   requireEnum(errors, review.mode, modeValues, 'review.mode');
+  if (typeof review.requiredForClaim !== 'boolean') {
+    errors.push(
+      '[CT-10B_CHROMATIC_STATUS_INVALID_BOOLEAN] review.requiredForClaim must be a boolean'
+    );
+  }
+  validateReviewScope(errors, review.scope);
   requireEnum(errors, review.diffOutcome, diffOutcomeValues, 'review.diffOutcome');
+}
+
+function validateReviewScope(errors: string[], scope: unknown) {
+  if (!isPlainObject(scope)) {
+    errors.push('[CT-10B_CHROMATIC_STATUS_INVALID_REVIEW_SCOPE] review.scope must be an object');
+    return;
+  }
+
+  validateKeys(errors, scope, ['componentIds', 'storyIds', 'componentTiers'], [], 'review.scope');
+  requireStringArray(errors, scope.componentIds, 'review.scope.componentIds');
+  requireStringArray(errors, scope.storyIds, 'review.scope.storyIds');
+
+  if (!isPlainObject(scope.componentTiers)) {
+    errors.push(
+      '[CT-10B_CHROMATIC_STATUS_INVALID_COMPONENT_TIERS] review.scope.componentTiers must be an object'
+    );
+    return;
+  }
+
+  const tiers = Object.entries(scope.componentTiers);
+  if (tiers.length === 0) {
+    errors.push(
+      '[CT-10B_CHROMATIC_STATUS_INVALID_COMPONENT_TIERS] review.scope.componentTiers must not be empty'
+    );
+  }
+
+  for (const [componentId, tier] of tiers) {
+    if (componentId.length === 0) {
+      errors.push(
+        '[CT-10B_CHROMATIC_STATUS_INVALID_COMPONENT_TIERS] review.scope.componentTiers keys must be non-empty component IDs'
+      );
+    }
+    if (typeof tier !== 'string' || tier.length === 0) {
+      errors.push(
+        `[CT-10B_CHROMATIC_STATUS_INVALID_STRING] review.scope.componentTiers.${componentId} must be a non-empty string`
+      );
+    }
+  }
 }
 
 function validateCheck(errors: string[], check: unknown) {

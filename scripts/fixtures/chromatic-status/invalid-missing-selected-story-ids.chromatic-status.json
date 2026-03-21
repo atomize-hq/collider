@@ -16,6 +16,18 @@
   },
   "review": {
     "mode": "informational",
+    "requiredForClaim": false,
+    "scope": {
+      "componentIds": ["button"],
+      "storyIds": [
+        "contracts-pilot-recipe--button-recipe",
+        "foundations-runtime-css-parity--baseline-theme",
+        "contracts-generated-tokens--token-registry"
+      ],
+      "componentTiers": {
+        "button": "primitive"
+      }
+    },
     "diffOutcome": "deferred"
   },
   "check": {
