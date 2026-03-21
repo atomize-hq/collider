@@ -8,9 +8,9 @@
   - Severity: important
   - Finding: the repo has no repo-owned reusable-component mapping or link contract for future Code Connect and Storybook Connect style rails.
   - Required fix: define the repo-owned identity and projection rules that can generate mapping and link metadata without vendor-authored truth.
-  - Owner: future `WS-9B`
+  - Owner: `WS-9B`
   - Status: open
-  - Must close before: reusable-component mapping or link claims may become promotion-relevant
+  - Must close before: `SEAM-9B` closeout may claim `CT-11B` published or advance `THR-07`
 
 - **REM-004**
   - Source gate: closeout

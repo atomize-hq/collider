@@ -2,15 +2,15 @@
 
 ## Execution Horizon
 
-- Active seam: `SEAM-8B`
-- Next seam: `SEAM-9B`
-- Future seams: `SEAM-10B`
+- Active seam: `SEAM-9B`
+- Next seam: `SEAM-10B`
+- Future seams: none
 
 Reasoning:
 
-- `SEAM-8B` is active because `SEAM-7B` landed `CT-9B`, and branch-aware visual review is now the shortest blocker chain into the rest of the pack.
-- `SEAM-9B` is next because it is the nearest direct consumer of `CT-10B` once the review rail publishes stable build URLs and machine-readable status.
-- `SEAM-10B` remains future because it still consumes outputs from both `SEAM-8B` and `SEAM-9B` and should not be deeply decomposed before those contracts exist.
+- `SEAM-9B` is active because `SEAM-8B` landed `CT-10B`, recorded a realized `seam_exit_gate` with `promotion_readiness: ready`, and published the handoff that mapping and link execution needs.
+- `SEAM-10B` is next because it is the nearest direct consumer of `CT-11B` once the active mapping seam publishes inspectable completeness outputs.
+- No future seams remain because the pack now exposes only the current execution target and its immediate downstream consumer.
 
 ## Contract Registry
 
@@ -104,20 +104,20 @@ Reasoning:
   - **Consumer seam(s)**: `SEAM-9B`
   - **Carried contract IDs**: `CT-10B`
   - **Purpose**: provide stable published Storybook URLs and review status for Storybook Connect style linking
-  - **State**: identified
-  - **Satisfied by**: none yet
+  - **State**: revalidated
+  - **Satisfied by**: `storybook/chromatic-review-contract.md`, `storybook/chromatic-review-policy.md`, `scripts/lib/chromatic-status.mjs`, `scripts/validate-chromatic-status.mjs`, `.github/workflows/ci.yml`, `harness-future-rails/governance/seam-8b-closeout.md`
   - **Revalidation trigger**: any change to Storybook publish host, build URL format, or status artifact schema
-  - **Notes**: mapping work may begin earlier, but Storybook link material cannot close until this thread is published
+  - **Notes**: `SEAM-9B` consumed the published review contract during promotion into the active window and revalidated the allowed `CT-10B` field boundary against the recorded `SEAM-8B` seam-exit handoff; link execution may proceed, but `CT-11B` still must land before downstream promotion can consume it.
 
 - **Thread ID**: `THR-04`
   - **Producer seam**: `SEAM-7B`
   - **Consumer seam(s)**: `SEAM-9B`
   - **Carried contract IDs**: `CT-9B`
   - **Purpose**: carry reusable-component identity and required coverage metadata into mapping/link projections
-  - **State**: published
-  - **Satisfied by**: `storybook/component-specs/button.json`, `artifacts/storybook/proof-coverage.json`, `pnpm govern:storybook-proof`
+  - **State**: revalidated
+  - **Satisfied by**: `storybook/component-specs/button.json`, `artifacts/storybook/proof-coverage.json`, `pnpm govern:storybook-proof`, `harness-future-rails/governance/seam-7b-closeout.md`
   - **Revalidation trigger**: any change to component identity schema, supported variants, or required mapping hooks
-  - **Notes**: this thread is what keeps Code Connect and Storybook Connect from inventing identity out of vendor state
+  - **Notes**: `SEAM-9B` revalidated the published identity and downstream-hook contract during promotion into the active window; this thread keeps Code Connect and Storybook Connect from inventing identity out of vendor state.
 
 - **Thread ID**: `THR-05`
   - **Producer seam**: `SEAM-6B`
@@ -134,10 +134,10 @@ Reasoning:
   - **Consumer seam(s)**: `SEAM-10B`
   - **Carried contract IDs**: `CT-10B`
   - **Purpose**: allow promotion policy to distinguish reusable components that are visually reviewed from those that only build
-  - **State**: identified
-  - **Satisfied by**: none yet
+  - **State**: published
+  - **Satisfied by**: `storybook/chromatic-review-contract.md`, `storybook/chromatic-review-policy.md`, `.github/workflows/ci.yml`, `harness-future-rails/governance/seam-8b-closeout.md`
   - **Revalidation trigger**: any change to visual-review policy, required branch scope, or status artifact fields
-  - **Notes**: this thread stays non-blocking until `SEAM-10B` explicitly promotes it to required for the relevant claim
+  - **Notes**: this thread stays non-blocking until `SEAM-10B` explicitly promotes it to required for the relevant claim, but the review-mode semantics are now published basis rather than planned future work.
 
 - **Thread ID**: `THR-07`
   - **Producer seam**: `SEAM-9B`
@@ -164,7 +164,7 @@ Reasoning:
 - inherited `SEAM-4` blocks `SEAM-7B` because the new proof-system seam must start from the already-landed Storybook consumption posture rather than redefining it.
 - `SEAM-7B` blocks `SEAM-8B` because branch-aware visual review cannot be required until Storybook proof inventory and component metadata are explicit.
 - `SEAM-7B` blocks `SEAM-9B` because reusable-component mapping needs stable repo-owned identities and required story coverage first.
-- `SEAM-8B` blocks `SEAM-9B` because Storybook link metadata needs a published review URL, not only local story IDs.
+- `SEAM-8B` precedes `SEAM-9B` because Storybook link metadata needs a published review URL and repo-owned status boundary, not only local story IDs.
 - `SEAM-6B` blocks `SEAM-10B` because reusable-component promotion still depends on the existing Figma parity ledger and claim semantics.
 - `SEAM-7B` blocks `SEAM-10B` because promotion cannot require proof coverage that has not been formalized.
 - `SEAM-8B` blocks `SEAM-10B` because visual review must exist before it can be promoted from optional to required.
@@ -194,6 +194,6 @@ Why this is the critical path:
 ## Parallelization Notes
 
 - `WS-7B` is landed basis and no longer occupies the forward execution window.
-- `WS-8B` is the active workstream because `CT-9B` is published and revalidated for branch-aware review planning.
-- `WS-9B` is next and may begin identity-schema review now, but link completion should still wait for `CT-10B`.
-- `WS-10B` should not finalize required-rail policy until `CT-10B` and `CT-11B` both exist as inspectable outputs.
+- `WS-8B` is landed basis and no longer occupies the forward execution window.
+- `WS-9B` is the active workstream because inbound `THR-03` and `THR-04` are revalidated and `CT-11B` is now the nearest missing contract on the critical path.
+- `WS-10B` is next and may review claim scoping against published proof and visual-review inputs, but it should not finalize required-rail policy until `CT-11B` exists as an inspectable output.

@@ -3,7 +3,7 @@ seam_id: SEAM-10B
 seam_slug: reusable-component-promotion-convergence
 type: conformance
 status: proposed
-execution_horizon: future
+execution_horizon: next
 plan_version: v1
 basis:
   source_scope_ref: scope_brief.md
@@ -67,4 +67,4 @@ open_remediations:
   - Risk: the promotion status duplicates upstream state instead of consuming it.
   - De-risk plan: require the final status artifact to reference upstream status records by revision and current outcome.
 - **Rollout / safety**: start with informational status only, then promote selected claims to blocking once `CT-9B`, `CT-10B`, and `CT-11B` have real data and low ambiguity.
-- **Downstream decomposition context**: this is the final seam because it converts the earlier rails into enforceable promotion policy. The first review bundle should focus on claim scoping and refusal behavior, especially how reusable-component advancement differs from simpler change classes.
+- **Downstream decomposition context**: this is now the next seam because `SEAM-9B` is active and the final remaining blocker chain runs through `CT-11B`. The first review bundle should focus on claim scoping and refusal behavior, especially how reusable-component advancement differs from simpler change classes once mapping completeness becomes inspectable.

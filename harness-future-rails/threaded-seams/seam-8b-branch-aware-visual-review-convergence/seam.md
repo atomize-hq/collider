@@ -1,8 +1,8 @@
 ---
 seam_id: SEAM-8B
 seam_slug: branch-aware-visual-review-convergence
-status: exec-ready
-execution_horizon: active
+status: landed
+execution_horizon: future
 plan_version: v2
 basis:
   currentness: current
@@ -23,14 +23,13 @@ gates:
     contract: passed
     revalidation: passed
   post_exec:
-    landing: pending
-    closeout: pending
+    landing: passed
+    closeout: passed
 seam_exit_gate:
   required: true
   planned_location: S3
-  status: pending
-open_remediations:
-  - REM-002
+  status: passed
+open_remediations: []
 ---
 
 # SEAM-8B — Branch-Aware Visual Review Convergence
@@ -50,10 +49,10 @@ open_remediations:
 - **Basis posture**:
   - **Currentness**: `current`
   - **Upstream closeouts assumed**: inherited `SEAM-4` via `harness-convergence/threading.md`; `SEAM-5B` via the published Figma publish-proof contract and handoff boundary; `SEAM-6B` via `src/figma/sync-ledger.json` and parity-policy semantics; `SEAM-7B` via `harness-future-rails/governance/seam-7b-closeout.md` plus the landed `CT-9B` surfaces.
-  - **Required threads**: `THR-02` is `revalidated` against the recorded `SEAM-7B` handoff; seam-owned outbound `THR-03` and `THR-06` remain `identified` until `CT-10B` lands with evidence.
+  - **Required threads**: `THR-02` remains `revalidated` against the recorded `SEAM-7B` handoff; seam-owned outbound `THR-03` and `THR-06` are now `published` through the realized `SEAM-8B` closeout and downstream field-consumption boundary.
   - **Stale triggers**: the proof inventory, tier policy, component-spec shape, or proof-coverage report may drift; the current CI topology may change before a dedicated review owner is wired; the publish host may change as long as the repo-owned `CT-10B` schema stays stable.
 - **Threading constraints**
-  - **Upstream blockers**: none on landed contract input; `CT-9B` and the prior seam handoff are both published and current through `THR-02`.
+  - **Upstream blockers**: none; this seam is landed basis and no longer owns a forward-window blocker.
   - **Downstream blocked seams**: `SEAM-9B`, `SEAM-10B`
   - **Contracts produced (owned)**: `CT-10B`
   - **Contracts consumed**: `CT-9B`
@@ -67,7 +66,7 @@ open_remediations:
 - **Planned location**: `S3`
 - **Why this seam needs an explicit exit gate**: downstream `SEAM-9B` and `SEAM-10B` depend on a stable review URL, machine-readable status payload, and explicit optional-versus-claim-relevant policy; the closeout must publish those boundaries without vendor scraping.
 - **Expected contracts to publish**: `CT-10B` rooted at `artifacts/chromatic/status.json`, the stable `chromatic-review` owner, and repo-owned contract or policy docs under `storybook/**`.
-- **Expected threads to publish / advance**: publish `THR-03` with stable build URL and status fields for `SEAM-9B`; publish `THR-06` with review-mode semantics for `SEAM-10B`; keep `THR-02` revalidated while `CT-9B` remains current.
+- **Expected threads to publish / advance**: `THR-03` is published with stable build URL and status fields for `SEAM-9B`; `THR-06` is published with review-mode semantics for `SEAM-10B`; `THR-02` remains revalidated while `CT-9B` stays current.
 - **Likely downstream stale triggers**: provider transport or URL-shape changes, proof-scope drift from `CT-9B`, artifact freshness failures, or any attempt to read vendor-only status outside `CT-10B`.
 - **Expected closeout evidence**: landed workflow owner, generated status artifacts or fixtures, validator output, named-check conclusion rules, and one downstream-readable closeout record that names the fields `SEAM-9B` and `SEAM-10B` may consume.
 
@@ -90,17 +89,17 @@ open_remediations:
   - `CT-9B`: required from `SEAM-7B`; `S1.T1` and `S1.T3` define how proof inventory version, component IDs, story IDs, and review-required scope flow into `CT-10B`; `S2.T1` and `S2.T2` consume the published proof selection so the review rail builds and publishes the exact same revision.
 - **Threads touched**:
   - `THR-02`: `revalidated`; the active seam already consumed the landed proof contract, and `S1.T3` plus `S2.T1` keep the pilot review subset aligned with that published contract.
-  - `THR-03`: `identified`; `S1.T1`, `S2.T2`, and `S3.T3` advance it by freezing the build URL and status schema that `SEAM-9B` will later consume for Storybook linking.
-  - `THR-06`: `identified`; `S1.T3`, `S2.T3`, and `S3.T2` advance it by making optional-versus-required review semantics explicit for reusable-component claims before `SEAM-10B` reads them.
+  - `THR-03`: `published`; `S1.T1`, `S2.T2`, and `S3.T3` realized the build URL and status schema that `SEAM-9B` now consumes for Storybook linking.
+  - `THR-06`: `published`; `S1.T3`, `S2.T3`, and `S3.T2` realized the optional-versus-required review semantics that `SEAM-10B` will later consume.
 - **Dependency edges honored**:
   - `SEAM-7B` no longer blocks readiness: `CT-9B` is landed, revalidated, and backed by a recorded seam-exit handoff that downstream promotion can consume.
-  - `SEAM-8B` blocks `SEAM-9B`: `S2` and `S3` publish a stable build URL and generated status artifact before mapping or Storybook-link work may depend on them.
-  - `SEAM-8B` blocks `SEAM-10B`: `S1.T3` and `S3.T2` freeze the review-mode semantics before promotion policy may treat visual review as claim-relevant.
+  - `SEAM-8B` no longer blocks `SEAM-9B`: `CT-10B` is landed and may be consumed through the published handoff captured in `harness-future-rails/governance/seam-8b-closeout.md`.
+  - `SEAM-8B` no longer blocks `SEAM-10B` on contract publication: the remaining blocker for `SEAM-10B` is downstream consumption and ratcheting, not missing `CT-10B` semantics.
 - **Revalidation requirements**:
   - Reconfirm that `SEAM-7B` published the current `CT-9B` field names, tier policy, and pilot family the review rail should consume.
-  - Reconfirm the current CI topology: `storybook-proof` governs `CT-9B`, `build-storybook` builds Storybook, and no branch-aware review owner exists yet.
-  - Reconfirm whether the publish transport remains Chromatic for the first landing; if it changes, preserve the `CT-10B` schema and named-check contract.
-  - Reconfirm that no downstream seam has started projecting build URLs or review status directly from vendor state outside `artifacts/chromatic/status.json`.
+  - Reconfirm the current CI topology only if downstream consumers report a stale-trigger against the landed `chromatic-review` owner or `CT-10B` schema.
+  - Reconfirm whether the publish transport changes after closeout; if it does, preserve the `CT-10B` schema and named-check contract.
+  - Reconfirm that no downstream seam starts projecting build URLs or review status directly from vendor state outside the repo-owned `CT-10B` contract.
 - **Parallelization notes**:
-  - **What can proceed now**: `S1` can settle contract and policy wording immediately; fixture design and validator scaffolding can begin in parallel because `CT-9B` is already landed and revalidated.
-  - **What must wait**: `S2` should not wire a provider-backed publish path until `S1` freezes the contract and policy; `S3.T2` may not ratchet any status semantics into required territory until the pilot artifact is stable and downstream consumers confirm they can read it.
+  - **What can proceed now**: downstream `SEAM-9B` may consume the published `CT-10B` contract, and `SEAM-10B` may plan against the published review-mode semantics.
+  - **What must wait**: only downstream policy ratchets and consumers that depend on `CT-11B` remain outside this landed seam.

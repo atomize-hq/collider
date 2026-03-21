@@ -2,24 +2,28 @@
 seam_id: SEAM-9B
 seam_slug: reusable-component-mapping-and-link-convergence
 type: integration
-status: proposed
-execution_horizon: next
-plan_version: v1
+status: exec-ready
+execution_horizon: active
+plan_version: v2
 basis:
   source_scope_ref: scope_brief.md
   source_scope_version: v1
   upstream_closeouts:
     - SEAM-5B
     - SEAM-6B
+    - SEAM-7B
+    - SEAM-8B
   required_threads:
     - THR-03
     - THR-04
 gates:
-  review: pending
-  contract: pending
-  revalidation: pending
-  landing: pending
-  closeout: pending
+  pre_exec:
+    review: passed
+    contract: passed
+    revalidation: passed
+  post_exec:
+    landing: pending
+    closeout: pending
 open_remediations:
   - REM-003
 ---
@@ -43,8 +47,7 @@ open_remediations:
   - only reusable components with stable component-spec records are eligible for mapping or link projections
 - **Dependencies**
   - Direct blockers:
-    - `SEAM-7B`
-    - `SEAM-8B`
+    - none; published `SEAM-7B` and `SEAM-8B` handoffs are current basis
   - Transitive blockers:
     - `SEAM-5B`
     - inherited `SEAM-4`
@@ -61,4 +64,4 @@ open_remediations:
   - Risk: Storybook links drift because published URLs and component specs are maintained separately.
   - De-risk plan: consume `CT-10B` build URLs and `CT-9B` identities through one projection path.
 - **Rollout / safety**: start with a narrow pilot component family and fail closed on incomplete mapping fields before broadening to the full reusable-component catalog.
-- **Downstream decomposition context**: this seam is now next because it depends on the active `SEAM-8B` review rail and is the nearest direct consumer of `CT-10B`. The first review bundle should focus on whether the proposed identity schema is sufficiently stable to generate both Code Connect and Storybook Connect style outputs without vendor lock-in once build URLs and review status are published.
+- **Downstream decomposition context**: this seam is now active because `SEAM-8B` landed `CT-10B`, recorded a ready seam-exit handoff, and published the field boundary that Storybook-link execution consumes. The first execution slice should freeze the repo-owned `CT-11B` identity and projection contract against the now-current `CT-9B` and `CT-10B` basis without letting vendor payloads redefine identity.

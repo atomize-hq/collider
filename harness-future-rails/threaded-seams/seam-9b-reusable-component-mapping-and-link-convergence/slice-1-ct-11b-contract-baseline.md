@@ -2,11 +2,11 @@
 slice_id: S1
 seam_id: SEAM-9B
 slice_kind: delivery
-execution_horizon: next
-status: decomposed
-plan_version: v1
+execution_horizon: active
+status: exec-ready
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   basis_ref: seam.md#basis
   stale_triggers:
     - Any change to `CT-9B` component identity fields or downstream hook semantics requires this slice to be revalidated before execution.
@@ -38,34 +38,34 @@ candidate_subslices: []
 - **User/system value**: downstream tooling can inspect one stable repo-owned mapping contract instead of reverse-engineering component identity from Storybook, Figma, or vendor-specific metadata.
 - **Scope (in/out)**:
   - In: one authoritative field set for component identity, code entrypoint refs, variant and slot refs, example stories, Figma refs, and Storybook link provenance; nullable-versus-required field rules; repo-owned projection boundaries for Storybook and Figma outputs.
-  - Out: emitting final pilot artifacts, consuming unpublished `CT-10B` URLs as current truth, or defining reusable-component promotion policy.
+  - Out: emitting final pilot artifacts or defining reusable-component promotion policy.
 - **Acceptance criteria**:
-  - `CT-11B` clearly states which fields come from published `CT-9B`, which are seam-owned additions, and which fields remain blocked on published `CT-10B`.
+  - `CT-11B` clearly states which fields come from published `CT-9B`, which are seam-owned additions, and which fields are derived from the current `CT-10B` contract or remain explicitly incomplete.
   - Storybook link fields are explicitly derived from repo-owned review artifacts, not hand-authored vendor URLs.
   - The contract distinguishes missing-but-allowed provisional fields from missing-and-invalid required fields.
   - One shared projection boundary can feed both `storybook/connect/**` and `figma/code-connect/**` without duplicating identity normalization rules.
-- **Dependencies**: requires landed `CT-9B`; treats `CT-10B` as provisional input until `THR-03` is published.
-- **Verification**: contract review against [review.md](./review.md#r1---repo-owned-mapping-projection-flow) and [review.md](./review.md#r2---storybook-link-resolution-and-provisional-handoff).
-- **Rollout/safety**: keep Storybook link fields nullable or explicitly unresolved until `SEAM-8B` publishes the review artifact; fail closed on any attempt to treat vendor IDs as primary identity.
-- **Review surface refs**: [review.md](./review.md#r1---repo-owned-mapping-projection-flow), [review.md](./review.md#r2---storybook-link-resolution-and-provisional-handoff)
+- **Dependencies**: requires landed `CT-9B` and revalidated `CT-10B`; Storybook link fields must stay sourced from the published `THR-03` boundary instead of host conventions or vendor UI.
+- **Verification**: contract review against [review.md](./review.md#r1---repo-owned-mapping-projection-flow) and [review.md](./review.md#r2---storybook-link-resolution-and-published-handoff).
+- **Rollout/safety**: keep Storybook link fields explicitly unresolved or incomplete until the repo-owned inputs can derive them from current `CT-10B` reality; fail closed on any attempt to treat vendor IDs as primary identity.
+- **Review surface refs**: [review.md](./review.md#r1---repo-owned-mapping-projection-flow), [review.md](./review.md#r2---storybook-link-resolution-and-published-handoff)
 
 #### S1.T1 - Freeze Repo-Owned Identity And Provenance Fields
 
-- **Outcome**: the seam defines the exact `CT-11B` field set, including which values are copied from `CT-9B`, which are seam-owned, and which remain provisional until `CT-10B` lands.
+- **Outcome**: the seam defines the exact `CT-11B` field set, including which values are copied from `CT-9B`, which are seam-owned, and which are derived from the published `CT-10B` contract boundary.
 - **Inputs/outputs**:
   - Inputs: `storybook/component-specs/*.json`, `storybook/story-inventory.json`, `artifacts/storybook/proof-coverage.json`, and the `CT-10B` contract assumptions in `threading.md`.
   - Outputs: repo-owned `CT-11B` contract documentation and field definitions for `storybook/connect/**` and `figma/code-connect/**`.
-- **Thread/contract refs**: consumes `THR-04`; reserves `THR-03`; defines `CT-11B`.
+- **Thread/contract refs**: consumes revalidated `THR-03` and `THR-04`; defines `CT-11B`.
 - **Implementation notes**: mark `publishedStorybookUrl` or equivalent fields as derived from `CT-10B`; keep vendor-native identifiers secondary; preserve one repo-owned `componentId` as the binding key across all projections.
-- **Acceptance criteria**: field ownership and provenance are explicit; no required field depends on unpublished provider state.
-- **Test notes**: validate the proposed field set against the current `button` component spec and confirm every required field has a repo-owned source or an explicit provisional rule.
-- **Risk/rollback notes**: if `CT-10B` lands with different URL semantics, narrow or rename the link fields rather than broadening vendor-specific truth inside `CT-11B`.
+- **Acceptance criteria**: field ownership and provenance are explicit; no required field depends on undocumented provider state.
+- **Test notes**: validate the proposed field set against the current `button` component spec and confirm every required field has a repo-owned source or an explicit incomplete-state rule.
+- **Risk/rollback notes**: if `CT-10B` changes its consumable URL semantics after revalidation, narrow or rename the link fields rather than broadening vendor-specific truth inside `CT-11B`.
 
 Checklist:
 
 - Implement: write the contract field list and provenance rules.
 - Test: compare the field list against existing pilot component metadata.
-- Validate: confirm Storybook link fields are clearly provisional until `THR-03` is published.
+- Validate: confirm Storybook link fields stay anchored to the published `THR-03` boundary and do not fall back to vendor conventions.
 - Cleanup: remove any field that only mirrors vendor UI or vendor IDs.
 
 #### S1.T2 - Freeze Shared Projection Rules For Storybook And Figma Outputs

@@ -4,8 +4,8 @@ pack_version: v1
 status: extracted
 source_ref: figma-ci-sync/target-state-harness.md + harness-convergence/threading.md + seam-6b handoff boundary
 execution_horizon:
-  active_seam: SEAM-8B
-  next_seam: SEAM-9B
+  active_seam: SEAM-9B
+  next_seam: SEAM-10B
 ---
 
 # Scope Brief - Harness Future Rails

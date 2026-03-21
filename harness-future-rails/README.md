@@ -12,12 +12,12 @@ This directory contains seam, threading, review-surface, and governance artifact
 
 Execution horizon:
 
-- Active seam: `SEAM-8B`
-- Next seam: `SEAM-9B`
+- Active seam: `SEAM-9B`
+- Next seam: `SEAM-10B`
 
 Upstream basis:
 
 - `harness-convergence/*` remains the completed convergence pack for `SEAM-5B` and `SEAM-6B`
 - this pack starts after that boundary and does not reopen it
 
-`SEAM-7B` is now landed basis inside this pack; detailed seam review bundles should be created or refreshed under `threaded-seams/` only for seams that enter the execution horizon.
+`SEAM-7B` and `SEAM-8B` are now landed basis inside this pack; detailed seam review bundles should be created or refreshed under `threaded-seams/` only for seams that enter the forward execution horizon.

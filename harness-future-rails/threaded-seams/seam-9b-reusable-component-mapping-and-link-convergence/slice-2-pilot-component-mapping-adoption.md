@@ -2,11 +2,11 @@
 slice_id: S2
 seam_id: SEAM-9B
 slice_kind: delivery
-execution_horizon: next
-status: decomposed
-plan_version: v1
+execution_horizon: active
+status: exec-ready
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   basis_ref: seam.md#basis
   stale_triggers:
     - Any pilot component-spec change that renames `exampleStoryIds`, `supportedVariantsSource`, or `slotNamesSource`.
@@ -37,17 +37,17 @@ candidate_subslices: []
 
 - **User/system value**: one real reusable component family proves that the repo-owned mapping contract can bind Storybook proof, code entrypoint metadata, and Figma references without vendor-authored truth.
 - **Scope (in/out)**:
-  - In: pilot component-spec completion, pilot mapping projections for Storybook and Figma outputs, explicit handling for provisional published-link fields, and one inspectable completeness result for the pilot family.
-  - Out: broad rollout to the full reusable-component catalog, final claim-level gating, or any dependency on unpublished `CT-10B` fields being current.
+  - In: pilot component-spec completion, pilot mapping projections for Storybook and Figma outputs, explicit handling for published-link completeness rules, and one inspectable completeness result for the pilot family.
+  - Out: broad rollout to the full reusable-component catalog or final claim-level gating.
 - **Acceptance criteria**:
   - The pilot component family has repo-owned values for `codeEntrypoint`, `figmaComponentRef`, supported variants, slot refs, and example stories.
   - Storybook and Figma projection outputs can be derived from the same pilot metadata without separate hand-authored edits.
   - Any Storybook link field is either resolved from published `CT-10B` evidence or explicitly marked unresolved and non-consumable.
   - The pilot output makes it obvious which missing fields still block mapping completeness.
-- **Dependencies**: requires `S1` contract baseline and the existing pilot identity in `CT-9B`; link completion remains blocked on `THR-03`.
-- **Verification**: pilot walkthrough against [review.md](./review.md#r2---storybook-link-resolution-and-provisional-handoff) and [review.md](./review.md#r3---pilot-component-mapping-surface).
+- **Dependencies**: requires `S1` contract baseline plus revalidated `THR-03` and `THR-04`; link completeness now depends on deriving current values from repo-owned inputs, not on waiting for a missing upstream publication.
+- **Verification**: pilot walkthrough against [review.md](./review.md#r2---storybook-link-resolution-and-published-handoff) and [review.md](./review.md#r3---pilot-component-mapping-surface).
 - **Rollout/safety**: constrain execution to the current pilot family first; prefer unresolved placeholders over guessed Storybook URLs or guessed Figma references.
-- **Review surface refs**: [review.md](./review.md#r2---storybook-link-resolution-and-provisional-handoff), [review.md](./review.md#r3---pilot-component-mapping-surface)
+- **Review surface refs**: [review.md](./review.md#r2---storybook-link-resolution-and-published-handoff), [review.md](./review.md#r3---pilot-component-mapping-surface)
 
 #### S2.T1 - Complete Pilot Metadata At The Component-Spec Source
 
@@ -72,17 +72,17 @@ Checklist:
 
 - **Outcome**: the pilot family produces one Storybook projection output and one Figma projection output from the same repo-owned metadata.
 - **Inputs/outputs**:
-  - Inputs: completed pilot component spec, proof inventory, proof coverage, and provisional or published review artifact data.
+  - Inputs: completed pilot component spec, proof inventory, proof coverage, and published review-contract data.
   - Outputs: pilot `storybook/connect/<component-id>.json` and `figma/code-connect/<component-id>.json` records plus a completeness report.
-- **Thread/contract refs**: advances `THR-07`; conditionally consumes `THR-03`.
-- **Implementation notes**: emit an explicit unresolved state when the published Storybook URL is unavailable; once `CT-10B` is landed, revalidate the output and flip the link field from unresolved to current rather than inventing a fallback URL shape now.
+- **Thread/contract refs**: advances `THR-07`; consumes revalidated `THR-03`.
+- **Implementation notes**: emit an explicit incomplete or invalid state when the published Storybook URL cannot be derived from repo-owned inputs; do not invent a fallback URL shape or host convention.
 - **Acceptance criteria**: the pilot records show identical component identity across both outputs; unresolved Storybook links are clearly non-consumable; published links only appear from repo-owned review artifacts.
 - **Test notes**: inspect the pilot outputs side by side and confirm the same `componentId`, example stories, variants, and slot refs drive both records.
-- **Risk/rollback notes**: if the first `CT-10B` artifact does not match the planned link field semantics, keep the output in unresolved mode and reopen revalidation instead of broadening the contract ad hoc.
+- **Risk/rollback notes**: if the current `CT-10B` contract does not match the planned link field semantics, keep the output incomplete and reopen revalidation instead of broadening the contract ad hoc.
 
 Checklist:
 
 - Implement: define the pilot output shape and completeness report expectations.
 - Test: compare the planned Storybook and Figma outputs for one pilot component.
-- Validate: confirm link resolution stays blocked until `CT-10B` is published.
+- Validate: confirm link resolution stays bound to the published `CT-10B` contract and does not rely on guessed URLs.
 - Cleanup: remove any output field that only exists to mirror vendor-native payloads.

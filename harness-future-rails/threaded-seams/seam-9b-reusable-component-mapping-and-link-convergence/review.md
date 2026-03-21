@@ -1,7 +1,7 @@
 ---
 seam_id: SEAM-9B
 review_phase: pre_exec
-execution_horizon: next
+execution_horizon: active
 basis_ref: seam.md#basis
 ---
 
@@ -14,7 +14,7 @@ This artifact feeds `gates.pre_exec.review`.
 
 - Can the proposed mapping schema still let vendor-generated IDs, Figma metadata, or Chromatic URLs redefine component identity instead of projecting from `CT-9B`?
 - Could a component appear fully mapped even when `codeEntrypoint`, `figmaComponentRef`, or published Storybook link data is missing or only locally inferred?
-- If `SEAM-8B` lands a different `CT-10B` URL shape or review-mode rule, would this seam silently bake stale Storybook link semantics into `CT-11B`?
+- If the published `CT-10B` contract later changes its URL shape or review-mode rule, would this seam silently bake stale Storybook link semantics into `CT-11B`?
 
 ## R1 - Repo-Owned Mapping Projection Flow
 
@@ -28,17 +28,17 @@ flowchart LR
   CodeConnect --> Designers["Designers navigating code-backed components"]
 ```
 
-## R2 - Storybook Link Resolution And Provisional Handoff
+## R2 - Storybook Link Resolution And Published Handoff
 
 ```mermaid
 flowchart TB
   CT9B["CT-9B published identity<br/>THR-04 published"] --> Contract["CT-11B contract baseline"]
-  CT10B["CT-10B branch review artifact<br/>THR-03 identified"] --> Contract
+  CT10B["CT-10B branch review contract<br/>THR-03 revalidated"] --> Contract
   Contract --> Generator["Repo-owned mapping generator / validator"]
   Generator --> Connect["storybook/connect/<component-id>.json"]
   Generator --> Figma["figma/code-connect/<component-id>.json"]
   Connect --> Promotion["SEAM-10B promotion consumer"]
-  CT10B -. provisional until closeout .-> Connect
+  CT10B --> Connect
 ```
 
 ## R3 - Pilot Component Mapping Surface
@@ -57,23 +57,23 @@ flowchart LR
 ## Likely Mismatch Hotspots
 
 - `storybook/component-specs/button.json` currently leaves `codeEntrypoint` and `figmaComponentRef` as `null`, so the pilot identity basis exists but the mapping seam still has to decide which fields are required before a component may claim completeness.
-- `THR-03` is not published yet, so any field that promises a current Storybook URL risks locking in stale semantics if it is treated as required before `SEAM-8B` lands.
+- `THR-03` is now revalidated, so any field that promises a current Storybook URL must stay tied to the repo-owned `CT-10B` field boundary instead of host conventions, vendor UI links, or prose summaries.
 - Storybook and Figma projections can drift if they each acquire separate normalization logic instead of sharing one repo-owned identity transform.
 - The temptation to reuse vendor terminology directly in `CT-11B` can make downstream promotion parse tool-specific payloads instead of a stable repo-owned shape.
 
 ## Pre-Exec Findings
 
-- `REM-003` remains open and is the primary contract-definition blocker for this seam: the repo still lacks a published repo-owned mapping and link contract for future Code Connect and Storybook Connect style rails.
-- `THR-04` is already published and usable as current basis, but `THR-03` remains only `identified`; any execution plan that treats published Storybook links as current before `SEAM-8B` closeout would be a pre-exec mismatch.
-- The current pilot basis is narrow and real: `storybook/component-specs/button.json`, `storybook/story-inventory.json`, and `artifacts/storybook/proof-coverage.json` already describe the reusable component identity and example-story side of the mapping problem, but they do not yet publish code entrypoint or Figma reference truth.
-- No new remediation is opened yet beyond `REM-003`; if `SEAM-8B` lands a `CT-10B` schema that invalidates this seam's assumed link fields, pre-exec revalidation should open a new `origin_phase: pre_exec` remediation rather than silently editing around it.
+- The current basis is coherent and falsifiable: `storybook/component-specs/button.json`, `storybook/story-inventory.json`, `artifacts/storybook/proof-coverage.json`, `storybook/chromatic-review-contract.md`, `storybook/chromatic-review-policy.md`, and `harness-future-rails/governance/seam-8b-closeout.md` expose the identity and link-consumption boundary this seam needs.
+- `THR-03` and `THR-04` are both revalidated for this seam. The remaining gap is delivery, not handoff ambiguity: `CT-11B` still needs to be published, but upstream proof and review contracts are current enough to execute against.
+- `storybook/component-specs/button.json` still leaves `codeEntrypoint` and `figmaComponentRef` as `null`, which is a real landing task for the pilot metadata slice, but it is not a pre-exec blocker because the missing values are exactly what the active seam is meant to author.
+- `REM-003` remains open as the seam-owned delivery objective for landing `CT-11B`; it no longer blocks pre-exec readiness because contract ownership, review posture, and upstream revalidation are all explicit.
 
 ## Pre-Exec Gate Disposition
 
-- **Review gate**: pending
-- **Contract gate concerns**: `CT-11B` must freeze repo-owned identity, required-versus-nullable mapping fields, and one shared projection boundary before implementation starts.
-- **Revalidation prerequisites**: `SEAM-8B` must land `CT-10B`, publish `THR-03`, and record a realized seam-exit handoff in `../../governance/seam-8b-closeout.md`.
-- **Opened remediations**: `REM-003` remains open; no additional pre-exec remediation is proposed yet.
+- **Review gate**: passed. The active seam still has reviewer-visible failure modes around identity ownership, missing pilot metadata, and Storybook link provenance.
+- **Contract gate**: passed. Ownership stays aligned with `threading.md`: `SEAM-9B` owns `CT-11B`, consumes revalidated `CT-9B` and `CT-10B`, and preserves `THR-07` as the only unpublished outbound thread.
+- **Revalidation gate**: passed. `SEAM-8B` landed `CT-10B`, recorded a ready seam-exit handoff in `../../governance/seam-8b-closeout.md`, and the current repo surfaces still match the seam's planned consumption boundary.
+- **Opened remediations**: none for pre-exec gating. `REM-003` stays open as the active seam's landing and closeout obligation.
 
 ## Planned Seam-Exit Gate Focus
 

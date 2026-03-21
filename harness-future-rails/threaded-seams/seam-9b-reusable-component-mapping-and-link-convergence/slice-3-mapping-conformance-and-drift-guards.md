@@ -2,11 +2,11 @@
 slice_id: S3
 seam_id: SEAM-9B
 slice_kind: delivery
-execution_horizon: next
-status: decomposed
-plan_version: v1
+execution_horizon: active
+status: exec-ready
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   basis_ref: seam.md#basis
   stale_triggers:
     - Any drift between the shared `CT-11B` intermediate shape and the emitted Storybook or Figma outputs.
@@ -43,28 +43,28 @@ candidate_subslices: []
   - The repo can distinguish missing pilot metadata from a stale or mismatched published Storybook link.
   - Drift between `storybook/connect/**` and `figma/code-connect/**` is inspectable from one shared contract, not by comparing vendor outputs manually.
   - `SEAM-10B` can identify which mapping fields are authoritative and which stale triggers require revalidation.
-- **Dependencies**: requires `S1` contract rules and `S2` pilot output shape; full freshness checks stay provisional until `THR-03` is published.
+- **Dependencies**: requires `S1` contract rules, `S2` pilot output shape, and the revalidated `THR-03` boundary that defines current Storybook-link provenance.
 - **Verification**: validator and reporting review against [review.md](./review.md#r1---repo-owned-mapping-projection-flow) and [review.md](./review.md#r3---pilot-component-mapping-surface).
 - **Rollout/safety**: keep the first validator focused on repo-owned contract semantics and unresolved-versus-invalid distinctions; avoid parsing raw vendor payloads directly.
 - **Review surface refs**: [review.md](./review.md#r1---repo-owned-mapping-projection-flow), [review.md](./review.md#r3---pilot-component-mapping-surface)
 
 #### S3.T1 - Add Structural Validation And Completeness States
 
-- **Outcome**: the seam has one validator that classifies pilot mapping records as ready, unresolved, or invalid based on repo-owned contract rules.
+- **Outcome**: the seam has one validator that classifies pilot mapping records as ready, incomplete, or invalid based on repo-owned contract rules.
 - **Inputs/outputs**:
-  - Inputs: `CT-11B` field rules, pilot projection outputs, and `CT-10B` publication state.
+  - Inputs: `CT-11B` field rules, pilot projection outputs, and the current `CT-10B` contract boundary.
   - Outputs: validator expectations, fixture matrix, and machine-readable completeness states.
-- **Thread/contract refs**: advances `THR-07`; conditionally inspects `THR-03`.
-- **Implementation notes**: keep unresolved `publishedStorybookUrl` fields legal only when `THR-03` is still unpublished; once `THR-03` is published, revalidation should tighten the rule so missing links become invalid for the published pilot scope.
-- **Acceptance criteria**: the validator distinguishes structural failure from unresolved upstream dependency; field-level failures identify the missing or stale contract fact directly.
-- **Test notes**: define at least one valid pilot case, one unresolved link case, and one invalid-provenance case.
+- **Thread/contract refs**: advances `THR-07`; inspects revalidated `THR-03`.
+- **Implementation notes**: the old unpublished-thread exception is gone; missing `publishedStorybookUrl` values must now surface as explicit incomplete or invalid states under `CT-11B`, depending on the record's claimed completeness.
+- **Acceptance criteria**: the validator distinguishes structural failure from incomplete repo-owned mapping work; field-level failures identify the missing or stale contract fact directly.
+- **Test notes**: define at least one valid pilot case, one incomplete link case, and one invalid-provenance case.
 - **Risk/rollback notes**: do not mix promotion semantics into this validator; it should prove mapping contract health, not decide reusable-component advancement.
 
 Checklist:
 
 - Implement: define validator expectations and completeness-state semantics.
-- Test: cover valid, unresolved, and invalid pilot cases.
-- Validate: confirm unresolved status only exists while `THR-03` remains unpublished.
+- Test: cover valid, incomplete, and invalid pilot cases.
+- Validate: confirm missing links are never excused by unpublished-thread logic once `THR-03` is revalidated.
 - Cleanup: remove any check that depends on undocumented vendor response fields.
 
 #### S3.T2 - Freeze Drift Guards For Shared Projection Outputs

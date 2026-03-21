@@ -2,8 +2,8 @@
 seam_id: SEAM-8B
 seam_slug: branch-aware-visual-review-convergence
 type: integration
-status: exec-ready
-execution_horizon: active
+status: landed
+execution_horizon: future
 plan_version: v2
 basis:
   currentness: current
@@ -24,14 +24,13 @@ gates:
     contract: passed
     revalidation: passed
   post_exec:
-    landing: pending
-    closeout: pending
+    landing: passed
+    closeout: passed
 seam_exit_gate:
   required: true
   planned_location: S3
-  status: pending
-open_remediations:
-  - REM-002
+  status: passed
+open_remediations: []
 ---
 
 # SEAM-8B — Branch-Aware Visual Review Convergence
@@ -69,4 +68,4 @@ open_remediations:
   - Risk: the reviewed story set diverges from the proof inventory and creates false confidence.
   - De-risk plan: make the inventory the only allowed source for required review scope.
 - **Rollout / safety**: start with non-blocking status emission for a pilot reusable component slice, then promote it to a required review rail only after `CT-10B` is stable and current.
-- **Downstream decomposition context**: this seam is active because `SEAM-7B` already landed `CT-9B` and published the realized seam-exit handoff. The next critical-path step is freezing the branch-aware review contract and landing `CT-10B`.
+- **Downstream decomposition context**: this seam is landed basis. `SEAM-9B` now consumes the published `CT-10B` handoff, and `SEAM-10B` remains downstream of the review-mode semantics this seam closed out.
