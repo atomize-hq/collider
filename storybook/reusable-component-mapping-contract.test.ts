@@ -195,10 +195,28 @@ describe('reusable component mapping contract examples', () => {
       '[CT-11B_MAPPING_MISSING_REQUIRED_KEY] publishedStorybookUrl is required'
     );
   });
+
+  it('rejects extra top-level keys that are outside the frozen CT-11B v1 shape', () => {
+    const recordWithExtraField = {
+      ...unresolvedRecord,
+      vendorComponentId: 'button@vendor',
+    };
+
+    expect(validateMappingRecord(recordWithExtraField)).toContain(
+      '[CT-11B_MAPPING_EXTRA_TOP_LEVEL_KEY] vendorComponentId is not allowed'
+    );
+  });
 });
 
 function validateMappingRecord(record: MappingRecord) {
   const errors: string[] = [];
+  const allowedFields = new Set(reusableComponentMappingRequiredFields);
+
+  for (const field of Object.keys(record)) {
+    if (!allowedFields.has(field)) {
+      errors.push(`[CT-11B_MAPPING_EXTRA_TOP_LEVEL_KEY] ${field} is not allowed`);
+    }
+  }
 
   for (const field of reusableComponentMappingRequiredFields) {
     if (!(field in record)) {
