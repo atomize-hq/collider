@@ -1,0 +1,36 @@
+{
+  "projectionKind": "figma-code-connect",
+  "mappingVersion": "1",
+  "componentId": "button",
+  "codeEntrypoint": "design-tokens/src/recipes/button.recipe.json",
+  "figmaComponentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=button",
+  "supportedVariants": [
+    { "name": "intent", "values": ["primary", "secondary"] },
+    { "name": "size", "values": ["sm", "md"] }
+  ],
+  "slotNames": ["icon", "label", "root"],
+  "exampleStoryIds": [
+    "contracts-pilot-recipe--button-recipe",
+    "foundations-runtime-css-parity--baseline-theme",
+    "contracts-generated-tokens--token-registry"
+  ],
+  "implementedStoryIds": [
+    "contracts-pilot-recipe--button-recipe",
+    "foundations-runtime-css-parity--baseline-theme",
+    "contracts-generated-tokens--token-registry"
+  ],
+  "publishedStorybookUrl": null,
+  "storyLinkStatus": "missing-status-artifact",
+  "blockingFields": ["publishedStorybookUrl"],
+  "sources": {
+    "componentSpec": "storybook/component-specs/button.json",
+    "proofCoverage": "artifacts/storybook/proof-coverage.json",
+    "storyInventory": "storybook/story-inventory.json",
+    "supportedVariantsSource": "design-tokens/dist/tokens.ts",
+    "slotNamesSource": "design-tokens/dist/tokens.ts",
+    "chromaticStatus": null
+  },
+  "figma": {
+    "componentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=button"
+  }
+}

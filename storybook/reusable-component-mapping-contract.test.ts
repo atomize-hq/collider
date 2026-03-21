@@ -162,8 +162,12 @@ describe('reusable component mapping contract module', () => {
 describe('reusable component mapping contract examples', () => {
   it('keeps inherited CT-9B fields aligned with the current button proof metadata', () => {
     expect(buttonSpec.componentId).toBe('button');
-    expect(buttonSpec.downstreamHooks.codeEntrypoint).toBeNull();
-    expect(buttonSpec.downstreamHooks.figmaComponentRef).toBeNull();
+    expect(buttonSpec.downstreamHooks.codeEntrypoint).toBe(
+      'design-tokens/src/recipes/button.recipe.json'
+    );
+    expect(buttonSpec.downstreamHooks.figmaComponentRef).toBe(
+      'figma://file/23PLdynlRYoBYQx9teoC8A#component=button'
+    );
     expect(buttonSpec.downstreamHooks.supportedVariantsSource).toBe(
       unresolvedRecord.supportedVariantsSource
     );

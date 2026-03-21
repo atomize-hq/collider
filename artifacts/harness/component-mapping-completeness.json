@@ -1,0 +1,17 @@
+{
+  "completenessVersion": "1",
+  "generatedAt": "2026-03-21T14:10:34.611Z",
+  "summary": { "componentCount": 1, "completeCount": 0, "incompleteCount": 1 },
+  "components": [
+    {
+      "componentId": "button",
+      "status": "incomplete",
+      "storyLinkStatus": "missing-status-artifact",
+      "blockingFields": ["publishedStorybookUrl"],
+      "outputPaths": {
+        "figmaCodeConnect": "figma/code-connect/button.json",
+        "storybookConnect": "storybook/connect/button.json"
+      }
+    }
+  ]
+}

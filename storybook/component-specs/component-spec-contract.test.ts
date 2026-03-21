@@ -83,11 +83,15 @@ describe('validateComponentSpec', () => {
       runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
     });
     expect(spec.downstreamHooks).toEqual({
-      codeEntrypoint: null,
-      figmaComponentRef: null,
+      codeEntrypoint: 'design-tokens/src/recipes/button.recipe.json',
+      figmaComponentRef: 'figma://file/23PLdynlRYoBYQx9teoC8A#component=button',
       supportedVariantsSource: 'design-tokens/dist/tokens.ts',
       slotNamesSource: 'design-tokens/dist/tokens.ts',
-      exampleStoryIds: ['contracts-pilot-recipe--button-recipe'],
+      exampleStoryIds: [
+        'contracts-pilot-recipe--button-recipe',
+        'foundations-runtime-css-parity--baseline-theme',
+        'contracts-generated-tokens--token-registry',
+      ],
     });
   });
 
