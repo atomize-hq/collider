@@ -6,8 +6,8 @@
   - Source gate: closeout
   - Related seam/slice/thread/contract: `SEAM-9B`, `CT-11B`, `THR-07`
   - Severity: important
-  - Finding: the repo-owned `CT-11B` contract, pilot projection outputs, and validation/reporting entrypoints are now landed, but `artifacts/harness/reusable-component-mapping-status.json` still reports the live pilot mapping incomplete because `publishedStorybookUrl` cannot be derived from current repo-owned `CT-10B` evidence while `artifacts/chromatic/status.json` is absent locally.
-  - Required fix: restore current repo-owned `CT-10B` publication evidence or equivalent recorded status that the mapping generator may consume directly, rerun `pnpm generate:component-mapping` and `pnpm validate:reusable-component-mapping`, and close `REM-003` only once the pilot mapping status is complete and `THR-07` can be published.
+  - Finding: the repo-owned `CT-11B` contract, pilot projection outputs, and validation/reporting entrypoints are now landed, but `artifacts/harness/reusable-component-mapping-status.json` still reports the live pilot mapping incomplete because `publishedStorybookUrl` cannot be derived from current repo-owned `CT-10B` evidence. The latest `chromatic-review` CI run on March 21, 2026 for `e4a9f4f4e0a9dd75744a80cfe6a323882855c16e` failed before status emission because `CHROMATIC_PROJECT_TOKEN` was empty, so neither `artifacts/chromatic/status.json` nor a downloadable `chromatic-status-e4a9f4f4e0a9dd75744a80cfe6a323882855c16e` artifact exists.
+  - Required fix: restore the `CHROMATIC_PROJECT_TOKEN` secret or otherwise restore current repo-owned `CT-10B` publication evidence, then rerun the `chromatic-review` owner until `artifacts/chromatic/status.json` or `chromatic-status-<sha>` exists. After that, restore the artifact locally if needed, rerun `pnpm generate:component-mapping` and `pnpm validate:reusable-component-mapping`, and close `REM-003` only once the pilot mapping status is complete and `THR-07` can be published.
   - Owner: `WS-9B`
   - Status: open
   - Must close before: `SEAM-9B` closeout may claim `CT-11B` published or advance `THR-07`

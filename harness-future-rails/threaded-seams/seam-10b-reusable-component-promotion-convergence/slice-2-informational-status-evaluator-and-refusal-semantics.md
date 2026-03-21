@@ -13,9 +13,9 @@ basis:
     - Any newly published `CT-11B` completeness field or stale-trigger branch that changes mapping refusal behavior.
 gates:
   pre_exec:
-    review: inherited
-    contract: inherited
-    revalidation: inherited
+    review: pending
+    contract: pending
+    revalidation: pending
   post_exec:
     landing: pending
     closeout: pending
@@ -50,6 +50,7 @@ candidate_subslices: []
 - **Dependencies**: requires `S1` contract baseline plus current `CT-8B`, `CT-9B`, and `CT-10B`; mapping completeness remains provisional until `THR-07` publishes.
 - **Verification**: review against [review.md](./review.md#r2---upstream-status-aggregation-into-ct-12b) and [review.md](./review.md#r3---informational-versus-blocking-ratchet).
 - **Rollout/safety**: keep the first evaluator informational and fail closed on missing or stale upstream evidence rather than guessing a stronger claim.
+- **Subslice posture**: keep this slice intact while the seam stays `execution_horizon: next` with `basis.currentness: provisional`; provisional candidate subslices are not admitted because this work defines authoritative `CT-12B` evaluator semantics and promotion-policy refusal behavior.
 - **Review surface refs**: [review.md](./review.md#r2---upstream-status-aggregation-into-ct-12b), [review.md](./review.md#r3---informational-versus-blocking-ratchet)
 
 #### S2.T1 - Define Rail Aggregation And Highest-Earned-Claim Semantics

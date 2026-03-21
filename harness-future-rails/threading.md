@@ -147,7 +147,7 @@ Reasoning:
   - **State**: identified
   - **Satisfied by**: none yet
   - **Revalidation trigger**: any change to component identity, Figma reference shape, or story URL projection rules
-  - **Notes**: this is what makes mapping/link quality inspectable instead of anecdotal
+  - **Notes**: this is what makes mapping/link quality inspectable instead of anecdotal. Current publication is blocked by missing repo-owned `CT-10B` evidence: the latest `chromatic-review` CI run on March 21, 2026 failed with `[CHROMATIC_REVIEW_TOKEN_MISSING]`, so no `chromatic-status-<sha>` artifact exists for restoration or downstream closeout.
 
 - **Thread ID**: `THR-08`
   - **Producer seam**: `SEAM-7B`
