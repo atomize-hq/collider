@@ -6,14 +6,20 @@ import storyInventory from './story-inventory.json';
 import contractDoc from './reusable-component-mapping-contract.md?raw';
 import projectionPolicyDoc from './reusable-component-mapping-projection-policy.md?raw';
 import {
+  reusableComponentMappingComparableFields,
   figmaCodeConnectPathFor,
   reusableComponentMappingAllowedCt10bFields,
+  reusableComponentMappingConformanceFields,
   reusableComponentMappingContractVersion,
   reusableComponentMappingIdentityFields,
   reusableComponentMappingOutputDirectories,
   reusableComponentMappingProvisionalNullableFields,
+  reusableComponentMappingProjectionKinds,
   reusableComponentMappingRepoOwnedFields,
+  reusableComponentMappingRequiredProjectionFields,
   reusableComponentMappingRequiredFields,
+  reusableComponentMappingResolvedFields,
+  reusableComponentMappingSharedProjectionFields,
   reusableComponentMappingStorybookLinkFields,
   storybookConnectPathFor,
 } from '../scripts/lib/reusable-component-mapping-contract.mjs';
@@ -39,10 +45,30 @@ const unresolvedRecord: MappingRecord = {
   supportedVariantsSource: buttonSpec.downstreamHooks.supportedVariantsSource,
   slotNamesSource: buttonSpec.downstreamHooks.slotNamesSource,
   exampleStoryIds: buttonSpec.downstreamHooks.exampleStoryIds,
+  supportedVariants: [
+    { name: 'intent', values: ['primary', 'secondary'] },
+    { name: 'size', values: ['sm', 'md'] },
+  ],
+  slotNames: ['icon', 'label', 'root'],
+  implementedStoryIds: [
+    'contracts-pilot-recipe--button-recipe',
+    'foundations-runtime-css-parity--baseline-theme',
+    'contracts-generated-tokens--token-registry',
+  ],
   publishedStorybookUrl: null,
   publishedStorybookRevisionGitSha: null,
   publishedStorybookComponentIds: null,
   publishedStorybookStoryIds: null,
+  storyLinkStatus: 'missing-status-artifact',
+  blockingFields: ['publishedStorybookUrl'],
+  sources: {
+    componentSpec: 'storybook/component-specs/button.json',
+    proofCoverage: 'artifacts/storybook/proof-coverage.json',
+    storyInventory: 'storybook/story-inventory.json',
+    supportedVariantsSource: buttonSpec.downstreamHooks.supportedVariantsSource,
+    slotNamesSource: buttonSpec.downstreamHooks.slotNamesSource,
+    chromaticStatus: 'artifacts/chromatic/status.json',
+  },
 };
 
 const resolvedRecord: MappingRecord = {
@@ -55,16 +81,32 @@ const resolvedRecord: MappingRecord = {
     'foundations-runtime-css-parity--baseline-theme',
     'contracts-generated-tokens--token-registry',
   ],
+  storyLinkStatus: 'resolved',
+  blockingFields: [],
 };
 
 describe('reusable component mapping contract docs', () => {
   it('pins the exact shared field inventory and CT-10B consumption boundary', () => {
     expect(contractDoc).toContain('`storybook/reusable-component-mapping-contract.md`');
-    expect(contractDoc).toContain('`CT-11B` v1 is a JSON object with exactly these top-level keys');
+    expect(contractDoc).toContain(
+      '`CT-11B` v1 is a shared repo-owned JSON object with exactly these top-level keys'
+    );
+    expect(contractDoc).toContain('`supportedVariants`');
+    expect(contractDoc).toContain('`slotNames`');
+    expect(contractDoc).toContain('`implementedStoryIds`');
     expect(contractDoc).toContain('`publishedStorybookUrl`');
     expect(contractDoc).toContain('`publishedStorybookRevisionGitSha`');
     expect(contractDoc).toContain('`publishedStorybookComponentIds`');
     expect(contractDoc).toContain('`publishedStorybookStoryIds`');
+    expect(contractDoc).toContain('`storyLinkStatus`');
+    expect(contractDoc).toContain('`blockingFields`');
+    expect(contractDoc).toContain('`sources`');
+    expect(contractDoc).toContain(
+      'Each emitted projection must preserve those same shared top-level fields'
+    );
+    expect(contractDoc).toContain(
+      'Any shared top-level field change must be implemented atomically'
+    );
     expect(contractDoc).toContain('`build.url`');
     expect(contractDoc).toContain('`revision.gitSha`');
     expect(contractDoc).toContain('`proofInventory.selectedComponentIds`');
@@ -86,13 +128,14 @@ describe('reusable component mapping contract docs', () => {
     expect(projectionPolicyDoc).toContain(
       'Both output surfaces must preserve the same `componentId`.'
     );
+    expect(projectionPolicyDoc).toContain(
+      'The same shared top-level field set must be preserved verbatim'
+    );
     expect(projectionPolicyDoc).toContain('Adapters may not infer missing code entrypoints');
     expect(projectionPolicyDoc).toContain(
       'Adapters may not derive Storybook URLs from host conventions'
     );
-    expect(projectionPolicyDoc).toContain(
-      'No generated `storybook/connect/**` or `figma/code-connect/**` records are published in this slice.'
-    );
+    expect(projectionPolicyDoc).toContain('Any shared top-level field change must update');
   });
 });
 
@@ -118,6 +161,16 @@ describe('reusable component mapping contract module', () => {
       'publishedStorybookRevisionGitSha',
       'publishedStorybookComponentIds',
       'publishedStorybookStoryIds',
+    ]);
+    expect(reusableComponentMappingResolvedFields).toEqual([
+      'supportedVariants',
+      'slotNames',
+      'implementedStoryIds',
+    ]);
+    expect(reusableComponentMappingConformanceFields).toEqual([
+      'storyLinkStatus',
+      'blockingFields',
+      'sources',
     ]);
     expect(reusableComponentMappingProvisionalNullableFields).toEqual([
       'codeEntrypoint',
@@ -150,6 +203,26 @@ describe('reusable component mapping contract module', () => {
       'publishedStorybookComponentIds',
       'publishedStorybookStoryIds',
     ]);
+    expect(reusableComponentMappingSharedProjectionFields).toEqual([
+      ...reusableComponentMappingRequiredFields,
+      'supportedVariants',
+      'slotNames',
+      'implementedStoryIds',
+      'storyLinkStatus',
+      'blockingFields',
+      'sources',
+    ]);
+    expect(reusableComponentMappingComparableFields).toEqual(
+      reusableComponentMappingSharedProjectionFields
+    );
+    expect(reusableComponentMappingRequiredProjectionFields).toEqual([
+      'projectionKind',
+      ...reusableComponentMappingSharedProjectionFields,
+    ]);
+    expect(reusableComponentMappingProjectionKinds).toEqual({
+      storybookConnect: 'storybook-connect',
+      figmaCodeConnect: 'figma-code-connect',
+    });
     expect(reusableComponentMappingOutputDirectories).toEqual({
       storybookConnect: 'storybook/connect',
       figmaCodeConnect: 'figma/code-connect',
@@ -182,6 +255,12 @@ describe('reusable component mapping contract examples', () => {
     expect(validateMappingRecord(resolvedRecord)).toEqual([]);
     expect(pickIdentityBasis(unresolvedRecord)).toEqual(pickIdentityBasis(resolvedRecord));
     expect(pickRepoOwnedFields(unresolvedRecord)).toEqual(pickRepoOwnedFields(resolvedRecord));
+    expect(pickResolvedFields(unresolvedRecord)).toEqual(pickResolvedFields(resolvedRecord));
+    expect(pickConformanceFields(resolvedRecord)).toEqual({
+      storyLinkStatus: 'resolved',
+      blockingFields: [],
+      sources: unresolvedRecord.sources,
+    });
     expect(resolvedRecord.publishedStorybookStoryIds).toEqual(
       storyInventory.components[0]?.implementedStoryRefs.map((story) => story.storyId)
     );
@@ -210,7 +289,7 @@ describe('reusable component mapping contract examples', () => {
 
 function validateMappingRecord(record: MappingRecord) {
   const errors: string[] = [];
-  const allowedFields = new Set(reusableComponentMappingRequiredFields);
+  const allowedFields = new Set(reusableComponentMappingSharedProjectionFields);
 
   for (const field of Object.keys(record)) {
     if (!allowedFields.has(field)) {
@@ -218,7 +297,7 @@ function validateMappingRecord(record: MappingRecord) {
     }
   }
 
-  for (const field of reusableComponentMappingRequiredFields) {
+  for (const field of reusableComponentMappingSharedProjectionFields) {
     if (!(field in record)) {
       errors.push(`[CT-11B_MAPPING_MISSING_REQUIRED_KEY] ${field} is required`);
     }
@@ -228,7 +307,7 @@ function validateMappingRecord(record: MappingRecord) {
     errors.push('[CT-11B_MAPPING_VERSION_MISMATCH] mappingVersion must equal "1"');
   }
 
-  for (const field of reusableComponentMappingRequiredFields) {
+  for (const field of reusableComponentMappingSharedProjectionFields) {
     if (!(field in record)) {
       continue;
     }
@@ -268,6 +347,18 @@ function validateMappingRecord(record: MappingRecord) {
     errors.push('[CT-11B_MAPPING_INVALID_STRING_ARRAY] exampleStoryIds must be a string array');
   }
 
+  if (!Array.isArray(record.supportedVariants)) {
+    errors.push('[CT-11B_MAPPING_INVALID_SUPPORTED_VARIANTS] supportedVariants must be an array');
+  }
+
+  if (!isStringArray(record.slotNames)) {
+    errors.push('[CT-11B_MAPPING_INVALID_STRING_ARRAY] slotNames must be a string array');
+  }
+
+  if (!isStringArray(record.implementedStoryIds)) {
+    errors.push('[CT-11B_MAPPING_INVALID_STRING_ARRAY] implementedStoryIds must be a string array');
+  }
+
   if (
     record.publishedStorybookComponentIds !== null &&
     !isStringArray(record.publishedStorybookComponentIds)
@@ -284,6 +375,18 @@ function validateMappingRecord(record: MappingRecord) {
     errors.push(
       '[CT-11B_MAPPING_INVALID_STRING_ARRAY] publishedStorybookStoryIds must be a string array or null'
     );
+  }
+
+  if (typeof record.storyLinkStatus !== 'string' || record.storyLinkStatus.length === 0) {
+    errors.push('[CT-11B_MAPPING_INVALID_LINK_STATUS] storyLinkStatus must be a non-empty string');
+  }
+
+  if (!isStringArray(record.blockingFields)) {
+    errors.push('[CT-11B_MAPPING_INVALID_STRING_ARRAY] blockingFields must be a string array');
+  }
+
+  if (!isObjectRecord(record.sources)) {
+    errors.push('[CT-11B_MAPPING_INVALID_SOURCES] sources must be an object');
   }
 
   return errors;
@@ -306,6 +409,27 @@ function pickRepoOwnedFields(record: MappingRecord) {
   );
 }
 
+function pickResolvedFields(record: MappingRecord) {
+  return reusableComponentMappingResolvedFields.reduce<Record<string, unknown>>((result, field) => {
+    result[field] = record[field];
+    return result;
+  }, {});
+}
+
+function pickConformanceFields(record: MappingRecord) {
+  return reusableComponentMappingConformanceFields.reduce<Record<string, unknown>>(
+    (result, field) => {
+      result[field] = record[field];
+      return result;
+    },
+    {}
+  );
+}
+
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((entry) => typeof entry === 'string');
+}
+
+function isObjectRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

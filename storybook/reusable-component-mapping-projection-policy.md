@@ -8,6 +8,8 @@
 - The same shared record must feed both declared output surfaces:
   - `storybook/connect/<component-id>.json`
   - `figma/code-connect/<component-id>.json`
+- The same shared top-level field set must be preserved verbatim in both output surfaces.
+- Output adapters may add only `projectionKind` and one consumer namespace object (`storybook` or `figma`) on top of the shared top-level fields.
 - Output adapters may reshape the shared record for consumer convenience, but they may not create new identity semantics, new provenance rules, or new link-derivation rules.
 
 ## Identity Preservation Rules
@@ -20,9 +22,11 @@
 ## Adapter Boundary Rules
 
 - Storybook and Figma adapters may change field arrangement, nesting, or consumer-facing labels only at the adapter edge.
+- Storybook and Figma adapters may not change, drop, or rename shared top-level fields carried by `CT-11B`.
 - Adapters may not rename the repo-owned identity concepts carried by `componentId`, `codeEntrypoint`, `figmaComponentRef`, `supportedVariantsSource`, `slotNamesSource`, or `exampleStoryIds`.
 - Adapters may not infer missing code entrypoints, Figma refs, supported variants, slot names, or example story IDs from vendor metadata.
 - Adapters may not derive Storybook URLs from host conventions, local URLs, vendor UI, or prose summaries. Storybook-link fields may come only from published `CT-10B`.
+- Any shared top-level field change must update the contract module, generator, validator, fixtures, and both output adapters in one change.
 
 ## Incomplete-State Rules
 

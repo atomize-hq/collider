@@ -4,13 +4,14 @@
 
 ## Scope
 
-- This document freezes the shared repo-owned mapping record that later slices will project into `storybook/connect/<component-id>.json` and `figma/code-connect/<component-id>.json`.
+- This document freezes the shared repo-owned mapping record that `SEAM-9B` projects into `storybook/connect/<component-id>.json` and `figma/code-connect/<component-id>.json`.
 - This document defines field ownership, provenance, and provisional-nullability rules for `CT-11B`.
-- This document does not authorize generated outputs, completeness validators, or promotion policy. Those remain in later `SEAM-9B` and `SEAM-10B` slices.
+- This document also freezes the required shared top-level fields that every emitted mapping projection must preserve.
+- This document does not authorize promotion policy. That remains in `SEAM-10B`.
 
 ## Shared Record Shape
 
-`CT-11B` v1 is a JSON object with exactly these top-level keys and no extras:
+`CT-11B` v1 is a shared repo-owned JSON object with exactly these top-level keys and no extras:
 
 1. `mappingVersion`
 2. `componentId`
@@ -23,12 +24,23 @@
 9. `supportedVariantsSource`
 10. `slotNamesSource`
 11. `exampleStoryIds`
-12. `publishedStorybookUrl`
-13. `publishedStorybookRevisionGitSha`
-14. `publishedStorybookComponentIds`
-15. `publishedStorybookStoryIds`
+12. `supportedVariants`
+13. `slotNames`
+14. `implementedStoryIds`
+15. `publishedStorybookUrl`
+16. `publishedStorybookRevisionGitSha`
+17. `publishedStorybookComponentIds`
+18. `publishedStorybookStoryIds`
+19. `storyLinkStatus`
+20. `blockingFields`
+21. `sources`
 
 The initial `mappingVersion` is the literal string `"1"`.
+
+Each emitted projection must preserve those same shared top-level fields and add:
+
+- `projectionKind`
+- one adapter namespace object: `storybook` for Storybook projections or `figma` for Figma projections
 
 ## Field Groups
 
@@ -52,6 +64,14 @@ The initial `mappingVersion` is the literal string `"1"`.
 | `slotNamesSource`         | `string`           | Repo-relative source for slot definitions.                                      |
 | `exampleStoryIds`         | `string[]`         | Repo-owned Storybook story IDs used as mapping examples.                        |
 
+### Shared Resolved Mapping Fields
+
+| Field                 | Type       | Notes                                                                                 |
+| --------------------- | ---------- | ------------------------------------------------------------------------------------- |
+| `supportedVariants`   | `object[]` | Repo-owned supported variant payload resolved from `supportedVariantsSource`.         |
+| `slotNames`           | `string[]` | Repo-owned slot list resolved from `slotNamesSource`.                                 |
+| `implementedStoryIds` | `string[]` | Repo-owned implemented Storybook story IDs copied from the current `CT-9B` inventory. |
+
 ### `CT-10B`-Derived Storybook Link Fields
 
 | Field                              | Type                 | Notes                                                                                                       |
@@ -60,6 +80,14 @@ The initial `mappingVersion` is the literal string `"1"`.
 | `publishedStorybookRevisionGitSha` | `string` or `null`   | Derived only from `CT-10B` `revision.gitSha`. Required key; may be provisional in `S1`.                     |
 | `publishedStorybookComponentIds`   | `string[]` or `null` | Derived only from `CT-10B` `proofInventory.selectedComponentIds`. Required key; may be provisional in `S1`. |
 | `publishedStorybookStoryIds`       | `string[]` or `null` | Derived only from `CT-10B` `proofInventory.selectedStoryIds`. Required key; may be provisional in `S1`.     |
+
+### Conformance And Provenance Fields
+
+| Field             | Type       | Notes                                                                                   |
+| ----------------- | ---------- | --------------------------------------------------------------------------------------- |
+| `storyLinkStatus` | `string`   | Repo-owned classification of the current Storybook link provenance.                     |
+| `blockingFields`  | `string[]` | Repo-owned completeness blockers. Empty means the mapping is structurally complete.     |
+| `sources`         | `object`   | Repo-owned manifest of the source paths and source references used to build the record. |
 
 ## Field Origins And Allowed Inputs
 
@@ -75,10 +103,16 @@ The initial `mappingVersion` is the literal string `"1"`.
 | `supportedVariantsSource`          | `CT-9B` downstream hook | Carries the repo-owned variant source without renaming the field.            |
 | `slotNamesSource`                  | `CT-9B` downstream hook | Carries the repo-owned slot source without renaming the field.               |
 | `exampleStoryIds`                  | `CT-9B` downstream hook | Carries the repo-owned example story IDs without renaming the field.         |
+| `supportedVariants`                | Repo-owned resolution   | Must be resolved from `supportedVariantsSource`, not from vendor payloads.   |
+| `slotNames`                        | Repo-owned resolution   | Must be resolved from `slotNamesSource`, not from vendor payloads.           |
+| `implementedStoryIds`              | `CT-9B` story inventory | Must come from the current repo-owned story inventory.                       |
 | `publishedStorybookUrl`            | `CT-10B`                | May be derived only from `build.url`.                                        |
 | `publishedStorybookRevisionGitSha` | `CT-10B`                | May be derived only from `revision.gitSha`.                                  |
 | `publishedStorybookComponentIds`   | `CT-10B`                | May be derived only from `proofInventory.selectedComponentIds`.              |
 | `publishedStorybookStoryIds`       | `CT-10B`                | May be derived only from `proofInventory.selectedStoryIds`.                  |
+| `storyLinkStatus`                  | Repo-owned evaluation   | Must be derived from repo-owned `CT-10B` validation and scope checks.        |
+| `blockingFields`                   | Repo-owned evaluation   | Must be derived from the repo-owned completeness checks over this record.    |
+| `sources`                          | Repo-owned manifest     | Must enumerate repo-owned source paths and source refs only.                 |
 
 `SEAM-9B` may consume only these `CT-10B` fields for Storybook-link derivation:
 
@@ -94,7 +128,7 @@ No other `CT-10B` field may be copied into `CT-11B`.
 - Every key listed in the shared record shape is required. Missing required keys are invalid.
 - `codeEntrypoint`, `figmaComponentRef`, `publishedStorybookUrl`, `publishedStorybookRevisionGitSha`, `publishedStorybookComponentIds`, and `publishedStorybookStoryIds` are the only provisional-nullable fields in `S1`.
 - A provisional-nullable field may be `null` only when the record is explicitly incomplete and the missing value has not yet been authored or derived through the repo-owned source contract.
-- `supportedVariantsSource`, `slotNamesSource`, and `exampleStoryIds` are required and may not be `null`.
+- `supportedVariantsSource`, `slotNamesSource`, `exampleStoryIds`, `supportedVariants`, `slotNames`, `implementedStoryIds`, `storyLinkStatus`, `blockingFields`, and `sources` are required and may not be `null`.
 - `componentId` and all repo source path fields are required and may not be `null`.
 - A record that omits a required key is invalid even if the missing field would otherwise be provisional-nullable.
 
@@ -102,9 +136,12 @@ No other `CT-10B` field may be copied into `CT-11B`.
 
 - Vendor-native IDs are never primary identity and may not appear as independent source-of-truth fields in `CT-11B`.
 - Vendor URLs, host conventions, local preview URLs, and hand-authored Storybook links are forbidden as link sources. `publishedStorybookUrl` may come only from published `CT-10B`.
+- Vendor payloads may not redefine `supportedVariants`, `slotNames`, `implementedStoryIds`, `storyLinkStatus`, `blockingFields`, or `sources`.
 - Vendor metadata may not redefine `componentId`, supported variants, slot names, example stories, code entrypoints, or Figma component references.
 - Extra top-level keys are invalid until a future contract version publishes them explicitly.
 
 ## Compatibility Rule
 
 Future vendor-specific projection formats may evolve, but the repo-owned identity, mapping, and Storybook-link field names above must remain stable enough that downstream promotion can consume `CT-11B` without tool-specific parsing. If `SEAM-9B` must rename or reinterpret any existing key, bump `mappingVersion` instead of mutating the current `CT-11B` shape in place.
+
+Any shared top-level field change must be implemented atomically across this contract, `scripts/lib/reusable-component-mapping-contract.mjs`, `scripts/lib/component-mapping.mjs`, `scripts/lib/reusable-component-mapping-validator.mjs`, the reusable-component-mapping fixtures, and the affected tests.

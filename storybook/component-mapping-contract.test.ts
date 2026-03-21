@@ -10,6 +10,10 @@ import {
   createComponentMappingArtifacts,
   writeComponentMappingArtifacts,
 } from '../scripts/lib/component-mapping.mjs';
+import {
+  reusableComponentMappingProjectionKinds,
+  reusableComponentMappingRequiredProjectionFields,
+} from '../scripts/lib/reusable-component-mapping-contract.mjs';
 
 const chromaticFixtureDir = path.join(repoRoot, 'scripts/fixtures/chromatic-status');
 const componentMappingCliPath = path.join(repoRoot, 'scripts/generate-component-mapping.mjs');
@@ -151,7 +155,7 @@ describe('writeComponentMappingArtifacts', () => {
     );
 
     expect(storybookConnect).toMatchObject({
-      projectionKind: 'storybook-connect',
+      projectionKind: reusableComponentMappingProjectionKinds.storybookConnect,
       componentId: 'button',
       componentSpecPath: 'storybook/component-specs/button.json',
       storyInventoryPath: 'storybook/story-inventory.json',
@@ -163,7 +167,7 @@ describe('writeComponentMappingArtifacts', () => {
       publishedStorybookRevisionGitSha: '1111111111111111111111111111111111111111',
     });
     expect(figmaCodeConnect).toMatchObject({
-      projectionKind: 'figma-code-connect',
+      projectionKind: reusableComponentMappingProjectionKinds.figmaCodeConnect,
       componentId: 'button',
       componentSpecPath: 'storybook/component-specs/button.json',
       figma: {
@@ -186,6 +190,12 @@ describe('writeComponentMappingArtifacts', () => {
         },
       ],
     });
+    expect(topLevelSharedKeys(storybookConnect, 'storybook')).toEqual(
+      [...reusableComponentMappingRequiredProjectionFields].sort()
+    );
+    expect(topLevelSharedKeys(figmaCodeConnect, 'figma')).toEqual(
+      [...reusableComponentMappingRequiredProjectionFields].sort()
+    );
   });
 });
 
@@ -259,4 +269,10 @@ function copyIntoWorkspace(workspace: string, repoRelativePath: string) {
 
 function readJson(workspace: string, repoRelativePath: string) {
   return JSON.parse(fs.readFileSync(path.join(workspace, repoRelativePath), 'utf8'));
+}
+
+function topLevelSharedKeys(record: Record<string, unknown>, adapterKey: 'figma' | 'storybook') {
+  return Object.keys(record)
+    .filter((key) => key !== adapterKey)
+    .sort((left, right) => left.localeCompare(right));
 }

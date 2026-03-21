@@ -5,6 +5,11 @@ export const reusableComponentMappingOutputDirectories = Object.freeze({
   figmaCodeConnect: 'figma/code-connect',
 });
 
+export const reusableComponentMappingProjectionKinds = Object.freeze({
+  storybookConnect: 'storybook-connect',
+  figmaCodeConnect: 'figma-code-connect',
+});
+
 export const reusableComponentMappingIdentityFields = Object.freeze([
   'componentId',
   'componentSpecPath',
@@ -28,11 +33,38 @@ export const reusableComponentMappingStorybookLinkFields = Object.freeze([
   'publishedStorybookStoryIds',
 ]);
 
+export const reusableComponentMappingResolvedFields = Object.freeze([
+  'supportedVariants',
+  'slotNames',
+  'implementedStoryIds',
+]);
+
+export const reusableComponentMappingConformanceFields = Object.freeze([
+  'storyLinkStatus',
+  'blockingFields',
+  'sources',
+]);
+
 export const reusableComponentMappingRequiredFields = Object.freeze([
   'mappingVersion',
   ...reusableComponentMappingIdentityFields,
   ...reusableComponentMappingRepoOwnedFields,
   ...reusableComponentMappingStorybookLinkFields,
+]);
+
+export const reusableComponentMappingSharedProjectionFields = Object.freeze([
+  ...reusableComponentMappingRequiredFields,
+  ...reusableComponentMappingResolvedFields,
+  ...reusableComponentMappingConformanceFields,
+]);
+
+export const reusableComponentMappingComparableFields = Object.freeze([
+  ...reusableComponentMappingSharedProjectionFields,
+]);
+
+export const reusableComponentMappingRequiredProjectionFields = Object.freeze([
+  'projectionKind',
+  ...reusableComponentMappingSharedProjectionFields,
 ]);
 
 export const reusableComponentMappingProvisionalNullableFields = Object.freeze([

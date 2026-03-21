@@ -17,9 +17,13 @@ import {
   defaultStoryInventoryPath,
   loadAndValidateStoryInventory,
 } from './storybook-story-inventory.mjs';
+import {
+  reusableComponentMappingContractVersion,
+  reusableComponentMappingProjectionKinds,
+} from './reusable-component-mapping-contract.mjs';
 import { validateComponentSpec } from './storybook-component-spec.mjs';
 
-export const componentMappingVersion = '1';
+export const componentMappingVersion = reusableComponentMappingContractVersion;
 export const componentMappingStatusVersion = '1';
 export const componentMappingCompletenessVersion = componentMappingStatusVersion;
 export const componentMappingRootDirEnvVar = 'COMPONENT_MAPPING_ROOT_DIR';
@@ -206,7 +210,7 @@ function createComponentMappingRecord(context) {
     blockingFields,
     componentId: context.componentId,
     figmaCodeConnect: {
-      projectionKind: 'figma-code-connect',
+      projectionKind: reusableComponentMappingProjectionKinds.figmaCodeConnect,
       ...sharedRecord,
       figma: {
         componentRef: sharedRecord.figmaComponentRef,
@@ -215,7 +219,7 @@ function createComponentMappingRecord(context) {
     status: blockingFields.length === 0 ? 'complete' : 'incomplete',
     storyLinkStatus: storyLink.storyLinkStatus,
     storybookConnect: {
-      projectionKind: 'storybook-connect',
+      projectionKind: reusableComponentMappingProjectionKinds.storybookConnect,
       ...sharedRecord,
       storybook: {
         proofCoverageStatus: proofCoverageComponent.status,

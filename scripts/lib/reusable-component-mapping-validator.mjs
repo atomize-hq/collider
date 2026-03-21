@@ -13,32 +13,13 @@ import {
   defaultReusableComponentMappingStatusPath,
   defaultStorybookConnectDir,
 } from './component-mapping.mjs';
+import {
+  reusableComponentMappingComparableFields,
+  reusableComponentMappingRequiredProjectionFields,
+} from './reusable-component-mapping-contract.mjs';
 
 export const reusableComponentMappingValidationUsage =
   'Usage: pnpm validate:reusable-component-mapping';
-
-const comparableFields = Object.freeze([
-  'mappingVersion',
-  'componentId',
-  'componentSpecPath',
-  'storyInventoryPath',
-  'proofCoveragePath',
-  'chromaticStatusPath',
-  'codeEntrypoint',
-  'figmaComponentRef',
-  'supportedVariantsSource',
-  'slotNamesSource',
-  'supportedVariants',
-  'slotNames',
-  'exampleStoryIds',
-  'publishedStorybookUrl',
-  'publishedStorybookRevisionGitSha',
-  'publishedStorybookComponentIds',
-  'publishedStorybookStoryIds',
-  'storyLinkStatus',
-]);
-
-const requiredProjectionFields = Object.freeze([...comparableFields, 'projectionKind']);
 
 export async function runReusableComponentMappingValidation(options = {}) {
   const stdout = options.stdout ?? process.stdout;
@@ -245,7 +226,7 @@ function readProjection(absPath, context) {
 
 function validateRequiredFields(projection, context) {
   const issues = [];
-  for (const field of requiredProjectionFields) {
+  for (const field of reusableComponentMappingRequiredProjectionFields) {
     if (!(field in projection)) {
       issues.push(
         `[CT-11B_MAPPING_MISSING_REQUIRED_KEY] componentId "${context.componentId}" ${context.projectionLabel}.${field} is required`
@@ -266,7 +247,7 @@ function compareProjection(expected, actual, context) {
 
 function compareProjectionFields(left, right, context) {
   const drift = [];
-  for (const field of comparableFields) {
+  for (const field of reusableComponentMappingComparableFields) {
     if (!(field in left) || !(field in right)) {
       continue;
     }
