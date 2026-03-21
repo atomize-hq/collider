@@ -1,6 +1,6 @@
 {
   "statusVersion": "1",
-  "generatedAt": "2026-03-21T20:00:00.000Z",
+  "generatedAt": "2026-03-21T20:35:00.000Z",
   "changeClass": "reusable-component-advancement",
   "railSummaries": {
     "ct8b": {
@@ -19,7 +19,7 @@
       "claimRelevant": true,
       "sourceVersionOrRevision": "inventoryVersion:1|proofCoverageVersion:1",
       "freshness": "current",
-      "outcome": "satisfied"
+      "outcome": "unsatisfied"
     },
     "ct10b": {
       "contractId": "CT-10B",
@@ -79,8 +79,8 @@
   },
   "highestEarnedClaim": {
     "profileId": "reusable-component-advancement",
-    "claimId": "reusable-component-status-baseline"
+    "claimId": "reusable-component-informational"
   },
-  "reasonCodes": ["ct8b-parity-deferred", "consumer-policy-blocking-deferred"],
+  "reasonCodes": ["ct8b-parity-deferred", "ct9b-proof-coverage-missing"],
   "enforcementMode": "informational"
 }

@@ -1,6 +1,6 @@
 {
   "statusVersion": "1",
-  "generatedAt": "2026-03-21T20:00:00.000Z",
+  "generatedAt": "2026-03-21T20:30:00.000Z",
   "changeClass": "reusable-component-advancement",
   "railSummaries": {
     "ct8b": {
@@ -37,7 +37,7 @@
       "claimRelevant": true,
       "sourceVersionOrRevision": "mappingStatusVersion:1",
       "freshness": "current",
-      "outcome": "satisfied"
+      "outcome": "unsatisfied"
     }
   },
   "claimProfiles": {
@@ -79,8 +79,8 @@
   },
   "highestEarnedClaim": {
     "profileId": "reusable-component-advancement",
-    "claimId": "reusable-component-status-baseline"
+    "claimId": "reusable-component-reviewed"
   },
-  "reasonCodes": ["ct8b-parity-deferred", "consumer-policy-blocking-deferred"],
+  "reasonCodes": ["ct8b-parity-deferred", "ct11b-mapping-invalid"],
   "enforcementMode": "informational"
 }

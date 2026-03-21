@@ -41,13 +41,13 @@ candidate_subslices: []
 - **User/system value**: one repo-owned status contract makes reusable-component promotion inspectable without requiring maintainers or AI agents to reconstruct proof, review, mapping, and parity posture from separate artifacts.
 - **Scope (in/out)**:
   - In: the `CT-12B` artifact shape at `artifacts/harness/reusable-component-status.json`; evidence provenance and freshness fields; claim profiles by change class; highest-earned-level semantics; refusal and deferral reasons; informational-versus-blocking mode flags.
-  - Out: implementing upstream rails, broadening reusable-component rigor to unrelated changes, or finalizing mapping-required blocking policy before `THR-07` is published.
+  - Out: implementing upstream rails, broadening reusable-component rigor to unrelated changes, or activating mapping-dependent blocking policy before `S3` defines the consumer ratchet.
 - **Acceptance criteria**:
   - `CT-12B` names which upstream contract revision and outcome each rail summary came from instead of duplicating upstream payloads.
   - The claim matrix distinguishes reusable-component advancement from narrower change classes and keeps the latter on smaller gate profiles.
-  - Mapping-dependent claims stay explicitly provisional until `CT-11B` is published and revalidated.
+  - Mapping-dependent claims consume published `CT-11B` basis without reinterpreting it, while blocking adoption stays deferred to `S3`.
   - Consumers can derive the highest earned claim and refusal reasons mechanically from the contract shape.
-- **Dependencies**: published `CT-8B`, `CT-9B`, and `CT-10B`; provisional planning input from `THR-07` and future `CT-11B`.
+- **Dependencies**: published `CT-8B`, `CT-9B`, `CT-10B`, and `CT-11B`.
 - **Verification**: review against [review.md](./review.md#r1---change-class-aware-promotion-decision-flow) and [review.md](./review.md#r2---upstream-status-aggregation-into-ct-12b).
 - **Rollout/safety**: start additive and informational; keep stronger claim branches disabled or deferred until the active seam publishes mapping completeness.
 - **Review surface refs**: [review.md](./review.md#r1---change-class-aware-promotion-decision-flow), [review.md](./review.md#r2---upstream-status-aggregation-into-ct-12b)
@@ -77,7 +77,7 @@ Checklist:
 - **Inputs/outputs**:
   - Inputs: seam brief scope rules, `CT-8B` parity semantics, `CT-9B` proof coverage policy, `CT-10B` review optionality semantics, and provisional `CT-11B` completeness expectations.
   - Outputs: claim matrix and change-class policy for `CT-12B`.
-- **Thread/contract refs**: consumes `THR-05`, `THR-06`, and `THR-08`; plans future consumption of `THR-07`.
+- **Thread/contract refs**: consumes `THR-05`, `THR-06`, `THR-07`, and `THR-08`.
 - **Implementation notes**: keep reusable-component advancement separate from token-only, docs-only, and proof-only changes; mark mapping-required claims as deferred until `CT-11B` is current.
 - **Acceptance criteria**: the policy cannot accidentally apply full reusable-component rails to unrelated changes; claim escalation rules are explicit and mechanically testable.
 - **Test notes**: sketch at least one reusable-component advancement case and one narrower change-class case and confirm they land on different allowed profiles.
@@ -87,5 +87,5 @@ Checklist:
 
 - Implement: define the claim profiles and their required or informational rails.
 - Test: compare reusable-component and non-reusable-component scenarios against the matrix.
-- Validate: confirm mapping-required claims remain deferred while `THR-07` is unpublished.
+- Validate: confirm mapping is treated as current published basis while blocking ratchets remain deferred to `S3`.
 - Cleanup: remove any claim branch that cannot name its allowed upstream evidence surface.

@@ -7,37 +7,37 @@
       "contractId": "CT-8B",
       "threadId": "THR-05",
       "sourcePath": "src/figma/sync-ledger.json",
+      "claimRelevant": true,
       "sourceVersionOrRevision": "ledgerVersion:2|artifactRevision:5a567cd7d07860135ab0bfb1d8f2873ef1eec836",
       "freshness": "current",
-      "outcome": "deferred",
-      "claimRelevant": true
+      "outcome": "deferred"
     },
     "ct9b": {
       "contractId": "CT-9B",
       "threadId": "THR-08",
       "sourcePath": "artifacts/storybook/proof-coverage.json",
+      "claimRelevant": false,
       "sourceVersionOrRevision": "inventoryVersion:1|proofCoverageVersion:1",
       "freshness": "current",
-      "outcome": "not-applicable",
-      "claimRelevant": false
+      "outcome": "not-applicable"
     },
     "ct10b": {
       "contractId": "CT-10B",
       "threadId": "THR-06",
       "sourcePath": "artifacts/chromatic/status.json",
+      "claimRelevant": false,
       "sourceVersionOrRevision": "statusVersion:1|revision:e4a9f4f4e0a9dd75744a80cfe6a323882855c16e",
       "freshness": "current",
-      "outcome": "not-applicable",
-      "claimRelevant": false
+      "outcome": "not-applicable"
     },
     "ct11b": {
       "contractId": "CT-11B",
       "threadId": "THR-07",
       "sourcePath": "artifacts/harness/reusable-component-mapping-status.json",
+      "claimRelevant": false,
       "sourceVersionOrRevision": "mappingStatusVersion:1",
       "freshness": "current",
-      "outcome": "not-applicable",
-      "claimRelevant": false
+      "outcome": "not-applicable"
     }
   },
   "claimProfiles": {
@@ -81,6 +81,6 @@
     "profileId": "token-only",
     "claimId": "token-only-informational"
   },
-  "reasonCodes": [],
+  "reasonCodes": ["ct8b-parity-deferred"],
   "enforcementMode": "informational"
 }

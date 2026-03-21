@@ -66,5 +66,5 @@ open_remediations:
   - De-risk plan: scope the policy explicitly to reusable-component advancement and keep narrower change classes on smaller gate profiles.
   - Risk: the promotion status duplicates upstream state instead of consuming it.
   - De-risk plan: require the final status artifact to reference upstream status records by revision and current outcome.
-- **Rollout / safety**: start with informational status only, then promote selected claims to blocking once `CT-9B`, `CT-10B`, and `CT-11B` have real data and low ambiguity.
-- **Downstream decomposition context**: this is now the next seam because `SEAM-9B` is active and the final remaining blocker chain runs through `CT-11B`. The first review bundle should focus on claim scoping and refusal behavior, especially how reusable-component advancement differs from simpler change classes once mapping completeness becomes inspectable.
+- **Rollout / safety**: start with informational status only, then promote selected claims to blocking once the published `CT-9B`, `CT-10B`, and `CT-11B` inputs remain stable and `S3` defines the consumer ratchet explicitly.
+- **Downstream decomposition context**: this is now the next seam because `SEAM-9B` is landed basis and the remaining work is convergence: consuming `CT-11B` through one repo-owned evaluator, then defining consumer ratchets and seam-exit evidence without reopening upstream contract ownership.

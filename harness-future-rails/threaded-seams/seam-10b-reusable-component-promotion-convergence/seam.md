@@ -21,7 +21,7 @@ basis:
     - Any change to `src/figma/sync-ledger.json`, parity-mode policy, or `CT-8B` claim semantics that alters what reusable-component promotion may say about Figma parity.
     - Any change to `storybook/story-inventory.json`, `storybook/component-specs/*.json`, `artifacts/storybook/proof-coverage.json`, or component-tier policy that alters the proof coverage or reusable-component identity fields carried by `CT-9B`.
     - Any change to `artifacts/chromatic/status.json`, `storybook/chromatic-review-contract.md`, `storybook/chromatic-review-policy.md`, or the `CT-10B` field-consumption boundary that changes review freshness, scope, or build URL semantics.
-    - Any `SEAM-9B` closeout delta that keeps `THR-07` below `published`, changes the `CT-11B` field boundary, or leaves mapping completeness non-consumable for downstream promotion policy.
+    - Any `SEAM-9B` closeout delta that reopens `THR-07`, changes the `CT-11B` field boundary, or leaves mapping completeness non-consumable for downstream promotion policy.
 gates:
   pre_exec:
     review: pending
@@ -44,7 +44,7 @@ open_remediations:
 
 - **Goal / value**: publish one repo-owned promotion-status contract that lets maintainers, policy consumers, and AI agents determine the highest earned reusable-component claim from current proof, review, mapping, and parity evidence without reading prose or broadening that rigor to unrelated changes.
 - **Type**: conformance
-- **Slicing strategy**: contract-first, because `SEAM-10B` owns undefined `CT-12B`, must scope change-class-specific claim rules before any consumer may enforce them, and cannot safely ratchet mapping-dependent promotion until `SEAM-9B` lands `CT-11B`.
+- **Slicing strategy**: contract-first, because `SEAM-10B` owns undefined `CT-12B`, must scope change-class-specific claim rules before any consumer may enforce them, and must consume the published `CT-11B` boundary without reopening `SEAM-9B`.
 - **Scope**
   - **In**: the repo-owned `CT-12B` artifact at `artifacts/harness/reusable-component-status.json`; claim-level policy for reusable-component advancement versus narrower change classes; informational-versus-blocking mode semantics; upstream-status provenance and freshness rules for `CT-8B`, `CT-9B`, `CT-10B`, and `CT-11B`; local, CI, PR or handoff, and release-consumer boundaries for reusable-component promotion.
   - **Out**: changing `CT-8B`, `CT-9B`, `CT-10B`, or `CT-11B`; broadening full reusable-component rigor to token-only, docs-only, or proof-only changes; reopening Figma parity semantics; implementing upstream proof, review, or mapping rails; vendor-specific status scraping outside repo-owned contracts.
@@ -52,11 +52,11 @@ open_remediations:
 - **Verification**: maintainers can determine the highest earned reusable-component level from one machine-readable surface; refusal states name the missing, stale, or deferred upstream rail directly; informational mode and blocking mode are distinct; token-only or docs-only changes do not inherit reusable-component requirements accidentally.
 - **Basis posture**:
   - **Currentness**: `provisional`
-  - **Upstream closeouts assumed**: `SEAM-6B`, `SEAM-7B`, and `SEAM-8B` are published basis; `SEAM-9B` remains the active seam and has not yet published `THR-07`.
-  - **Required threads**: `THR-05`, `THR-06`, and `THR-08` are published side inputs; `THR-07` remains `identified`, which keeps this seam's basis provisional and its pre-exec revalidation gate pending.
-  - **Stale triggers**: any drift in parity semantics, proof coverage policy, visual-review field boundaries, or `CT-11B` mapping completeness rules; any `SEAM-9B` closeout that records blocked or partial mapping publication.
+  - **Upstream closeouts assumed**: `SEAM-6B`, `SEAM-7B`, `SEAM-8B`, and `SEAM-9B` are published basis; `harness-future-rails/governance/seam-9b-closeout.md` dated March 21, 2026 records `CT-11B` published and `THR-07` ready for downstream consumption.
+  - **Required threads**: `THR-05`, `THR-06`, `THR-07`, and `THR-08` are published side inputs. The seam remains `provisional` because consumer ratchets and pack closeout are still owned here, not because mapping is unpublished.
+  - **Stale triggers**: any drift in parity semantics, proof coverage policy, visual-review field boundaries, or `CT-11B` mapping completeness rules; any `SEAM-9B` closeout delta that reopens or narrows the published mapping basis.
 - **Threading constraints**
-  - **Upstream blockers**: `SEAM-9B` remains the active upstream blocker until `CT-11B` is published, `THR-07` advances to `published`, and the seam-exit handoff is recorded in `../../governance/seam-9b-closeout.md`.
+  - **Upstream blockers**: none at the contract-publication layer. `SEAM-9B` is now landed basis; this seam must consume that closeout rather than treating mapping as planning-only input.
   - **Downstream blocked seams**: none; this seam hands off to policy consumers and pack closeout rather than a later seam.
   - **Contracts produced**: `CT-12B`
   - **Contracts consumed**: `CT-8B`, `CT-9B`, `CT-10B`, `CT-11B`
@@ -95,21 +95,21 @@ open_remediations:
   - `CT-8B`: published Figma parity status and claim semantics from `src/figma/sync-ledger.json`; consumed as a side input for parity-sensitive reusable-component claims and as a refusal reason when parity is stale or insufficient.
   - `CT-9B`: published proof coverage and component metadata from `storybook/story-inventory.json`, `storybook/component-specs/*.json`, and `artifacts/storybook/proof-coverage.json`; consumed so `CT-12B` can distinguish story existence from required proof coverage.
   - `CT-10B`: published branch-aware review status and review-mode semantics from `artifacts/chromatic/status.json` plus the repo-owned contract or policy docs; consumed so reusable-component promotion may distinguish reviewed proof from proof that only builds.
-  - `CT-11B`: mapping completeness and link metadata owned by `SEAM-9B`; consumed provisionally in planning, but not as current execution basis until `THR-07` becomes `published` and `SEAM-9B` records a ready seam-exit handoff.
+  - `CT-11B`: mapping completeness and link metadata owned by `SEAM-9B`; consumed as current published basis through `artifacts/harness/reusable-component-mapping-status.json` and the March 21, 2026 seam closeout.
 - **Threads touched**:
   - `THR-05`: `published`; `S1` and `S2` consume the current Figma parity boundary without reopening `WS-6B`.
   - `THR-06`: `published`; `S1` and `S3` consume review-mode and optionality semantics so `CT-12B` can separate informational review status from claim-relevant required review.
-  - `THR-07`: `identified`; this seam depends on `SEAM-9B` publishing mapping completeness before mapping-dependent claims or blocking modes may become `current`.
+  - `THR-07`: `published`; this seam may consume mapping completeness as current basis, while keeping blocking consumer ratchets scoped to `S3`.
   - `THR-08`: `published`; `S1` and `S2` consume proof-coverage evidence instead of treating story existence as enough for promotion.
 - **Dependency edges honored**:
   - `SEAM-6B`, `SEAM-7B`, and `SEAM-8B` are published side inputs and may be consumed as current basis unless their documented stale triggers fire.
-  - `SEAM-9B` blocks `SEAM-10B`: `CT-12B` may be planned now, but mapping-complete claims or blocking ratchets may not be finalized until `CT-11B` is published and the active seam records a ready seam-exit handoff.
+  - `SEAM-9B` no longer blocks `SEAM-10B` at the contract layer: `CT-11B` is published basis, but consumer blocking ratchets still require `S3` and seam-exit evidence from this seam.
   - There is no downstream seam after `SEAM-10B`; instead this seam must publish a pack-closeout-consumable handoff for policy consumers.
 - **Revalidation requirements**:
   - Reconfirm that `../../governance/seam-9b-closeout.md` records `seam_exit_gate.status: passed`, `promotion_readiness: ready`, and `THR-07` as `published` before promoting this seam past `decomposed`.
   - Reconfirm that `CT-8B`, `CT-9B`, and `CT-10B` still expose the same field boundaries and freshness expectations documented in `threading.md`.
   - Reconfirm that no merge, handoff, or release consumer already reads a stronger reusable-component claim surface outside the planned `CT-12B` contract.
 - **Parallelization notes**:
-  - **What can proceed now**: contract scoping, claim-matrix design, refusal taxonomy, and consumer-boundary planning against published `CT-8B`, `CT-9B`, and `CT-10B`.
-  - **What must wait**: mapping-complete or fully blocking promotion policy, pack-closeout readiness, and any execution that depends on current `CT-11B` evidence must wait for the active seam handoff.
+  - **What can proceed now**: contract scoping, claim-matrix design, evaluator semantics, refusal taxonomy, and consumer-boundary planning against published `CT-8B`, `CT-9B`, `CT-10B`, and `CT-11B`.
+  - **What must wait**: blocking promotion policy and pack-closeout readiness must still wait for `S3`/`S4`, even though current `CT-11B` evidence is now consumable.
   - **Candidate subslices**: none are admitted in this seam. Every planned slice either publishes authoritative `CT-12B` truth or changes promotion policy, which the provisional candidate-subslice matrix disqualifies for `execution_horizon: next`.

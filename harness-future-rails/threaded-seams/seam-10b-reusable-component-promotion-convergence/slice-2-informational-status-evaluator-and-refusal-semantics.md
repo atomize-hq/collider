@@ -41,13 +41,13 @@ candidate_subslices: []
 - **User/system value**: the repo can explain the highest currently earned reusable-component claim and the exact missing or stale rail without conflating advisory status with blocking policy.
 - **Scope (in/out)**:
   - In: rail aggregation rules across `CT-8B`, `CT-9B`, `CT-10B`, and `CT-11B`; highest-earned-claim evaluation; refusal, deferral, and stale taxonomy; informational fixture or report examples; mixed-state handling when some rails are current and others are not.
-  - Out: declaring a blocking consumer authoritative before `THR-07` is published or changing upstream contract semantics to fit the evaluator.
+  - Out: declaring a blocking consumer authoritative before `S3` defines that ratchet or changing upstream contract semantics to fit the evaluator.
 - **Acceptance criteria**:
   - The evaluator can report the highest earned claim from current upstream status without overclaiming.
   - Refusal reasons name the exact missing, stale, deferred, or out-of-scope rail rather than collapsing everything into one generic failure.
   - Informational mode is explicit and distinguishable from blocking mode in the final status surface.
   - Mixed states remain inspectable when proof and review are current but mapping or parity is not.
-- **Dependencies**: requires `S1` contract baseline plus current `CT-8B`, `CT-9B`, and `CT-10B`; mapping completeness remains provisional until `THR-07` publishes.
+- **Dependencies**: requires `S1` contract baseline plus current `CT-8B`, `CT-9B`, `CT-10B`, and `CT-11B`; mapping completeness is current published basis, while blocking consumer policy remains deferred.
 - **Verification**: review against [review.md](./review.md#r2---upstream-status-aggregation-into-ct-12b) and [review.md](./review.md#r3---informational-versus-blocking-ratchet).
 - **Rollout/safety**: keep the first evaluator informational and fail closed on missing or stale upstream evidence rather than guessing a stronger claim.
 - **Subslice posture**: keep this slice intact while the seam stays `execution_horizon: next` with `basis.currentness: provisional`; provisional candidate subslices are not admitted because this work defines authoritative `CT-12B` evaluator semantics and promotion-policy refusal behavior.
@@ -62,7 +62,7 @@ candidate_subslices: []
 - **Thread/contract refs**: consumes `THR-05`, `THR-06`, `THR-07`, and `THR-08`; supports `CT-12B`.
 - **Implementation notes**: separate `missing`, `stale`, `deferred`, and `not_applicable` outcomes; never let an unpublished or stale rail masquerade as passing merely because another rail is current.
 - **Acceptance criteria**: the same upstream inputs always resolve to the same earned claim and refusal reasons; change-class scoping from `S1` is honored.
-- **Test notes**: define at least one current-enough advisory case, one mapping-deferred case, and one stale-parity or stale-review case.
+- **Test notes**: define at least one current-enough advisory case, one mapping-invalid or incomplete case, and one stale-parity or stale-review case.
 - **Risk/rollback notes**: if the aggregation logic starts implying new upstream meanings, narrow the downstream evaluator and defer the claim branch instead.
 
 Checklist:
@@ -79,7 +79,7 @@ Checklist:
   - Inputs: aggregation rules, stale triggers, and expected consumer questions from merge or handoff or release policy.
   - Outputs: refusal taxonomy, freshness semantics, and example outputs or fixtures for `CT-12B`.
 - **Thread/contract refs**: supports `CT-12B`; reflects `THR-05`, `THR-06`, `THR-07`, and `THR-08`.
-- **Implementation notes**: encode whether a refusal came from stale evidence, unpublished mapping completeness, missing proof coverage, out-of-scope change class, or a consumer-policy deferral; keep refusal reasons additive and machine-readable.
+- **Implementation notes**: encode whether a refusal came from stale evidence, published-but-invalid mapping completeness, missing proof coverage, out-of-scope change class, or a consumer-policy deferral; keep refusal reasons additive and machine-readable.
 - **Acceptance criteria**: a reviewer can identify the exact blocking or deferred rail from the status artifact alone.
 - **Test notes**: include examples for advisory success, blocking review failure, mapping deferral, and non-reusable-component scope.
 - **Risk/rollback notes**: do not collapse refusal reasons into prose summaries that later consumers cannot parse deterministically.
