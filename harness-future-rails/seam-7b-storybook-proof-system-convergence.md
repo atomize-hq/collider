@@ -2,8 +2,8 @@
 seam_id: SEAM-7B
 seam_slug: storybook-proof-system-convergence
 type: conformance
-status: proposed
-execution_horizon: active
+status: landed
+execution_horizon: future
 plan_version: v1
 basis:
   source_scope_ref: scope_brief.md
@@ -63,4 +63,4 @@ open_remediations:
   - Risk: the required story-kind matrix becomes too broad and blocks simple component promotion.
   - De-risk plan: start with tier-based minimums and ratchet upward only where later seams actually consume the coverage.
 - **Rollout / safety**: introduce the metadata contract in informational mode first, backfill a pilot component family, then make inventory validation required before `SEAM-8B` consumes it.
-- **Downstream decomposition context**: this seam is active because it defines the proof contract every later seam needs. The first seam-local review bundle should focus on whether the proposed inventory and component-spec schema are minimal, repo-owned, and sufficient for later visual review and mapping seams.
+- **Downstream decomposition context**: this seam is landed basis because it already published `CT-9B`. Later seams should consume the landed proof inventory, component specs, and proof-coverage report instead of reopening proof-contract scope here.

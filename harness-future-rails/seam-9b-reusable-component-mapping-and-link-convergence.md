@@ -3,7 +3,7 @@ seam_id: SEAM-9B
 seam_slug: reusable-component-mapping-and-link-convergence
 type: integration
 status: proposed
-execution_horizon: future
+execution_horizon: next
 plan_version: v1
 basis:
   source_scope_ref: scope_brief.md
@@ -61,4 +61,4 @@ open_remediations:
   - Risk: Storybook links drift because published URLs and component specs are maintained separately.
   - De-risk plan: consume `CT-10B` build URLs and `CT-9B` identities through one projection path.
 - **Rollout / safety**: start with a narrow pilot component family and fail closed on incomplete mapping fields before broadening to the full reusable-component catalog.
-- **Downstream decomposition context**: this seam stays future because it depends on both the proof metadata and the published review rail. The first review bundle should focus on whether the proposed identity schema is sufficiently stable to generate both Code Connect and Storybook Connect style outputs without vendor lock-in.
+- **Downstream decomposition context**: this seam is now next because it depends on the active `SEAM-8B` review rail and is the nearest direct consumer of `CT-10B`. The first review bundle should focus on whether the proposed identity schema is sufficiently stable to generate both Code Connect and Storybook Connect style outputs without vendor lock-in once build URLs and review status are published.

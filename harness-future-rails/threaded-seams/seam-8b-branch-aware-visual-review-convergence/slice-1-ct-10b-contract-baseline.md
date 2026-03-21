@@ -1,10 +1,23 @@
 ---
 slice_id: S1
 seam_id: SEAM-8B
-execution_horizon: next
-status: provisional
-plan_version: v1
-basis_ref: seam.md#seam-brief-restated
+slice_kind: delivery
+execution_horizon: active
+status: decomposed
+plan_version: v2
+basis:
+  currentness: current
+  basis_ref: seam.md#basis
+  stale_triggers:
+    - Any change to landed `CT-9B` field names, proof-scope selection, or component-tier policy must be reflected here before execution starts.
+gates:
+  pre_exec:
+    review: inherited
+    contract: inherited
+    revalidation: inherited
+  post_exec:
+    landing: pending
+    closeout: pending
 threads:
   - THR-02
   - THR-03
@@ -15,6 +28,7 @@ contracts_consumed:
   - CT-9B
 open_remediations:
   - REM-002
+  - REM-005
 ---
 
 ### S1 — CT-10B Contract Baseline
@@ -27,7 +41,7 @@ open_remediations:
   - The plan names exact required fields for `CT-10B`, including branch, git revision, proof-scope selection, build URL, diff outcome, and review mode.
   - One repo-owned document states who owns the named check, how local versus CI runs behave, and which secret or credential surface is allowed.
   - One repo-owned policy states when review is informational versus claim-relevant for reusable-component advancement.
-- **Dependencies**: blocked by final `CT-9B` publication from `SEAM-7B`; uses current `pnpm storybook:build` and `.github/workflows/ci.yml` layout as provisional basis only.
+- **Dependencies**: consumes landed `CT-9B` from `SEAM-7B`; uses the current `storybook-proof` plus `build-storybook` CI topology as the baseline; stays under the seam-level `REM-005` blocker until the upstream closeout is normalized.
 - **Verification**: contract review against [review.md](./review.md#r1--branch-aware-review-publication-workflow) and [review.md](./review.md#r2--ci-and-status-normalization-data-flow), plus fixture review for at least one passed and one refused payload.
 - **Rollout/safety**: keep the review rail explicitly non-blocking while only the contract and fixtures are being frozen.
 - **Review surface refs**: [review.md](./review.md#r1--branch-aware-review-publication-workflow), [review.md](./review.md#r2--ci-and-status-normalization-data-flow), [review.md](./review.md#r3--touch-surface-handoff-map)
@@ -60,8 +74,8 @@ Checklist:
 - **Thread/contract refs**: consumes `CT-9B`; advances `THR-03`; supports `CT-10B`.
 - **Implementation notes**: the command must publish the already-built Storybook output for the resolved git SHA instead of rebuilding ad hoc; the CI owner must be the only path allowed to emit the named status in shared branches; credential use stays confined to CI through one approved secret surface.
 - **Acceptance criteria**: the plan names the command, the workflow owner, the allowed credential surface, and the rule that local runs may validate or dry-run but may not impersonate the shared branch-review status.
-- **Test notes**: review the planned job boundaries against the current CI file so the build and publish steps do not diverge on revision or output directory.
-- **Risk/rollback notes**: if the workflow topology changes during `SEAM-7B`, revalidate this task before implementing it; do not spread publish logic across multiple jobs with no single owner.
+- **Test notes**: review the planned owner against the current `build-storybook` job so build and publish do not diverge on revision or output directory.
+- **Risk/rollback notes**: if the workflow topology changes after this refresh, revalidate this task before implementing it; do not spread publish logic across multiple jobs with no single owner.
 
 Checklist:
 

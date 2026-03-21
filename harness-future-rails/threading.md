@@ -2,15 +2,15 @@
 
 ## Execution Horizon
 
-- Active seam: `SEAM-7B`
-- Next seam: `SEAM-8B`
-- Future seams: `SEAM-9B`, `SEAM-10B`
+- Active seam: `SEAM-8B`
+- Next seam: `SEAM-9B`
+- Future seams: `SEAM-10B`
 
 Reasoning:
 
-- `SEAM-7B` is active because every remaining rail depends on an explicit Storybook proof inventory and reusable-component metadata contract.
-- `SEAM-8B` is next because branch-aware visual review is the first downstream consumer of that proof contract and the shortest blocker chain into the rest of the pack.
-- `SEAM-9B` and `SEAM-10B` remain future because they consume outputs from `SEAM-7B` and `SEAM-8B` and should not be deeply decomposed before those contracts exist.
+- `SEAM-8B` is active because `SEAM-7B` landed `CT-9B`, and branch-aware visual review is now the shortest blocker chain into the rest of the pack.
+- `SEAM-9B` is next because it is the nearest direct consumer of `CT-10B` once the review rail publishes stable build URLs and machine-readable status.
+- `SEAM-10B` remains future because it still consumes outputs from both `SEAM-8B` and `SEAM-9B` and should not be deeply decomposed before those contracts exist.
 
 ## Contract Registry
 
@@ -94,10 +94,10 @@ Reasoning:
   - **Consumer seam(s)**: `SEAM-8B`
   - **Carried contract IDs**: `CT-9B`
   - **Purpose**: ensure branch-aware visual review consumes an explicit proof inventory instead of ad hoc story selection
-  - **State**: published
-  - **Satisfied by**: `storybook/story-inventory.json`, `storybook/component-tier-policy.json`, `artifacts/storybook/proof-coverage.json`, `pnpm govern:storybook-proof`
+  - **State**: revalidated
+  - **Satisfied by**: `storybook/story-inventory.json`, `storybook/component-tier-policy.json`, `storybook/component-specs/button.json`, `artifacts/storybook/proof-coverage.json`, `pnpm govern:storybook-proof`, `harness-future-rails/governance/seam-7b-closeout.md`
   - **Revalidation trigger**: any change to `storybook/story-inventory.json`, component-tier rules, or required story-kind policy
-  - **Notes**: `SEAM-8B` should not freeze required visual-review coverage before this thread is published
+  - **Notes**: `SEAM-8B` consumed the published proof contract during promotion into the active window; exec-ready still waits on closeout normalization plus `CT-10B` planning gates
 
 - **Thread ID**: `THR-03`
   - **Producer seam**: `SEAM-8B`
@@ -193,7 +193,7 @@ Why this is the critical path:
 
 ## Parallelization Notes
 
-- `WS-7B` should start first and publish `CT-9B`.
-- `WS-8B` can begin as soon as `CT-9B` is concrete enough for Storybook review selection.
-- `WS-9B` may begin its identity-schema work after `CT-9B` publishes, but link completion should wait for `CT-10B`.
+- `WS-7B` is landed basis and no longer occupies the forward execution window.
+- `WS-8B` is the active workstream because `CT-9B` is published and revalidated for branch-aware review planning.
+- `WS-9B` is next and may begin identity-schema review now, but link completion should still wait for `CT-10B`.
 - `WS-10B` should not finalize required-rail policy until `CT-10B` and `CT-11B` both exist as inspectable outputs.

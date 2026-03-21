@@ -1,10 +1,24 @@
 ---
 slice_id: S2
 seam_id: SEAM-8B
-execution_horizon: next
-status: provisional
-plan_version: v1
-basis_ref: seam.md#seam-brief-restated
+slice_kind: delivery
+execution_horizon: active
+status: decomposed
+plan_version: v2
+basis:
+  currentness: current
+  basis_ref: seam.md#basis
+  stale_triggers:
+    - Any change to landed `CT-9B` proof scope, selected component IDs, or required story IDs must be reflected here before pilot wiring starts.
+    - Any replacement of `build-storybook` as the pre-publish owner must be revalidated here before execution starts.
+gates:
+  pre_exec:
+    review: inherited
+    contract: inherited
+    revalidation: inherited
+  post_exec:
+    landing: pending
+    closeout: pending
 threads:
   - THR-02
   - THR-03
@@ -15,6 +29,7 @@ contracts_consumed:
   - CT-9B
 open_remediations:
   - REM-002
+  - REM-005
 ---
 
 ### S2 — Pilot Branch Review Publication
@@ -27,7 +42,7 @@ open_remediations:
   - A branch or PR run publishes the exact pilot proof scope selected by `CT-9B` and records the same git SHA in the artifact.
   - The generated artifact exists for success, changed-diff, and failure paths.
   - Reviewers can map the build URL and diff outcome back to the selected proof scope without reading CI logs.
-- **Dependencies**: requires `S1` to freeze the contract and policy, and requires `SEAM-7B` to publish the final pilot proof scope carried by `THR-02`.
+- **Dependencies**: requires `S1` to freeze the contract and policy, consumes the already-landed pilot proof scope carried by `THR-02`, and remains under the seam-level `REM-005` blocker until the upstream closeout is normalized.
 - **Verification**: dry-run or pilot CI evidence reviewed against [review.md](./review.md#r1--branch-aware-review-publication-workflow) and [review.md](./review.md#r4--sequence-for-optional-to-consumable-review-status).
 - **Rollout/safety**: keep this slice on a narrow pilot family and preserve the ability to mark the rail deferred when the branch is outside the selected claim scope.
 - **Review surface refs**: [review.md](./review.md#r1--branch-aware-review-publication-workflow), [review.md](./review.md#r2--ci-and-status-normalization-data-flow), [review.md](./review.md#r4--sequence-for-optional-to-consumable-review-status)
@@ -42,7 +57,7 @@ open_remediations:
 - **Implementation notes**: resolve component IDs, story IDs, and git SHA before invoking the publish command; use the built Storybook output directory from `pnpm storybook:build`; fail closed if the resolved proof scope is empty or mismatched with the inventory revision.
 - **Acceptance criteria**: the planned workflow shows a single revision flowing through build and publish; the pilot scope comes from `CT-9B`, not a hard-coded vendor story list.
 - **Test notes**: exercise one pilot run and one empty-scope refusal path before widening branch coverage.
-- **Risk/rollback notes**: if the pilot family changes in `SEAM-7B`, revalidate this task before landing any workflow edits.
+- **Risk/rollback notes**: if the proof inventory or pilot family changes after this refresh, revalidate this task before landing any workflow edits.
 
 Checklist:
 
