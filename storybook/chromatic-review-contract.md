@@ -78,3 +78,26 @@ No raw provider payload, response blob, or vendor-only nested shape may appear i
 ## Compatibility Rule
 
 Provider or host changes must preserve these field names and meanings. If a transport or provider change would rename or reinterpret downstream fields, bump `statusVersion` instead of renaming the existing `CT-10B` keys.
+
+## Downstream Consumption Contract
+
+- `SEAM-9B` may consume only these `CT-10B` fields for Storybook-link publication:
+  - `build.url`
+  - `revision.gitSha`
+  - `proofInventory.selectedComponentIds`
+  - `proofInventory.selectedStoryIds`
+- `SEAM-10B` may consume only these `CT-10B` fields for review-policy promotion:
+  - `review.mode`
+  - `review.requiredForClaim`
+  - `review.scope`
+  - `review.diffOutcome`
+- `check.name` and `check.conclusion` are execution evidence only. They record whether the `chromatic-review` rail ran and emitted a current artifact; they are not claim-policy inputs and may not be treated as merge or promotion authority.
+- Downstream seams must consume these repo-owned fields from `artifacts/chromatic/status.json`, not vendor UI summaries, prose closeouts, or raw provider payloads.
+
+## Downstream Stale Triggers
+
+- Revalidate downstream consumers if the provider transport changes in a way that could alter how `CT-10B` is generated.
+- Revalidate downstream consumers if the published `build.url` shape changes.
+- Revalidate downstream consumers if `CT-9B` changes the proof scope or selected IDs carried into `proofInventory` and `review.scope`.
+- Revalidate downstream consumers if the freshness window for `generatedAt` changes.
+- Revalidate downstream consumers if any flow starts reading vendor UI or prose summaries instead of `artifacts/chromatic/status.json`.

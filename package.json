@@ -11,6 +11,7 @@
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
     "chromatic:review": "node scripts/chromatic-review.mjs",
+    "validate:chromatic-status": "node scripts/validate-chromatic-status.mjs",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "validate:storybook-policy": "node scripts/validate-storybook-version-policy.mjs .storybook/storybook-version-policy.json",

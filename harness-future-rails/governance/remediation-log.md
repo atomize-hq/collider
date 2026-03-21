@@ -2,16 +2,6 @@
 
 ## Open remediations
 
-- **REM-002**
-  - Source gate: review
-  - Related seam/slice/thread/contract: `SEAM-8B`, `CT-10B`, `THR-03`, `THR-06`
-  - Severity: important
-  - Finding: `CT-9B` is now landed and consumable, but the repo still has only `pnpm storybook:build` plus the `build-storybook` CI job; there is no repo-owned `CT-10B` contract document, `chromatic-review` owner, normalizer, validator, or generated branch-aware visual review artifact for downstream seams to consume.
-  - Required fix: publish the repo-owned `CT-10B` contract, policy, named review owner, and generated status artifact with build URL and diff outcome semantics.
-  - Owner: future `WS-8B`
-  - Status: open
-  - Must close before: `SEAM-10B` may require visual review for reusable-component advancement
-
 - **REM-003**
   - Source gate: contract
   - Related seam/slice/thread/contract: `SEAM-9B`, `CT-11B`, `THR-07`
@@ -33,6 +23,17 @@
   - Must close before: the pack can claim a complete reusable-component harness
 
 ## Resolved remediations
+
+- **REM-002**
+  - Source gate: review
+  - Related seam/slice/thread/contract: `SEAM-8B`, `CT-10B`, `THR-03`, `THR-06`
+  - Severity: important
+  - Finding: `CT-9B` is now landed and consumable, but the repo still has only `pnpm storybook:build` plus the `build-storybook` CI job; there is no repo-owned `CT-10B` contract document, `chromatic-review` owner, normalizer, validator, or generated branch-aware visual review artifact for downstream seams to consume.
+  - Required fix: publish the repo-owned `CT-10B` contract, policy, named review owner, and generated status artifact with build URL and diff outcome semantics.
+  - Owner: `WS-8B`
+  - Status: resolved
+  - Must close before: `SEAM-10B` may require visual review for reusable-component advancement
+  - Resolution evidence: `storybook/chromatic-review-contract.md`, `storybook/chromatic-review-policy.md`, `scripts/lib/chromatic-status.mjs`, `scripts/lib/chromatic-status-validator.mjs`, `scripts/validate-chromatic-status.mjs`, `.github/workflows/ci.yml`, `artifacts/chromatic/status.json`, `harness-future-rails/governance/seam-8b-closeout.md`
 
 - **REM-005**
   - Origin phase: pre_exec

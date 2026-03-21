@@ -1,0 +1,43 @@
+{
+  "statusVersion": "1",
+  "branch": {
+    "name": "feature/seam-8b-pilot"
+  },
+  "revision": {
+    "gitSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "proofInventory": {
+    "path": "storybook/story-inventory.json",
+    "inventoryVersion": "1",
+    "selectedComponentIds": ["button"],
+    "selectedStoryIds": [
+      "contracts-pilot-recipe--button-recipe",
+      "foundations-runtime-css-parity--baseline-theme",
+      "contracts-generated-tokens--token-registry"
+    ]
+  },
+  "build": {
+    "url": "https://example.invalid/chromatic/builds/mismatched-revision"
+  },
+  "review": {
+    "mode": "informational",
+    "requiredForClaim": false,
+    "scope": {
+      "componentIds": ["button"],
+      "storyIds": [
+        "contracts-pilot-recipe--button-recipe",
+        "foundations-runtime-css-parity--baseline-theme",
+        "contracts-generated-tokens--token-registry"
+      ],
+      "componentTiers": {
+        "button": "primitive"
+      }
+    },
+    "diffOutcome": "passed"
+  },
+  "check": {
+    "name": "chromatic-review",
+    "conclusion": "success"
+  },
+  "generatedAt": "2026-03-21T12:00:00.000Z"
+}

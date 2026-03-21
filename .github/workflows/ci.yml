@@ -265,6 +265,12 @@ jobs:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
         run: pnpm chromatic:review
 
+      - name: Validate chromatic review status artifact
+        if: always()
+        env:
+          CHROMATIC_STATUS_EXPECTED_GIT_SHA: ${{ github.sha }}
+        run: pnpm validate:chromatic-status
+
       - name: Upload chromatic review status artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -274,5 +280,5 @@ jobs:
           if-no-files-found: error
 
       - name: Fail on chromatic review publication error
-        if: steps.publish_chromatic_review.outcome == 'failure'
+        if: ${{ always() && steps.publish_chromatic_review.outcome == 'failure' }}
         run: exit 1

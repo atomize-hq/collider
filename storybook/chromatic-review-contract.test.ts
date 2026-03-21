@@ -64,6 +64,12 @@ describe('chromatic review contract doc', () => {
     expect(contract).toContain(
       '`review.requiredForClaim` is reserved for future reusable-component promotion consumption in `SEAM-10B`.'
     );
+    expect(contract).toContain('## Downstream Consumption Contract');
+    expect(contract).toContain('`SEAM-9B` may consume only these `CT-10B` fields');
+    expect(contract).toContain('`SEAM-10B` may consume only these `CT-10B` fields');
+    expect(contract).toContain('`check.name` and `check.conclusion` are execution evidence only.');
+    expect(contract).toContain('## Downstream Stale Triggers');
+    expect(contract).toContain('if the published `build.url` shape changes');
   });
 });
 
