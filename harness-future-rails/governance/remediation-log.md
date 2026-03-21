@@ -12,17 +12,6 @@
   - Status: open
   - Must close before: `SEAM-10B` may require visual review for reusable-component advancement
 
-- **REM-005**
-  - Origin phase: pre_exec
-  - Source gate: revalidation
-  - Related seam/slice/thread/contract: `SEAM-8B`, `THR-02`, `CT-9B`, `harness-future-rails/governance/seam-7b-closeout.md`
-  - Severity: blocking
-  - Finding: `SEAM-7B` landed `CT-9B`, but its closeout does not record the realized `seam_exit_gate` status, promotion-readiness signal, or downstream stale-trigger disposition required by the v2.3 promotion rules. `SEAM-8B` can keep an active planning window with a current basis, but it cannot pass pre-exec revalidation or move to `exec-ready` until that upstream handoff record exists.
-  - Required fix: backfill the realized `seam_exit_gate` record and downstream stale-trigger or remediation disposition in `harness-future-rails/governance/seam-7b-closeout.md` without changing the landed `CT-9B` facts.
-  - Owner: `WS-INT`
-  - Status: open
-  - Must close before: `exec-ready`
-
 - **REM-003**
   - Source gate: contract
   - Related seam/slice/thread/contract: `SEAM-9B`, `CT-11B`, `THR-07`
@@ -44,6 +33,18 @@
   - Must close before: the pack can claim a complete reusable-component harness
 
 ## Resolved remediations
+
+- **REM-005**
+  - Origin phase: pre_exec
+  - Source gate: revalidation
+  - Related seam/slice/thread/contract: `SEAM-8B`, `THR-02`, `CT-9B`, `harness-future-rails/governance/seam-7b-closeout.md`
+  - Severity: blocking
+  - Finding: `SEAM-7B` landed `CT-9B`, but its closeout did not record the realized `seam_exit_gate` status, promotion-readiness signal, or downstream stale-trigger disposition required by the v2.3 promotion rules. `SEAM-8B` could keep an active planning window with a current basis, but it could not pass pre-exec revalidation or move to `exec-ready` until that upstream handoff record existed.
+  - Required fix: backfill the realized `seam_exit_gate` record and downstream stale-trigger or remediation disposition in `harness-future-rails/governance/seam-7b-closeout.md` without changing the landed `CT-9B` facts.
+  - Owner: `WS-INT`
+  - Status: resolved
+  - Must close before: `exec-ready`
+  - Resolution evidence: `harness-future-rails/governance/seam-7b-closeout.md`
 
 - **REM-001**
   - Source gate: contract

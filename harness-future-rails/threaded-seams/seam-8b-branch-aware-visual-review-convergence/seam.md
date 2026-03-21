@@ -1,7 +1,7 @@
 ---
 seam_id: SEAM-8B
 seam_slug: branch-aware-visual-review-convergence
-status: decomposed
+status: exec-ready
 execution_horizon: active
 plan_version: v2
 basis:
@@ -15,14 +15,13 @@ basis:
   required_threads:
     - THR-02
   stale_triggers:
-    - `harness-future-rails/governance/seam-7b-closeout.md` is missing the realized `seam_exit_gate` record required for downstream promotion.
     - Any change to `storybook/story-inventory.json`, `storybook/component-tier-policy.json`, `storybook/component-specs/*.json`, or `artifacts/storybook/proof-coverage.json` that changes the proof scope consumed by `CT-10B`.
     - Any CI topology or provider-transport change that bypasses `.github/workflows/ci.yml`, `pnpm storybook:build`, or the future `artifacts/chromatic/status.json` contract.
 gates:
   pre_exec:
     review: passed
     contract: passed
-    revalidation: failed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
@@ -32,7 +31,6 @@ seam_exit_gate:
   status: pending
 open_remediations:
   - REM-002
-  - REM-005
 ---
 
 # SEAM-8B — Branch-Aware Visual Review Convergence
@@ -52,10 +50,10 @@ open_remediations:
 - **Basis posture**:
   - **Currentness**: `current`
   - **Upstream closeouts assumed**: inherited `SEAM-4` via `harness-convergence/threading.md`; `SEAM-5B` via the published Figma publish-proof contract and handoff boundary; `SEAM-6B` via `src/figma/sync-ledger.json` and parity-policy semantics; `SEAM-7B` via `harness-future-rails/governance/seam-7b-closeout.md` plus the landed `CT-9B` surfaces.
-  - **Required threads**: `THR-02` is `revalidated`; seam-owned outbound `THR-03` and `THR-06` remain `identified` until `CT-10B` lands with evidence.
-  - **Stale triggers**: the upstream `SEAM-7B` closeout still lacks the required realized `seam_exit_gate` record; the proof inventory, tier policy, component-spec shape, or proof-coverage report may drift; the current CI topology may change before a dedicated review owner is wired; the publish host may change as long as the repo-owned `CT-10B` schema stays stable.
+  - **Required threads**: `THR-02` is `revalidated` against the recorded `SEAM-7B` handoff; seam-owned outbound `THR-03` and `THR-06` remain `identified` until `CT-10B` lands with evidence.
+  - **Stale triggers**: the proof inventory, tier policy, component-spec shape, or proof-coverage report may drift; the current CI topology may change before a dedicated review owner is wired; the publish host may change as long as the repo-owned `CT-10B` schema stays stable.
 - **Threading constraints**
-  - **Upstream blockers**: landed `CT-9B` is available through `THR-02`; readiness remains blocked by `REM-005` until the upstream closeout records the required handoff.
+  - **Upstream blockers**: none on landed contract input; `CT-9B` and the prior seam handoff are both published and current through `THR-02`.
   - **Downstream blocked seams**: `SEAM-9B`, `SEAM-10B`
   - **Contracts produced (owned)**: `CT-10B`
   - **Contracts consumed**: `CT-9B`
@@ -95,7 +93,7 @@ open_remediations:
   - `THR-03`: `identified`; `S1.T1`, `S2.T2`, and `S3.T3` advance it by freezing the build URL and status schema that `SEAM-9B` will later consume for Storybook linking.
   - `THR-06`: `identified`; `S1.T3`, `S2.T3`, and `S3.T2` advance it by making optional-versus-required review semantics explicit for reusable-component claims before `SEAM-10B` reads them.
 - **Dependency edges honored**:
-  - `SEAM-7B` no longer blocks contract input: `CT-9B` is landed and revalidated, but `REM-005` keeps readiness blocked until the prior closeout records the required seam-exit handoff.
+  - `SEAM-7B` no longer blocks readiness: `CT-9B` is landed, revalidated, and backed by a recorded seam-exit handoff that downstream promotion can consume.
   - `SEAM-8B` blocks `SEAM-9B`: `S2` and `S3` publish a stable build URL and generated status artifact before mapping or Storybook-link work may depend on them.
   - `SEAM-8B` blocks `SEAM-10B`: `S1.T3` and `S3.T2` freeze the review-mode semantics before promotion policy may treat visual review as claim-relevant.
 - **Revalidation requirements**:

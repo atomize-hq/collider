@@ -97,7 +97,7 @@ Reasoning:
   - **State**: revalidated
   - **Satisfied by**: `storybook/story-inventory.json`, `storybook/component-tier-policy.json`, `storybook/component-specs/button.json`, `artifacts/storybook/proof-coverage.json`, `pnpm govern:storybook-proof`, `harness-future-rails/governance/seam-7b-closeout.md`
   - **Revalidation trigger**: any change to `storybook/story-inventory.json`, component-tier rules, or required story-kind policy
-  - **Notes**: `SEAM-8B` consumed the published proof contract during promotion into the active window; exec-ready still waits on closeout normalization plus `CT-10B` planning gates
+  - **Notes**: `SEAM-8B` consumed the published proof contract during promotion into the active window and revalidated it against the recorded `SEAM-7B` seam-exit handoff; downstream execution now depends on landing `CT-10B`, not further `CT-9B` closeout normalization
 
 - **Thread ID**: `THR-03`
   - **Producer seam**: `SEAM-8B`

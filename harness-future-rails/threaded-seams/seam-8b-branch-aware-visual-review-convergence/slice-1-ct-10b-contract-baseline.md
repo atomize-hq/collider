@@ -3,7 +3,7 @@ slice_id: S1
 seam_id: SEAM-8B
 slice_kind: delivery
 execution_horizon: active
-status: decomposed
+status: exec-ready
 plan_version: v2
 basis:
   currentness: current
@@ -28,7 +28,6 @@ contracts_consumed:
   - CT-9B
 open_remediations:
   - REM-002
-  - REM-005
 ---
 
 ### S1 — CT-10B Contract Baseline
@@ -41,7 +40,7 @@ open_remediations:
   - The plan names exact required fields for `CT-10B`, including branch, git revision, proof-scope selection, build URL, diff outcome, and review mode.
   - One repo-owned document states who owns the named check, how local versus CI runs behave, and which secret or credential surface is allowed.
   - One repo-owned policy states when review is informational versus claim-relevant for reusable-component advancement.
-- **Dependencies**: consumes landed `CT-9B` from `SEAM-7B`; uses the current `storybook-proof` plus `build-storybook` CI topology as the baseline; stays under the seam-level `REM-005` blocker until the upstream closeout is normalized.
+- **Dependencies**: consumes landed `CT-9B` from `SEAM-7B`; uses the current `storybook-proof` plus `build-storybook` CI topology as the baseline; relies on the recorded `SEAM-7B` seam-exit handoff remaining aligned with the published proof surfaces.
 - **Verification**: contract review against [review.md](./review.md#r1--branch-aware-review-publication-workflow) and [review.md](./review.md#r2--ci-and-status-normalization-data-flow), plus fixture review for at least one passed and one refused payload.
 - **Rollout/safety**: keep the review rail explicitly non-blocking while only the contract and fixtures are being frozen.
 - **Review surface refs**: [review.md](./review.md#r1--branch-aware-review-publication-workflow), [review.md](./review.md#r2--ci-and-status-normalization-data-flow), [review.md](./review.md#r3--touch-surface-handoff-map)

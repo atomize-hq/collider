@@ -3,13 +3,12 @@ slice_id: S3
 seam_id: SEAM-8B
 slice_kind: seam_exit_gate
 execution_horizon: active
-status: decomposed
+status: exec-ready
 plan_version: v2
 basis:
   currentness: current
   basis_ref: seam.md#basis
   stale_triggers:
-    - The upstream `SEAM-7B` closeout must record the realized `seam_exit_gate` handoff before this slice can promote the seam to `exec-ready`.
     - Any provider transport, URL-shape, or artifact-freshness change that broadens `CT-10B` beyond the repo-owned contract must be revalidated here before closeout.
 gates:
   pre_exec:
@@ -28,7 +27,6 @@ contracts_consumed:
   - CT-9B
 open_remediations:
   - REM-002
-  - REM-005
 ---
 
 ### S3 — Seam-Exit Gate
@@ -41,8 +39,8 @@ open_remediations:
   - A local or CI validator fails missing, stale, or malformed `CT-10B` payloads.
   - The `chromatic-review` check semantics are explicit about execution health versus claim-level policy.
   - The seam records exactly what evidence downstream seams may consume and what must be revalidated before they do.
-  - The slice makes the remaining `exec-ready` blocker explicit: `REM-005` must close before this seam can claim upstream handoff completeness.
-- **Dependencies**: requires `S2` pilot artifact emission, the landed `CT-9B` contract, and closure of `REM-005` before readiness promotion can pass.
+  - The slice makes upstream handoff completeness explicit by consuming the recorded `SEAM-7B` seam-exit record alongside the landed `CT-9B` contract.
+- **Dependencies**: requires `S2` pilot artifact emission, the landed `CT-9B` contract, and the recorded `SEAM-7B` seam-exit handoff during downstream readiness and closeout.
 - **Verification**: validator and fixture review against [review.md](./review.md#r2--ci-and-status-normalization-data-flow) and [review.md](./review.md#r4--sequence-for-optional-to-consumable-review-status).
 - **Rollout/safety**: start with validator-enforced freshness and artifact presence; keep claim-level blocking behavior deferred until `SEAM-10B` consumes the published evidence.
 - **Review surface refs**: [review.md](./review.md#r2--ci-and-status-normalization-data-flow), [review.md](./review.md#r3--touch-surface-handoff-map), [review.md](./review.md#r4--sequence-for-optional-to-consumable-review-status)

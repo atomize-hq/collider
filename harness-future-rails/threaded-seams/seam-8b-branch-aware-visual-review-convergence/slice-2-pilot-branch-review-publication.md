@@ -3,7 +3,7 @@ slice_id: S2
 seam_id: SEAM-8B
 slice_kind: delivery
 execution_horizon: active
-status: decomposed
+status: exec-ready
 plan_version: v2
 basis:
   currentness: current
@@ -29,7 +29,6 @@ contracts_consumed:
   - CT-9B
 open_remediations:
   - REM-002
-  - REM-005
 ---
 
 ### S2 — Pilot Branch Review Publication
@@ -42,7 +41,7 @@ open_remediations:
   - A branch or PR run publishes the exact pilot proof scope selected by `CT-9B` and records the same git SHA in the artifact.
   - The generated artifact exists for success, changed-diff, and failure paths.
   - Reviewers can map the build URL and diff outcome back to the selected proof scope without reading CI logs.
-- **Dependencies**: requires `S1` to freeze the contract and policy, consumes the already-landed pilot proof scope carried by `THR-02`, and remains under the seam-level `REM-005` blocker until the upstream closeout is normalized.
+- **Dependencies**: requires `S1` to freeze the contract and policy, consumes the already-landed pilot proof scope carried by `THR-02`, and depends on the recorded `SEAM-7B` handoff staying aligned with the published proof scope.
 - **Verification**: dry-run or pilot CI evidence reviewed against [review.md](./review.md#r1--branch-aware-review-publication-workflow) and [review.md](./review.md#r4--sequence-for-optional-to-consumable-review-status).
 - **Rollout/safety**: keep this slice on a narrow pilot family and preserve the ability to mark the rail deferred when the branch is outside the selected claim scope.
 - **Review surface refs**: [review.md](./review.md#r1--branch-aware-review-publication-workflow), [review.md](./review.md#r2--ci-and-status-normalization-data-flow), [review.md](./review.md#r4--sequence-for-optional-to-consumable-review-status)

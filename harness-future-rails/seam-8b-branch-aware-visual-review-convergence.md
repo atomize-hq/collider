@@ -2,7 +2,7 @@
 seam_id: SEAM-8B
 seam_slug: branch-aware-visual-review-convergence
 type: integration
-status: decomposed
+status: exec-ready
 execution_horizon: active
 plan_version: v2
 basis:
@@ -16,14 +16,13 @@ basis:
   required_threads:
     - THR-02
   stale_triggers:
-    - `harness-future-rails/governance/seam-7b-closeout.md` is missing the realized `seam_exit_gate` record required for downstream promotion.
     - Any change to `storybook/story-inventory.json`, `storybook/component-tier-policy.json`, `storybook/component-specs/*.json`, or `artifacts/storybook/proof-coverage.json` that changes the proof scope consumed by `CT-10B`.
     - Any CI topology or provider-transport change that bypasses `.github/workflows/ci.yml`, `pnpm storybook:build`, or the future `artifacts/chromatic/status.json` contract.
 gates:
   pre_exec:
     review: passed
     contract: passed
-    revalidation: failed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
@@ -33,7 +32,6 @@ seam_exit_gate:
   status: pending
 open_remediations:
   - REM-002
-  - REM-005
 ---
 
 # SEAM-8B — Branch-Aware Visual Review Convergence
@@ -54,7 +52,7 @@ open_remediations:
   - this seam publishes proof surfaces; it does not redefine them
 - **Dependencies**
   - Direct blockers:
-    - none on landed contract input; readiness is blocked by `REM-005` until the upstream closeout records the required `seam_exit_gate`
+    - none; landed `CT-9B` and the realized `SEAM-7B` seam-exit handoff are both current
   - Transitive blockers:
     - inherited `SEAM-4`
   - Direct consumers:
@@ -71,4 +69,4 @@ open_remediations:
   - Risk: the reviewed story set diverges from the proof inventory and creates false confidence.
   - De-risk plan: make the inventory the only allowed source for required review scope.
 - **Rollout / safety**: start with non-blocking status emission for a pilot reusable component slice, then promote it to a required review rail only after `CT-10B` is stable and current.
-- **Downstream decomposition context**: this seam is active because `SEAM-7B` already landed `CT-9B` and the next critical-path step is freezing the branch-aware review contract. Readiness promotion remains blocked until the upstream `SEAM-7B` closeout records the required `seam_exit_gate` handoff and the refreshed pre-exec posture stays current.
+- **Downstream decomposition context**: this seam is active because `SEAM-7B` already landed `CT-9B` and published the realized seam-exit handoff. The next critical-path step is freezing the branch-aware review contract and landing `CT-10B`.
