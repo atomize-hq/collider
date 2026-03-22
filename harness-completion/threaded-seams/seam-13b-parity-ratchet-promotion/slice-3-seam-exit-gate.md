@@ -3,7 +3,7 @@ slice_id: S3
 seam_id: SEAM-13B
 slice_kind: seam_exit_gate
 execution_horizon: active
-status: exec-ready
+status: landed
 plan_version: v2
 basis:
   currentness: current
@@ -15,8 +15,8 @@ gates:
     contract: inherited
     revalidation: inherited
   post_exec:
-    landing: pending
-    closeout: pending
+    landing: passed
+    closeout: passed
 threads:
   - THR-10
   - THR-11
@@ -68,3 +68,29 @@ candidate_subslices: []
   - SEAM-14B can read the closeout and know whether promotion is legal
 
 - **Review surface refs**: R3 (contract/thread flow — Level E terminal state reached)
+
+#### S3.T1 - Landed evidence and contract publication
+
+- **Outcome**: Complete seam-exit record in `governance/seam-13b-closeout.md`
+- **Inputs/outputs**:
+  - Input: S1 and S2 landed artifacts, sync-ledger.json state, reusable-component-status.json state, CT-15B artifact
+  - Output: Updated closeout with seam-exit gate record; threading.md with THR-11 advanced
+- **Thread/contract refs**: CT-15B (published, consumed by THR-11 → SEAM-14B), CT-14B (consumed), CT-12B (consumed), THR-10 (consumed, confirmed current), THR-11 (advanced identified → defined)
+- **Implementation notes**:
+  - Record sync-ledger.json landing state confirming all 5 CT-15B criteria satisfied
+  - Record reusable-component-status.json landing state (CT-15B criterion 5 satisfied)
+  - Record CT-15B publication with artifact path
+  - Record THR-10 consumption (confirmed current — hardened rail from SEAM-12B unchanged)
+  - Advance THR-11 from `identified` to `defined` in threading.md
+  - Emit downstream stale triggers for SEAM-14B
+  - State promotion readiness: `ready`
+- **Acceptance criteria**: Closeout is complete; SEAM-14B promotion input is unambiguous
+- **Test notes**: Verify all 5 CT-15B satisfaction criteria are confirmed in the closeout record
+- **Risk/rollback notes**: One-way ratchet — closeout confirms the ratchet is real; no rollback without governance action
+
+Checklist:
+
+- [x] Implement: capture evidence, publish contract record, advance threads
+- [x] Test: validate all CT-15B satisfaction criteria confirmed
+- [x] Validate: confirm SEAM-14B promotion input is unambiguous
+- [x] Cleanup: resolve or carry forward all open remediations

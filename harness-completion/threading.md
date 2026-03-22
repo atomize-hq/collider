@@ -2,12 +2,12 @@
 
 ## Execution horizon
 
-| Seam     | Horizon | Status     |
-| -------- | ------- | ---------- |
-| SEAM-11B | landed  | landed     |
-| SEAM-12B | landed  | landed     |
-| SEAM-13B | active  | exec-ready |
-| SEAM-14B | next    | proposed   |
+| Seam     | Horizon | Status   |
+| -------- | ------- | -------- |
+| SEAM-11B | landed  | landed   |
+| SEAM-12B | landed  | landed   |
+| SEAM-13B | active  | landed   |
+| SEAM-14B | next    | proposed |
 
 Policy: only SEAM-13B is eligible for authoritative sub-slices by default. SEAM-14B may later receive seam-local review and slices with provisional candidate-subslice hints. Future seams beyond this pack remain at seam-brief depth.
 
@@ -90,10 +90,10 @@ Policy: only SEAM-13B is eligible for authoritative sub-slices by default. SEAM-
   - **Consumer seam(s)**: SEAM-14B
   - **Carried contract IDs**: CT-15B
   - **Purpose**: Carry Level E promotion state to harness finalization — SEAM-14B cannot attest until promotion is complete
-  - **State**: identified
+  - **State**: defined
   - **Revalidation trigger**: parity enforcement rule change or CT-12B status change
   - **Satisfied by**: SEAM-13B landing with `highestEarnedLevel: E-promotion-complete` and `parityMode: required` in sync-ledger.json
-  - **Notes**: One-way ratchet — once satisfied, this thread should not regress without governance action
+  - **Notes**: One-way ratchet — once satisfied, this thread should not regress without governance action. SEAM-13B landed 2026-03-22. sync-ledger.json shows `parityMode: required` and `highestEarnedLevel: E-promotion-complete`. CT-15B published with 5-criterion definition at `artifacts/harness/ct-15b-parity-enforcement-state.md`. THR-11 advanced from `identified` to `defined` at SEAM-13B closeout. SEAM-14B may consume CT-15B/THR-11 for attestation.
 
 - **Thread ID**: `THR-12`
   - **Producer seam**: SEAM-14B
