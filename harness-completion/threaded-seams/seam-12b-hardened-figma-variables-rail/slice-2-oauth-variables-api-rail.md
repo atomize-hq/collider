@@ -3,7 +3,7 @@ slice_id: S2
 seam_id: SEAM-12B
 slice_kind: delivery
 execution_horizon: active
-status: exec-ready
+status: blocked
 plan_version: v2
 basis:
   currentness: current
@@ -11,6 +11,7 @@ basis:
   stale_triggers:
     - artifact_revision_change_in_design_tokens_dist_figma_tokens_json
     - figma_variables_api_scope_change
+    - enterprise_only_variables_api_write_access
 gates:
   pre_exec:
     review: inherited
@@ -50,9 +51,13 @@ candidate_subslices:
       - figma_variables_api_scope_change
 ---
 
-### S2 - OAuth/Variables API rail implementation
+### S2 (Blocked) - OAuth/Variables API rail implementation
 
-- **User/system value**: Implement the repo-owned command that reads the canonical token artifact and deterministically writes variables into Figma via the OAuth/Variables API, replacing manual interpretation with an automatable, auditable publish path.
+**Status**: Blocked. Figma Variables REST API write access is Enterprise/full-seat gated, so this slice is not executable for non-Enterprise tenants.
+
+**Replacement**: Use the plugin-based rail slice: `slice-2-plugin-rail.md`.
+
+- **User/system value**: (Enterprise-only) Implement the repo-owned command that reads the canonical token artifact and deterministically writes variables into Figma via the Variables REST API.
 
 - **Scope (in/out)**:
   - In:
@@ -73,8 +78,8 @@ candidate_subslices:
     - CT-14B publication (that happens at seam exit)
 
 - **Acceptance criteria**:
-  - Command executes successfully against the current artifact and target Figma file
-  - sync-ledger.json shows hardened rail mode (`oauth-variables-api`) alongside `plugin-import-manual`
+  - Command executes successfully against the current artifact and target Figma file (Enterprise-only)
+  - sync-ledger.json shows Enterprise rail mode (`rest-variables-oauth`) alongside `plugin-import-manual`
   - Machine-readable success markers written on each execution
   - Credential model is documented, enforced, and does not rely on personal tokens
   - Determinism test passes: two consecutive runs with the same input produce the same Figma variable state
@@ -106,14 +111,14 @@ candidate_subslices:
 - **Outcome**: Registered OAuth app with appropriate scopes; credential configuration documented
 - **Inputs/outputs**:
   - Input: Figma OAuth2 documentation, Variables API scope requirements
-  - Output: Registered app, `src/figma/oauth-config.json` (no secrets), credential model documentation
+  - Output: Registered shared app (Enterprise tenancy), credential model documentation (no secrets committed)
 - **Thread/contract refs**: CT-14B (credential model is part of the contract)
 - **Implementation notes**:
   - Determine required scopes for Variables API write access
   - Register OAuth app at org level (preferred) or characterize the approval path
-  - Create `oauth-config.json` with app ID, redirect URI, required scopes — no client secrets
-  - Document the credential storage model (where secrets live, who owns them)
-- **Acceptance criteria**: OAuth app exists or approval path is documented; config file exists; no secrets in repo
+  - Do not add `oauth-config.json` to the repo. Credential material stays in runtime configuration; the repo may only contain declarative policy docs.
+  - Document the credential storage model (where secrets live, who owns them) and the exact environment variables required by the quarantined Enterprise script.
+- **Acceptance criteria**: OAuth app exists or approval path is documented; credential model is documented; no secrets in repo
 - **Test notes**: Verify OAuth flow produces a valid access token with Variables API write scope
 - **Risk/rollback notes**: External dependency — if org admin approval is required with unknown timeline, document the blocker and define fallback (personal dev app as interim, with explicit downgrade acknowledgment in CT-14B)
 

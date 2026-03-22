@@ -5,16 +5,13 @@ import { execFileSync } from 'node:child_process';
 import { loadAndValidateSyncLedger } from './sync-ledger.mjs';
 
 export const defaultFigmaVariablesSyncLedgerPath = 'src/figma/sync-ledger.json';
-export const defaultFigmaVariablesSyncConfigPath = 'src/figma/oauth-config.json';
-export const figmaVariablesSyncUsage = 'Usage: node scripts/figma-variables-sync.mjs';
-export const hardenedPublishMode = 'oauth-variables-api';
-export const hardenedCredentialModel = 'oauth-app';
+export const figmaVariablesSyncUsage = 'Usage: node scripts/figma-variables-sync-enterprise.mjs';
+export const hardenedPublishMode = 'rest-variables-oauth';
 export const hardenedCollectionName = 'Collider Tokens';
 export const hardenedModeName = 'Base';
 
 const hardenedExceptionPrefix = 'figma-hardened-variables-';
 const retryableStatusCodes = new Set([429, 500, 502, 503, 504]);
-const requiredScopes = ['file_variables:read', 'file_variables:write'];
 const supportedTokenTypes = new Set(['color', 'duration', 'string', 'boolean', 'number']);
 const earnedLevelRank = new Map([
   ['A-source-valid', 1],
@@ -26,7 +23,6 @@ const earnedLevelRank = new Map([
 
 export async function runFigmaVariablesSync(options = {}) {
   const ledgerPath = options.ledgerPath ?? defaultFigmaVariablesSyncLedgerPath;
-  const configPath = options.configPath ?? defaultFigmaVariablesSyncConfigPath;
   const env = options.env ?? process.env;
   const fetchImpl = options.fetch ?? globalThis.fetch?.bind(globalThis);
   const sleep = options.sleep ?? defaultSleep;
@@ -55,8 +51,7 @@ export async function runFigmaVariablesSync(options = {}) {
   try {
     artifactRevision = resolveArtifactRevision(ledger.artifact.path);
     const artifactDocument = readJson(ledger.artifact.path);
-    const config = validateSyncConfig(readJson(configPath));
-    const accessToken = resolveAccessToken(env, config);
+    const accessToken = resolveAccessToken(env);
     const fileKey = parseFigmaFileKey(ledger.publish.figmaFile);
     const desiredVariables = flattenTokenDocument(artifactDocument);
 
@@ -102,23 +97,18 @@ export async function runFigmaVariablesSync(options = {}) {
       collectionName: hardenedCollectionName,
       modeName: hardenedModeName,
     });
-    const timestamp = now().toISOString();
     const updatedLedger = buildSuccessLedger({
       ledger,
       artifactRevision,
-      timestamp,
-      verification,
     });
 
     writeJson(ledgerPath, updatedLedger);
     return { ok: true, ledger: updatedLedger, plan, verification, artifactRevision };
   } catch (error) {
-    const timestamp = now().toISOString();
     const syncError = normalizeSyncError(error);
     const failureLedger = buildFailureLedger({
       ledger,
       artifactRevision,
-      timestamp,
       error: syncError,
     });
 
@@ -233,54 +223,19 @@ export function createSyncPlan({ currentState, desiredVariables }) {
   };
 }
 
-export function validateSyncConfig(config) {
-  if (!isPlainObject(config)) {
-    throw new FigmaVariablesSyncError('config', 'oauth config must be a JSON object');
-  }
-
-  if (config.credentialModel !== hardenedCredentialModel) {
-    throw new FigmaVariablesSyncError(
-      'auth',
-      `oauth config must declare credentialModel=${hardenedCredentialModel}`
-    );
-  }
-
-  if (typeof config.accessTokenEnv !== 'string' || config.accessTokenEnv.length === 0) {
-    throw new FigmaVariablesSyncError(
-      'auth',
-      'oauth config must declare a non-empty accessTokenEnv'
-    );
-  }
-
-  if (!Array.isArray(config.requiredScopes) || config.requiredScopes.length === 0) {
-    throw new FigmaVariablesSyncError(
-      'auth',
-      'oauth config must declare requiredScopes for the hardened rail'
-    );
-  }
-
-  for (const scope of requiredScopes) {
-    if (!config.requiredScopes.includes(scope)) {
-      throw new FigmaVariablesSyncError('auth', `oauth config must include scope ${scope}`);
-    }
-  }
-
-  return config;
-}
-
-export function resolveAccessToken(env, config) {
-  const configuredToken = env?.[config.accessTokenEnv];
+export function resolveAccessToken(env) {
+  const configuredToken = env?.FIGMA_OAUTH_ACCESS_TOKEN;
   if (typeof configuredToken !== 'string' || configuredToken.length === 0) {
     if (typeof env?.FIGMA_TOKEN === 'string' && env.FIGMA_TOKEN.length > 0) {
       throw new FigmaVariablesSyncError(
         'auth',
-        'FIGMA_TOKEN is not accepted by the hardened rail; provide an OAuth app token via the configured accessTokenEnv'
+        'FIGMA_TOKEN is not accepted by the Enterprise rail; provide an OAuth app token via FIGMA_OAUTH_ACCESS_TOKEN'
       );
     }
 
     throw new FigmaVariablesSyncError(
       'auth',
-      `missing OAuth access token in ${config.accessTokenEnv}`
+      'missing OAuth access token in FIGMA_OAUTH_ACCESS_TOKEN (Enterprise Variables API rail)'
     );
   }
 
@@ -594,18 +549,10 @@ function isColorValue(value) {
   );
 }
 
-export function buildSuccessLedger({ ledger, artifactRevision, timestamp, verification }) {
+export function buildSuccessLedger({ ledger, artifactRevision }) {
   const nextLedger = cloneLedger(ledger);
   nextLedger.artifact.revision = artifactRevision;
   nextLedger.publish.mode = hardenedPublishMode;
-  nextLedger.publish.oauthCredentialModel = hardenedCredentialModel;
-  nextLedger.publish.lastHardenedRunStatus = 'passed';
-  nextLedger.publish.lastHardenedRunTimestamp = timestamp;
-  nextLedger.publish.successMarkers = {
-    collectionCount: verification.collectionCount,
-    determinismVerified: verification.determinismVerified,
-    variableCount: verification.variableCount,
-  };
   nextLedger.verification.materializationStatus = 'passed';
   nextLedger.verification.lastVerifiedRevision = artifactRevision;
   nextLedger.promotion.highestEarnedLevel = maxEarnedLevel(
@@ -620,15 +567,11 @@ export function buildSuccessLedger({ ledger, artifactRevision, timestamp, verifi
   return nextLedger;
 }
 
-export function buildFailureLedger({ ledger, artifactRevision, timestamp, error }) {
+export function buildFailureLedger({ ledger, artifactRevision, error }) {
   const syncError = normalizeSyncError(error);
   const nextLedger = cloneLedger(ledger);
   nextLedger.artifact.revision = artifactRevision;
   nextLedger.publish.mode = hardenedPublishMode;
-  nextLedger.publish.oauthCredentialModel = hardenedCredentialModel;
-  nextLedger.publish.lastHardenedRunStatus = 'failed';
-  nextLedger.publish.lastHardenedRunTimestamp = timestamp;
-  delete nextLedger.publish.successMarkers;
   nextLedger.verification.materializationStatus = 'failed';
   nextLedger.verification.lastVerifiedRevision = artifactRevision;
   nextLedger.promotion.highestEarnedLevel = 'C-consumption-valid';
@@ -642,7 +585,7 @@ export function buildFailureLedger({ ledger, artifactRevision, timestamp, error 
     message: syncError.message,
     blocking: true,
     status: 'open',
-    field: 'publish.lastHardenedRunStatus',
+    field: 'verification.materializationStatus',
   });
   return nextLedger;
 }

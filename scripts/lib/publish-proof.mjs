@@ -9,7 +9,6 @@ export const publishProofPilotName = 'Collider Copy pilot';
 export const publishProofPilotFile = 'figma://file/23PLdynlRYoBYQx9teoC8A';
 export const publishProofModes = new Set([
   'plugin-import-manual',
-  'oauth-variables-api',
   'rest-variables-oauth',
   'tokens-studio-carried',
 ]);
@@ -55,7 +54,7 @@ export function validatePublishProof(data) {
 
   if (!publishProofModes.has(data.mode)) {
     errors.push(
-      '[CT-7B_PUBLISH_PROOF_INVALID_MODE] mode must be plugin-import-manual, oauth-variables-api, rest-variables-oauth, or tokens-studio-carried'
+      '[CT-7B_PUBLISH_PROOF_INVALID_MODE] mode must be plugin-import-manual, rest-variables-oauth, or tokens-studio-carried'
     );
   }
 

@@ -6,7 +6,7 @@ This runbook proves the current `CT-7B` plugin-based proof rail for the existing
 
 - Pilot file: `Collider Copy pilot` (`figma://file/23PLdynlRYoBYQx9teoC8A`)
 - Canonical artifact path: `design-tokens/dist/figma/tokens.json`
-- Canonical local proof URL: `http://127.0.0.1:4173/design-tokens/dist/figma/tokens.json`
+- Canonical local proof URL: `http://localhost:4173/design-tokens/dist/figma/tokens.json`
 
 ## Preconditions
 
@@ -18,17 +18,21 @@ This runbook proves the current `CT-7B` plugin-based proof rail for the existing
 ## Local Proof Server
 
 1. From the repo root, serve the generated artifact over localhost:
-   `python3 -m http.server 4173 --bind 127.0.0.1`
+   `pnpm figma:tokens:serve`
 2. Confirm the artifact is reachable before opening Figma:
-   `curl http://127.0.0.1:4173/design-tokens/dist/figma/tokens.json`
+   `curl http://localhost:4173/design-tokens/dist/figma/tokens.json`
 3. Keep this server running while the plugin/importer performs the materialization.
 
 ## Configure The Plugin Or Importer
 
-1. Open the pilot Figma file and launch the chosen plugin or importer.
-2. Use a read-only handoff mode such as a local URL, pasted JSON, or file upload.
-3. Point the importer at `design-tokens/dist/figma/tokens.json`.
-4. Materialize variables into the pilot file without enabling any write-back mode.
+1. Build the repo-owned plugin bundle:
+   `pnpm figma:plugin:build`
+2. In Figma, import the plugin from:
+   `figma/plugins/collider-token-sync/manifest.json`
+3. Open the pilot Figma file and run the plugin: `Collider Token Sync`.
+4. Fetch the artifact from the local proof URL:
+   `http://localhost:4173/design-tokens/dist/figma/tokens.json`
+5. Sync variables. The plugin will replace the `Collider Tokens` collection deterministically.
 
 ## Update The Ledger After The Walkthrough
 

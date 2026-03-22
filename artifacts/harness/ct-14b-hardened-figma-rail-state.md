@@ -10,90 +10,53 @@ derived_consumers:
 thread_ids:
   - THR-09
   - THR-10
-schema_version: '1'
+schema_version: '2'
 ledger_schema_ref: CT-7B
 ---
 
-# CT-14B — Hardened Figma Rail State
+# CT-14B — Deterministic Figma Rail State (Plugin)
 
 ## Purpose
 
-Captures the operational status of the hardened OAuth/Variables API rail, as recorded in `src/figma/sync-ledger.json`. Enables SEAM-13B to confirm the hardened rail is working before ratcheting parity from deferred to required.
+Captures the operational status of Collider's deterministic **plugin-based** Figma rail, as recorded in `src/figma/sync-ledger.json`. This replaces the earlier assumption that the Variables REST API rail is generally available for write access (it is Enterprise/full-seat gated).
 
 ## Satisfaction Criteria
 
-CT-14B is satisfied when **all six** conditions hold simultaneously:
+CT-14B is satisfied when **all five** conditions hold simultaneously:
 
-1. `publish.mode` = `"oauth-variables-api"` in `src/figma/sync-ledger.json`
-2. `publish.oauthCredentialModel` is non-null and equals `"oauth-app"` (not personal tokens)
-3. `publish.lastHardenedRunStatus` = `"passed"`
-4. `publish.lastHardenedRunTimestamp` is non-null (ISO 8601 timestamp of last successful execution)
-5. `publish.successMarkers` is a non-empty object containing `variableCount` > 0, `collectionCount` > 0, and `determinismVerified` = `true`
-6. CT-13B remains satisfied (proof state is still current — the hardened rail extends, not replaces, the proven baseline)
+1. `publish.mode` = `"plugin-import-manual"` in `src/figma/sync-ledger.json`
+2. `publish.tokensStudioCarrier` = `false`
+3. `verification.materializationStatus` = `"passed"`
+4. `verification.lastVerifiedRevision` equals `artifact.revision` (verified-current)
+5. CT-13B remains satisfied (proof state is still current)
 
 ## Consumer Verification Procedure
 
 A downstream consumer (SEAM-13B) verifies CT-14B satisfaction by:
 
 1. Read `src/figma/sync-ledger.json`
-2. Assert `publish.mode === "oauth-variables-api"`
-3. Assert `publish.oauthCredentialModel === "oauth-app"`
-4. Assert `publish.lastHardenedRunStatus === "passed"`
-5. Assert `publish.lastHardenedRunTimestamp !== null`
-6. Assert `publish.successMarkers.determinismVerified === true`
-7. Assert `publish.successMarkers.variableCount > 0`
-8. Assert `publish.successMarkers.collectionCount > 0`
-9. Verify CT-13B satisfaction criteria still hold (see `artifacts/harness/ct-13b-figma-proof-state.md`)
+2. Assert `publish.mode === "plugin-import-manual"`
+3. Assert `publish.tokensStudioCarrier === false`
+4. Assert `verification.materializationStatus === "passed"`
+5. Assert `verification.lastVerifiedRevision === artifact.revision`
+6. Verify CT-13B satisfaction criteria still hold (see `artifacts/harness/ct-13b-figma-proof-state.md`)
 
-If any assertion fails, CT-14B is not satisfied and the consuming seam must not proceed with work that assumes a working hardened rail.
+If any assertion fails, CT-14B is not satisfied.
 
 ## Stale Triggers
 
-- Artifact revision change in `design-tokens/dist/figma/tokens.json` (same trigger as CT-13B — the hardened rail must be re-executed against the new artifact)
-- Figma Variables API scope change (API surface the rail depends on has shifted)
-- OAuth credential model change (credential assumptions no longer hold)
+- Artifact revision change in `design-tokens/dist/figma/tokens.json` (requires re-materialization and re-verification).
+- Deterministic mapping changes in the repo-owned plugin (requires re-materialization and re-verification).
 
 The consumer detects artifact staleness by comparing `artifact.revision` in the ledger against `git log -1 --format=%H -- design-tokens/dist/figma/tokens.json`.
 
 ## Owned Fields
 
-CT-14B introduces new fields within the `publish` object of `src/figma/sync-ledger.json`. All new fields are additive extensions within the existing CT-7B v2 schema — no schema migration required.
+CT-14B does not introduce new ledger fields. It constrains an allowed combination of existing `CT-8B` v2 fields to represent a verified-current plugin materialization attempt.
 
-| Field                              | Expected Value (Satisfied) | Schema Owner           |
-| ---------------------------------- | -------------------------- | ---------------------- |
-| `publish.mode`                     | `"oauth-variables-api"`    | CT-14B (extends CT-7B) |
-| `publish.oauthCredentialModel`     | `"oauth-app"`              | CT-14B (new)           |
-| `publish.lastHardenedRunStatus`    | `"passed"`                 | CT-14B (new)           |
-| `publish.lastHardenedRunTimestamp` | ISO 8601 timestamp         | CT-14B (new)           |
-| `publish.successMarkers`           | Object (see below)         | CT-14B (new)           |
+## Determinism Invariant
 
-### `publish.successMarkers` Shape
-
-```json
-{
-  "variableCount": 42,
-  "collectionCount": 3,
-  "determinismVerified": true
-}
-```
-
-- `variableCount` — number of Figma variables written by the rail (must be > 0)
-- `collectionCount` — number of Figma variable collections written (must be > 0)
-- `determinismVerified` — `true` when two consecutive runs with the same input token file produced identical variable values in Figma
-
-### `publish.oauthCredentialModel` Enum
-
-| Value         | Guarantees                                                                                                                         |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `"oauth-app"` | Repo-owned OAuth application; credentials are not tied to a personal user token; app can be rotated without individual user action |
-
-Personal tokens (`"personal-token"`) are explicitly excluded from CT-14B satisfaction. The credential model must be org-owned and rotatable.
-
-### Determinism Invariant
-
-The determinism invariant is defined at the **variable-value level**: two consecutive runs of the hardened rail with the same input (`design-tokens/dist/figma/tokens.json` at the same revision) must produce identical variable names, values, and collection assignments in Figma.
-
-Full API response-level determinism is NOT required — timestamps, request IDs, and other API metadata may differ between runs. Only the variable state that Figma persists is subject to the invariant.
+The determinism invariant is defined at the **variable-value level**: repeated plugin runs with the same input (`design-tokens/dist/figma/tokens.json` at the same revision) must produce identical variable names, values, and collection assignments in Figma.
 
 ## Canonical Example — Satisfied State
 
@@ -105,17 +68,9 @@ Full API response-level determinism is NOT required — timestamps, request IDs,
     "revision": "2ee89e27306a1caa846d904ad6229370f371b1b3"
   },
   "publish": {
-    "mode": "oauth-variables-api",
+    "mode": "plugin-import-manual",
     "tokensStudioCarrier": false,
-    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A",
-    "oauthCredentialModel": "oauth-app",
-    "lastHardenedRunStatus": "passed",
-    "lastHardenedRunTimestamp": "2026-03-25T14:30:00Z",
-    "successMarkers": {
-      "variableCount": 42,
-      "collectionCount": 3,
-      "determinismVerified": true
-    }
+    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
   },
   "verification": {
     "materializationStatus": "passed",
@@ -123,21 +78,13 @@ Full API response-level determinism is NOT required — timestamps, request IDs,
   },
   "promotion": {
     "parityMode": "deferred",
-    "parityDeferredReason": "Parity remains deferred because the hardened Variables API rail and release-governed promotion gate are not yet in place for Collider.",
+    "parityDeferredReason": "Parity remains deferred until a release-governed promotion gate and an explicit Enterprise-backed parity rail are adopted.",
     "highestEarnedLevel": "D-publish-valid"
   },
   "exceptions": []
 }
 ```
 
-Note: `parityMode` remains `"deferred"` when CT-14B is satisfied. Ratcheting to `"required"` is owned by SEAM-13B / CT-15B.
-
-## Scope Boundary
-
-CT-14B describes rail **state**, not rail **procedure**. How the OAuth flow works, how the command is invoked, how variables are mapped from tokens, and how determinism is tested are owned by SEAM-12B S2. CT-14B only specifies what the landed result must look like for downstream consumption.
-
 ## Relationship to CT-13B
 
-CT-14B extends CT-13B. CT-13B proves the plugin-import-manual rail works at the current artifact revision. CT-14B proves the hardened OAuth/Variables API rail works at the same revision. Both can be satisfied simultaneously — CT-14B satisfaction requires CT-13B satisfaction (criterion 6).
-
-CT-14B satisfaction implies the repo has a hardened, automatable publish path. It does NOT imply the plugin-import-manual path is removed — that path remains as fallback.
+CT-14B extends CT-13B by insisting the `plugin-import-manual` rail is deterministic and recorded as verified-current for the active artifact revision. CT-14B satisfaction requires CT-13B satisfaction.

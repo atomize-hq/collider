@@ -36,9 +36,8 @@ candidate_subslices: []
 
 - **Scope (in/out)**:
   - In:
-    - Define CT-14B contract shape: mode identifier, credential model descriptor, success markers schema, sync-ledger field extensions
-    - Document what "hardened rail state" means in machine-readable terms
-    - Specify the sync-ledger fields CT-14B adds (within v2 schema bounds per CT-7B)
+    - Define CT-14B contract shape for the **plugin rail** as a constrained combination of existing sync-ledger v2 fields
+    - Document what "deterministic plugin rail state" means in machine-readable terms
     - Define the relationship between CT-14B and CT-13B (CT-14B extends proof state with rail operational state)
     - Specify versioning and compatibility guarantees
   - Out:
@@ -48,9 +47,9 @@ candidate_subslices: []
 
 - **Acceptance criteria**:
   - CT-14B contract artifact exists with machine-readable field definitions
-  - The contract specifies: rail mode identifier, credential model type, success marker shape, sync-ledger extension fields
+  - The contract specifies: the required `publish.mode`, `verification.*` fields, and promotion constraints for a satisfied plugin rail
   - The contract explicitly states what downstream consumers (SEAM-13B) can depend on
-  - The contract is compatible with CT-7B v2 ledger schema — no schema migration required
+  - The contract is compatible with CT-7B/CT-8B v2 ledger schema — no schema migration required
   - The determinism invariant is defined at the variable-value level (not full API response level)
 
 - **Dependencies**:
@@ -71,16 +70,19 @@ candidate_subslices: []
 
 - **Outcome**: Machine-readable CT-14B contract definition artifact
 - **Inputs/outputs**:
-  - Input: CT-7B schema shape, CT-13B proof state shape (provisional), Figma Variables API documentation
+  - Input: CT-7B/CT-8B schema shape, CT-13B proof state shape (provisional)
   - Output: CT-14B contract artifact (likely in governance or contract directory)
 - **Thread/contract refs**: CT-14B (produced), CT-13B (consumed), CT-7B (consumed), THR-10 (CT-14B is the carried contract)
 - **Implementation notes**:
-  - Define sync-ledger field extensions: `publishMode: "oauth-variables-api"`, `oauthCredentialModel`, `lastHardenedRunStatus`, `lastHardenedRunTimestamp`, `successMarkers`
+  - Define the satisfied state strictly in existing ledger fields (no extensions):
+    - `publish.mode="plugin-import-manual"`
+    - `publish.tokensStudioCarrier=false`
+    - `verification.materializationStatus="passed"`
+    - `verification.lastVerifiedRevision === artifact.revision` (verified-current)
   - Define equivalence criteria: what "same Figma state" means for determinism testing
-  - Specify the credential model type enum and what each value guarantees
-- **Acceptance criteria**: CT-14B artifact exists, is machine-readable, and specifies all fields listed above
+- **Acceptance criteria**: CT-14B artifact exists, is machine-readable, and specifies the satisfied-state constraints above
 - **Test notes**: Validate contract artifact against governance schema; verify CT-7B compatibility
-- **Risk/rollback notes**: Low risk — this is a definition artifact. If Variables API scope changes the shape, the contract can be revised before S2 implementation.
+- **Risk/rollback notes**: Low risk — this is a definition artifact. If plugin mapping or verification changes, the contract can be revised before S2 implementation.
 
 Checklist:
 

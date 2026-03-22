@@ -38,17 +38,18 @@ open_remediations: []
 
 # SEAM-12B — Hardened Figma Variables Rail Implementation
 
-- **Goal / value**: Implement a repo-owned OAuth/Variables API rail that can deterministically write approved token contents into Figma without manual interpretation, replacing plugin-import-manual as the hardened long-term publish path.
+- **Goal / value**: Ship a repo-owned **Figma plugin** that deterministically materializes approved token contents into Figma without manual value transcription. The Variables REST API write rail is treated as Enterprise-only future work and is not part of the v1 posture.
 
 - **Scope**
   - In:
-    - OAuth app registration and credential model for Figma Variables API
-    - Repo-owned command or workflow that reads `design-tokens/dist/figma/tokens.json` and writes variables into the target Figma file
-    - Explicit scope/permission documentation
-    - Deterministic success markers and machine-readable status updates to sync-ledger.json
-    - Error handling and failure reporting
+    - Repo-owned Figma plugin that reads `design-tokens/dist/figma/tokens.json` (URL default + file upload fallback)
+    - Deterministic mapping rules (token path to variable name, type coercions, color parsing, duration normalization)
+    - Replace-collection write behavior for a fixed collection/mode (`Collider Tokens`, `Base`)
+    - In-plugin verification (counts, names, and values for the default mode)
+    - Operator runbook + ledger alignment for `plugin-import-manual`
+    - CT-14B: deterministic plugin rail state contract (no new schema fields)
   - Out:
-    - Removing the plugin-import-manual rail (it remains as fallback)
+    - Removing the plugin-import-manual rail (it remains the canonical v1 rail)
     - Implementing Figma-to-repo reverse sync
     - Implementing Chromatic, Code Connect, or Storybook Connect rails
     - Changing the canonical token source format
@@ -57,58 +58,50 @@ open_remediations: []
   - Inputs:
     - `design-tokens/dist/figma/tokens.json` (generated artifact)
     - CT-13B proof state from SEAM-11B (baseline confirmation that the current artifact is publishable)
-    - Figma Variables API (REST, OAuth2)
-    - OAuth credentials (stored per repo credential model)
+    - Figma plugin Variables API (local document write)
   - Outputs:
-    - CLI command or CI workflow step that executes the publish
+    - Repo-owned plugin bundle + operator flow that executes the publish
     - Updated `src/figma/sync-ledger.json` with hardened rail status
-    - CT-14B: Hardened Figma rail state contract (mode, credential model, success markers)
+    - CT-14B: deterministic plugin rail state contract (verified-current plugin materialization)
 
 - **Key invariants / rules**:
   - The rail must be deterministic: same input artifact → same Figma variable state
   - The rail must not require undocumented manual interpretation to succeed
-  - Credentials must follow an explicit ownership model (not personal tokens in env vars)
-  - The rail must write machine-readable status into the sync-ledger on every execution
+  - The repo remains the only canonical source of token values (repo → Figma only)
   - Source-of-truth direction is always repo → Figma
 
 - **Dependencies**
   - Direct blockers: SEAM-11B (must confirm current rail works before building replacement)
-  - Transitive blockers: Figma OAuth app registration (external)
   - Direct consumers: SEAM-13B (parity ratchet depends on hardened rail being real)
   - Derived consumers: SEAM-14B
 
 - **Touch surface**:
-  - New: `scripts/figma-variables-sync.ts` or equivalent (command implementation)
-  - New: `src/figma/oauth-config.json` or equivalent (credential model, no secrets)
-  - Modified: `src/figma/sync-ledger.json` (new mode and status fields)
-  - Modified: `justfile` or `package.json` scripts (publish command registration)
-  - External: Figma Variables API endpoints, OAuth app registration
+  - New: `figma/plugins/collider-token-sync/**` (plugin source)
+  - New: `scripts/build-figma-plugin.mjs` (plugin bundling)
+  - New: `src/lib/tokens/figma-token-mapping.ts` (pure mapping used by plugin + tests)
+  - Modified: `src/figma/pilot-setup.md`, `src/figma/README.md`, `src/figma/parity-policy.md`
+  - Modified: `src/figma/sync-ledger.json` + fixtures (canonical mode alignment)
 
 - **Verification**:
-  - Command executes successfully against the current artifact and target Figma file
-  - sync-ledger.json shows the hardened rail mode alongside plugin-import-manual
-  - Machine-readable success markers are written on each execution
-  - Credential model is documented and does not rely on personal tokens
+  - Plugin executes successfully against the current artifact and pilot file
+  - sync-ledger.json records `publish.mode="plugin-import-manual"` and a verified-current state for the active revision
+  - In-plugin verification confirms counts, names, and values match the computed mapping
   - Determinism test: two consecutive runs with the same input produce the same Figma state
 
 - **Risks / unknowns**:
-  - Risk: Figma Variables API scope or rate limits may block the implementation
-  - De-risk plan: Spike API access early in seam-local review; document scope requirements before committing to implementation approach
-  - Risk: OAuth app registration may require organization admin approval with unknown timeline
-  - De-risk plan: Identify approval path during pre-exec review; define fallback if delayed
+  - Risk: The destination file may contain a remote/published collection with the same name; the plugin must abort cleanly rather than partially apply.
+  - Risk: Figma CSP/network restrictions may block localhost fetch; file upload must remain a first-class fallback.
 
 - **Rollout / safety**:
   - The plugin-import-manual rail remains functional during and after this seam
-  - The hardened rail is additive — it does not remove the existing path
   - First execution should be against a branch-specific or test Figma file if available
 
 - **Downstream decomposition context**:
-  - This is the `next` seam because it depends on SEAM-11B proof confirmation and involves external dependency resolution
   - THR-09 (proof freshness) and THR-10 (hardened rail readiness) matter most
-  - First seam-local review should focus on: API scope requirements, credential model options, and command interface design
+  - First seam-local review should focus on deterministic mapping correctness and failure handling when the target collection cannot be replaced
 
 - **Expected seam-exit concerns**:
   - Contracts likely to publish: CT-14B (hardened rail state)
   - Threads likely to advance: THR-09 (proof freshness → published), THR-10 (hardened rail → published)
-  - Review-surface areas likely to shift after landing: R1 workflow adds automated publish path; R2 data flow shows dual-mode rail
+  - Review-surface areas likely to shift after landing: R1 workflow adds a repo-owned deterministic plugin; R2 data flow shows plugin materialization and ledger update loop
   - Downstream seams most likely to require revalidation: SEAM-13B (parity ratchet depends on hardened rail being real and verified)

@@ -1,6 +1,6 @@
 {
   "proofVersion": "1",
-  "mode": "oauth-variables-api",
+  "mode": "plugin-import-manual",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
     "gitSha": "2ee89e27306a1caa846d904ad6229370f371b1b3"
@@ -12,7 +12,7 @@
   "materialization": {
     "status": "passed",
     "attemptedAt": "2026-03-22T00:07:21Z",
-    "notes": "Executed through the hardened oauth-variables-api rail against the shared Figma app."
+    "notes": "Materialized via the repo-owned plugin/importer rail against the pilot file."
   },
   "carrier": {
     "used": false,

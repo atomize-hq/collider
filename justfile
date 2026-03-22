@@ -56,9 +56,17 @@ storybook-proof:
 reusable-component-promotion:
     pnpm govern:reusable-component-promotion
 
-# Hardened Figma variables sync rail
-figma-sync-variables:
-    pnpm figma:sync:variables
+# Build the repo-owned Figma token sync plugin
+figma-plugin-build:
+    pnpm figma:plugin:build
+
+# Serve the token artifact with permissive CORS headers (for plugin URL fetch)
+figma-token-server:
+    pnpm figma:tokens:serve
+
+# Enterprise-only rail (Figma Variables REST API; requires Enterprise/full-seat access)
+figma-sync-variables-enterprise:
+    pnpm figma:sync:variables:enterprise
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers

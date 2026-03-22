@@ -42,3 +42,8 @@ next-env.d.ts
 .claude
 .agents
 .codex-artifacts/
+
+# figma plugins
+/figma/plugins/**/dist/
+/figma/plugins/**/code.js
+/figma/plugins/**/code.js.map

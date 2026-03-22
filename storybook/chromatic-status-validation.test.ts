@@ -77,6 +77,7 @@ describe('evaluateChromaticStatus', () => {
 
 describe('runChromaticStatusValidation', () => {
   it('passes on a valid artifact and prints the published thread summary', async () => {
+    const now = new Date('2026-03-21T12:30:00.000Z');
     const workspace = createWorkspace({
       fixtureName: 'valid-passed.chromatic-status.json',
       generatedAt: '2026-03-21T12:25:00.000Z',
@@ -87,6 +88,7 @@ describe('runChromaticStatusValidation', () => {
     const exitCode = await runChromaticStatusValidation({
       expectedGitSha: '1111111111111111111111111111111111111111',
       rootDir: workspace,
+      now,
       stdout,
       stderr,
     });

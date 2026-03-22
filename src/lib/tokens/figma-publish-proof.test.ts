@@ -23,7 +23,7 @@ describe('loadAndValidatePublishProof', () => {
     const result = loadAndValidatePublishProof(path.join(repoRoot, 'src/figma/publish-proof.json'));
 
     expect(result.errors).toEqual([]);
-    expect(result.data.mode).toBe('oauth-variables-api');
+    expect(result.data.mode).toBe('plugin-import-manual');
     expect(result.data.materialization.status).toBe('passed');
   });
 

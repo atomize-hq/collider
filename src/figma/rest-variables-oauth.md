@@ -1,12 +1,12 @@
-# OAuth Variables API Hardening Contract
+# Enterprise Variables API Rail (Future)
 
-> Historical path note: this document remains at `rest-variables-oauth.md`, but the canonical hardened mode string is `oauth-variables-api`.
+This document is intentionally **not** part of Collider's v1 operator flow. It exists only to capture the future Enterprise-only rail contract for writing variables through the Figma Variables REST API.
 
-This document defines the only approved long-term hardening target for the repo-to-Figma rail in Collider. It constrains how `SEAM-5B` may move beyond proof-only materialization without taking ownership of downstream `CT-8B` promotion or ledger policy.
+In v1, the repo-owned plugin (`plugin-import-manual`) remains the canonical rail.
 
 ## Approved Rail
 
-- The hardening target is exactly `oauth-variables-api`.
+- The Enterprise rail target is exactly `rest-variables-oauth`.
 - The source artifact remains exactly `design-tokens/dist/figma/tokens.json`.
 - The transport is a repo-owned OAuth app writing approved variables through the Figma Variables REST API.
 - No personal access token, designer-owned app, or user-provided credential may be treated as the hardened rail.
@@ -24,7 +24,7 @@ This document defines the only approved long-term hardening target for the repo-
 - The shared app operator must have edit access to the destination file.
 - The hardening rail must use an explicit shared app-owner model rather than unmanaged per-user credentials.
 - The rail stays declarative until owned credentials and destination access actually exist.
-- Runtime access tokens come from `FIGMA_OAUTH_ACCESS_TOKEN`; `src/figma/oauth-config.json` documents the non-secret credential model and required scopes.
+- Runtime access tokens come from `FIGMA_OAUTH_ACCESS_TOKEN`. This repo does not commit OAuth client secrets.
 
 ## Required OAuth Scopes
 
@@ -43,7 +43,7 @@ This document defines the only approved long-term hardening target for the repo-
 ## Publish-Proof Alignment
 
 - Hardened attempts must reuse the seam-owned publish-proof contract in [`src/figma/publish-proof-contract.md`](./publish-proof-contract.md).
-- For a hardened attempt, `mode` must be `oauth-variables-api`.
+- For an Enterprise attempt, `mode` must be `rest-variables-oauth`.
 - Hardened attempts must keep `carrier.used=false`. If Tokens Studio is involved at all, the attempt falls under the carrier exception policy instead of the hardened rail.
 - This contract constrains publish-proof values and ownership expectations only. It does not add a second schema surface.
 

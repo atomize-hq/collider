@@ -41,7 +41,7 @@ Historical `CT-7` should now be read this way:
 `CT-7B` replaces it by making four things explicit:
 
 1. the short-term proof rail is `plugin-import-manual`
-2. the long-term hardened rail is `rest-variables-oauth`
+2. the long-term hardened rail is `rest-variables-oauth` (Enterprise-only Variables REST API rail; not part of the v1 operator flow)
 3. Tokens Studio is optional and temporary only
 4. machine-readable verification and promotion are defined downstream through `CT-8B`
 

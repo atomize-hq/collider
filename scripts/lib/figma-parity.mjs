@@ -25,9 +25,9 @@ export function evaluateFigmaParity(ledger) {
     );
   }
 
-  if (ledger.publish.mode !== 'oauth-variables-api') {
+  if (ledger.publish.mode !== 'rest-variables-oauth') {
     errors.push(
-      '[FIGMA_PARITY_REQUIRES_HARDENED_RAIL] publish.mode must be oauth-variables-api when promotion.parityMode is required'
+      '[FIGMA_PARITY_REQUIRES_ENTERPRISE_RAIL] publish.mode must be rest-variables-oauth when promotion.parityMode is required'
     );
   }
 

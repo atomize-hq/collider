@@ -12,9 +12,9 @@ This directory documents Collider's live Figma convergence posture under `CT-7B`
 ## Publish Rail (`CT-7B`)
 
 - `plugin-import-manual` is the default proof rail for current convergence work.
-- `oauth-variables-api` is the only approved hardening target before parity can become required.
+- The repo-owned Figma plugin (`Collider Token Sync`) is the canonical implementation of `plugin-import-manual`.
+- `rest-variables-oauth` exists only as a future Enterprise-only rail (Figma Variables REST API) and is not part of the v1 operator flow.
 - `tokens-studio-carried` is optional temporary carriage only. It is never a permanent required rail.
-- `src/figma/oauth-config.json` records the non-secret OAuth-app credential model; the runtime access token is supplied through `FIGMA_OAUTH_ACCESS_TOKEN`.
 - No Figma write-back or bidirectional sync is allowed by this policy.
 
 ## Verification Ledger (`CT-8B`)
@@ -30,8 +30,7 @@ This directory documents Collider's live Figma convergence posture under `CT-7B`
 
 - The live ledger is currently `promotion.parityMode="deferred"`.
 - Deferred parity may still earn `D-publish-valid` when the current artifact revision is materialized successfully.
-- `E-promotion-complete` requires `promotion.parityMode="required"`, the hardened rail, current verification, and no open blocking exceptions.
-- The hardened rail is named `oauth-variables-api`; `rest-variables-oauth` is historical wording retained only in older records and compatibility docs.
+- `E-promotion-complete` remains out of scope for v1 until an explicit Enterprise-backed parity rail is adopted.
 
 ## Operational Rules
 
@@ -39,3 +38,14 @@ This directory documents Collider's live Figma convergence posture under `CT-7B`
 - Canonical token changes still go through repo PRs.
 - Record any unresolved parity blockers in `exceptions`.
 - Keep parity-policy decisions centralized in `src/figma/parity-policy.md` instead of duplicating them across runbooks.
+
+## Plugin Operator Flow
+
+1. Build the plugin bundle:
+   `pnpm figma:plugin:build`
+2. Import the plugin into Figma from:
+   `figma/plugins/collider-token-sync/manifest.json`
+3. Serve the artifact locally (optional but recommended):
+   `pnpm figma:tokens:serve`
+4. In the pilot file, run the plugin and sync from:
+   `http://localhost:4173/design-tokens/dist/figma/tokens.json`

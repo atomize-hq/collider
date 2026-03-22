@@ -5,7 +5,7 @@ This file is the canonical parity-policy surface for Collider's `CT-8B` ledger.
 ## Current Posture
 
 - The current parity posture is `promotion.parityMode="deferred"`.
-- Parity remains deferred until the hardened `oauth-variables-api` rail and the release-governed promotion gate are both in place.
+- Parity remains deferred in v1 because the publish rail is `plugin-import-manual` (repo-owned plugin/importer), not an API-backed Enterprise rail.
 
 ## Allowed States
 
@@ -18,7 +18,7 @@ This file is the canonical parity-policy surface for Collider's `CT-8B` ledger.
 
 Promotion from deferred to required is allowed only when all of the following are true:
 
-- the active publish rail is `oauth-variables-api`
+- the active publish rail is `rest-variables-oauth` (Enterprise Variables REST API rail)
 - the current artifact revision is recorded in `artifact.revision`
 - `verification.materializationStatus="passed"` for that same revision
 - `verification.lastVerifiedRevision` matches `artifact.revision`

@@ -5,17 +5,9 @@
     "revision": "3333333333333333333333333333333333333333"
   },
   "publish": {
-    "mode": "oauth-variables-api",
+    "mode": "rest-variables-oauth",
     "tokensStudioCarrier": false,
-    "figmaFile": "figma://file/fixture-valid-required-sync-ledger",
-    "oauthCredentialModel": "oauth-app",
-    "lastHardenedRunStatus": "passed",
-    "lastHardenedRunTimestamp": "2026-03-21T12:00:00Z",
-    "successMarkers": {
-      "variableCount": 40,
-      "collectionCount": 1,
-      "determinismVerified": true
-    }
+    "figmaFile": "figma://file/fixture-valid-required-sync-ledger"
   },
   "verification": {
     "materializationStatus": "passed",
