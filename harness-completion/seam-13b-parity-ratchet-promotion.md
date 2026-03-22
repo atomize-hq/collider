@@ -2,17 +2,19 @@
 seam_id: SEAM-13B
 seam_slug: parity-ratchet-promotion
 type: conformance
-status: decomposed
-execution_horizon: next
-plan_version: v1
+status: exec-ready
+execution_horizon: active
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   source_scope_ref: scope_brief.md
   source_scope_version: v1
   upstream_closeouts:
     - seam: SEAM-12B
       pack: harness-completion
       contract: CT-14B
+      status: landed
+      closeout_ref: governance/seam-12b-closeout.md
   required_threads:
     - THR-10
     - THR-11
@@ -21,15 +23,15 @@ basis:
     - ct_12b_reusable_component_status_change
 gates:
   pre_exec:
-    review: pending
-    contract: pending
-    revalidation: pending
+    review: passed
+    contract: passed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
 seam_exit_gate:
   required: true
-  planned_location: reserved_final_slice
+  planned_location: S3
   status: pending
 open_remediations: []
 ---

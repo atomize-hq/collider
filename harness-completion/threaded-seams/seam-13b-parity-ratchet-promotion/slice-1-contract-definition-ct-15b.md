@@ -2,11 +2,11 @@
 slice_id: S1
 seam_id: SEAM-13B
 slice_kind: delivery
-execution_horizon: next
-status: decomposed
-plan_version: v1
+execution_horizon: active
+status: exec-ready
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   basis_ref: seam.md#basis
   stale_triggers:
     - ct_14b_shape_change
@@ -14,8 +14,8 @@ basis:
 gates:
   pre_exec:
     review: inherited
-    contract: pending
-    revalidation: pending
+    contract: passed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
@@ -46,7 +46,7 @@ candidate_subslices: []
   - SEAM-14B can read the contract and know exactly what to check for attestation
 
 - **Dependencies**:
-  - CT-14B shape (provisional — SEAM-12B has not landed)
+  - CT-14B shape (current — SEAM-12B landed, CT-14B published with 5-criterion definition at `artifacts/harness/ct-14b-hardened-figma-rail-state.md`)
   - CT-12B definition (landed — SEAM-10B)
   - CT-7B sync-ledger schema (landed — SEAM-5B)
 

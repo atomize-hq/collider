@@ -1,18 +1,18 @@
 ---
 seam_id: SEAM-13B
 seam_slug: parity-ratchet-promotion
-status: decomposed
-execution_horizon: next
-plan_version: v1
+status: exec-ready
+execution_horizon: active
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   source_seam_brief: ../../seam-13b-parity-ratchet-promotion.md
   source_scope_ref: ../../scope_brief.md
   upstream_closeouts:
     - seam: SEAM-12B
       pack: harness-completion
       contract: CT-14B
-      status: decomposed
+      status: landed
       closeout_ref: ../../governance/seam-12b-closeout.md
   required_threads:
     - THR-10
@@ -22,9 +22,9 @@ basis:
     - ct_12b_reusable_component_status_change
 gates:
   pre_exec:
-    review: pending
-    contract: pending
-    revalidation: pending
+    review: passed
+    contract: passed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
@@ -73,16 +73,17 @@ open_remediations: []
   - CT-15B is defined with explicit satisfaction criteria consumable by SEAM-14B
 
 - **Basis posture**:
-  - Currentness: `provisional` — SEAM-12B is `exec-ready` but has not landed. CT-14B is not yet published. THR-10 is `identified`, not `published` or `revalidated`.
-  - Upstream closeouts consumed: SEAM-12B/CT-14B (hardened rail state — not yet landed)
-  - Required threads: THR-10 (consumed — hardened rail readiness from SEAM-12B, state: `identified`), THR-11 (produced — parity enforcement state for SEAM-14B, state: `identified`)
-  - Stale triggers: SEAM-12B hardened rail state change, CT-12B reusable-component status change
+  - Currentness: `current` — SEAM-12B landed 2026-03-22 with all 5 CT-14B satisfaction criteria met. CT-14B is published at `artifacts/harness/ct-14b-hardened-figma-rail-state.md`. THR-10 advanced from `identified` to `defined` at SEAM-12B closeout, and to `revalidated` upon SEAM-13B promotion to active/exec-ready 2026-03-22.
+  - Upstream closeouts consumed: SEAM-12B/CT-14B — landed and current; plugin rail executed at revision `2ee89e27306a1caa846d904ad6229370f371b1b3`, 40 variables materialized, 5/5 CT-14B criteria met.
+  - Required threads: THR-10 (consumed — hardened rail readiness from SEAM-12B, state: `revalidated`), THR-11 (produced — parity enforcement state for SEAM-14B, state: `identified`)
+  - Stale triggers: SEAM-12B hardened rail state change, CT-12B reusable-component status change. Note: `seam_12b_hardened_rail_state_change` fired in confirming direction at SEAM-12B landing — plan validated, no invalidation.
+  - Revalidation note (v1→v2): S2.T1 comparison procedure updated — the OAuth/Variables API rail remains blocked as planned; comparison will use figma-use approach (the plan's explicit fallback). No plan invalidation.
 
 - **Threading constraints**
-  - Upstream blockers: SEAM-12B (must land with CT-14B published and THR-10 advanced)
+  - Upstream blockers: None — SEAM-12B has landed, CT-14B is published, THR-10 is revalidated.
   - Downstream blocked seams: SEAM-14B (needs CT-15B / THR-11 for harness attestation)
   - Contracts produced: CT-15B (parity enforcement state — parityMode transition, enforcement wiring, Level E claim)
-  - Contracts consumed: CT-14B (hardened rail state from SEAM-12B), CT-12B (reusable-component promotion status from SEAM-10B)
+  - Contracts consumed: CT-14B (hardened rail state from SEAM-12B — landed), CT-12B (reusable-component promotion status from SEAM-10B — landed)
 
 ## Review bundle
 

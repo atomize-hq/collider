@@ -3,7 +3,7 @@ seam_id: SEAM-14B
 seam_slug: harness-finalization
 type: conformance
 status: proposed
-execution_horizon: future
+execution_horizon: next
 plan_version: v1
 basis:
   currentness: provisional
@@ -94,7 +94,7 @@ open_remediations: []
   - The reconciliation is additive and reviewable in a single PR
 
 - **Downstream decomposition context**:
-  - This is a `future` seam and the terminal node — it depends on all prior seams completing
+  - This is a `next` seam and the terminal node — it depends on all prior seams completing
   - THR-11 (parity enforcement) and THR-12 (harness attestation) matter most
   - First seam-local review should focus on: invariant checklist, attestation format, and what "reconciled" means for target-state-harness.md
 

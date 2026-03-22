@@ -12,13 +12,13 @@ This pack captures seam briefs, authoritative threading, pack-level review surfa
 
 Execution horizon:
 
-- Active seam: `SEAM-12B` (exec-ready)
-- Next seam: `SEAM-13B`
+- Active seam: `SEAM-13B` (exec-ready)
+- Next seam: `SEAM-14B`
 
 Policy:
 
-- only the active seam is eligible for authoritative downstream sub-slices by default
-- the next seam may later receive seam-local review + slices, and only provisional candidate-subslice hints
+- only SEAM-13B (active) is eligible for authoritative downstream sub-slices by default
+- SEAM-14B (next) may receive seam-local review + slices once SEAM-13B lands, with only provisional candidate-subslice hints
 - active and next seams must eventually terminate in a dedicated final `seam-exit-gate` slice once seam-local planning begins
 - future seams remain seam briefs
 
@@ -31,6 +31,6 @@ This pack begins where `harness-future-rails` ended. SEAM-7B through SEAM-10B ar
 | Seam     | Purpose                                                        | Horizon |
 | -------- | -------------------------------------------------------------- | ------- |
 | SEAM-11B | Refresh live Figma publish proof for current artifact revision | landed  |
-| SEAM-12B | Implement hardened OAuth/Variables API Figma rail              | active  |
-| SEAM-13B | Ratchet parity to required and complete promotion to Level E   | next    |
-| SEAM-14B | Finalize harness target-state attestation and pack closeout    | future  |
+| SEAM-12B | Implement hardened OAuth/Variables API Figma rail              | landed  |
+| SEAM-13B | Ratchet parity to required and complete promotion to Level E   | active  |
+| SEAM-14B | Finalize harness target-state attestation and pack closeout    | next    |

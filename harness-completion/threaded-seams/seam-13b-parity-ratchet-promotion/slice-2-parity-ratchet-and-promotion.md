@@ -2,11 +2,11 @@
 slice_id: S2
 seam_id: SEAM-13B
 slice_kind: delivery
-execution_horizon: next
-status: decomposed
-plan_version: v1
+execution_horizon: active
+status: exec-ready
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   basis_ref: seam.md#basis
   stale_triggers:
     - seam_12b_hardened_rail_state_change
@@ -16,7 +16,7 @@ gates:
   pre_exec:
     review: inherited
     contract: inherited
-    revalidation: pending
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
@@ -58,9 +58,9 @@ candidate_subslices: []
 
 - **Dependencies**:
   - S1 (CT-15B must be defined so the ratchet has explicit success criteria)
-  - CT-14B published (SEAM-12B must have landed — hardened rail must be real)
-  - CT-12B current (reusable-component status from SEAM-10B)
-  - THR-10 must be at least `defined` (proof that SEAM-12B handed off successfully)
+  - CT-14B published (SEAM-12B landed 2026-03-22 — plugin rail verified, 40 variables materialized, all 5 criteria met ✓)
+  - CT-12B current (reusable-component status from SEAM-10B — verify file unchanged before consumption)
+  - THR-10 `revalidated` (SEAM-13B promotion consumed and confirmed current ✓)
 
 - **Verification**:
   - Parity comparison results documented (token-by-token or summary with pass/fail)
@@ -79,7 +79,7 @@ candidate_subslices: []
   - Inputs: `design-tokens/dist/figma/tokens.json`, Figma file variables (via hardened rail from SEAM-12B)
   - Outputs: Parity comparison result (pass/fail per token, summary)
 - **Thread/contract refs**: Depends on CT-14B (hardened rail provides the comparison mechanism)
-- **Implementation notes**: The comparison procedure depends on what SEAM-12B actually ships. If the hardened rail includes a compare mode, use it. If not, use the same `figma-use` comparison approach from SEAM-11B but against the Variables API surface. Document the procedure chosen.
+- **Implementation notes**: SEAM-12B shipped the plugin-import-manual rail (the canonical v1 path). The OAuth/Variables API rail remains blocked (Enterprise-only) as planned. Use the figma-use CLI comparison approach against the Variables API collection (`Collider Tokens / Base`) that the plugin wrote into. Document the token-by-token or category-level comparison results.
 - **Acceptance criteria**: Every token in the repo artifact has a verified match in the Figma file, or discrepancies are documented as blocking remediations
 - **Test notes**: Comparison should cover all token categories (solid colors, RGBA, semantic aliases)
 - **Risk/rollback notes**: If drift is found, remediate before proceeding to T2. Do not ratchet on top of known divergence.
