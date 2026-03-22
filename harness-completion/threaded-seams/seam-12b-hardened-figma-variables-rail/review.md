@@ -1,7 +1,7 @@
 ---
 seam_id: SEAM-12B
 review_phase: pre_exec
-execution_horizon: next
+execution_horizon: active
 basis_ref: seam.md#basis
 ---
 
@@ -90,13 +90,16 @@ The contract definition (S1) must specify which model is selected and why.
 
 ## Pre-exec findings
 
-- No blocking findings at decomposition time. The seam is `next` with `basis.currentness: provisional` — concrete findings will emerge during revalidation when SEAM-11B lands and CT-13B is published.
+- **F1 (revalidation)**: SEAM-11B landed 2026-03-22. CT-13B published at `artifacts/harness/ct-13b-figma-proof-state.md` with all 3 satisfaction criteria met. THR-09 advanced to `defined`. Artifact revision unchanged at `2ee89e27306a1caa846d904ad6229370f371b1b3`. sync-ledger.json matches closeout exactly: `materializationStatus: passed`, `lastVerifiedRevision: 2ee89e27306a1caa846d904ad6229370f371b1b3`, `highestEarnedLevel: D-publish-valid`, `exceptions: []`. **No remediation needed** — basis is now current.
+- **F2 (CT-13B freshness hotspot)**: The mismatch hotspot "CT-13B freshness at activation" is resolved: the artifact revision has not changed since SEAM-11B landing, so THR-09 is current and the proof baseline is valid. **No remediation needed.**
+- **F3 (alpha-channel limitation)**: SEAM-11B closeout notes that figma-use CLI strips alpha channels from hex8 values. This is a known tool constraint, not a proof deficiency. The hardened OAuth/Variables API rail (this seam's scope) is expected to resolve it by writing variables directly via API rather than through the CLI tool. **No remediation needed** — this validates the need for this seam.
+- **F4 (external dependency)**: Figma OAuth app registration path and Variables API scope requirements remain uncharacterized. This is an acknowledged execution risk (falsification Q3), not a gate blocker. De-risk plan: characterize scope and approval path early in S2.T1.
 
 ## Pre-exec gate disposition
 
-- **Review gate**: pending — review bundle is written; gate passes when falsification questions are addressed during activation
-- **Contract gate concerns**: CT-14B must be defined (S1) before the rail can be implemented (S2); CT-13B must be published by SEAM-11B before SEAM-12B can activate
-- **Revalidation prerequisites**: SEAM-11B must land with CT-13B published and THR-09 advanced; Figma Variables API scope must be characterized
+- **Review gate**: passed — falsification questions are well-defined and actionable; review surfaces R1–R3 accurately represent the planned work shape; mismatch hotspots are addressed or acknowledged with de-risk plans
+- **Contract gate**: passed — CT-14B produced by SEAM-12B, CT-13B consumed from SEAM-11B, THR-09 consumed, THR-10 produced; all match authoritative threading.md contract ownership and dependency directionality
+- **Revalidation gate**: passed — SEAM-11B landed with CT-13B published, THR-09 advanced, artifact revision unchanged, sync-ledger matches closeout, no stale triggers fired
 - **Opened remediations**: none
 
 ## Planned seam-exit gate focus
@@ -104,3 +107,4 @@ The contract definition (S1) must specify which model is selected and why.
 - **What must be true before downstream promotion is legal**: The hardened rail must execute successfully against the current artifact and target Figma file; CT-14B must be published with deterministic success markers; THR-10 must be advanced to `defined`; sync-ledger.json must show dual-mode rail status
 - **Which outbound contracts/threads matter most**: CT-14B (SEAM-13B needs the hardened rail to be real before ratcheting parity); THR-10 (carries rail readiness to SEAM-13B)
 - **Which review-surface deltas would force downstream revalidation**: R1 workflow gaining the automated publish path; R2 data flow showing dual-mode rail; any change to the credential model or Variables API scope that affects the rail's operational status
+- **Upstream handoff consumed**: SEAM-11B closeout confirms plugin-import-manual rail works at revision `2ee89e27306a1caa846d904ad6229370f371b1b3`. The hardened rail should produce equivalent or better results for the same input. The alpha-channel limitation in figma-use CLI is a known tool constraint that this seam's OAuth/Variables API rail is expected to resolve.

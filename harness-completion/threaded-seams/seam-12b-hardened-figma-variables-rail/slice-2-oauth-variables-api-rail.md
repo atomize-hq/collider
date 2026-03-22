@@ -2,20 +2,20 @@
 slice_id: S2
 seam_id: SEAM-12B
 slice_kind: delivery
-execution_horizon: next
-status: decomposed
-plan_version: v1
+execution_horizon: active
+status: exec-ready
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   basis_ref: seam.md#basis
   stale_triggers:
-    - seam_11b_proof_state_change
+    - artifact_revision_change_in_design_tokens_dist_figma_tokens_json
     - figma_variables_api_scope_change
 gates:
   pre_exec:
     review: inherited
     contract: inherited
-    revalidation: pending
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
@@ -43,9 +43,9 @@ candidate_subslices:
         - 'Scope narrowness: 2 — narrow, single purpose'
         - 'Contract authority impact: 2 — no authoritative publication'
     eligible_for_subslice_decomposition_when:
-      - SEAM-12B is promoted to active
-      - basis.currentness is revalidated to current
-      - Figma OAuth app registration path is characterized
+      - SEAM-12B is promoted to active # satisfied 2026-03-21
+      - basis.currentness is revalidated to current # satisfied 2026-03-21
+      - Figma OAuth app registration path is characterized # pending
     stale_triggers:
       - figma_variables_api_scope_change
 ---
@@ -169,6 +169,6 @@ Checklist:
   - Fully isolatable — can run against a test Figma file
   - Cheap to discard — probe script and report are throwaway
 - **Blocked until**:
-  - SEAM-12B is promoted to `active`
-  - `basis.currentness` is revalidated to `current`
-  - OAuth app registration path is at least characterized
+  - ~~SEAM-12B is promoted to `active`~~ (satisfied 2026-03-21)
+  - ~~`basis.currentness` is revalidated to `current`~~ (satisfied 2026-03-21)
+  - OAuth app registration path is at least characterized (pending — this is the remaining gate for CS-S2-01 authoritative promotion)

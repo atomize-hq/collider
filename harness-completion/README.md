@@ -12,8 +12,8 @@ This pack captures seam briefs, authoritative threading, pack-level review surfa
 
 Execution horizon:
 
-- Active seam: `SEAM-11B` (exec-ready)
-- Next seam: `SEAM-12B`
+- Active seam: `SEAM-12B` (exec-ready)
+- Next seam: `SEAM-13B`
 
 Policy:
 
@@ -24,13 +24,13 @@ Policy:
 
 ## Upstream basis
 
-This pack begins where `harness-future-rails` ended. SEAM-7B through SEAM-10B are landed and closed. The remaining gap is between the repo's current Figma-side posture (`C-consumption-valid`, parity deferred, proof not-run) and the full Level E target defined in `figma-ci-sync/target-state-harness.md`.
+This pack begins where `harness-future-rails` ended. SEAM-7B through SEAM-10B are landed and closed. SEAM-11B is now landed with proof verified at revision `2ee89e27306a1caa846d904ad6229370f371b1b3`, earning `D-publish-valid`. The remaining gap is between the repo's current posture (`D-publish-valid`, parity deferred) and the full Level E target defined in `figma-ci-sync/target-state-harness.md`.
 
 ## Scope summary
 
 | Seam     | Purpose                                                        | Horizon |
 | -------- | -------------------------------------------------------------- | ------- |
-| SEAM-11B | Refresh live Figma publish proof for current artifact revision | active  |
-| SEAM-12B | Implement hardened OAuth/Variables API Figma rail              | next    |
-| SEAM-13B | Ratchet parity to required and complete promotion to Level E   | future  |
+| SEAM-11B | Refresh live Figma publish proof for current artifact revision | landed  |
+| SEAM-12B | Implement hardened OAuth/Variables API Figma rail              | active  |
+| SEAM-13B | Ratchet parity to required and complete promotion to Level E   | next    |
 | SEAM-14B | Finalize harness target-state attestation and pack closeout    | future  |

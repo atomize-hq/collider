@@ -3,7 +3,7 @@ seam_id: SEAM-13B
 seam_slug: parity-ratchet-promotion
 type: conformance
 status: proposed
-execution_horizon: future
+execution_horizon: next
 plan_version: v1
 basis:
   currentness: provisional

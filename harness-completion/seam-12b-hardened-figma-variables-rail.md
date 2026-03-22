@@ -2,28 +2,30 @@
 seam_id: SEAM-12B
 seam_slug: hardened-figma-variables-rail
 type: platform
-status: decomposed
-execution_horizon: next
-plan_version: v1
+status: exec-ready
+execution_horizon: active
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   source_scope_ref: scope_brief.md
   source_scope_version: v1
   upstream_closeouts:
     - seam: SEAM-11B
       pack: harness-completion
       contract: CT-13B
+      status: landed
+      closeout_ref: governance/seam-11b-closeout.md
   required_threads:
     - THR-09
     - THR-10
   stale_triggers:
-    - seam_11b_proof_state_change
+    - artifact_revision_change_in_design_tokens_dist_figma_tokens_json
     - figma_variables_api_scope_change
 gates:
   pre_exec:
-    review: pending
-    contract: pending
-    revalidation: pending
+    review: passed
+    contract: passed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending

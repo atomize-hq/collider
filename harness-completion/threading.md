@@ -4,12 +4,12 @@
 
 | Seam     | Horizon | Status     |
 | -------- | ------- | ---------- |
-| SEAM-11B | active  | exec-ready |
-| SEAM-12B | next    | decomposed |
-| SEAM-13B | future  | proposed   |
+| SEAM-11B | landed  | landed     |
+| SEAM-12B | active  | exec-ready |
+| SEAM-13B | next    | proposed   |
 | SEAM-14B | future  | proposed   |
 
-Policy: only SEAM-11B is eligible for authoritative sub-slices by default. SEAM-12B may later receive seam-local review and slices with provisional candidate-subslice hints. SEAM-13B and SEAM-14B remain at seam-brief depth.
+Policy: only SEAM-12B is eligible for authoritative sub-slices by default. SEAM-13B may later receive seam-local review and slices with provisional candidate-subslice hints. SEAM-14B remains at seam-brief depth.
 
 ## Contract registry
 
@@ -70,10 +70,10 @@ Policy: only SEAM-11B is eligible for authoritative sub-slices by default. SEAM-
   - **Consumer seam(s)**: SEAM-12B
   - **Carried contract IDs**: CT-13B
   - **Purpose**: Carry Figma publish proof freshness state from proof refresh to hardened rail implementation — SEAM-12B needs to know the current rail works before building the replacement
-  - **State**: identified
+  - **State**: revalidated
   - **Revalidation trigger**: artifact revision change in `design-tokens/dist/figma/tokens.json`
-  - **Satisfied by**: SEAM-11B landing with `materializationStatus: verified` in sync-ledger.json
-  - **Notes**: This thread becomes stale if the artifact revision changes between SEAM-11B landing and SEAM-12B execution
+  - **Satisfied by**: SEAM-11B landing with `materializationStatus: passed` in sync-ledger.json
+  - **Notes**: SEAM-11B landed 2026-03-22. THR-09 advanced to `defined` at SEAM-11B closeout, then to `revalidated` when SEAM-12B (consumer) completed revalidation during promotion to active/exec-ready. Artifact revision unchanged (`2ee89e27306a1caa846d904ad6229370f371b1b3`).
 
 - **Thread ID**: `THR-10`
   - **Producer seam**: SEAM-12B

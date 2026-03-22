@@ -2,20 +2,20 @@
 slice_id: S1
 seam_id: SEAM-12B
 slice_kind: delivery
-execution_horizon: next
-status: decomposed
-plan_version: v1
+execution_horizon: active
+status: exec-ready
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   basis_ref: seam.md#basis
   stale_triggers:
-    - seam_11b_proof_state_change
+    - artifact_revision_change_in_design_tokens_dist_figma_tokens_json
     - figma_variables_api_scope_change
 gates:
   pre_exec:
     review: inherited
-    contract: pending
-    revalidation: pending
+    contract: passed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
@@ -56,7 +56,7 @@ candidate_subslices: []
 - **Dependencies**:
   - CT-13B (consumed — proof state shape informs what CT-14B extends)
   - CT-7B (consumed — ledger schema bounds what fields CT-14B can add)
-  - Note: CT-13B is not yet published (SEAM-11B not landed), so CT-14B definition is provisional
+  - Note: CT-13B is now published (SEAM-11B landed 2026-03-22), so CT-14B definition can consume the realized proof state shape
 
 - **Verification**:
   - Contract artifact passes schema validation

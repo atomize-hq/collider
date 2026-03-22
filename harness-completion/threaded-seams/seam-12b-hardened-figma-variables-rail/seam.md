@@ -1,28 +1,30 @@
 ---
 seam_id: SEAM-12B
 seam_slug: hardened-figma-variables-rail
-status: decomposed
-execution_horizon: next
-plan_version: v1
+status: exec-ready
+execution_horizon: active
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   source_seam_brief: ../../seam-12b-hardened-figma-variables-rail.md
   source_scope_ref: ../../scope_brief.md
   upstream_closeouts:
     - seam: SEAM-11B
       pack: harness-completion
       contract: CT-13B
+      status: landed
+      closeout_ref: ../../governance/seam-11b-closeout.md
   required_threads:
     - THR-09
     - THR-10
   stale_triggers:
-    - seam_11b_proof_state_change
+    - artifact_revision_change_in_design_tokens_dist_figma_tokens_json
     - figma_variables_api_scope_change
 gates:
   pre_exec:
-    review: pending
-    contract: pending
-    revalidation: pending
+    review: passed
+    contract: passed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
@@ -72,10 +74,10 @@ open_remediations: []
   - CT-14B contract is defined and consumable by SEAM-13B
 
 - **Basis posture**:
-  - Currentness: `provisional` — SEAM-11B has not yet landed; CT-13B is not yet published; THR-09 is not yet advanced
-  - Upstream closeouts assumed: SEAM-11B/CT-13B (proof state confirming plugin-import-manual works for current revision)
-  - Required threads: THR-09 (consumed — proof freshness from SEAM-11B), THR-10 (produced — hardened rail readiness for SEAM-13B)
-  - Stale triggers: SEAM-11B proof state change, Figma Variables API scope change
+  - Currentness: `current` — SEAM-11B landed 2026-03-22 with CT-13B published and THR-09 advanced to `defined`. Artifact revision unchanged (`2ee89e27306a1caa846d904ad6229370f371b1b3`). Basis revalidated during promotion to active.
+  - Upstream closeouts consumed: SEAM-11B/CT-13B (proof state confirming plugin-import-manual works at revision `2ee89e27306a1caa846d904ad6229370f371b1b3`)
+  - Required threads: THR-09 (consumed and revalidated — proof freshness from SEAM-11B), THR-10 (produced — hardened rail readiness for SEAM-13B)
+  - Stale triggers: artifact revision change in `design-tokens/dist/figma/tokens.json`, Figma Variables API scope change
 
 - **Threading constraints**
   - Upstream blockers: SEAM-11B (must land with CT-13B published and THR-09 advanced)
