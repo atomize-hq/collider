@@ -23,7 +23,7 @@ Captures the verified status of the current artifact revision through the plugin
 
 CT-13B is satisfied when **all three** conditions hold simultaneously:
 
-1. `verification.materializationStatus` = `"verified"` in `src/figma/sync-ledger.json`
+1. `verification.materializationStatus` = `"passed"` in `src/figma/sync-ledger.json`
 2. `verification.lastVerifiedRevision` is non-null and matches `artifact.revision` in the same ledger
 3. Proof evidence artifact exists at `artifacts/harness/figma-proof-evidence.json`
 
@@ -32,7 +32,7 @@ CT-13B is satisfied when **all three** conditions hold simultaneously:
 A downstream consumer (SEAM-12B) verifies CT-13B satisfaction by:
 
 1. Read `src/figma/sync-ledger.json`
-2. Assert `verification.materializationStatus === "verified"`
+2. Assert `verification.materializationStatus === "passed"`
 3. Assert `verification.lastVerifiedRevision !== null`
 4. Assert `verification.lastVerifiedRevision === artifact.revision` (revision consistency)
 5. Assert file exists: `artifacts/harness/figma-proof-evidence.json`
@@ -53,7 +53,7 @@ CT-13B describes state in fields owned by the CT-7B/CT-8B ledger schema. CT-13B 
 
 | Field                                | Expected Value (Satisfied)            | Schema Owner |
 | ------------------------------------ | ------------------------------------- | ------------ |
-| `verification.materializationStatus` | `"verified"`                          | CT-8B        |
+| `verification.materializationStatus` | `"passed"`                            | CT-8B        |
 | `verification.lastVerifiedRevision`  | Non-null, matches `artifact.revision` | CT-8B        |
 | `promotion.highestEarnedLevel`       | `"D-publish-valid"`                   | CT-8B        |
 | `exceptions`                         | `[]` (no blocking exceptions)         | CT-8B        |
@@ -79,7 +79,7 @@ Additionally, CT-13B requires the existence of:
     "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
   },
   "verification": {
-    "materializationStatus": "verified",
+    "materializationStatus": "passed",
     "lastVerifiedRevision": "5a567cd7d07860135ab0bfb1d8f2873ef1eec836"
   },
   "promotion": {

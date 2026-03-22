@@ -8,7 +8,7 @@
       "threadId": "THR-05",
       "sourcePath": "src/figma/sync-ledger.json",
       "claimRelevant": true,
-      "sourceVersionOrRevision": "ledgerVersion:2|artifactRevision:5a567cd7d07860135ab0bfb1d8f2873ef1eec836",
+      "sourceVersionOrRevision": "ledgerVersion:2|artifactRevision:2ee89e27306a1caa846d904ad6229370f371b1b3",
       "freshness": "current",
       "outcome": "deferred"
     },

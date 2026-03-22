@@ -23,7 +23,7 @@ describe('loadAndValidatePublishProof', () => {
     const result = loadAndValidatePublishProof(path.join(repoRoot, 'src/figma/publish-proof.json'));
 
     expect(result.errors).toEqual([]);
-    expect(result.data.materialization.status).toBe('failed');
+    expect(result.data.materialization.status).toBe('passed');
   });
 
   it('reports a missing artifact git sha', () => {

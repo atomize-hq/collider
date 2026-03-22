@@ -224,7 +224,7 @@ describe('reusable component promotion cross-contract provenance', () => {
     const ct11bMarker = `mappingStatusVersion:${reusableComponentMappingStatus.mappingStatusVersion}`;
 
     expect(ct8bMarker).toBe(
-      'ledgerVersion:2|artifactRevision:5a567cd7d07860135ab0bfb1d8f2873ef1eec836'
+      'ledgerVersion:2|artifactRevision:2ee89e27306a1caa846d904ad6229370f371b1b3'
     );
     expect(ct9bMarker).toBe('inventoryVersion:1|proofCoverageVersion:1');
     expect(ct10bMarker).toBe('statusVersion:1|revision:e4a9f4f4e0a9dd75744a80cfe6a323882855c16e');
