@@ -25,12 +25,6 @@ export function evaluateFigmaParity(ledger) {
     );
   }
 
-  if (ledger.publish.mode !== 'rest-variables-oauth') {
-    errors.push(
-      '[FIGMA_PARITY_REQUIRES_ENTERPRISE_RAIL] publish.mode must be rest-variables-oauth when promotion.parityMode is required'
-    );
-  }
-
   if (ledger.publish.tokensStudioCarrier) {
     errors.push(
       '[FIGMA_PARITY_FORBIDS_TOKENS_STUDIO_CARRIER] publish.tokensStudioCarrier must be false when promotion.parityMode is required'

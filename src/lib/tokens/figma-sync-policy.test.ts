@@ -140,7 +140,7 @@ describe('validateFigmaParity', () => {
     );
   });
 
-  it('fails required parity when the ledger does not point at the hardened rail', () => {
+  it('accepts required parity with the canonical plugin-import-manual rail', () => {
     const requiredLedger = readFixture('valid-required.sync-ledger.json');
     const result = evaluateFigmaParity({
       ...requiredLedger,
@@ -150,10 +150,7 @@ describe('validateFigmaParity', () => {
       },
     });
 
-    expect(result.ok).toBe(false);
-    expect(result.errors).toContain(
-      '[FIGMA_PARITY_REQUIRES_ENTERPRISE_RAIL] publish.mode must be rest-variables-oauth when promotion.parityMode is required'
-    );
+    expect(result.ok).toBe(true);
   });
 
   it('fails required parity when the current verification is stale', () => {

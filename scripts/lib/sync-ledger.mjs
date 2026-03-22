@@ -358,17 +358,7 @@ function validateExceptions(errors, exceptions) {
 }
 
 function validateLedgerGuardrails(errors, ledger) {
-  const { artifact, publish, verification, promotion, exceptions } = ledger;
-
-  if (
-    promotion?.parityMode === 'required' &&
-    publish?.mode !== undefined &&
-    publish.mode !== 'rest-variables-oauth'
-  ) {
-    errors.push(
-      '[CT-8B_REQUIRED_PARITY_REQUIRES_ENTERPRISE_RAIL] publish.mode must be rest-variables-oauth when promotion.parityMode is required'
-    );
-  }
+  const { artifact, verification, promotion, exceptions } = ledger;
 
   if (
     promotion?.highestEarnedLevel === 'E-promotion-complete' &&

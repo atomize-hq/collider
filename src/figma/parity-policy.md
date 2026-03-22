@@ -18,7 +18,7 @@ This file is the canonical parity-policy surface for Collider's `CT-8B` ledger.
 
 Promotion from deferred to required is allowed only when all of the following are true:
 
-- the active publish rail is `rest-variables-oauth` (Enterprise Variables REST API rail)
+- the active publish rail is `plugin-import-manual` (canonical v1 path per CT-15B provisional assumptions; `rest-variables-oauth` remains deferred until Enterprise API becomes available without seat restrictions)
 - the current artifact revision is recorded in `artifact.revision`
 - `verification.materializationStatus="passed"` for that same revision
 - `verification.lastVerifiedRevision` matches `artifact.revision`

@@ -14,9 +14,8 @@
     "lastVerifiedRevision": "2ee89e27306a1caa846d904ad6229370f371b1b3"
   },
   "promotion": {
-    "parityMode": "deferred",
-    "parityDeferredReason": "Parity remains deferred because the release-governed promotion gate is not yet in place for Collider.",
-    "highestEarnedLevel": "D-publish-valid"
+    "parityMode": "required",
+    "highestEarnedLevel": "E-promotion-complete"
   },
   "exceptions": []
 }

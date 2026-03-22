@@ -10,7 +10,7 @@
       "claimRelevant": true,
       "sourceVersionOrRevision": "ledgerVersion:2|artifactRevision:2ee89e27306a1caa846d904ad6229370f371b1b3",
       "freshness": "current",
-      "outcome": "deferred"
+      "outcome": "satisfied"
     },
     "ct9b": {
       "contractId": "CT-9B",
@@ -79,12 +79,8 @@
   },
   "highestEarnedClaim": {
     "profileId": "reusable-component-advancement",
-    "claimId": "reusable-component-status-baseline"
+    "claimId": "reusable-component-parity-current"
   },
-  "reasonCodes": [
-    "ct8b-parity-deferred",
-    "ct10b-review-informational",
-    "consumer-policy-blocking-deferred"
-  ],
+  "reasonCodes": ["ct10b-review-informational", "consumer-policy-blocking-deferred"],
   "enforcementMode": "informational"
 }

@@ -225,7 +225,7 @@ describe('reusable component status CLI contract', () => {
       changeClass: 'token-only',
       highestEarnedClaim: {
         profileId: 'token-only',
-        claimId: 'token-only-informational',
+        claimId: 'token-only-parity-current',
       },
     });
   });

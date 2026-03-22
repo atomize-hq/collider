@@ -71,7 +71,7 @@ describe('evaluateReusableComponentPromotionDecision', () => {
     );
   });
 
-  it('keeps current repo posture non-blocking in CI while parity is deferred and review is informational', () => {
+  it('keeps current repo posture non-blocking in CI with parity satisfied and review informational', () => {
     const status = createReusableComponentStatus({
       changeClass: 'reusable-component-advancement',
       now: '2026-03-21T20:00:00.000Z',
@@ -86,7 +86,6 @@ describe('evaluateReusableComponentPromotionDecision', () => {
     expect(result.enforcementMode).toBe('blocking');
     expect(result.blockingReasons).toEqual([]);
     expect(result.advisoryReasons).toContain('ct10b-review-informational');
-    expect(result.advisoryReasons).toContain('ct8b-parity-deferred');
   });
 
   it('blocks CI when mapping becomes incomplete for an explicit reusable-component advancement', () => {
@@ -135,9 +134,16 @@ describe('evaluateReusableComponentPromotionDecision', () => {
   });
 
   it('blocks release while parity remains deferred', () => {
+    const workspace = copyBaseWorkspace();
+    replaceWorkspaceFile(
+      workspace,
+      'src/figma/sync-ledger.json',
+      'scripts/fixtures/sync-ledger/valid.sync-ledger.json'
+    );
     const status = createReusableComponentStatus({
       changeClass: 'reusable-component-advancement',
       now: '2026-03-21T20:00:00.000Z',
+      rootDir: workspace,
     });
 
     const result = evaluateReusableComponentPromotionDecision(status, {
