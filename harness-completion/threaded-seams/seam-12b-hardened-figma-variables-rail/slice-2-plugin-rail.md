@@ -3,7 +3,7 @@ slice_id: S2P
 seam_id: SEAM-12B
 slice_kind: delivery
 execution_horizon: active
-status: exec-ready
+status: landed
 plan_version: v2
 basis:
   currentness: current
@@ -16,8 +16,8 @@ gates:
     contract: inherited
     revalidation: passed
   post_exec:
-    landing: pending
-    closeout: pending
+    landing: passed
+    closeout: passed
 threads:
   - THR-09
   - THR-10

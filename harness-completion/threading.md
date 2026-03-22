@@ -5,8 +5,8 @@
 | Seam     | Horizon | Status     |
 | -------- | ------- | ---------- |
 | SEAM-11B | landed  | landed     |
-| SEAM-12B | active  | exec-ready |
-| SEAM-13B | next    | proposed   |
+| SEAM-12B | active  | landed     |
+| SEAM-13B | next    | decomposed |
 | SEAM-14B | future  | proposed   |
 
 Policy: only SEAM-12B is eligible for authoritative sub-slices by default. SEAM-13B may later receive seam-local review and slices with provisional candidate-subslice hints. SEAM-14B remains at seam-brief depth.
@@ -80,10 +80,10 @@ Policy: only SEAM-12B is eligible for authoritative sub-slices by default. SEAM-
   - **Consumer seam(s)**: SEAM-13B
   - **Carried contract IDs**: CT-14B
   - **Purpose**: Carry hardened rail readiness state to parity ratchet — SEAM-13B must not ratchet parity until the hardened rail is real and verified
-  - **State**: identified
+  - **State**: defined
   - **Revalidation trigger**: hardened rail implementation change or Figma Variables API scope change
-  - **Satisfied by**: SEAM-12B landing with a working OAuth/Variables API rail that writes deterministic success markers
-  - **Notes**: External dependency (OAuth app registration) may delay satisfaction
+  - **Satisfied by**: SEAM-12B landing with a working plugin rail that writes deterministic success markers
+  - **Notes**: SEAM-12B landed 2026-03-22. Plugin rail executed and verified at revision `2ee89e27306a1caa846d904ad6229370f371b1b3` — 40 variables materialized into `Collider Tokens / Base`. CT-14B published with all 5 satisfaction criteria met. THR-10 is now defined and consumable by SEAM-13B. The OAuth/Variables API rail (S2) remains blocked (Enterprise-only) — this does not affect THR-10 satisfaction, as the plugin rail is the canonical v1 path.
 
 - **Thread ID**: `THR-11`
   - **Producer seam**: SEAM-13B

@@ -3,7 +3,7 @@ slice_id: S3
 seam_id: SEAM-12B
 slice_kind: seam_exit_gate
 execution_horizon: active
-status: exec-ready
+status: landed
 plan_version: v2
 basis:
   currentness: current
@@ -15,8 +15,8 @@ gates:
     contract: inherited
     revalidation: inherited
   post_exec:
-    landing: pending
-    closeout: pending
+    landing: passed
+    closeout: passed
 threads:
   - THR-09
   - THR-10
@@ -85,7 +85,7 @@ candidate_subslices: []
 
 Checklist:
 
-- Implement: capture evidence, publish contract, advance threads
-- Test: validate closeout completeness
-- Validate: confirm SEAM-13B promotion input is unambiguous
-- Cleanup: resolve or carry forward all open remediations
+- [x] Implement: capture evidence, publish contract, advance threads
+- [x] Test: validate closeout completeness
+- [x] Validate: confirm SEAM-13B promotion input is unambiguous
+- [x] Cleanup: resolve or carry forward all open remediations
