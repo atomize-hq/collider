@@ -3,7 +3,7 @@ slice_id: S1
 seam_id: SEAM-14B
 slice_kind: delivery
 execution_horizon: active
-status: exec-ready
+status: landed
 plan_version: v1
 basis:
   currentness: current
@@ -17,7 +17,7 @@ gates:
     contract: inherited
     revalidation: inherited
   post_exec:
-    landing: pending
+    landing: passed
     closeout: pending
 threads: []
 contracts_produced: []
@@ -84,10 +84,21 @@ candidate_subslices: []
 
 Checklist:
 
-- [ ] Implement: read target-state-harness.md; enumerate and verify each invariant category
-- [ ] Implement: confirm optional rails are labeled optional (or add labels)
-- [ ] Implement: resolve attestation artifact location (document canonical path)
-- [ ] Implement: update "Current Repo Position Versus Target State" section
-- [ ] Test: verify diff is accurate and section reflects landed state
-- [ ] Validate: confirm S2 has an unambiguous attestation artifact location and invariant evidence
-- [ ] Cleanup: open any required remediations for unsatisfied invariants
+- [x] Implement: read target-state-harness.md; enumerate and verify each invariant category
+- [x] Implement: confirm optional rails are labeled optional (or add labels)
+- [x] Implement: resolve attestation artifact location (document canonical path)
+- [x] Implement: update "Current Repo Position Versus Target State" section
+- [x] Test: verify diff is accurate and section reflects landed state
+- [x] Validate: confirm S2 has an unambiguous attestation artifact location and invariant evidence
+- [x] Cleanup: open any required remediations for unsatisfied invariants
+
+#### Landed evidence (2026-03-22)
+
+- **canonical-source**: confirmed — `design-tokens/src/tokens/` is the sole authoring surface; no Figma-side token definitions; Figma is explicitly excluded from canonical status in target-state-harness.md §1.
+- **projection**: confirmed — `design-tokens/dist/figma/tokens.json` exists at git revision `2ee89e27306a1caa846d904ad6229370f371b1b3`; revision matches `sync-ledger.json artifact.revision`; build is deterministic.
+- **publish-rail**: confirmed — CT-14B satisfied; `sync-ledger.json publish.mode: "plugin-import-manual"`, `tokensStudioCarrier: false`; `verification.materializationStatus: "passed"`.
+- **verification**: confirmed — `sync-ledger.json verification.materializationStatus: "passed"`, `lastVerifiedRevision: "2ee89e27306a1caa846d904ad6229370f371b1b3"`; ledgerVersion 2.
+- **promotion**: confirmed — CT-15B all 5 criteria satisfied: `parityMode: "required"`, `parityDeferredReason` absent, `highestEarnedLevel: "E-promotion-complete"`, `exceptions: []`, `reusable-component-status.json` reflects full completion (all rail outcomes `"satisfied"`, freshness `"current"`, `highestEarnedClaim.claimId: "reusable-component-parity-current"`).
+- **optional rails**: confirmed explicitly labeled optional in target-state-harness.md — Chromatic ("Optional visual-review rail"), Storybook Connect ("Optional design-link rail"), Code Connect ("Optional design-to-code mapping rail"). No silently-omitted rails.
+- **attestation artifact location**: resolved — `artifacts/harness/harness-attestation.json` (was TBD in seam brief; now documented in target-state-harness.md "Current Repo Position" section).
+- **blocking remediations**: none — all five invariant categories satisfied; S2 may proceed.

@@ -417,27 +417,41 @@ The harness is considered complete only when all of these are true.
 
 ## Current Repo Position Versus Target State
 
+_Last updated: SEAM-13B landing (2026-03-22). Attestation artifact canonical path resolved by SEAM-14B S1._
+
 ### Implemented now
 
 - canonical repo-owned token and recipe source
-- deterministic build outputs
+- deterministic build outputs (`design-tokens/dist/figma/tokens.json` at revision `2ee89e27306a1caa846d904ad6229370f371b1b3`)
 - runtime CSS cutover path
 - Storybook consumption of generated artifacts
 - token governance in local and CI workflows
-- Figma sync policy and sync ledger scaffolding
+- Figma sync policy and sync ledger (`src/figma/sync-ledger.json`, `ledgerVersion: 2`)
+- Figma publish rail — hardened `plugin-import-manual` path (CT-14B satisfied; `materializationStatus: "passed"`)
+- machine-readable sync status for cross-surface promotion (`verification.materializationStatus`, `verification.lastVerifiedRevision`)
+
+### Required by harness, earned at Level E (SEAM-13B)
+
+- `promotion.parityMode: "required"` in sync-ledger (no longer deferred)
+- `promotion.highestEarnedLevel: "E-promotion-complete"`
+- CT-15B satisfied (all 5 criteria confirmed; `parityDeferredReason` absent, `exceptions: []`)
+- reusable-component-status: all four rail outcomes `satisfied`, freshness `current`, `highestEarnedClaim.claimId: "reusable-component-parity-current"`
 
 ### Partially implemented now
 
-- Figma publish rail
-- Storybook proof surfaces as a system-wide contract layer
-- machine-readable sync status for cross-surface promotion
+- Storybook proof surfaces as a system-wide contract layer (present; enforcement mode remains `informational`)
 
 ### Declared in skills but not yet implemented as repo truth
 
-- branch-aware Chromatic publish and review
-- Storybook Connect links back into Figma
-- Code Connect mappings as a durable design-to-code layer
+- branch-aware Chromatic publish and review (optional)
+- Storybook Connect links back into Figma (optional)
+- Code Connect mappings as a durable design-to-code layer (optional)
 - promotion policy that treats those rails as required for reusable-component advancement
+
+### Attestation artifact
+
+- Canonical path (resolved SEAM-14B S1): `artifacts/harness/harness-attestation.json`
+- Status: to be produced by SEAM-14B S2
 
 ### Explicit tool posture
 

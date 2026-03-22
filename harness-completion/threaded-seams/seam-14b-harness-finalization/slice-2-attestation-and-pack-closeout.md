@@ -3,7 +3,7 @@ slice_id: S2
 seam_id: SEAM-14B
 slice_kind: delivery
 execution_horizon: active
-status: exec-ready
+status: landed
 plan_version: v1
 basis:
   currentness: current
@@ -15,7 +15,7 @@ gates:
     contract: inherited
     revalidation: inherited
   post_exec:
-    landing: pending
+    landing: passed
     closeout: pending
 threads: []
 contracts_produced: []
@@ -79,9 +79,9 @@ candidate_subslices: []
 
 Checklist:
 
-- [ ] Implement: write attestation artifact at S1-resolved canonical path
-- [ ] Test: validate JSON schema; verify each artifact path resolves
-- [ ] Validate: confirm each claim is independently verifiable without human interpretation
+- [x] Implement: write attestation artifact at S1-resolved canonical path
+- [x] Test: validate JSON schema; verify each artifact path resolves
+- [x] Validate: confirm each claim is independently verifiable without human interpretation
 
 #### S2.T2 — Pack closeouts
 
@@ -100,7 +100,7 @@ Checklist:
 
 Checklist:
 
-- [ ] Implement: read harness-completion pack-closeout.md; verify remediation log clean; mark complete
-- [ ] Implement: read harness-future-rails pack-closeout.md; inspect for blockers; mark complete or open remediation
-- [ ] Test: confirm both diffs are accurate and no blockers were silently skipped
-- [ ] Validate: pack closeout state matches what S3 will record in the seam-exit gate
+- [x] Implement: read harness-completion pack-closeout.md; verify remediation log clean; mark complete
+- [x] Implement: read harness-future-rails pack-closeout.md; inspect for blockers; mark complete or open remediation
+- [x] Test: confirm both diffs are accurate and no blockers were silently skipped
+- [x] Validate: pack closeout state matches what S3 will record in the seam-exit gate
