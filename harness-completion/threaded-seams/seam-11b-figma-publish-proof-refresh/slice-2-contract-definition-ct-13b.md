@@ -3,8 +3,8 @@ slice_id: S2
 seam_id: SEAM-11B
 slice_kind: delivery
 execution_horizon: active
-status: decomposed
-plan_version: v1
+status: exec-ready
+plan_version: v2
 basis:
   currentness: current
   basis_ref: seam.md#basis
@@ -12,8 +12,8 @@ basis:
     - artifact_revision_change_in_design_tokens_dist_figma_tokens_json
 gates:
   pre_exec:
-    review: pending
-    contract: pending
+    review: passed
+    contract: passed
     revalidation: passed
   post_exec:
     landing: pending

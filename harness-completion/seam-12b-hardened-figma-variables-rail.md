@@ -2,7 +2,7 @@
 seam_id: SEAM-12B
 seam_slug: hardened-figma-variables-rail
 type: platform
-status: proposed
+status: decomposed
 execution_horizon: next
 plan_version: v1
 basis:

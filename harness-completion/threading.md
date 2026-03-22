@@ -2,12 +2,12 @@
 
 ## Execution horizon
 
-| Seam     | Horizon | Status   |
-| -------- | ------- | -------- |
-| SEAM-11B | active  | proposed |
-| SEAM-12B | next    | proposed |
-| SEAM-13B | future  | proposed |
-| SEAM-14B | future  | proposed |
+| Seam     | Horizon | Status     |
+| -------- | ------- | ---------- |
+| SEAM-11B | active  | exec-ready |
+| SEAM-12B | next    | decomposed |
+| SEAM-13B | future  | proposed   |
+| SEAM-14B | future  | proposed   |
 
 Policy: only SEAM-11B is eligible for authoritative sub-slices by default. SEAM-12B may later receive seam-local review and slices with provisional candidate-subslice hints. SEAM-13B and SEAM-14B remain at seam-brief depth.
 

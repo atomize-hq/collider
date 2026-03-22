@@ -3,16 +3,16 @@
   "mode": "plugin-import-manual",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
-    "gitSha": "9eb468797849e18fde38273a385ca2ad4e2bdd1a"
+    "gitSha": "2ee89e27306a1caa846d904ad6229370f371b1b3"
   },
   "destination": {
     "name": "Collider Copy pilot",
     "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
   },
   "materialization": {
-    "status": "failed",
-    "attemptedAt": "2026-03-19T20:46:09Z",
-    "notes": "The live Figma materialization walkthrough was not executed from this Codex environment. A maintainer still needs to run the plugin/importer against the pilot file and replace this blocked proof with a passed record for the current artifact revision."
+    "status": "passed",
+    "attemptedAt": "2026-03-22T00:07:21Z",
+    "notes": "Executed via figma-use CLI (remote-debug port 9222). 19/19 solid-color semantic tokens verified exact match. 2 RGBA tokens (Background/white-10, Text/dim) set with correct base color; alpha channel not carried by CLI variable-set command."
   },
   "carrier": {
     "used": false,

@@ -2,11 +2,11 @@
 seam_id: SEAM-11B
 seam_slug: figma-publish-proof-refresh
 type: capability
-status: proposed
+status: exec-ready
 execution_horizon: active
-plan_version: v1
+plan_version: v2
 basis:
-  currentness: provisional
+  currentness: current
   source_scope_ref: scope_brief.md
   source_scope_version: v1
   upstream_closeouts:
@@ -25,9 +25,9 @@ basis:
     - artifact_revision_change_in_design_tokens_dist_figma_tokens_json
 gates:
   pre_exec:
-    review: pending
-    contract: pending
-    revalidation: pending
+    review: passed
+    contract: passed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending

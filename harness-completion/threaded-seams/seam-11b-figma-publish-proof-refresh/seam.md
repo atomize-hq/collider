@@ -1,9 +1,9 @@
 ---
 seam_id: SEAM-11B
 seam_slug: figma-publish-proof-refresh
-status: decomposed
+status: exec-ready
 execution_horizon: active
-plan_version: v1
+plan_version: v2
 basis:
   currentness: current
   source_seam_brief: ../../seam-11b-figma-publish-proof-refresh.md
@@ -24,8 +24,8 @@ basis:
     - artifact_revision_change_in_design_tokens_dist_figma_tokens_json
 gates:
   pre_exec:
-    review: pending
-    contract: pending
+    review: passed
+    contract: passed
     revalidation: passed
   post_exec:
     landing: pending

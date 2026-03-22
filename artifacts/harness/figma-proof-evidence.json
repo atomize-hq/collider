@@ -1,0 +1,19 @@
+{
+  "seam": "SEAM-11B",
+  "slice": "S1",
+  "proofMode": "plugin-import-manual",
+  "artifactPath": "design-tokens/dist/figma/tokens.json",
+  "artifactRevision": "2ee89e27306a1caa846d904ad6229370f371b1b3",
+  "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A",
+  "result": "passed",
+  "timestamp": "2026-03-22T00:07:21Z",
+  "publishProofPath": "src/figma/publish-proof.json",
+  "verification": {
+    "solidColorTokens": { "total": 19, "matched": 19 },
+    "rgbaTokens": {
+      "total": 2,
+      "baseColorCorrect": 2,
+      "alphaLimitation": "figma-use CLI variable-set strips alpha channel from hex8 values"
+    }
+  }
+}

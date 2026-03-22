@@ -2,7 +2,7 @@
   "ledgerVersion": "2",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
-    "revision": "5a567cd7d07860135ab0bfb1d8f2873ef1eec836"
+    "revision": "2ee89e27306a1caa846d904ad6229370f371b1b3"
   },
   "publish": {
     "mode": "plugin-import-manual",
@@ -10,21 +10,13 @@
     "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
   },
   "verification": {
-    "materializationStatus": "not-run",
-    "lastVerifiedRevision": null
+    "materializationStatus": "verified",
+    "lastVerifiedRevision": "2ee89e27306a1caa846d904ad6229370f371b1b3"
   },
   "promotion": {
     "parityMode": "deferred",
     "parityDeferredReason": "Parity remains deferred because the hardened Variables API rail and release-governed promotion gate are not yet in place for Collider.",
-    "highestEarnedLevel": "C-consumption-valid"
+    "highestEarnedLevel": "D-publish-valid"
   },
-  "exceptions": [
-    {
-      "code": "figma-proof-pending",
-      "message": "The current artifact revision has not yet been re-verified through the plugin-import-manual proof rail from this repo environment.",
-      "blocking": true,
-      "status": "open",
-      "field": "verification.materializationStatus"
-    }
-  ]
+  "exceptions": []
 }

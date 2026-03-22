@@ -1,6 +1,6 @@
 ---
 seam_id: SEAM-12B
-status: proposed
+status: decomposed
 closeout_version: v0
 seam_exit_gate:
   source_ref:

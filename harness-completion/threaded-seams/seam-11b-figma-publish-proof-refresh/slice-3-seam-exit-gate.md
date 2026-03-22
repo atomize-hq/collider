@@ -3,8 +3,8 @@ slice_id: S3
 seam_id: SEAM-11B
 slice_kind: seam_exit_gate
 execution_horizon: active
-status: decomposed
-plan_version: v1
+status: exec-ready
+plan_version: v2
 basis:
   currentness: current
   basis_ref: seam.md#basis

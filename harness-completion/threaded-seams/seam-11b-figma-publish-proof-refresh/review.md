@@ -82,9 +82,9 @@ flowchart TB
 
 ## Pre-exec gate disposition
 
-- **Review gate**: pending (this review documents the shape; gate passes when slice planning is confirmed)
-- **Contract gate concerns**: CT-13B does not yet exist. S2 creates it. Gate passes when CT-13B is defined.
-- **Revalidation prerequisites**: All upstream closeouts are landed. Basis is `current`. Revalidation gate: `passed`.
+- **Review gate**: passed — review bundle is complete with 3 falsification questions, 3 Mermaid diagrams, mismatch hotspots, and 2 findings. Slice planning (S1–S3) is confirmed and internally consistent. The work shape is falsifiable.
+- **Contract gate**: passed — CT-13B ownership (SEAM-11B), consumption (SEAM-12B), threading (THR-09), and dependency directionality all match `threading.md` exactly. CT-7B and CT-8B consumed correctly. No ownership drift detected.
+- **Revalidation gate**: passed — all upstream closeouts (SEAM-5B/CT-7B, SEAM-6B/CT-8B, SEAM-10B/CT-12B) are landed. Basis is `current`. No stale triggers have fired.
 - **Opened remediations**: none
 
 ## Planned seam-exit gate focus

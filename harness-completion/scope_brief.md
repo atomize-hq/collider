@@ -1,7 +1,7 @@
 ---
 pack_id: harness-completion
 pack_version: v1
-pack_status: extracted
+pack_status: active
 source_ref: figma-ci-sync/target-state-harness.md
 execution_horizon:
   active_seam: SEAM-11B
