@@ -7,12 +7,18 @@ seam_exit_gate:
   status: pending
   promotion_readiness: blocked
 basis:
-  currentness: provisional
-  upstream_closeouts: []
+  currentness: current
+  upstream_closeouts:
+    - seam: SEAM-13B
+      pack: harness-completion
+      contract: CT-15B
+      closeout_ref: seam-13b-closeout.md
   required_threads:
     - THR-11
     - THR-12
-  stale_triggers: []
+  stale_triggers:
+    - seam_13b_parity_enforcement_change
+    - target_state_harness_document_change
 gates:
   post_exec:
     landing: pending

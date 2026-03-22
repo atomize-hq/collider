@@ -4,8 +4,8 @@ pack_version: v1
 pack_status: active
 source_ref: figma-ci-sync/target-state-harness.md
 execution_horizon:
-  active_seam: SEAM-13B
-  next_seam: SEAM-14B
+  active_seam: SEAM-14B
+  next_seam: null
 ---
 
 # Scope Brief — Harness Completion

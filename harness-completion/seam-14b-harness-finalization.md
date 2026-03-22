@@ -2,17 +2,18 @@
 seam_id: SEAM-14B
 seam_slug: harness-finalization
 type: conformance
-status: proposed
-execution_horizon: next
+status: exec-ready
+execution_horizon: active
 plan_version: v1
 basis:
-  currentness: provisional
+  currentness: current
   source_scope_ref: scope_brief.md
   source_scope_version: v1
   upstream_closeouts:
     - seam: SEAM-13B
       pack: harness-completion
       contract: CT-15B
+      closeout_ref: governance/seam-13b-closeout.md
   required_threads:
     - THR-11
     - THR-12
@@ -21,15 +22,15 @@ basis:
     - target_state_harness_document_change
 gates:
   pre_exec:
-    review: pending
-    contract: pending
-    revalidation: pending
+    review: passed
+    contract: passed
+    revalidation: passed
   post_exec:
     landing: pending
     closeout: pending
 seam_exit_gate:
   required: true
-  planned_location: reserved_final_slice
+  planned_location: threaded-seams/seam-14b-harness-finalization/slice-3-seam-exit-gate.md
   status: pending
 open_remediations: []
 ---
