@@ -3,7 +3,7 @@ slice_id: S1
 seam_id: SEAM-12B
 slice_kind: delivery
 execution_horizon: active
-status: exec-ready
+status: landed
 plan_version: v2
 basis:
   currentness: current
@@ -17,8 +17,8 @@ gates:
     contract: passed
     revalidation: passed
   post_exec:
-    landing: pending
-    closeout: pending
+    landing: passed
+    closeout: passed
 threads:
   - THR-09
   - THR-10
@@ -84,7 +84,7 @@ candidate_subslices: []
 
 Checklist:
 
-- Implement: define CT-14B contract artifact
-- Test: validate schema compatibility with CT-7B
-- Validate: confirm downstream consumer interface covers SEAM-13B needs
-- Cleanup: ensure contract is referenced in threading.md and seam.md
+- [x] Implement: define CT-14B contract artifact — `artifacts/harness/ct-14b-hardened-figma-rail-state.md`
+- [x] Test: validate schema compatibility with CT-7B — all fields nest under `publish`, no schema migration
+- [x] Validate: confirm downstream consumer interface covers SEAM-13B needs — CT-15B stale trigger `ct_14b_shape_change` confirmed
+- [x] Cleanup: ensure contract is referenced in threading.md and seam.md — threading.md updated with resolved compat decision

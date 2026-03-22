@@ -52,7 +52,7 @@ Policy: only SEAM-12B is eligible for authoritative sub-slices by default. SEAM-
   - **Derived consumers**: SEAM-14B
   - **Thread IDs**: THR-09, THR-10
   - **Definition**: Hardened Figma rail state — the operational status of the OAuth/Variables API rail including mode, credential model, success markers, and sync-ledger updates
-  - **Versioning / compat**: May extend sync-ledger v2 or introduce a parallel status surface
+  - **Versioning / compat**: Extends sync-ledger v2 within `publish` object — additive fields, no schema migration
 
 - **Contract ID**: `CT-15B`
   - **Type**: permission
