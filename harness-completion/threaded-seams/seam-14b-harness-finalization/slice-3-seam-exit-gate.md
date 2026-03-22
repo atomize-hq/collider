@@ -3,7 +3,7 @@ slice_id: S3
 seam_id: SEAM-14B
 slice_kind: seam_exit_gate
 execution_horizon: active
-status: exec-ready
+status: landed
 plan_version: v1
 basis:
   currentness: current
@@ -15,8 +15,8 @@ gates:
     contract: inherited
     revalidation: inherited
   post_exec:
-    landing: pending
-    closeout: pending
+    landing: passed
+    closeout: passed
 threads:
   - THR-11
   - THR-12
@@ -81,9 +81,9 @@ candidate_subslices: []
 
 Checklist:
 
-- [ ] Implement: capture S1 and S2 evidence; write full closeout record
-- [ ] Implement: advance THR-11 to `closed` in threading.md
-- [ ] Implement: advance THR-12 to `closed` in threading.md
-- [ ] Test: validate attestation artifact paths in closeout record exist in repo
-- [ ] Validate: closeout is internally consistent; promotion readiness is unambiguous
-- [ ] Cleanup: confirm remediation log is clean; confirm no blocking issues remain
+- [x] Implement: capture S1 and S2 evidence; write full closeout record
+- [x] Implement: advance THR-11 to `closed` in threading.md
+- [x] Implement: advance THR-12 to `closed` in threading.md
+- [x] Test: validate attestation artifact paths in closeout record exist in repo
+- [x] Validate: closeout is internally consistent; promotion readiness is unambiguous
+- [x] Cleanup: confirm remediation log is clean; confirm no blocking issues remain

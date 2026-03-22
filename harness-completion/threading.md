@@ -2,12 +2,12 @@
 
 ## Execution horizon
 
-| Seam     | Horizon | Status     |
-| -------- | ------- | ---------- |
-| SEAM-11B | landed  | landed     |
-| SEAM-12B | landed  | landed     |
-| SEAM-13B | landed  | landed     |
-| SEAM-14B | active  | exec-ready |
+| Seam     | Horizon | Status |
+| -------- | ------- | ------ |
+| SEAM-11B | landed  | landed |
+| SEAM-12B | landed  | landed |
+| SEAM-13B | landed  | landed |
+| SEAM-14B | active  | landed |
 
 Policy: SEAM-14B is the active seam and eligible for authoritative sub-slices. Seam-local planning created at promotion 2026-03-22. No next seam — this is the terminal seam for the pack.
 
@@ -90,20 +90,20 @@ Policy: SEAM-14B is the active seam and eligible for authoritative sub-slices. S
   - **Consumer seam(s)**: SEAM-14B
   - **Carried contract IDs**: CT-15B
   - **Purpose**: Carry Level E promotion state to harness finalization — SEAM-14B cannot attest until promotion is complete
-  - **State**: revalidated
+  - **State**: closed
   - **Revalidation trigger**: parity enforcement rule change or CT-12B status change
   - **Satisfied by**: SEAM-13B landing with `highestEarnedLevel: E-promotion-complete` and `parityMode: required` in sync-ledger.json
-  - **Notes**: One-way ratchet — once satisfied, this thread should not regress without governance action. SEAM-13B landed 2026-03-22. sync-ledger.json shows `parityMode: required` and `highestEarnedLevel: E-promotion-complete`. CT-15B published with 5-criterion definition at `artifacts/harness/ct-15b-parity-enforcement-state.md`. THR-11 advanced from `identified` to `defined` at SEAM-13B closeout, then advanced to `revalidated` when SEAM-14B (consumer) completed revalidation during promotion to active/exec-ready on 2026-03-22. No stale triggers fired; parity enforcement rules and CT-12B status unchanged since SEAM-13B landing.
+  - **Notes**: One-way ratchet — once satisfied, this thread should not regress without governance action. SEAM-13B landed 2026-03-22. sync-ledger.json shows `parityMode: required` and `highestEarnedLevel: E-promotion-complete`. CT-15B published with 5-criterion definition at `artifacts/harness/ct-15b-parity-enforcement-state.md`. THR-11 advanced from `identified` to `defined` at SEAM-13B closeout, then advanced to `revalidated` when SEAM-14B (consumer) completed revalidation during promotion to active/exec-ready on 2026-03-22. No stale triggers fired; parity enforcement rules and CT-12B status unchanged since SEAM-13B landing. Closed at SEAM-14B S3 landing 2026-03-22. CT-15B fully consumed and discharged.
 
 - **Thread ID**: `THR-12`
   - **Producer seam**: SEAM-14B
   - **Consumer seam(s)**: none (terminal)
   - **Carried contract IDs**: none
   - **Purpose**: Harness attestation completion signal — marks the entire target-state harness as verified and landed
-  - **State**: identified
+  - **State**: closed
   - **Revalidation trigger**: target-state-harness.md change or new required invariant
   - **Satisfied by**: SEAM-14B landing with completed attestation artifact and reconciled target-state document
-  - **Notes**: Terminal thread — closes the harness completion scope
+  - **Notes**: Terminal thread — closes the harness completion scope. Published and closed at SEAM-14B S3 landing 2026-03-22. Terminal attestation signal — harness-completion scope formally closed.
 
 ## Dependency graph
 

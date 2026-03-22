@@ -1,11 +1,11 @@
 ---
 seam_id: SEAM-14B
-status: in-progress
+status: landed
 closeout_version: v1
 seam_exit_gate:
   source_ref: ../threaded-seams/seam-14b-harness-finalization/slice-3-seam-exit-gate.md
-  status: pending
-  promotion_readiness: blocked
+  status: passed
+  promotion_readiness: ready
 basis:
   currentness: current
   upstream_closeouts:
@@ -21,8 +21,8 @@ basis:
     - target_state_harness_document_change
 gates:
   post_exec:
-    landing: pending
-    closeout: pending
+    landing: passed
+    closeout: passed
 open_remediations: []
 ---
 
@@ -51,22 +51,24 @@ open_remediations: []
 
 ## Seam-exit gate record
 
-_Pending S3 landing._
-
-- **Source artifact**: (S3 will populate — `slice-3-seam-exit-gate.md`)
-- **Landed evidence**: S1 complete (above); S2 complete (above); S3 pending
+- **Source artifact**: `threaded-seams/seam-14b-harness-finalization/slice-3-seam-exit-gate.md`
+- **Landed evidence**:
+  - S1: all five invariant categories confirmed satisfied (see S1 Evidence section above)
+  - S2: attestation artifact written at `artifacts/harness/harness-attestation.json`; JSON valid; five claims each with resolvable artifact path; both pack closeouts confirmed complete
 - **Contracts published or changed**: none (terminal seam; no new contracts produced)
-- **Threads published / advanced**: THR-11 revalidated (advancing to closed at S3); THR-12 to be published at S3
-- **Review-surface delta**: `figma-ci-sync/target-state-harness.md` — "Current Repo Position" section updated
-- **Planned-vs-landed delta**: none for S1; on plan
-- **Downstream stale triggers raised**: none
+- **Threads published / advanced**:
+  - THR-11: `revalidated` → `closed` (CT-15B fully consumed and discharged; Level E promotion confirmed)
+  - THR-12: `identified` → `closed` (terminal attestation signal; harness-completion scope formally closed)
+- **Review-surface delta**: `figma-ci-sync/target-state-harness.md` "Current Repo Position" section updated at S1; no further delta at S3
+- **Planned-vs-landed delta**: none; all three slices landed on plan
+- **Downstream stale triggers raised**: none (terminal seam; no consumers)
 - **Remediation disposition**: none opened; none carried forward
-- **Promotion blockers**: none (S2 and S3 still pending)
-- **Promotion readiness**: blocked pending S2 and S3
+- **Promotion blockers**: none
+- **Promotion readiness**: ready
 
 ## Post-exec gate disposition
 
-- **Landing gate**: pending
-- **Closeout gate**: pending
+- **Landing gate**: passed
+- **Closeout gate**: passed
 - **Unresolved remediations**: none
 - **Carried-forward remediations**: none
