@@ -56,6 +56,10 @@ storybook-proof:
 reusable-component-promotion:
     pnpm govern:reusable-component-promotion
 
+# Hardened Figma variables sync rail
+figma-sync-variables:
+    pnpm figma:sync:variables
+
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers
 # ══════════════════════════════════════════════════════════════════════════════

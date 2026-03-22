@@ -1,0 +1,5 @@
+{
+  "credentialModel": "oauth-app",
+  "accessTokenEnv": "FIGMA_OAUTH_ACCESS_TOKEN",
+  "requiredScopes": ["file_variables:read", "file_variables:write"]
+}

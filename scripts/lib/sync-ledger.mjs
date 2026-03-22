@@ -21,6 +21,12 @@ export const topLevelKeys = [
 ];
 export const artifactKeys = ['path', 'revision'];
 export const publishKeys = ['mode', 'tokensStudioCarrier', 'figmaFile'];
+export const hardenedPublishKeys = [
+  'oauthCredentialModel',
+  'lastHardenedRunStatus',
+  'lastHardenedRunTimestamp',
+  'successMarkers',
+];
 export const verificationKeys = ['materializationStatus', 'lastVerifiedRevision'];
 export const basePromotionKeys = ['parityMode', 'highestEarnedLevel'];
 export const exceptionRequiredKeys = ['code', 'message', 'blocking', 'status'];
@@ -29,6 +35,7 @@ export const syncLedgerArtifactPath = 'design-tokens/dist/figma/tokens.json';
 export const publishModes = new Set([
   'plugin-import-manual',
   'rest-variables-oauth',
+  'oauth-variables-api',
   'tokens-studio-carried',
 ]);
 export const materializationStatuses = new Set(['not-run', 'passed', 'failed']);
@@ -99,6 +106,9 @@ export function evaluateSyncLedgerConformance(ledger) {
     'artifact.revision': ledger.artifact.revision,
     'publish.mode': ledger.publish.mode,
     'publish.tokensStudioCarrier': ledger.publish.tokensStudioCarrier,
+    'publish.oauthCredentialModel': ledger.publish.oauthCredentialModel ?? null,
+    'publish.lastHardenedRunStatus': ledger.publish.lastHardenedRunStatus ?? null,
+    'publish.lastHardenedRunTimestamp': ledger.publish.lastHardenedRunTimestamp ?? null,
     'verification.materializationStatus': ledger.verification.materializationStatus,
     'verification.lastVerifiedRevision': ledger.verification.lastVerifiedRevision,
     'promotion.parityMode': ledger.promotion.parityMode,
@@ -226,11 +236,16 @@ function validatePublish(errors, publish) {
     return;
   }
 
-  validateKeySpec(errors, publish, { required: publishKeys, optional: [] }, 'publish');
+  validateKeySpec(
+    errors,
+    publish,
+    { required: publishKeys, optional: hardenedPublishKeys },
+    'publish'
+  );
 
   if (!publishModes.has(publish.mode)) {
     errors.push(
-      '[CT-8B_INVALID_PUBLISH_MODE] publish.mode must be plugin-import-manual, rest-variables-oauth, or tokens-studio-carried'
+      '[CT-8B_INVALID_PUBLISH_MODE] publish.mode must be plugin-import-manual, rest-variables-oauth, oauth-variables-api, or tokens-studio-carried'
     );
   }
 
@@ -241,6 +256,62 @@ function validatePublish(errors, publish) {
   }
 
   requireNonEmptyString(errors, publish.figmaFile, 'publish.figmaFile');
+
+  if (publish.oauthCredentialModel !== undefined && publish.oauthCredentialModel !== 'oauth-app') {
+    errors.push(
+      '[CT-8B_INVALID_OAUTH_CREDENTIAL_MODEL] publish.oauthCredentialModel must be oauth-app when present'
+    );
+  }
+
+  if (publish.lastHardenedRunStatus !== undefined) {
+    if (publish.lastHardenedRunStatus !== 'passed' && publish.lastHardenedRunStatus !== 'failed') {
+      errors.push(
+        '[CT-8B_INVALID_HARDENED_RUN_STATUS] publish.lastHardenedRunStatus must be passed or failed when present'
+      );
+    }
+  }
+
+  if (publish.lastHardenedRunTimestamp !== undefined) {
+    requireUtcIsoTimestamp(
+      errors,
+      publish.lastHardenedRunTimestamp,
+      'publish.lastHardenedRunTimestamp'
+    );
+  }
+
+  if (publish.successMarkers !== undefined) {
+    validateSuccessMarkers(errors, publish.successMarkers);
+  }
+
+  if (publish.mode === 'oauth-variables-api') {
+    if (publish.oauthCredentialModel !== 'oauth-app') {
+      errors.push(
+        '[CT-8B_HARDENED_RAIL_REQUIRES_OAUTH_APP] publish.oauthCredentialModel must be oauth-app when publish.mode is oauth-variables-api'
+      );
+    }
+
+    if (publish.lastHardenedRunStatus == null) {
+      errors.push(
+        '[CT-8B_HARDENED_RAIL_REQUIRES_RUN_STATUS] publish.lastHardenedRunStatus is required when publish.mode is oauth-variables-api'
+      );
+    }
+
+    if (publish.lastHardenedRunTimestamp == null) {
+      errors.push(
+        '[CT-8B_HARDENED_RAIL_REQUIRES_RUN_TIMESTAMP] publish.lastHardenedRunTimestamp is required when publish.mode is oauth-variables-api'
+      );
+    }
+
+    if (publish.lastHardenedRunStatus === 'passed' && publish.successMarkers == null) {
+      errors.push(
+        '[CT-8B_HARDENED_RAIL_REQUIRES_SUCCESS_MARKERS] publish.successMarkers is required when publish.lastHardenedRunStatus is passed'
+      );
+    }
+
+    if (publish.lastHardenedRunStatus === 'passed' && publish.successMarkers != null) {
+      validateSuccessMarkers(errors, publish.successMarkers);
+    }
+  }
 
   if (
     typeof publish.tokensStudioCarrier === 'boolean' &&
@@ -363,10 +434,10 @@ function validateLedgerGuardrails(errors, ledger) {
   if (
     promotion?.parityMode === 'required' &&
     publish?.mode !== undefined &&
-    publish.mode !== 'rest-variables-oauth'
+    publish.mode !== 'oauth-variables-api'
   ) {
     errors.push(
-      '[CT-8B_REQUIRED_PARITY_REQUIRES_HARDENED_RAIL] publish.mode must be rest-variables-oauth when promotion.parityMode is required'
+      '[CT-8B_REQUIRED_PARITY_REQUIRES_HARDENED_RAIL] publish.mode must be oauth-variables-api when promotion.parityMode is required'
     );
   }
 
@@ -484,6 +555,47 @@ function requireNonEmptyString(errors, value, label) {
 function requireSha(errors, value, label) {
   if (typeof value !== 'string' || !shaPattern.test(value)) {
     errors.push(`[CT-8B_INVALID_SHA] ${label} must be a 40-character lowercase git SHA`);
+  }
+}
+
+function requireUtcIsoTimestamp(errors, value, label) {
+  if (
+    typeof value !== 'string' ||
+    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(value) ||
+    Number.isNaN(Date.parse(value))
+  ) {
+    errors.push(`[CT-8B_INVALID_TIMESTAMP] ${label} must be an ISO-8601 UTC timestamp`);
+  }
+}
+
+function validateSuccessMarkers(errors, successMarkers) {
+  if (!assertPlainObject(errors, successMarkers, 'publish.successMarkers must be an object')) {
+    return;
+  }
+
+  validateKeySpec(
+    errors,
+    successMarkers,
+    { required: ['collectionCount', 'determinismVerified', 'variableCount'], optional: [] },
+    'publish.successMarkers'
+  );
+
+  if (!Number.isInteger(successMarkers.collectionCount) || successMarkers.collectionCount <= 0) {
+    errors.push(
+      '[CT-8B_INVALID_SUCCESS_MARKERS] publish.successMarkers.collectionCount must be a positive integer'
+    );
+  }
+
+  if (!Number.isInteger(successMarkers.variableCount) || successMarkers.variableCount <= 0) {
+    errors.push(
+      '[CT-8B_INVALID_SUCCESS_MARKERS] publish.successMarkers.variableCount must be a positive integer'
+    );
+  }
+
+  if (typeof successMarkers.determinismVerified !== 'boolean') {
+    errors.push(
+      '[CT-8B_INVALID_SUCCESS_MARKERS] publish.successMarkers.determinismVerified must be a boolean'
+    );
   }
 }
 

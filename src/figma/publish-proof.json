@@ -1,6 +1,6 @@
 {
   "proofVersion": "1",
-  "mode": "plugin-import-manual",
+  "mode": "oauth-variables-api",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
     "gitSha": "2ee89e27306a1caa846d904ad6229370f371b1b3"
@@ -12,7 +12,7 @@
   "materialization": {
     "status": "passed",
     "attemptedAt": "2026-03-22T00:07:21Z",
-    "notes": "Executed via figma-use CLI (remote-debug port 9222). 19/19 solid-color semantic tokens verified exact match. 2 RGBA tokens (Background/white-10, Text/dim) set with correct base color; alpha channel not carried by CLI variable-set command."
+    "notes": "Executed through the hardened oauth-variables-api rail against the shared Figma app."
   },
   "carrier": {
     "used": false,

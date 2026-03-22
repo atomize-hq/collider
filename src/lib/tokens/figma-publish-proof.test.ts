@@ -19,10 +19,11 @@ describe('loadAndValidatePublishProof', () => {
     expect(result.data.mode).toBe('plugin-import-manual');
   });
 
-  it('accepts the committed blocked proof record', () => {
+  it('accepts the committed hardened proof record', () => {
     const result = loadAndValidatePublishProof(path.join(repoRoot, 'src/figma/publish-proof.json'));
 
     expect(result.errors).toEqual([]);
+    expect(result.data.mode).toBe('oauth-variables-api');
     expect(result.data.materialization.status).toBe('passed');
   });
 

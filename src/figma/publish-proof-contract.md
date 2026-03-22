@@ -11,7 +11,7 @@ This document defines the seam-owned publish-proof facts for `SEAM-5B`. It is th
 ## Required Proof Fields
 
 - `proofVersion`: must be exactly `"1"`.
-- `mode`: must be exactly one of `plugin-import-manual`, `rest-variables-oauth`, or `tokens-studio-carried`.
+- `mode`: must be exactly one of `plugin-import-manual`, `oauth-variables-api`, or `tokens-studio-carried`.
 - `artifact.path`: must be exactly `design-tokens/dist/figma/tokens.json`.
 - `artifact.gitSha`: records the repo revision of the artifact used for the publish attempt. Use a 40-character lowercase git SHA.
 - `destination.name`: must be exactly `Collider Copy pilot`.
@@ -40,7 +40,7 @@ This document defines the seam-owned publish-proof facts for `SEAM-5B`. It is th
 ```json
 {
   "proofVersion": "1",
-  "mode": "plugin-import-manual",
+  "mode": "oauth-variables-api",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
     "gitSha": "5a567cd7d07860135ab0bfb1d8f2873ef1eec836"

@@ -5,9 +5,17 @@
     "revision": "1111111111111111111111111111111111111111"
   },
   "publish": {
-    "mode": "plugin-import-manual",
+    "mode": "oauth-variables-api",
     "tokensStudioCarrier": false,
-    "figmaFile": "figma://file/fixture-valid-sync-ledger"
+    "figmaFile": "figma://file/fixture-valid-sync-ledger",
+    "oauthCredentialModel": "oauth-app",
+    "lastHardenedRunStatus": "passed",
+    "lastHardenedRunTimestamp": "2026-03-21T12:00:00Z",
+    "successMarkers": {
+      "variableCount": 40,
+      "collectionCount": 1,
+      "determinismVerified": true
+    }
   },
   "verification": {
     "materializationStatus": "passed",
@@ -15,7 +23,7 @@
   },
   "promotion": {
     "parityMode": "deferred",
-    "parityDeferredReason": "Parity remains deferred until the hardened Variables API rail and governance gate are in place.",
+    "parityDeferredReason": "Parity remains deferred because the release-governed promotion gate is not yet in place for Collider.",
     "highestEarnedLevel": "D-publish-valid"
   },
   "exceptions": []

@@ -11,6 +11,7 @@ import {
   evaluateSyncLedgerConformance,
   loadAndValidateSyncLedger,
   runValidateSyncLedgerCli,
+  validateSyncLedger,
 } from '../../../scripts/lib/sync-ledger.mjs';
 
 const syncLedgerFixtureDir = path.join(repoRoot, 'scripts/fixtures/sync-ledger');
@@ -20,6 +21,12 @@ describe('loadAndValidateSyncLedger', () => {
     const result = loadAndValidateSyncLedger(fixturePath('valid.sync-ledger.json'));
 
     expect(result.errors).toEqual([]);
+    expect(result.data.publish.mode).toBe('oauth-variables-api');
+    expect(result.data.publish.oauthCredentialModel).toBe('oauth-app');
+    expect(result.data.publish.lastHardenedRunStatus).toBe('passed');
+    expect(result.data.publish.successMarkers.variableCount).toBe(40);
+    expect(result.data.publish.successMarkers.collectionCount).toBe(1);
+    expect(result.data.publish.successMarkers.determinismVerified).toBe(true);
     expect(result.data.promotion.parityMode).toBe('deferred');
     expect(result.data.promotion.highestEarnedLevel).toBe('D-publish-valid');
   });
@@ -67,6 +74,39 @@ describe('loadAndValidateSyncLedger', () => {
 
     expect(result.errors).toContain(
       '[CT-8B_EARNED_LEVEL_REQUIRES_REQUIRED_PARITY] promotion.highestEarnedLevel cannot be E-promotion-complete when promotion.parityMode is deferred'
+    );
+  });
+
+  it('accepts the hardened ledger contract when the rail fields are complete', () => {
+    const result = validateSyncLedger(readFixture('valid-required.sync-ledger.json'));
+
+    expect(result).toEqual([]);
+  });
+
+  it('rejects a hardened ledger with an invalid credential model', () => {
+    const ledger = readFixture('valid-required.sync-ledger.json');
+    ledger.publish.oauthCredentialModel = 'personal-token';
+
+    expect(validateSyncLedger(ledger)).toContain(
+      '[CT-8B_INVALID_OAUTH_CREDENTIAL_MODEL] publish.oauthCredentialModel must be oauth-app when present'
+    );
+  });
+
+  it('rejects a hardened ledger with a malformed hardened timestamp', () => {
+    const ledger = readFixture('valid-required.sync-ledger.json');
+    ledger.publish.lastHardenedRunTimestamp = 'not-a-timestamp';
+
+    expect(validateSyncLedger(ledger)).toContain(
+      '[CT-8B_INVALID_TIMESTAMP] publish.lastHardenedRunTimestamp must be an ISO-8601 UTC timestamp'
+    );
+  });
+
+  it('rejects a hardened ledger when success markers are missing', () => {
+    const ledger = readFixture('valid-required.sync-ledger.json');
+    delete ledger.publish.successMarkers;
+
+    expect(validateSyncLedger(ledger)).toContain(
+      '[CT-8B_HARDENED_RAIL_REQUIRES_SUCCESS_MARKERS] publish.successMarkers is required when publish.lastHardenedRunStatus is passed'
     );
   });
 });
@@ -144,7 +184,7 @@ describe('validateFigmaParity', () => {
 
     expect(result.ok).toBe(false);
     expect(result.errors).toContain(
-      '[FIGMA_PARITY_REQUIRES_HARDENED_RAIL] publish.mode must be rest-variables-oauth when promotion.parityMode is required'
+      '[FIGMA_PARITY_REQUIRES_HARDENED_RAIL] publish.mode must be oauth-variables-api when promotion.parityMode is required'
     );
   });
 
@@ -216,7 +256,7 @@ describe('runValidateFigmaParityCli', () => {
     expect(stdout.read()).toContain('[FIGMA_PARITY_DEFERRED]');
     expect(stdout.read()).toContain('state=verified-current');
     expect(stdout.read()).toContain(
-      'Parity remains deferred until the hardened Variables API rail'
+      'Parity remains deferred because the release-governed promotion gate is not yet in place for Collider.'
     );
     expect(stderr.read()).toBe('');
   });
@@ -237,7 +277,19 @@ function readFixture(name: string) {
       status: string;
     }>;
     promotion: { parityMode: string };
-    publish: { figmaFile: string; mode: string; tokensStudioCarrier: boolean };
+    publish: {
+      figmaFile: string;
+      lastHardenedRunStatus?: string;
+      lastHardenedRunTimestamp?: string;
+      mode: string;
+      oauthCredentialModel?: string;
+      successMarkers?: {
+        collectionCount: number;
+        determinismVerified: boolean;
+        variableCount: number;
+      };
+      tokensStudioCarrier: boolean;
+    };
     verification: { lastVerifiedRevision: string | null; materializationStatus: string };
   };
 }

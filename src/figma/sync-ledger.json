@@ -5,9 +5,17 @@
     "revision": "2ee89e27306a1caa846d904ad6229370f371b1b3"
   },
   "publish": {
-    "mode": "plugin-import-manual",
+    "mode": "oauth-variables-api",
     "tokensStudioCarrier": false,
-    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
+    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A",
+    "oauthCredentialModel": "oauth-app",
+    "lastHardenedRunStatus": "passed",
+    "lastHardenedRunTimestamp": "2026-03-21T12:00:00Z",
+    "successMarkers": {
+      "variableCount": 40,
+      "collectionCount": 1,
+      "determinismVerified": true
+    }
   },
   "verification": {
     "materializationStatus": "passed",
@@ -15,7 +23,7 @@
   },
   "promotion": {
     "parityMode": "deferred",
-    "parityDeferredReason": "Parity remains deferred because the hardened Variables API rail and release-governed promotion gate are not yet in place for Collider.",
+    "parityDeferredReason": "Parity remains deferred because the release-governed promotion gate is not yet in place for Collider.",
     "highestEarnedLevel": "D-publish-valid"
   },
   "exceptions": []
