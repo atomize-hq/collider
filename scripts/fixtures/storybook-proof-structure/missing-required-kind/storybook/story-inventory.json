@@ -7,7 +7,7 @@
       "implementedStoryRefs": [
         {
           "kind": "default",
-          "storyId": "contracts-pilot-recipe--thinking-indicator-recipe"
+          "storyId": "ai-elements-thinking-indicator--default"
         }
       ]
     }

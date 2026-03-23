@@ -2,8 +2,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 
-import prettier from 'prettier';
-
 import { repoRoot } from '../../design-tokens/build/paths.mjs';
 import {
   componentMappingRootDirEnvVar,
@@ -17,6 +15,7 @@ import {
   reusableComponentMappingComparableFields,
   reusableComponentMappingRequiredProjectionFields,
 } from './reusable-component-mapping-contract.mjs';
+import { formatJsonArtifact } from './prettier-json.mjs';
 
 export const reusableComponentMappingValidationUsage =
   'Usage: pnpm validate:reusable-component-mapping';
@@ -285,7 +284,7 @@ function formatSummary(summary, absStatusPath) {
 }
 
 async function writeJson(absPath, value) {
-  const formatted = await prettier.format(JSON.stringify(value), { filepath: absPath });
+  const formatted = await formatJsonArtifact(value, absPath);
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
   fs.writeFileSync(absPath, formatted);
   return absPath;

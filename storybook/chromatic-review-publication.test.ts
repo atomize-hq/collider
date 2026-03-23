@@ -12,8 +12,11 @@ import {
 import { runChromaticReview } from '../scripts/lib/chromatic-review.mjs';
 
 const thinkingIndicatorStoryIds = [
-  'contracts-pilot-recipe--thinking-indicator-recipe',
-  'contracts-generated-tokens--token-registry',
+  'ai-elements-thinking-indicator--default',
+  'ai-elements-thinking-indicator--variant-matrix',
+  'ai-elements-thinking-indicator--state-matrix',
+  'ai-elements-thinking-indicator--motion',
+  'ai-elements-thinking-indicator--docs',
 ];
 
 describe('runChromaticReview', () => {

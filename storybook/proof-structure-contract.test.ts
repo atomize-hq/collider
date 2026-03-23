@@ -17,18 +17,21 @@ describe('loadAndValidateStorybookProofStructure', () => {
 
     expect(result.errors).toEqual([]);
     expect(
-      result.data.storyIndex?.fileByStoryId.get('contracts-generated-tokens--token-registry')
-    ).toBe(path.join(repoRoot, 'storybook/stories/generated-token-docs.stories.tsx'));
+      result.data.storyIndex?.fileByStoryId.get('ai-elements-thinking-indicator--default')
+    ).toBe(path.join(repoRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx'));
   });
 
   it('accepts the valid fixture pilot', () => {
     const result = loadFixture('valid-pilot');
 
     expect(result.errors).toEqual([]);
+    expect(result.data.storyIndex?.fileByStoryId.get('ai-elements-thinking-indicator--docs')).toBe(
+      path.join(repoRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx')
+    );
     expect(
-      result.data.storyIndex?.fileByStoryId.get('contracts-pilot-recipe--thinking-indicator-recipe')
+      result.data.storyIndex?.fileByStoryId.get('contracts-generated-tokens--token-registry')
     ).toBe(
-      path.join(fixturePath('valid-pilot'), 'storybook/stories/pilot-recipe-contract.stories.tsx')
+      path.join(fixturePath('valid-pilot'), 'storybook/stories/generated-token-docs.stories.tsx')
     );
   });
 
@@ -76,7 +79,7 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('broken-owned-story-ref');
 
     expect(result.errors).toContain(
-      '[CT-9B_PROOF_STRUCTURE_UNRESOLVED_STORY_REF] componentId "thinking-indicator" references unresolved storyId "contracts-pilot-recipe--missing-story" in storyInventory.implementedStoryRefs'
+      '[CT-9B_PROOF_STRUCTURE_UNRESOLVED_STORY_REF] componentId "thinking-indicator" references unresolved storyId "ai-elements-thinking-indicator--missing-story" in storyInventory.implementedStoryRefs'
     );
   });
 
@@ -137,5 +140,6 @@ function loadFixture(name: string) {
   return loadAndValidateStorybookProofStructure({
     componentTierPolicyPath: sharedTierPolicyPath,
     rootDir: fixturePath(name),
+    storyRoots: [path.join(repoRoot, 'src'), path.join(fixturePath(name), 'storybook/stories')],
   });
 }

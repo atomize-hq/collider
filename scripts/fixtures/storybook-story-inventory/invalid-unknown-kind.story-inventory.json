@@ -7,11 +7,11 @@
       "implementedStoryRefs": [
         {
           "kind": "default",
-          "storyId": "contracts-pilot-recipe--thinking-indicator-recipe"
+          "storyId": "ai-elements-thinking-indicator--default"
         },
         {
-          "kind": "visual-review",
-          "storyId": "contracts-generated-tokens--token-registry"
+          "kind": "docs",
+          "storyId": "ai-elements-thinking-indicator--docs"
         }
       ]
     }

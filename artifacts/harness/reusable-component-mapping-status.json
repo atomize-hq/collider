@@ -1,12 +1,7 @@
 {
   "mappingStatusVersion": "1",
-  "generatedAt": "2026-03-23T18:24:42.667Z",
-  "summary": {
-    "componentCount": 1,
-    "completeCount": 1,
-    "incompleteCount": 0,
-    "invalidCount": 0
-  },
+  "generatedAt": "2026-03-23T21:17:42.189Z",
+  "summary": { "componentCount": 1, "completeCount": 1, "incompleteCount": 0, "invalidCount": 0 },
   "components": [
     {
       "componentId": "thinking-indicator",

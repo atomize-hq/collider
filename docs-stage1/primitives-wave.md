@@ -161,17 +161,18 @@ Accepts `ToolCallViewModel`. No network calls; result data arrives via props.
 ### 5. ThinkingIndicator — `[NEW]`
 
 **Path:** `src/components/ai-elements/ThinkingIndicator.tsx`
-**Figma:** to be mapped when library component node is confirmed
+**Figma:** `figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator`
 **Tier:** primitive
 **Description:** An animated loader shown while the assistant is generating a response. Visually distinct from a spinner — should match the Collider design system's streaming/running aesthetic (see StatusStrip running variant in Figma).
 
-**Variants:**
+**Public contract:**
 
+- `intent`: `primary` | `secondary`
 - `size`: `sm` | `md`
 - `label`: string | undefined (optional accessible label)
 
-**Story kinds required:** `default`, `docs`
-**Optional story kinds:** `motion`
+**Story kinds required:** `default`, `variant-matrix`, `state-matrix`, `motion`, `docs`
+**Optional story kinds:** `actions`, `controlled`, `keyboard`, `focus`
 
 **LOC budget:** TSX ≤200
 

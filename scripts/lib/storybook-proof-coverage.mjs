@@ -1,9 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import prettier from 'prettier';
-
 import { repoRoot } from '../../design-tokens/build/paths.mjs';
+import { formatJsonArtifact } from './prettier-json.mjs';
 
 export const defaultStorybookProofCoveragePath = 'artifacts/storybook/proof-coverage.json';
 
@@ -50,7 +49,7 @@ export async function writeStorybookProofCoverageReport(
 ) {
   const rootDir = options.rootDir ?? repoRoot;
   const absPath = path.isAbsolute(outputPath) ? outputPath : path.resolve(rootDir, outputPath);
-  const formattedReport = await prettier.format(JSON.stringify(report), { filepath: absPath });
+  const formattedReport = await formatJsonArtifact(report, absPath);
 
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
   fs.writeFileSync(absPath, formattedReport);

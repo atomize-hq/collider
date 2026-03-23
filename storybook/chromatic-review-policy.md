@@ -33,8 +33,11 @@ The initial landed `CT-9B` pilot scope is:
 
 - `componentIds`: `["thinking-indicator"]`
 - `storyIds`:
-  - `contracts-pilot-recipe--thinking-indicator-recipe`
-  - `contracts-generated-tokens--token-registry`
+  - `ai-elements-thinking-indicator--default`
+  - `ai-elements-thinking-indicator--variant-matrix`
+  - `ai-elements-thinking-indicator--state-matrix`
+  - `ai-elements-thinking-indicator--motion`
+  - `ai-elements-thinking-indicator--docs`
 - `componentTiers`: `{ "thinking-indicator": "primitive" }`
 
 This pilot scope remains current until `CT-9B` changes.
@@ -58,7 +61,7 @@ The rail may run for a reusable-component advancement claim that includes the pi
 - `review.requiredForClaim` is `true`
 - `review.scope` mirrors the same pilot `CT-9B` scope:
   - `componentIds`: `["thinking-indicator"]`
-  - `storyIds`: `["contracts-pilot-recipe--thinking-indicator-recipe", "contracts-generated-tokens--token-registry"]`
+  - `storyIds`: `["ai-elements-thinking-indicator--default", "ai-elements-thinking-indicator--variant-matrix", "ai-elements-thinking-indicator--state-matrix", "ai-elements-thinking-indicator--motion", "ai-elements-thinking-indicator--docs"]`
   - `componentTiers`: `{ "thinking-indicator": "primitive" }`
 
 ## Consumer Boundary

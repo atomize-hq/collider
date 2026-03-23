@@ -129,9 +129,9 @@ describe('runStorybookProofGate', () => {
               componentId: 'thinking-indicator',
               tier: 'primitive',
               status: 'missing-required-kinds',
-              requiredKinds: ['default', 'docs'],
+              requiredKinds: ['default', 'variant-matrix', 'state-matrix', 'motion', 'docs'],
               implementedKinds: ['default'],
-              missingKinds: ['docs'],
+              missingKinds: ['variant-matrix', 'state-matrix', 'motion', 'docs'],
               generatedArtifactRefs: {
                 tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
                 recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
@@ -360,6 +360,11 @@ function prepareFixtureRoot(name: string) {
   const fixtureRoot = path.join(repoRoot, 'scripts/fixtures/storybook-proof-structure', name);
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), `storybook-proof-gate-${name}-`));
   fs.cpSync(fixtureRoot, tempRoot, { recursive: true });
+  fs.mkdirSync(path.join(tempRoot, 'src/components/ai-elements'), { recursive: true });
+  fs.copyFileSync(
+    path.join(repoRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx'),
+    path.join(tempRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx')
+  );
   fs.copyFileSync(
     path.join(
       repoRoot,

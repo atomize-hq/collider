@@ -66,19 +66,37 @@ describe('validateComponentSpec', () => {
     ]);
   });
 
-  it('keeps the committed thinking-indicator Stage 1 spec reviewer-clear', () => {
+  it('keeps the committed thinking-indicator Stage 2 spec reviewer-clear', () => {
     const spec = readThinkingIndicatorSpec();
 
     expect(spec.componentId).toBe('thinking-indicator');
     expect(spec.tier).toBe('primitive');
-    expect(spec.requiredStoryKinds).toEqual(['default', 'docs']);
+    expect(spec.requiredStoryKinds).toEqual([
+      'default',
+      'variant-matrix',
+      'state-matrix',
+      'motion',
+      'docs',
+    ]);
     expect(spec.ownedStoryRefs).toEqual([
       {
-        storyId: 'contracts-pilot-recipe--thinking-indicator-recipe',
+        storyId: 'ai-elements-thinking-indicator--default',
         kinds: ['default'],
       },
       {
-        storyId: 'contracts-generated-tokens--token-registry',
+        storyId: 'ai-elements-thinking-indicator--variant-matrix',
+        kinds: ['variant-matrix'],
+      },
+      {
+        storyId: 'ai-elements-thinking-indicator--state-matrix',
+        kinds: ['state-matrix'],
+      },
+      {
+        storyId: 'ai-elements-thinking-indicator--motion',
+        kinds: ['motion'],
+      },
+      {
+        storyId: 'ai-elements-thinking-indicator--docs',
         kinds: ['docs'],
       },
     ]);
@@ -93,8 +111,11 @@ describe('validateComponentSpec', () => {
       supportedVariantsSource: 'design-tokens/dist/tokens.ts',
       slotNamesSource: 'design-tokens/dist/tokens.ts',
       exampleStoryIds: [
-        'contracts-pilot-recipe--thinking-indicator-recipe',
-        'contracts-generated-tokens--token-registry',
+        'ai-elements-thinking-indicator--default',
+        'ai-elements-thinking-indicator--variant-matrix',
+        'ai-elements-thinking-indicator--state-matrix',
+        'ai-elements-thinking-indicator--motion',
+        'ai-elements-thinking-indicator--docs',
       ],
     });
   });
@@ -144,7 +165,7 @@ describe('validateComponentSpec', () => {
     spec.ownedStoryRefs = [
       ...spec.ownedStoryRefs,
       {
-        storyId: 'contracts-pilot-recipe--thinking-indicator-recipe',
+        storyId: 'ai-elements-thinking-indicator--default',
         kinds: ['docs'],
       },
     ];
@@ -152,7 +173,7 @@ describe('validateComponentSpec', () => {
     const result = validateComponentSpec(spec, { filenameStem: 'thinking-indicator' });
 
     expect(result).toContain(
-      '[CT-9B_COMPONENT_SPEC_DUPLICATE_STORY_ID] componentSpec.ownedStoryRefs[2].storyId duplicates "contracts-pilot-recipe--thinking-indicator-recipe"'
+      '[CT-9B_COMPONENT_SPEC_DUPLICATE_STORY_ID] componentSpec.ownedStoryRefs[5].storyId duplicates "ai-elements-thinking-indicator--default"'
     );
   });
 

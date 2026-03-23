@@ -132,8 +132,11 @@ describe('normalizeChromaticStatus', () => {
         path: 'storybook/story-inventory.json',
         selectedComponentIds: ['thinking-indicator'],
         selectedStoryIds: [
-          'contracts-pilot-recipe--thinking-indicator-recipe',
-          'contracts-generated-tokens--token-registry',
+          'ai-elements-thinking-indicator--default',
+          'ai-elements-thinking-indicator--variant-matrix',
+          'ai-elements-thinking-indicator--state-matrix',
+          'ai-elements-thinking-indicator--motion',
+          'ai-elements-thinking-indicator--docs',
         ],
       },
       buildUrl: 'https://example.com/build',
@@ -147,8 +150,11 @@ describe('normalizeChromaticStatus', () => {
           'thinking-indicator': 'primitive',
         },
         storyIds: [
-          'contracts-pilot-recipe--thinking-indicator-recipe',
-          'contracts-generated-tokens--token-registry',
+          'ai-elements-thinking-indicator--default',
+          'ai-elements-thinking-indicator--variant-matrix',
+          'ai-elements-thinking-indicator--state-matrix',
+          'ai-elements-thinking-indicator--motion',
+          'ai-elements-thinking-indicator--docs',
         ],
       },
       generatedAt: '2026-03-21T12:00:00.000Z',
@@ -169,8 +175,11 @@ describe('normalizeChromaticStatus', () => {
         path: 'storybook/story-inventory.json',
         selectedComponentIds: ['thinking-indicator'],
         selectedStoryIds: [
-          'contracts-pilot-recipe--thinking-indicator-recipe',
-          'contracts-generated-tokens--token-registry',
+          'ai-elements-thinking-indicator--default',
+          'ai-elements-thinking-indicator--variant-matrix',
+          'ai-elements-thinking-indicator--state-matrix',
+          'ai-elements-thinking-indicator--motion',
+          'ai-elements-thinking-indicator--docs',
         ],
       },
       build: {
@@ -186,8 +195,11 @@ describe('normalizeChromaticStatus', () => {
             'thinking-indicator': 'primitive',
           },
           storyIds: [
-            'contracts-pilot-recipe--thinking-indicator-recipe',
-            'contracts-generated-tokens--token-registry',
+            'ai-elements-thinking-indicator--default',
+            'ai-elements-thinking-indicator--variant-matrix',
+            'ai-elements-thinking-indicator--state-matrix',
+            'ai-elements-thinking-indicator--motion',
+            'ai-elements-thinking-indicator--docs',
           ],
         },
       },
@@ -200,8 +212,11 @@ describe('normalizeChromaticStatus', () => {
 
     expect(input.proofInventory.selectedComponentIds).toEqual(['thinking-indicator']);
     expect(input.reviewScope.storyIds).toEqual([
-      'contracts-pilot-recipe--thinking-indicator-recipe',
-      'contracts-generated-tokens--token-registry',
+      'ai-elements-thinking-indicator--default',
+      'ai-elements-thinking-indicator--variant-matrix',
+      'ai-elements-thinking-indicator--state-matrix',
+      'ai-elements-thinking-indicator--motion',
+      'ai-elements-thinking-indicator--docs',
     ]);
   });
 });

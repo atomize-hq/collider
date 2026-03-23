@@ -1,8 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import prettier from 'prettier';
-
 import { repoRoot } from '../../design-tokens/build/paths.mjs';
 import {
   defaultChromaticStatusMaxAgeMinutes,
@@ -21,6 +19,7 @@ import {
   reusableComponentMappingContractVersion,
   reusableComponentMappingProjectionKinds,
 } from './reusable-component-mapping-contract.mjs';
+import { formatJsonArtifact } from './prettier-json.mjs';
 import { validateComponentSpec } from './storybook-component-spec.mjs';
 
 export const componentMappingVersion = reusableComponentMappingContractVersion;
@@ -443,7 +442,7 @@ function loadComponentSpecs(componentSpecsDir) {
 }
 
 async function writeJson(absPath, value) {
-  const formatted = await prettier.format(JSON.stringify(value), { filepath: absPath });
+  const formatted = await formatJsonArtifact(value, absPath);
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
   fs.writeFileSync(absPath, formatted);
   return absPath;

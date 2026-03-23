@@ -3,16 +3,25 @@
   "components": [
     {
       "componentId": "thinking-indicator",
-      "validatorKinds": ["default", "docs"],
+      "validatorKinds": ["default", "variant-matrix", "state-matrix", "motion", "docs"],
       "implementedStoryRefs": [
         {
           "kind": "default",
-          "storyId": "contracts-pilot-recipe--missing-story"
+          "storyId": "ai-elements-thinking-indicator--missing-story"
         },
         {
-          "kind": "docs",
-          "storyId": "contracts-pilot-recipe--documentation"
-        }
+          "kind": "variant-matrix",
+          "storyId": "ai-elements-thinking-indicator--variant-matrix"
+        },
+        {
+          "kind": "state-matrix",
+          "storyId": "ai-elements-thinking-indicator--state-matrix"
+        },
+        {
+          "kind": "motion",
+          "storyId": "ai-elements-thinking-indicator--motion"
+        },
+        { "kind": "docs", "storyId": "ai-elements-thinking-indicator--docs" }
       ]
     }
   ]

@@ -2,7 +2,7 @@
 
 ## Status
 
-`toolchain-installed, no-components-mapped`
+`toolchain-installed, thinking-indicator-mapped`
 
 This file is the Stage 1 Code Connect bootstrap readiness artifact. It declares the strategy and conventions that Stage 1, Stage 2, and Sync QG follow when creating and maintaining Code Connect mappings.
 
@@ -49,7 +49,7 @@ https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=<nodeId>
 
 Map in this order:
 
-1. **button** (tier: primitive) — the only component with a complete CT-11B record today. `.figma.tsx` will live at `src/components/system/button.figma.tsx` when `Button.tsx` is implemented.
+1. **thinking-indicator** (tier: primitive) — the first component with a complete CT-11B record and live Storybook contract. `.figma.tsx` lives at `src/components/ai-elements/ThinkingIndicator.figma.tsx`.
 
 Follow the same pattern for all subsequent components, in tier order: primitives → interactive → workflow.
 

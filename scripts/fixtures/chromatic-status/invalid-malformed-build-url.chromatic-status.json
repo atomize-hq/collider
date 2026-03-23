@@ -11,8 +11,8 @@
     "inventoryVersion": "1",
     "selectedComponentIds": ["thinking-indicator"],
     "selectedStoryIds": [
-      "contracts-pilot-recipe--thinking-indicator-recipe",
-      "contracts-generated-tokens--token-registry"
+      "ai-elements-thinking-indicator--default",
+      "ai-elements-thinking-indicator--docs"
     ]
   },
   "build": {
@@ -24,8 +24,8 @@
     "scope": {
       "componentIds": ["thinking-indicator"],
       "storyIds": [
-        "contracts-pilot-recipe--thinking-indicator-recipe",
-        "contracts-generated-tokens--token-registry"
+        "ai-elements-thinking-indicator--default",
+        "ai-elements-thinking-indicator--docs"
       ],
       "componentTiers": {
         "thinking-indicator": "primitive"

@@ -16,12 +16,18 @@
   ],
   "slotNames": ["icon", "label", "root"],
   "exampleStoryIds": [
-    "contracts-pilot-recipe--thinking-indicator-recipe",
-    "contracts-generated-tokens--token-registry"
+    "ai-elements-thinking-indicator--default",
+    "ai-elements-thinking-indicator--variant-matrix",
+    "ai-elements-thinking-indicator--state-matrix",
+    "ai-elements-thinking-indicator--motion",
+    "ai-elements-thinking-indicator--docs"
   ],
   "implementedStoryIds": [
-    "contracts-pilot-recipe--thinking-indicator-recipe",
-    "contracts-generated-tokens--token-registry"
+    "ai-elements-thinking-indicator--default",
+    "ai-elements-thinking-indicator--variant-matrix",
+    "ai-elements-thinking-indicator--state-matrix",
+    "ai-elements-thinking-indicator--motion",
+    "ai-elements-thinking-indicator--docs"
   ],
   "publishedStorybookUrl": null,
   "publishedStorybookRevisionGitSha": null,

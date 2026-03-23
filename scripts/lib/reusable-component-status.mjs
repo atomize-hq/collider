@@ -1,8 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import prettier from 'prettier';
-
 import { repoRoot } from '../../design-tokens/build/paths.mjs';
 import {
   defaultChromaticStatusMaxAgeMinutes,
@@ -31,6 +29,7 @@ import {
   reusableComponentStatusRailSummaryFields,
   reusableComponentStatusRootFields,
 } from './reusable-component-status-contract.mjs';
+import { formatJsonArtifact } from './prettier-json.mjs';
 
 export const defaultReusableComponentStatusPath =
   'artifacts/harness/reusable-component-status.json';
@@ -107,7 +106,7 @@ export async function writeReusableComponentStatus(status, options = {}) {
   const rootDir = path.resolve(options.rootDir ?? repoRoot);
   const target = options.target ?? defaultReusableComponentStatusPath;
   const absPath = path.isAbsolute(target) ? target : path.resolve(rootDir, target);
-  const formatted = await prettier.format(JSON.stringify(status), { filepath: absPath });
+  const formatted = await formatJsonArtifact(status, absPath);
 
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
   fs.writeFileSync(absPath, formatted);

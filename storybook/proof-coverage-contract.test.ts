@@ -27,8 +27,8 @@ describe('createStorybookProofCoverageReport', () => {
           recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
           runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
         },
-        implementedKinds: ['default', 'docs'],
-        requiredKinds: ['default', 'docs'],
+        implementedKinds: ['default', 'variant-matrix', 'state-matrix', 'motion', 'docs'],
+        requiredKinds: ['default', 'variant-matrix', 'state-matrix', 'motion', 'docs'],
         tier: 'primitive',
       },
     ]);
@@ -49,11 +49,17 @@ describe('createStorybookProofCoverageReport', () => {
             },
             "implementedKinds": [
               "default",
+              "variant-matrix",
+              "state-matrix",
+              "motion",
               "docs",
             ],
             "missingKinds": [],
             "requiredKinds": [
               "default",
+              "variant-matrix",
+              "state-matrix",
+              "motion",
               "docs",
             ],
             "status": "ready",
@@ -90,10 +96,16 @@ describe('createStorybookProofCoverageReport', () => {
               "default",
             ],
             "missingKinds": [
+              "variant-matrix",
+              "state-matrix",
+              "motion",
               "docs",
             ],
             "requiredKinds": [
               "default",
+              "variant-matrix",
+              "state-matrix",
+              "motion",
               "docs",
             ],
             "status": "missing-required-kinds",
@@ -187,12 +199,18 @@ function loadFixture(name: string) {
   return loadAndValidateStorybookProofStructure({
     componentTierPolicyPath: sharedTierPolicyPath,
     rootDir: fixturePath(name),
+    storyRoots: [path.join(repoRoot, 'src'), path.join(fixturePath(name), 'storybook/stories')],
   });
 }
 
 function prepareCliFixture(name: string) {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), `storybook-proof-cli-${name}-`));
   fs.cpSync(fixturePath(name), tempRoot, { recursive: true });
+  fs.mkdirSync(path.join(tempRoot, 'src/components/ai-elements'), { recursive: true });
+  fs.copyFileSync(
+    path.join(repoRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx'),
+    path.join(tempRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx')
+  );
   fs.copyFileSync(
     sharedTierPolicyPath,
     path.join(tempRoot, 'storybook/component-tier-policy.json')
