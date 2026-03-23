@@ -1,0 +1,9 @@
+{
+  "codeConnect": {
+    "parser": "react",
+    "include": ["src/components/**/*.figma.tsx"],
+    "storybook": {
+      "url": "http://localhost:6006"
+    }
+  }
+}

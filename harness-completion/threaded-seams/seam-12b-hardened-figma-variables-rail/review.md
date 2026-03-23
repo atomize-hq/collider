@@ -58,7 +58,7 @@ flowchart TB
   SERVER -->|fetch| PLUGIN
   TOKENS -->|file upload| PLUGIN
   PLUGIN -->|create/replace local collection| FILE
-  PLUGIN -->|run report (copy/paste)| LEDGER
+  PLUGIN -->|"run report (copy/paste)"| LEDGER
 ```
 
 Key: the plugin reads tokens, writes variables, verifies counts/values, then emits a run report for the operator to record in the ledger.
