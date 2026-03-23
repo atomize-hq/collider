@@ -7,7 +7,7 @@ import {
 import { isObject, readJson, resolveFiles } from './component-recipe-validator-shared.mjs';
 
 const referencePattern = /^\{([^}]+)\}$/;
-const sourceFamilies = ['core', 'semantic', 'motion'];
+const sourceFamilies = ['core', 'semantic', 'motion', 'spacing', 'radius'];
 
 export function loadBuildGraph(options = {}) {
   const themeRegistry = readJson(options.themeRegistryPath ?? themeRegistryPath, true);
@@ -89,6 +89,8 @@ function inferFamily(filePath) {
   if (filePath.endsWith('/core.tokens.json')) return 'core';
   if (filePath.endsWith('/semantic.tokens.json')) return 'semantic';
   if (filePath.endsWith('/motion.tokens.json')) return 'motion';
+  if (filePath.endsWith('/spacing.tokens.json')) return 'spacing';
+  if (filePath.endsWith('/radius.tokens.json')) return 'radius';
   return null;
 }
 
@@ -116,6 +118,8 @@ function applyThemeChain(sourceTree, themeChain, options) {
     core: cloneValue(sourceTree.core),
     semantic: cloneValue(sourceTree.semantic),
     motion: cloneValue(sourceTree.motion),
+    spacing: cloneValue(sourceTree.spacing),
+    radius: cloneValue(sourceTree.radius),
   };
 
   const themesRoot = options.themesRoot ?? path.dirname(themeRegistryPath);

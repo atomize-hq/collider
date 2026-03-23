@@ -9,6 +9,27 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      spacing: {
+        '0': 'var(--spacing-0)',
+        '1': 'var(--spacing-1)',
+        '2': 'var(--spacing-2)',
+        '3': 'var(--spacing-3)',
+        '4': 'var(--spacing-4)',
+        '5': 'var(--spacing-5)',
+        '6': 'var(--spacing-6)',
+        '8': 'var(--spacing-8)',
+        '10': 'var(--spacing-10)',
+        '12': 'var(--spacing-12)',
+      },
+      borderRadius: {
+        none: 'var(--radius-none)',
+        sm: 'var(--radius-sm)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+        '2xl': 'var(--radius-2xl)',
+        full: 'var(--radius-full)',
+      },
       colors: {
         background: {
           base: 'var(--color-background-base)',

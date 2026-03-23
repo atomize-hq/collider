@@ -20,6 +20,13 @@
   --core-color-white-alpha-10: rgba(255, 255, 255, 0.1);
   --core-color-white-alpha-30: rgba(255, 255, 255, 0.3);
   --motion-placeholder-duration-quick: 150ms;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+  --radius-lg: 8px;
+  --radius-md: 4px;
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-xl: 12px;
   --semantic-color-background-base: #171717;
   --semantic-color-background-elevated: #2a2a2a;
   --semantic-color-background-overlay: #303030;
@@ -41,6 +48,16 @@
   --semantic-color-text-success: #48df3a;
   --semantic-color-text-tertiary: #b0bac8;
   --semantic-color-text-warning: #e8d1a2;
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
 
   /* Legacy runtime compatibility surface */
 

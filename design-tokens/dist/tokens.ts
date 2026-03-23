@@ -111,6 +111,41 @@ export const tokenMap = {
     type: 'duration',
     value: '150ms',
   },
+  'radius.2xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'radius.full': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '9999px',
+  },
+  'radius.lg': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '8px',
+  },
+  'radius.md': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'radius.none': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'radius.sm': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'radius.xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
   'semantic.color.background.base': {
     themeId: 'dark',
     type: 'color',
@@ -215,6 +250,56 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'color',
     value: '#e8d1a2',
+  },
+  'spacing.0': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'spacing.1': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'spacing.10': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '40px',
+  },
+  'spacing.12': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '48px',
+  },
+  'spacing.2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '8px',
+  },
+  'spacing.3': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'spacing.4': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'spacing.5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '20px',
+  },
+  'spacing.6': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'spacing.8': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '32px',
   },
 } as const;
 
