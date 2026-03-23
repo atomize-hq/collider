@@ -2,16 +2,12 @@
   "inventoryVersion": "1",
   "components": [
     {
-      "componentId": "button",
-      "validatorKinds": ["default", "workflow", "docs"],
+      "componentId": "thinking-indicator",
+      "validatorKinds": ["default", "docs"],
       "implementedStoryRefs": [
         {
           "kind": "default",
           "storyId": "contracts-pilot-recipe--button-recipe"
-        },
-        {
-          "kind": "workflow",
-          "storyId": "foundations-runtime-css-parity--baseline-theme"
         },
         {
           "kind": "docs",

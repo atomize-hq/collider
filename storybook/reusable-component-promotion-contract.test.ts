@@ -7,7 +7,7 @@ import syncLedger from '../src/figma/sync-ledger.json';
 import reusableComponentStatusReusableFixture from '../scripts/fixtures/reusable-component-status/valid-reusable-component-status.json';
 import reusableComponentStatusProofOnlyFixture from '../scripts/fixtures/reusable-component-status/valid-proof-only-status.json';
 import reusableComponentStatusTokenOnlyFixture from '../scripts/fixtures/reusable-component-status/valid-token-only-status.json';
-import buttonSpec from './component-specs/button.json';
+import buttonSpec from './component-specs/thinking-indicator.json';
 import contractDoc from './reusable-component-promotion-contract.md?raw';
 import policyDoc from './reusable-component-promotion-policy.md?raw';
 import storyInventory from './story-inventory.json';

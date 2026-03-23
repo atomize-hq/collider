@@ -1,0 +1,28 @@
+{
+  "specVersion": "1",
+  "componentId": "thinking-indicator",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "docs"],
+  "ownedStoryRefs": [
+    {
+      "storyId": "contracts-pilot-recipe--button-recipe",
+      "kinds": ["default"]
+    },
+    {
+      "storyId": "contracts-generated-tokens--token-registry",
+      "kinds": ["docs"]
+    }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": "storybook/stories/pilot-recipe-contract.stories.tsx",
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": null,
+    "figmaComponentRef": null,
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": []
+  }
+}

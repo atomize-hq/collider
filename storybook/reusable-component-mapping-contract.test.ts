@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import buttonSpec from './component-specs/button.json';
+import buttonSpec from './component-specs/thinking-indicator.json';
 import proofCoverage from '../artifacts/storybook/proof-coverage.json';
 import storyInventory from './story-inventory.json';
 import contractDoc from './reusable-component-mapping-contract.md?raw';
@@ -36,7 +36,7 @@ const identityPathFields = [
 const unresolvedRecord: MappingRecord = {
   mappingVersion: reusableComponentMappingContractVersion,
   componentId: buttonSpec.componentId,
-  componentSpecPath: 'storybook/component-specs/button.json',
+  componentSpecPath: 'storybook/component-specs/thinking-indicator.json',
   storyInventoryPath: 'storybook/story-inventory.json',
   proofCoveragePath: 'artifacts/storybook/proof-coverage.json',
   chromaticStatusPath: 'artifacts/chromatic/status.json',
@@ -45,14 +45,10 @@ const unresolvedRecord: MappingRecord = {
   supportedVariantsSource: buttonSpec.downstreamHooks.supportedVariantsSource,
   slotNamesSource: buttonSpec.downstreamHooks.slotNamesSource,
   exampleStoryIds: buttonSpec.downstreamHooks.exampleStoryIds,
-  supportedVariants: [
-    { name: 'intent', values: ['primary', 'secondary'] },
-    { name: 'size', values: ['sm', 'md'] },
-  ],
-  slotNames: ['icon', 'label', 'root'],
+  supportedVariants: [{ name: 'size', values: ['sm', 'md'] }],
+  slotNames: [],
   implementedStoryIds: [
     'contracts-pilot-recipe--button-recipe',
-    'foundations-runtime-css-parity--baseline-theme',
     'contracts-generated-tokens--token-registry',
   ],
   publishedStorybookUrl: null,
@@ -62,7 +58,7 @@ const unresolvedRecord: MappingRecord = {
   storyLinkStatus: 'missing-status-artifact',
   blockingFields: ['publishedStorybookUrl'],
   sources: {
-    componentSpec: 'storybook/component-specs/button.json',
+    componentSpec: 'storybook/component-specs/thinking-indicator.json',
     proofCoverage: 'artifacts/storybook/proof-coverage.json',
     storyInventory: 'storybook/story-inventory.json',
     supportedVariantsSource: buttonSpec.downstreamHooks.supportedVariantsSource,
@@ -75,10 +71,9 @@ const resolvedRecord: MappingRecord = {
   ...unresolvedRecord,
   publishedStorybookUrl: 'https://chromatic.example.com/build?appId=storybook&number=42',
   publishedStorybookRevisionGitSha: '1111111111111111111111111111111111111111',
-  publishedStorybookComponentIds: ['button'],
+  publishedStorybookComponentIds: ['thinking-indicator'],
   publishedStorybookStoryIds: [
     'contracts-pilot-recipe--button-recipe',
-    'foundations-runtime-css-parity--baseline-theme',
     'contracts-generated-tokens--token-registry',
   ],
   storyLinkStatus: 'resolved',
@@ -233,14 +228,10 @@ describe('reusable component mapping contract module', () => {
 });
 
 describe('reusable component mapping contract examples', () => {
-  it('keeps inherited CT-9B fields aligned with the current button proof metadata', () => {
-    expect(buttonSpec.componentId).toBe('button');
-    expect(buttonSpec.downstreamHooks.codeEntrypoint).toBe(
-      'design-tokens/src/recipes/button.recipe.json'
-    );
-    expect(buttonSpec.downstreamHooks.figmaComponentRef).toBe(
-      'figma://file/23PLdynlRYoBYQx9teoC8A#component=button'
-    );
+  it('keeps inherited CT-9B fields aligned with the current thinking-indicator proof metadata', () => {
+    expect(buttonSpec.componentId).toBe('thinking-indicator');
+    expect(buttonSpec.downstreamHooks.codeEntrypoint).toBeNull();
+    expect(buttonSpec.downstreamHooks.figmaComponentRef).toBeNull();
     expect(buttonSpec.downstreamHooks.supportedVariantsSource).toBe(
       unresolvedRecord.supportedVariantsSource
     );

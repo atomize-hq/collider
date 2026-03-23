@@ -9,7 +9,10 @@ import {
   validateComponentSpec,
 } from '../../scripts/lib/storybook-component-spec.mjs';
 
-const buttonSpecPath = path.join(repoRoot, 'storybook/component-specs/button.json');
+const thinkingIndicatorSpecPath = path.join(
+  repoRoot,
+  'storybook/component-specs/thinking-indicator.json'
+);
 
 type ComponentSpecFixture = {
   specVersion: string;
@@ -36,8 +39,10 @@ type ComponentSpecFixture = {
 };
 
 describe('validateComponentSpec', () => {
-  it('accepts the committed button component spec', () => {
-    const result = validateComponentSpec(readButtonSpec(), { filenameStem: 'button' });
+  it('accepts the committed thinking-indicator component spec', () => {
+    const result = validateComponentSpec(readThinkingIndicatorSpec(), {
+      filenameStem: 'thinking-indicator',
+    });
 
     expect(result).toEqual([]);
   });
@@ -61,19 +66,19 @@ describe('validateComponentSpec', () => {
     ]);
   });
 
-  it('keeps the committed button pilot proof metadata reviewer-clear', () => {
-    const spec = readButtonSpec();
+  it('keeps the committed thinking-indicator Stage 1 spec reviewer-clear', () => {
+    const spec = readThinkingIndicatorSpec();
 
-    expect(spec.componentId).toBe('button');
+    expect(spec.componentId).toBe('thinking-indicator');
     expect(spec.tier).toBe('primitive');
-    expect(spec.requiredStoryKinds).toEqual(['default', 'workflow', 'docs']);
+    expect(spec.requiredStoryKinds).toEqual(['default', 'docs']);
     expect(spec.ownedStoryRefs).toEqual([
       {
         storyId: 'contracts-pilot-recipe--button-recipe',
         kinds: ['default'],
       },
       {
-        storyId: 'contracts-pilot-recipe--documentation',
+        storyId: 'contracts-generated-tokens--token-registry',
         kinds: ['docs'],
       },
     ]);
@@ -83,22 +88,18 @@ describe('validateComponentSpec', () => {
       runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
     });
     expect(spec.downstreamHooks).toEqual({
-      codeEntrypoint: 'design-tokens/src/recipes/button.recipe.json',
-      figmaComponentRef: 'figma://file/23PLdynlRYoBYQx9teoC8A#component=button',
-      supportedVariantsSource: 'design-tokens/dist/tokens.ts',
-      slotNamesSource: 'design-tokens/dist/tokens.ts',
-      exampleStoryIds: [
-        'contracts-pilot-recipe--button-recipe',
-        'foundations-runtime-css-parity--baseline-theme',
-        'contracts-generated-tokens--token-registry',
-      ],
+      codeEntrypoint: null,
+      figmaComponentRef: null,
+      supportedVariantsSource: null,
+      slotNamesSource: null,
+      exampleStoryIds: [],
     });
   });
 
   it('reports a missing component id', () => {
-    const spec = omitKey(readButtonSpec(), 'componentId');
+    const spec = omitKey(readThinkingIndicatorSpec(), 'componentId');
 
-    const result = validateComponentSpec(spec, { filenameStem: 'button' });
+    const result = validateComponentSpec(spec, { filenameStem: 'thinking-indicator' });
 
     expect(result).toContain(
       '[CT-9B_COMPONENT_SPEC_MISSING_REQUIRED_KEY] componentSpec.componentId is required'
@@ -106,27 +107,29 @@ describe('validateComponentSpec', () => {
   });
 
   it('reports a filename and component id mismatch', () => {
-    const result = validateComponentSpec(readButtonSpec(), { filenameStem: 'button-primary' });
+    const result = validateComponentSpec(readThinkingIndicatorSpec(), {
+      filenameStem: 'thinking-indicator-variant',
+    });
 
     expect(result).toContain(
-      '[CT-9B_COMPONENT_SPEC_FILENAME_MISMATCH] componentSpec.componentId must match filename stem "button-primary"'
+      '[CT-9B_COMPONENT_SPEC_FILENAME_MISMATCH] componentSpec.componentId must match filename stem "thinking-indicator-variant"'
     );
   });
 
   it('reports an unknown proof kind', () => {
-    const spec = readButtonSpec();
+    const spec = readThinkingIndicatorSpec();
     spec.requiredStoryKinds = ['docs', 'hover-state'];
 
-    const result = validateComponentSpec(spec, { filenameStem: 'button' });
+    const result = validateComponentSpec(spec, { filenameStem: 'thinking-indicator' });
 
     expect(result).toContainEqual(expect.stringContaining('[CT-9B_COMPONENT_SPEC_UNKNOWN_KIND]'));
   });
 
   it('reports a duplicate proof kind', () => {
-    const spec = readButtonSpec();
+    const spec = readThinkingIndicatorSpec();
     spec.requiredStoryKinds = ['docs', 'docs'];
 
-    const result = validateComponentSpec(spec, { filenameStem: 'button' });
+    const result = validateComponentSpec(spec, { filenameStem: 'thinking-indicator' });
 
     expect(result).toContain(
       '[CT-9B_COMPONENT_SPEC_DUPLICATE_KIND] componentSpec.requiredStoryKinds[1] duplicates "docs" in componentSpec.requiredStoryKinds'
@@ -134,7 +137,7 @@ describe('validateComponentSpec', () => {
   });
 
   it('reports a duplicate owned story ref story id', () => {
-    const spec = readButtonSpec();
+    const spec = readThinkingIndicatorSpec();
     spec.ownedStoryRefs = [
       ...spec.ownedStoryRefs,
       {
@@ -143,7 +146,7 @@ describe('validateComponentSpec', () => {
       },
     ];
 
-    const result = validateComponentSpec(spec, { filenameStem: 'button' });
+    const result = validateComponentSpec(spec, { filenameStem: 'thinking-indicator' });
 
     expect(result).toContain(
       '[CT-9B_COMPONENT_SPEC_DUPLICATE_STORY_ID] componentSpec.ownedStoryRefs[2].storyId duplicates "contracts-pilot-recipe--button-recipe"'
@@ -151,11 +154,11 @@ describe('validateComponentSpec', () => {
   });
 
   it('reports unexpected root and nested keys', () => {
-    const spec = readButtonSpec();
+    const spec = readThinkingIndicatorSpec();
     spec.extraField = true;
     (spec.downstreamHooks as Record<string, unknown>).vendorDescriptor = {};
 
-    const result = validateComponentSpec(spec, { filenameStem: 'button' });
+    const result = validateComponentSpec(spec, { filenameStem: 'thinking-indicator' });
 
     expect(result).toContain(
       '[CT-9B_COMPONENT_SPEC_UNEXPECTED_KEY] componentSpec.extraField is not allowed'
@@ -166,10 +169,10 @@ describe('validateComponentSpec', () => {
   });
 
   it('reports a non-path generated artifact ref', () => {
-    const spec = readButtonSpec();
+    const spec = readThinkingIndicatorSpec();
     spec.generatedArtifactRefs.tokenDocs = 'https://storybook.example.com/tokens';
 
-    const result = validateComponentSpec(spec, { filenameStem: 'button' });
+    const result = validateComponentSpec(spec, { filenameStem: 'thinking-indicator' });
 
     expect(result).toContain(
       '[CT-9B_COMPONENT_SPEC_INVALID_REPO_PATH] componentSpec.generatedArtifactRefs.tokenDocs must be a repo-relative path string or null'
@@ -177,13 +180,13 @@ describe('validateComponentSpec', () => {
   });
 
   it('reports a missing downstream hook key', () => {
-    const spec = readButtonSpec();
+    const spec = readThinkingIndicatorSpec();
     spec.downstreamHooks = omitKey(
       spec.downstreamHooks,
       'slotNamesSource'
     ) as ComponentSpecFixture['downstreamHooks'];
 
-    const result = validateComponentSpec(spec, { filenameStem: 'button' });
+    const result = validateComponentSpec(spec, { filenameStem: 'thinking-indicator' });
 
     expect(result).toContain(
       '[CT-9B_COMPONENT_SPEC_MISSING_REQUIRED_KEY] componentSpec.downstreamHooks.slotNamesSource is required'
@@ -213,8 +216,8 @@ describe('validateComponentSpec', () => {
   });
 });
 
-function readButtonSpec() {
-  return JSON.parse(fs.readFileSync(buttonSpecPath, 'utf8')) as ComponentSpecFixture;
+function readThinkingIndicatorSpec() {
+  return JSON.parse(fs.readFileSync(thinkingIndicatorSpecPath, 'utf8')) as ComponentSpecFixture;
 }
 
 function omitKey<T extends Record<string, unknown>, K extends keyof T>(input: T, key: K) {

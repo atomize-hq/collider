@@ -1,0 +1,41 @@
+{
+  "projectionKind": "storybook-connect",
+  "mappingVersion": "1",
+  "componentId": "thinking-indicator",
+  "componentSpecPath": "storybook/component-specs/thinking-indicator.json",
+  "storyInventoryPath": "storybook/story-inventory.json",
+  "proofCoveragePath": "artifacts/storybook/proof-coverage.json",
+  "chromaticStatusPath": "artifacts/chromatic/status.json",
+  "codeEntrypoint": null,
+  "figmaComponentRef": null,
+  "supportedVariantsSource": null,
+  "slotNamesSource": null,
+  "supportedVariants": [{ "name": "size", "values": ["sm", "md"] }],
+  "slotNames": [],
+  "exampleStoryIds": [],
+  "implementedStoryIds": [
+    "contracts-pilot-recipe--button-recipe",
+    "contracts-generated-tokens--token-registry"
+  ],
+  "publishedStorybookUrl": "https://www.chromatic.com/build?appId=69b96940ff7216b1df881d31&number=1",
+  "publishedStorybookRevisionGitSha": "e4a9f4f4e0a9dd75744a80cfe6a323882855c16e",
+  "publishedStorybookComponentIds": ["thinking-indicator"],
+  "publishedStorybookStoryIds": [
+    "contracts-pilot-recipe--button-recipe",
+    "contracts-generated-tokens--token-registry"
+  ],
+  "storyLinkStatus": "resolved",
+  "blockingFields": [],
+  "sources": {
+    "componentSpec": "storybook/component-specs/thinking-indicator.json",
+    "proofCoverage": "artifacts/storybook/proof-coverage.json",
+    "storyInventory": "storybook/story-inventory.json",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "chromaticStatus": "artifacts/chromatic/status.json"
+  },
+  "storybook": {
+    "proofCoverageStatus": "ready",
+    "requiredKinds": ["default", "docs"]
+  }
+}

@@ -9,10 +9,9 @@
   "proofInventory": {
     "inventoryVersion": "1",
     "path": "storybook/story-inventory.json",
-    "selectedComponentIds": ["button"],
+    "selectedComponentIds": ["thinking-indicator"],
     "selectedStoryIds": [
       "contracts-pilot-recipe--button-recipe",
-      "foundations-runtime-css-parity--baseline-theme",
       "contracts-generated-tokens--token-registry"
     ]
   },
@@ -24,13 +23,12 @@
     "mode": "informational",
     "requiredForClaim": false,
     "scope": {
-      "componentIds": ["button"],
+      "componentIds": ["thinking-indicator"],
       "componentTiers": {
-        "button": "primitive"
+        "thinking-indicator": "primitive"
       },
       "storyIds": [
         "contracts-pilot-recipe--button-recipe",
-        "foundations-runtime-css-parity--baseline-theme",
         "contracts-generated-tokens--token-registry"
       ]
     }
