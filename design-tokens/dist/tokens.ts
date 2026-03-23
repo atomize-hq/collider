@@ -304,8 +304,8 @@ export const tokenMap = {
 } as const;
 
 export const recipeMap = {
-  button: {
-    componentId: 'button',
+  'thinking-indicator': {
+    componentId: 'thinking-indicator',
     defaults: {
       state: 'rest',
       variants: {

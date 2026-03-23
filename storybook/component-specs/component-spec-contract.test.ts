@@ -74,7 +74,7 @@ describe('validateComponentSpec', () => {
     expect(spec.requiredStoryKinds).toEqual(['default', 'docs']);
     expect(spec.ownedStoryRefs).toEqual([
       {
-        storyId: 'contracts-pilot-recipe--button-recipe',
+        storyId: 'contracts-pilot-recipe--thinking-indicator-recipe',
         kinds: ['default'],
       },
       {
@@ -88,11 +88,14 @@ describe('validateComponentSpec', () => {
       runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
     });
     expect(spec.downstreamHooks).toEqual({
-      codeEntrypoint: null,
-      figmaComponentRef: null,
-      supportedVariantsSource: null,
-      slotNamesSource: null,
-      exampleStoryIds: [],
+      codeEntrypoint: 'design-tokens/src/recipes/thinking-indicator.recipe.json',
+      figmaComponentRef: 'figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator',
+      supportedVariantsSource: 'design-tokens/dist/tokens.ts',
+      slotNamesSource: 'design-tokens/dist/tokens.ts',
+      exampleStoryIds: [
+        'contracts-pilot-recipe--thinking-indicator-recipe',
+        'contracts-generated-tokens--token-registry',
+      ],
     });
   });
 
@@ -141,7 +144,7 @@ describe('validateComponentSpec', () => {
     spec.ownedStoryRefs = [
       ...spec.ownedStoryRefs,
       {
-        storyId: 'contracts-pilot-recipe--button-recipe',
+        storyId: 'contracts-pilot-recipe--thinking-indicator-recipe',
         kinds: ['docs'],
       },
     ];
@@ -149,7 +152,7 @@ describe('validateComponentSpec', () => {
     const result = validateComponentSpec(spec, { filenameStem: 'thinking-indicator' });
 
     expect(result).toContain(
-      '[CT-9B_COMPONENT_SPEC_DUPLICATE_STORY_ID] componentSpec.ownedStoryRefs[2].storyId duplicates "contracts-pilot-recipe--button-recipe"'
+      '[CT-9B_COMPONENT_SPEC_DUPLICATE_STORY_ID] componentSpec.ownedStoryRefs[2].storyId duplicates "contracts-pilot-recipe--thinking-indicator-recipe"'
     );
   });
 
@@ -197,11 +200,11 @@ describe('validateComponentSpec', () => {
     const result = validateComponentSpec(
       {
         specVersion: '1',
-        componentId: 'button',
+        componentId: 'thinking-indicator',
         tier: 'pilot',
         requiredStoryKinds: ['docs'],
       },
-      { filenameStem: 'button' }
+      { filenameStem: 'thinking-indicator' }
     );
 
     expect(result).toContain(

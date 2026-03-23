@@ -2,16 +2,12 @@
   "inventoryVersion": "1",
   "components": [
     {
-      "componentId": "button",
-      "validatorKinds": ["default", "docs"],
+      "componentId": "thinking-indicator",
+      "validatorKinds": ["default"],
       "implementedStoryRefs": [
         {
           "kind": "default",
-          "storyId": "contracts-pilot-recipe--button-recipe"
-        },
-        {
-          "kind": "docs",
-          "storyId": "contracts-generated-tokens--token-registry"
+          "storyId": "contracts-pilot-recipe--thinking-indicator-recipe"
         }
       ]
     }

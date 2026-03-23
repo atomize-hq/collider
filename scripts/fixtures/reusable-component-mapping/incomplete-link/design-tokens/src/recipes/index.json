@@ -2,8 +2,8 @@
   "schemaVersion": "1",
   "recipes": [
     {
-      "componentId": "button",
-      "sourceFile": "button.recipe.json",
+      "componentId": "thinking-indicator",
+      "sourceFile": "thinking-indicator.recipe.json",
       "status": "pilot"
     }
   ]

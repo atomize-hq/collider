@@ -54,7 +54,7 @@ describe('createComponentMappingArtifacts', () => {
       '1111111111111111111111111111111111111111'
     );
     expect(artifacts.components[0]?.storybookConnect.publishedStorybookComponentIds).toEqual([
-      'button',
+      'thinking-indicator',
     ]);
     expect(artifacts.components[0]?.storybookConnect.storyLinkStatus).toBe('resolved');
     expect(artifacts.components[0]?.storybookConnect.blockingFields).toEqual([]);
@@ -147,8 +147,8 @@ describe('writeComponentMappingArtifacts', () => {
 
     await writeComponentMappingArtifacts(artifacts, { rootDir: workspace });
 
-    const storybookConnect = readJson(workspace, 'storybook/connect/button.json');
-    const figmaCodeConnect = readJson(workspace, 'figma/code-connect/button.json');
+    const storybookConnect = readJson(workspace, 'storybook/connect/thinking-indicator.json');
+    const figmaCodeConnect = readJson(workspace, 'figma/code-connect/thinking-indicator.json');
     const completeness = readJson(
       workspace,
       'artifacts/harness/reusable-component-mapping-status.json'
@@ -156,8 +156,8 @@ describe('writeComponentMappingArtifacts', () => {
 
     expect(storybookConnect).toMatchObject({
       projectionKind: reusableComponentMappingProjectionKinds.storybookConnect,
-      componentId: 'button',
-      componentSpecPath: 'storybook/component-specs/button.json',
+      componentId: 'thinking-indicator',
+      componentSpecPath: 'storybook/component-specs/thinking-indicator.json',
       storyInventoryPath: 'storybook/story-inventory.json',
       proofCoveragePath: 'artifacts/storybook/proof-coverage.json',
       chromaticStatusPath: 'artifacts/chromatic/status.json',
@@ -168,10 +168,10 @@ describe('writeComponentMappingArtifacts', () => {
     });
     expect(figmaCodeConnect).toMatchObject({
       projectionKind: reusableComponentMappingProjectionKinds.figmaCodeConnect,
-      componentId: 'button',
-      componentSpecPath: 'storybook/component-specs/button.json',
+      componentId: 'thinking-indicator',
+      componentSpecPath: 'storybook/component-specs/thinking-indicator.json',
       figma: {
-        componentRef: 'figma://file/23PLdynlRYoBYQx9teoC8A#component=button',
+        componentRef: 'figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator',
       },
     });
     expect(completeness).toMatchObject({
@@ -184,7 +184,7 @@ describe('writeComponentMappingArtifacts', () => {
       },
       components: [
         {
-          componentId: 'button',
+          componentId: 'thinking-indicator',
           state: 'complete',
           linkState: 'resolved-current',
         },
@@ -226,8 +226,12 @@ describe('component mapping CLI contract', () => {
     expect(result.status).toBe(0);
     expect(result.stderr).toBe('');
     expect(result.stdout).toContain('✓ Component mapping artifacts written:');
-    expect(fs.existsSync(path.join(workspace, 'storybook/connect/button.json'))).toBe(true);
-    expect(fs.existsSync(path.join(workspace, 'figma/code-connect/button.json'))).toBe(true);
+    expect(fs.existsSync(path.join(workspace, 'storybook/connect/thinking-indicator.json'))).toBe(
+      true
+    );
+    expect(fs.existsSync(path.join(workspace, 'figma/code-connect/thinking-indicator.json'))).toBe(
+      true
+    );
   });
 });
 
@@ -239,11 +243,11 @@ function createWorkspace(
 ) {
   const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'component-mapping-'));
 
-  copyIntoWorkspace(workspace, 'storybook/component-specs/button.json');
+  copyIntoWorkspace(workspace, 'storybook/component-specs/thinking-indicator.json');
   copyIntoWorkspace(workspace, 'storybook/story-inventory.json');
   copyIntoWorkspace(workspace, 'artifacts/storybook/proof-coverage.json');
   copyIntoWorkspace(workspace, 'design-tokens/src/recipes/index.json');
-  copyIntoWorkspace(workspace, 'design-tokens/src/recipes/button.recipe.json');
+  copyIntoWorkspace(workspace, 'design-tokens/src/recipes/thinking-indicator.recipe.json');
 
   if (options.chromaticFixtureName) {
     const status = JSON.parse(

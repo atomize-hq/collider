@@ -25,7 +25,9 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('valid-pilot');
 
     expect(result.errors).toEqual([]);
-    expect(result.data.storyIndex?.fileByStoryId.get('contracts-pilot-recipe--button-recipe')).toBe(
+    expect(
+      result.data.storyIndex?.fileByStoryId.get('contracts-pilot-recipe--thinking-indicator-recipe')
+    ).toBe(
       path.join(fixturePath('valid-pilot'), 'storybook/stories/pilot-recipe-contract.stories.tsx')
     );
   });
@@ -42,7 +44,7 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('missing-spec-file');
 
     expect(result.errors).toContain(
-      '[CT-9B_PROOF_STRUCTURE_MISSING_SPEC_FILE] componentId "button" is present in storybook/story-inventory.json but missing storybook/component-specs/button.json'
+      '[CT-9B_PROOF_STRUCTURE_MISSING_SPEC_FILE] componentId "thinking-indicator" is present in storybook/story-inventory.json but missing storybook/component-specs/thinking-indicator.json'
     );
   });
 
@@ -50,7 +52,7 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('orphan-spec');
 
     expect(result.errors).toContain(
-      '[CT-9B_PROOF_STRUCTURE_ORPHAN_SPEC] componentId "button" is defined by storybook/component-specs/button.json but missing from storybook/story-inventory.json'
+      '[CT-9B_PROOF_STRUCTURE_ORPHAN_SPEC] componentId "thinking-indicator" is defined by storybook/component-specs/thinking-indicator.json but missing from storybook/story-inventory.json'
     );
   });
 
@@ -58,7 +60,7 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('unknown-tier');
 
     expect(result.errors).toContain(
-      '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "button" references unknown tier "pilot" in componentSpec.tier'
+      '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "thinking-indicator" references unknown tier "pilot" in componentSpec.tier'
     );
   });
 
@@ -66,7 +68,7 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('tier-minimum-kind-missing');
 
     expect(result.errors).toContain(
-      '[CT-9B_PROOF_STRUCTURE_TIER_MINIMUM_KIND_MISSING] componentId "button" tier "interactive" requires kind "state-matrix" in componentSpec.requiredStoryKinds'
+      '[CT-9B_PROOF_STRUCTURE_TIER_MINIMUM_KIND_MISSING] componentId "thinking-indicator" tier "interactive" requires kind "state-matrix" in componentSpec.requiredStoryKinds'
     );
   });
 
@@ -74,7 +76,7 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('broken-owned-story-ref');
 
     expect(result.errors).toContain(
-      '[CT-9B_PROOF_STRUCTURE_UNRESOLVED_STORY_REF] componentId "button" references unresolved storyId "contracts-pilot-recipe--missing-story" in storyInventory.implementedStoryRefs'
+      '[CT-9B_PROOF_STRUCTURE_UNRESOLVED_STORY_REF] componentId "thinking-indicator" references unresolved storyId "contracts-pilot-recipe--missing-story" in storyInventory.implementedStoryRefs'
     );
   });
 
@@ -82,7 +84,7 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('unresolved-generated-artifact-ref');
 
     expect(result.errors).toContain(
-      '[CT-9B_PROOF_STRUCTURE_UNRESOLVED_GENERATED_ARTIFACT_REF] componentId "button" references missing generated artifact path "storybook/stories/missing-generated-docs.stories.tsx" in componentSpec.generatedArtifactRefs.tokenDocs'
+      '[CT-9B_PROOF_STRUCTURE_UNRESOLVED_GENERATED_ARTIFACT_REF] componentId "thinking-indicator" references missing generated artifact path "storybook/stories/missing-generated-docs.stories.tsx" in componentSpec.generatedArtifactRefs.tokenDocs'
     );
   });
 
@@ -90,7 +92,7 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('story-not-owned-by-spec');
 
     expect(result.errors).toContain(
-      '[CT-9B_PROOF_STRUCTURE_STORY_NOT_OWNED_BY_SPEC] componentId "button" references storyId "contracts-external-docs--external-proof" but storybook/stories/external-proof.stories.tsx is not listed in componentSpec.generatedArtifactRefs and the story is not owned by the component spec'
+      '[CT-9B_PROOF_STRUCTURE_STORY_NOT_OWNED_BY_SPEC] componentId "thinking-indicator" references storyId "contracts-external-docs--external-proof" but storybook/stories/external-proof.stories.tsx is not listed in componentSpec.generatedArtifactRefs and the story is not owned by the component spec'
     );
   });
 });

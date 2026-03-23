@@ -35,7 +35,7 @@ describe('evaluateReusableComponentMapping', () => {
       invalidCount: 0,
     });
     expect(result.report.components[0]).toMatchObject({
-      componentId: 'button',
+      componentId: 'thinking-indicator',
       state: 'complete',
       linkState: 'resolved-current',
       issues: [],
@@ -53,7 +53,7 @@ describe('evaluateReusableComponentMapping', () => {
 
     expect(result.ok).toBe(true);
     expect(result.report.components[0]).toMatchObject({
-      componentId: 'button',
+      componentId: 'thinking-indicator',
       state: 'incomplete',
       linkState: 'unresolved',
     });
@@ -75,7 +75,7 @@ describe('evaluateReusableComponentMapping', () => {
     expect(result.ok).toBe(false);
     expect(result.report.summary.invalidCount).toBe(1);
     expect(result.report.components[0]).toMatchObject({
-      componentId: 'button',
+      componentId: 'thinking-indicator',
       state: 'invalid',
       linkState: 'invalid-provenance',
     });
@@ -96,7 +96,7 @@ describe('evaluateReusableComponentMapping', () => {
 
     expect(result.ok).toBe(false);
     expect(result.report.components[0]).toMatchObject({
-      componentId: 'button',
+      componentId: 'thinking-indicator',
       state: 'invalid',
     });
     expect(
@@ -134,7 +134,7 @@ describe('runReusableComponentMappingValidation', () => {
       invalidCount: 0,
     });
     expect(statusReport.components[0]).toMatchObject({
-      componentId: 'button',
+      componentId: 'thinking-indicator',
       state: 'incomplete',
       linkState: 'unresolved',
     });

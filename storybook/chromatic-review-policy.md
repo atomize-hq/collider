@@ -31,12 +31,11 @@
 
 The initial landed `CT-9B` pilot scope is:
 
-- `componentIds`: `["button"]`
+- `componentIds`: `["thinking-indicator"]`
 - `storyIds`:
-  - `contracts-pilot-recipe--button-recipe`
-  - `foundations-runtime-css-parity--baseline-theme`
+  - `contracts-pilot-recipe--thinking-indicator-recipe`
   - `contracts-generated-tokens--token-registry`
-- `componentTiers`: `{ "button": "primitive" }`
+- `componentTiers`: `{ "thinking-indicator": "primitive" }`
 
 This pilot scope remains current until `CT-9B` changes.
 
@@ -53,14 +52,14 @@ The rail may skip execution for a branch that is outside reusable-component adva
 
 ### Claim-Required Example
 
-The rail may run for a reusable-component advancement claim that includes the pilot `button` proof scope. In that case:
+The rail may run for a reusable-component advancement claim that includes the pilot `thinking-indicator` proof scope. In that case:
 
 - `review.mode` is `claim-required`
 - `review.requiredForClaim` is `true`
 - `review.scope` mirrors the same pilot `CT-9B` scope:
-  - `componentIds`: `["button"]`
-  - `storyIds`: `["contracts-pilot-recipe--button-recipe", "foundations-runtime-css-parity--baseline-theme", "contracts-generated-tokens--token-registry"]`
-  - `componentTiers`: `{ "button": "primitive" }`
+  - `componentIds`: `["thinking-indicator"]`
+  - `storyIds`: `["contracts-pilot-recipe--thinking-indicator-recipe", "contracts-generated-tokens--token-registry"]`
+  - `componentTiers`: `{ "thinking-indicator": "primitive" }`
 
 ## Consumer Boundary
 

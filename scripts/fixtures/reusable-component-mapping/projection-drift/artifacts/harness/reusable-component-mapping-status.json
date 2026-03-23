@@ -9,23 +9,23 @@
   },
   "components": [
     {
-      "componentId": "button",
+      "componentId": "thinking-indicator",
       "state": "invalid",
       "linkState": "resolved-current",
       "issues": [],
       "drift": [
-        "[CT-11B_MAPPING_DRIFT] componentId \"button\" expected.slotNames does not match figmaCodeConnect",
-        "[CT-11B_MAPPING_DRIFT] componentId \"button\" storybookConnect.slotNames does not match figmaCodeConnect"
+        "[CT-11B_MAPPING_DRIFT] componentId \"thinking-indicator\" expected.slotNames does not match figmaCodeConnect",
+        "[CT-11B_MAPPING_DRIFT] componentId \"thinking-indicator\" storybookConnect.slotNames does not match figmaCodeConnect"
       ],
       "sourcePaths": {
-        "componentSpec": "storybook/component-specs/button.json",
+        "componentSpec": "storybook/component-specs/thinking-indicator.json",
         "storyInventory": "storybook/story-inventory.json",
         "proofCoverage": "artifacts/storybook/proof-coverage.json",
         "chromaticStatus": "artifacts/chromatic/status.json"
       },
       "outputPaths": {
-        "figmaCodeConnect": "figma/code-connect/button.json",
-        "storybookConnect": "storybook/connect/button.json"
+        "figmaCodeConnect": "figma/code-connect/thinking-indicator.json",
+        "storybookConnect": "storybook/connect/thinking-indicator.json"
       }
     }
   ]

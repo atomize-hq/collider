@@ -19,16 +19,12 @@ describe('loadAndValidateStoryInventory', () => {
     expect(result.errors).toEqual([]);
     expect(result.data.components).toEqual([
       {
-        componentId: 'button',
-        validatorKinds: ['default', 'workflow', 'docs'],
+        componentId: 'thinking-indicator',
+        validatorKinds: ['default', 'docs'],
         implementedStoryRefs: [
           {
             kind: 'default',
-            storyId: 'contracts-pilot-recipe--button-recipe',
-          },
-          {
-            kind: 'workflow',
-            storyId: 'foundations-runtime-css-parity--baseline-theme',
+            storyId: 'contracts-pilot-recipe--thinking-indicator-recipe',
           },
           {
             kind: 'docs',
@@ -46,11 +42,7 @@ describe('loadAndValidateStoryInventory', () => {
     expect(result.data.components[0]?.implementedStoryRefs).toEqual([
       {
         kind: 'default',
-        storyId: 'contracts-pilot-recipe--button-recipe',
-      },
-      {
-        kind: 'workflow',
-        storyId: 'foundations-runtime-css-parity--baseline-theme',
+        storyId: 'contracts-pilot-recipe--thinking-indicator-recipe',
       },
       {
         kind: 'docs',

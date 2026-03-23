@@ -11,7 +11,7 @@
     "path": "storybook/story-inventory.json",
     "selectedComponentIds": ["thinking-indicator"],
     "selectedStoryIds": [
-      "contracts-pilot-recipe--button-recipe",
+      "contracts-pilot-recipe--thinking-indicator-recipe",
       "contracts-generated-tokens--token-registry"
     ]
   },
@@ -28,7 +28,7 @@
         "thinking-indicator": "primitive"
       },
       "storyIds": [
-        "contracts-pilot-recipe--button-recipe",
+        "contracts-pilot-recipe--thinking-indicator-recipe",
         "contracts-generated-tokens--token-registry"
       ]
     }

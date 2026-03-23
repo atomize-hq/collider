@@ -1,6 +1,6 @@
 {
   "recipeVersion": "1",
-  "componentId": "button",
+  "componentId": "thinking-indicator",
   "variantAxes": [
     {
       "name": "intent",

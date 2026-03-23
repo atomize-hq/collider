@@ -109,12 +109,12 @@ describe('createReusableComponentStatus', () => {
       },
       components: [
         {
-          componentId: 'button',
+          componentId: 'thinking-indicator',
           tier: 'primitive',
           status: 'missing-required-kinds',
-          requiredKinds: ['default', 'workflow', 'docs'],
-          implementedKinds: ['default', 'docs'],
-          missingKinds: ['workflow'],
+          requiredKinds: ['default', 'docs'],
+          implementedKinds: ['default'],
+          missingKinds: ['docs'],
           generatedArtifactRefs: {
             tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
             recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
@@ -236,7 +236,7 @@ function copyBaseWorkspace() {
   for (const repoRelativePath of [
     'src/figma/sync-ledger.json',
     'storybook/story-inventory.json',
-    'storybook/component-specs/button.json',
+    'storybook/component-specs/thinking-indicator.json',
     'artifacts/storybook/proof-coverage.json',
     'artifacts/chromatic/status.json',
     'artifacts/harness/reusable-component-mapping-status.json',

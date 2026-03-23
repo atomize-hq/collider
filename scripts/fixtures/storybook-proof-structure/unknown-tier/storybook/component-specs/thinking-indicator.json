@@ -1,15 +1,15 @@
 {
   "specVersion": "1",
-  "componentId": "button",
+  "componentId": "thinking-indicator",
   "tier": "pilot",
-  "requiredStoryKinds": ["default", "workflow", "docs"],
+  "requiredStoryKinds": ["default", "docs"],
   "ownedStoryRefs": [
     {
-      "storyId": "contracts-pilot-recipe--button-recipe",
+      "storyId": "contracts-pilot-recipe--thinking-indicator-recipe",
       "kinds": ["default"]
     },
     {
-      "storyId": "contracts-pilot-recipe--documentation",
+      "storyId": "contracts-generated-tokens--token-registry",
       "kinds": ["docs"]
     }
   ],
@@ -23,6 +23,9 @@
     "figmaComponentRef": null,
     "supportedVariantsSource": "design-tokens/dist/tokens.ts",
     "slotNamesSource": "design-tokens/dist/tokens.ts",
-    "exampleStoryIds": ["contracts-pilot-recipe--button-recipe"]
+    "exampleStoryIds": [
+      "contracts-pilot-recipe--thinking-indicator-recipe",
+      "contracts-generated-tokens--token-registry"
+    ]
   }
 }

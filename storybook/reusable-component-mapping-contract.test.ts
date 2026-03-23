@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import buttonSpec from './component-specs/thinking-indicator.json';
+import thinkingIndicatorSpec from './component-specs/thinking-indicator.json';
 import proofCoverage from '../artifacts/storybook/proof-coverage.json';
 import storyInventory from './story-inventory.json';
 import contractDoc from './reusable-component-mapping-contract.md?raw';
@@ -35,20 +35,23 @@ const identityPathFields = [
 
 const unresolvedRecord: MappingRecord = {
   mappingVersion: reusableComponentMappingContractVersion,
-  componentId: buttonSpec.componentId,
+  componentId: thinkingIndicatorSpec.componentId,
   componentSpecPath: 'storybook/component-specs/thinking-indicator.json',
   storyInventoryPath: 'storybook/story-inventory.json',
   proofCoveragePath: 'artifacts/storybook/proof-coverage.json',
   chromaticStatusPath: 'artifacts/chromatic/status.json',
-  codeEntrypoint: null,
-  figmaComponentRef: null,
-  supportedVariantsSource: buttonSpec.downstreamHooks.supportedVariantsSource,
-  slotNamesSource: buttonSpec.downstreamHooks.slotNamesSource,
-  exampleStoryIds: buttonSpec.downstreamHooks.exampleStoryIds,
-  supportedVariants: [{ name: 'size', values: ['sm', 'md'] }],
-  slotNames: [],
+  codeEntrypoint: thinkingIndicatorSpec.downstreamHooks.codeEntrypoint,
+  figmaComponentRef: thinkingIndicatorSpec.downstreamHooks.figmaComponentRef,
+  supportedVariantsSource: thinkingIndicatorSpec.downstreamHooks.supportedVariantsSource,
+  slotNamesSource: thinkingIndicatorSpec.downstreamHooks.slotNamesSource,
+  exampleStoryIds: thinkingIndicatorSpec.downstreamHooks.exampleStoryIds,
+  supportedVariants: [
+    { name: 'intent', values: ['primary', 'secondary'] },
+    { name: 'size', values: ['sm', 'md'] },
+  ],
+  slotNames: ['icon', 'label', 'root'],
   implementedStoryIds: [
-    'contracts-pilot-recipe--button-recipe',
+    'contracts-pilot-recipe--thinking-indicator-recipe',
     'contracts-generated-tokens--token-registry',
   ],
   publishedStorybookUrl: null,
@@ -61,8 +64,8 @@ const unresolvedRecord: MappingRecord = {
     componentSpec: 'storybook/component-specs/thinking-indicator.json',
     proofCoverage: 'artifacts/storybook/proof-coverage.json',
     storyInventory: 'storybook/story-inventory.json',
-    supportedVariantsSource: buttonSpec.downstreamHooks.supportedVariantsSource,
-    slotNamesSource: buttonSpec.downstreamHooks.slotNamesSource,
+    supportedVariantsSource: thinkingIndicatorSpec.downstreamHooks.supportedVariantsSource,
+    slotNamesSource: thinkingIndicatorSpec.downstreamHooks.slotNamesSource,
     chromaticStatus: 'artifacts/chromatic/status.json',
   },
 };
@@ -73,7 +76,7 @@ const resolvedRecord: MappingRecord = {
   publishedStorybookRevisionGitSha: '1111111111111111111111111111111111111111',
   publishedStorybookComponentIds: ['thinking-indicator'],
   publishedStorybookStoryIds: [
-    'contracts-pilot-recipe--button-recipe',
+    'contracts-pilot-recipe--thinking-indicator-recipe',
     'contracts-generated-tokens--token-registry',
   ],
   storyLinkStatus: 'resolved',
@@ -222,21 +225,33 @@ describe('reusable component mapping contract module', () => {
       storybookConnect: 'storybook/connect',
       figmaCodeConnect: 'figma/code-connect',
     });
-    expect(storybookConnectPathFor('button')).toBe('storybook/connect/button.json');
-    expect(figmaCodeConnectPathFor('button')).toBe('figma/code-connect/button.json');
+    expect(storybookConnectPathFor('thinking-indicator')).toBe(
+      'storybook/connect/thinking-indicator.json'
+    );
+    expect(figmaCodeConnectPathFor('thinking-indicator')).toBe(
+      'figma/code-connect/thinking-indicator.json'
+    );
   });
 });
 
 describe('reusable component mapping contract examples', () => {
   it('keeps inherited CT-9B fields aligned with the current thinking-indicator proof metadata', () => {
-    expect(buttonSpec.componentId).toBe('thinking-indicator');
-    expect(buttonSpec.downstreamHooks.codeEntrypoint).toBeNull();
-    expect(buttonSpec.downstreamHooks.figmaComponentRef).toBeNull();
-    expect(buttonSpec.downstreamHooks.supportedVariantsSource).toBe(
+    expect(thinkingIndicatorSpec.componentId).toBe('thinking-indicator');
+    expect(thinkingIndicatorSpec.downstreamHooks.codeEntrypoint).toBe(
+      unresolvedRecord.codeEntrypoint
+    );
+    expect(thinkingIndicatorSpec.downstreamHooks.figmaComponentRef).toBe(
+      unresolvedRecord.figmaComponentRef
+    );
+    expect(thinkingIndicatorSpec.downstreamHooks.supportedVariantsSource).toBe(
       unresolvedRecord.supportedVariantsSource
     );
-    expect(buttonSpec.downstreamHooks.slotNamesSource).toBe(unresolvedRecord.slotNamesSource);
-    expect(buttonSpec.downstreamHooks.exampleStoryIds).toEqual(unresolvedRecord.exampleStoryIds);
+    expect(thinkingIndicatorSpec.downstreamHooks.slotNamesSource).toBe(
+      unresolvedRecord.slotNamesSource
+    );
+    expect(thinkingIndicatorSpec.downstreamHooks.exampleStoryIds).toEqual(
+      unresolvedRecord.exampleStoryIds
+    );
     expect(unresolvedRecord.componentId).toBe(proofCoverage.components[0]?.componentId);
     expect(storyInventory.components[0]?.componentId).toBe(unresolvedRecord.componentId);
   });

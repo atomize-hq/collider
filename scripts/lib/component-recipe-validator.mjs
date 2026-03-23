@@ -1,3 +1,4 @@
+// globSync intentionally unused in some environments; keep import for compatibility with earlier Node versions
 import { globSync } from 'node:fs';
 import path from 'node:path';
 import { readJson, repoRoot, resolveFiles } from './component-recipe-validator-shared.mjs';

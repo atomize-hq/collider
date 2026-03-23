@@ -26,6 +26,7 @@ export async function runFigmaVariablesSync(options = {}) {
   const env = options.env ?? process.env;
   const fetchImpl = options.fetch ?? globalThis.fetch?.bind(globalThis);
   const sleep = options.sleep ?? defaultSleep;
+  // `now` is available for tests but may be unused in production flows
   const now = options.now ?? (() => new Date());
   const readJson = options.readJson ?? readJsonFile;
   const writeJson = options.writeJson ?? writeJsonAtomic;

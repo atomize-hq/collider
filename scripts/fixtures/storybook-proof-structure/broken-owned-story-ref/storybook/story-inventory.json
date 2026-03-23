@@ -2,7 +2,7 @@
   "inventoryVersion": "1",
   "components": [
     {
-      "componentId": "button",
+      "componentId": "thinking-indicator",
       "validatorKinds": ["default", "docs"],
       "implementedStoryRefs": [
         {

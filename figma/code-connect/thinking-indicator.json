@@ -6,22 +6,28 @@
   "storyInventoryPath": "storybook/story-inventory.json",
   "proofCoveragePath": "artifacts/storybook/proof-coverage.json",
   "chromaticStatusPath": "artifacts/chromatic/status.json",
-  "codeEntrypoint": null,
-  "figmaComponentRef": null,
-  "supportedVariantsSource": null,
-  "slotNamesSource": null,
-  "supportedVariants": [{ "name": "size", "values": ["sm", "md"] }],
-  "slotNames": [],
-  "exampleStoryIds": [],
+  "codeEntrypoint": "design-tokens/src/recipes/thinking-indicator.recipe.json",
+  "figmaComponentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator",
+  "supportedVariantsSource": "design-tokens/dist/tokens.ts",
+  "slotNamesSource": "design-tokens/dist/tokens.ts",
+  "supportedVariants": [
+    { "name": "intent", "values": ["primary", "secondary"] },
+    { "name": "size", "values": ["sm", "md"] }
+  ],
+  "slotNames": ["icon", "label", "root"],
+  "exampleStoryIds": [
+    "contracts-pilot-recipe--thinking-indicator-recipe",
+    "contracts-generated-tokens--token-registry"
+  ],
   "implementedStoryIds": [
-    "contracts-pilot-recipe--button-recipe",
+    "contracts-pilot-recipe--thinking-indicator-recipe",
     "contracts-generated-tokens--token-registry"
   ],
   "publishedStorybookUrl": "https://www.chromatic.com/build?appId=69b96940ff7216b1df881d31&number=1",
   "publishedStorybookRevisionGitSha": "e4a9f4f4e0a9dd75744a80cfe6a323882855c16e",
   "publishedStorybookComponentIds": ["thinking-indicator"],
   "publishedStorybookStoryIds": [
-    "contracts-pilot-recipe--button-recipe",
+    "contracts-pilot-recipe--thinking-indicator-recipe",
     "contracts-generated-tokens--token-registry"
   ],
   "storyLinkStatus": "resolved",
@@ -30,11 +36,11 @@
     "componentSpec": "storybook/component-specs/thinking-indicator.json",
     "proofCoverage": "artifacts/storybook/proof-coverage.json",
     "storyInventory": "storybook/story-inventory.json",
-    "supportedVariantsSource": null,
-    "slotNamesSource": null,
+    "supportedVariantsSource": "design-tokens/dist/tokens.ts",
+    "slotNamesSource": "design-tokens/dist/tokens.ts",
     "chromaticStatus": "artifacts/chromatic/status.json"
   },
   "figma": {
-    "componentRef": null
+    "componentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator"
   }
 }

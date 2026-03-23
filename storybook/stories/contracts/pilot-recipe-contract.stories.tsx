@@ -17,7 +17,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const ButtonRecipe: Story = {
+export const ThinkingIndicatorRecipe: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const firstAxis = docsModel.variantAxes[0];

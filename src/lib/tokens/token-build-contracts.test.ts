@@ -32,7 +32,9 @@ describe('token build contracts', () => {
     );
     expect(typedSource).toContain('export type TokenId = keyof typeof tokenMap;');
     expect(typedSource).toContain('export type RecipeComponentId = keyof typeof recipeMap;');
-    expect(generated.recipeMap.button).toEqual(graph.recipeMap.button);
+    expect(generated.recipeMap['thinking-indicator']).toEqual(
+      graph.recipeMap['thinking-indicator']
+    );
   });
 
   it('keeps the figma export token-only and DTCG-shaped', () => {
@@ -113,10 +115,10 @@ describe('token build contracts', () => {
       ...graph,
       recipeMap: {
         ...graph.recipeMap,
-        button: {
-          ...graph.recipeMap.button,
+        'thinking-indicator': {
+          ...graph.recipeMap['thinking-indicator'],
           defaults: {
-            ...graph.recipeMap.button.defaults,
+            ...graph.recipeMap['thinking-indicator'].defaults,
             state: 'hover',
           },
         },

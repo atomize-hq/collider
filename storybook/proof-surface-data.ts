@@ -124,7 +124,7 @@ export function getTokenDocsModel(): TokenDocsModel {
 }
 
 export function getPilotRecipeDocsModel(
-  componentId: RecipeComponentId = 'button'
+  componentId: RecipeComponentId = 'thinking-indicator'
 ): RecipeDocsModel {
   const recipe = recipeMap[componentId];
   invariant(recipe, `recipeMap is missing the "${componentId}" entry`);

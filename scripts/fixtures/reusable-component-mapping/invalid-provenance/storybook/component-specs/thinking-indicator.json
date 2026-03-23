@@ -1,15 +1,15 @@
 {
   "specVersion": "1",
-  "componentId": "button",
+  "componentId": "thinking-indicator",
   "tier": "primitive",
-  "requiredStoryKinds": ["default", "workflow", "docs"],
+  "requiredStoryKinds": ["default", "docs"],
   "ownedStoryRefs": [
     {
-      "storyId": "contracts-pilot-recipe--button-recipe",
+      "storyId": "contracts-pilot-recipe--thinking-indicator-recipe",
       "kinds": ["default"]
     },
     {
-      "storyId": "contracts-pilot-recipe--documentation",
+      "storyId": "contracts-generated-tokens--token-registry",
       "kinds": ["docs"]
     }
   ],
@@ -19,13 +19,12 @@
     "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
   },
   "downstreamHooks": {
-    "codeEntrypoint": "design-tokens/src/recipes/button.recipe.json",
-    "figmaComponentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=button",
+    "codeEntrypoint": "design-tokens/src/recipes/thinking-indicator.recipe.json",
+    "figmaComponentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator",
     "supportedVariantsSource": "design-tokens/dist/tokens.ts",
     "slotNamesSource": "design-tokens/dist/tokens.ts",
     "exampleStoryIds": [
-      "contracts-pilot-recipe--button-recipe",
-      "foundations-runtime-css-parity--baseline-theme",
+      "contracts-pilot-recipe--thinking-indicator-recipe",
       "contracts-generated-tokens--token-registry"
     ]
   }

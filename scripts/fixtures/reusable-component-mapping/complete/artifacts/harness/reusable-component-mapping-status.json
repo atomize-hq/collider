@@ -9,20 +9,20 @@
   },
   "components": [
     {
-      "componentId": "button",
+      "componentId": "thinking-indicator",
       "state": "complete",
       "linkState": "resolved-current",
       "issues": [],
       "drift": [],
       "sourcePaths": {
-        "componentSpec": "storybook/component-specs/button.json",
+        "componentSpec": "storybook/component-specs/thinking-indicator.json",
         "storyInventory": "storybook/story-inventory.json",
         "proofCoverage": "artifacts/storybook/proof-coverage.json",
         "chromaticStatus": "artifacts/chromatic/status.json"
       },
       "outputPaths": {
-        "figmaCodeConnect": "figma/code-connect/button.json",
-        "storybookConnect": "storybook/connect/button.json"
+        "figmaCodeConnect": "figma/code-connect/thinking-indicator.json",
+        "storybookConnect": "storybook/connect/thinking-indicator.json"
       }
     }
   ]

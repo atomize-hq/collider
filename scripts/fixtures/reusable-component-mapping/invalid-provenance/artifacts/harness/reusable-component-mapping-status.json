@@ -9,22 +9,22 @@
   },
   "components": [
     {
-      "componentId": "button",
+      "componentId": "thinking-indicator",
       "state": "invalid",
       "linkState": "invalid-provenance",
       "issues": [
-        "[CT-11B_MAPPING_INVALID_LINK_PROVENANCE] componentId \"button\" does not have valid CT-10B Storybook link provenance"
+        "[CT-11B_MAPPING_INVALID_LINK_PROVENANCE] componentId \"thinking-indicator\" does not have valid CT-10B Storybook link provenance"
       ],
       "drift": [],
       "sourcePaths": {
-        "componentSpec": "storybook/component-specs/button.json",
+        "componentSpec": "storybook/component-specs/thinking-indicator.json",
         "storyInventory": "storybook/story-inventory.json",
         "proofCoverage": "artifacts/storybook/proof-coverage.json",
         "chromaticStatus": "artifacts/chromatic/status.json"
       },
       "outputPaths": {
-        "figmaCodeConnect": "figma/code-connect/button.json",
-        "storybookConnect": "storybook/connect/button.json"
+        "figmaCodeConnect": "figma/code-connect/thinking-indicator.json",
+        "storybookConnect": "storybook/connect/thinking-indicator.json"
       }
     }
   ]

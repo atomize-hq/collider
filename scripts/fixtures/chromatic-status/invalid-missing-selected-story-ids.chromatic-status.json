@@ -9,7 +9,7 @@
   "proofInventory": {
     "path": "storybook/story-inventory.json",
     "inventoryVersion": "1",
-    "selectedComponentIds": ["button"]
+    "selectedComponentIds": ["thinking-indicator"]
   },
   "build": {
     "url": "https://example.invalid/chromatic/builds/5555555555555555555555555555555555555555"
@@ -18,14 +18,13 @@
     "mode": "informational",
     "requiredForClaim": false,
     "scope": {
-      "componentIds": ["button"],
+      "componentIds": ["thinking-indicator"],
       "storyIds": [
-        "contracts-pilot-recipe--button-recipe",
-        "foundations-runtime-css-parity--baseline-theme",
+        "contracts-pilot-recipe--thinking-indicator-recipe",
         "contracts-generated-tokens--token-registry"
       ],
       "componentTiers": {
-        "button": "primitive"
+        "thinking-indicator": "primitive"
       }
     },
     "diffOutcome": "deferred"

@@ -11,9 +11,8 @@ import {
 } from '../scripts/lib/chromatic-review-command.mjs';
 import { runChromaticReview } from '../scripts/lib/chromatic-review.mjs';
 
-const buttonStoryIds = [
-  'contracts-pilot-recipe--button-recipe',
-  'foundations-runtime-css-parity--baseline-theme',
+const thinkingIndicatorStoryIds = [
+  'contracts-pilot-recipe--thinking-indicator-recipe',
   'contracts-generated-tokens--token-registry',
 ];
 
@@ -38,7 +37,7 @@ describe('runChromaticReview', () => {
     expect(result.diffOutcome).toBe('passed');
     expect(result.status?.check.conclusion).toBe('success');
     expect(result.status?.review.mode).toBe('informational');
-    expect(result.status?.proofInventory.selectedStoryIds).toEqual(buttonStoryIds);
+    expect(result.status?.proofInventory.selectedStoryIds).toEqual(thinkingIndicatorStoryIds);
     expect(readStatusArtifact(result.absArtifactPath)).toMatchObject({
       build: {
         url: 'https://example.invalid/chromatic/builds/passed',
@@ -206,14 +205,14 @@ function createProofStructureLoader(
 ) {
   const inventoryComponents = options.inventoryComponents ?? [
     {
-      componentId: 'button',
-      implementedStoryRefs: buttonStoryIds.map((storyId) => ({ storyId })),
+      componentId: 'thinking-indicator',
+      implementedStoryRefs: thinkingIndicatorStoryIds.map((storyId) => ({ storyId })),
     },
   ];
   const componentSpecs = options.componentSpecs ?? [
     {
       data: {
-        componentId: 'button',
+        componentId: 'thinking-indicator',
         tier: 'primitive',
       },
     },

@@ -6,7 +6,7 @@
   },
   "components": [
     {
-      "componentId": "button",
+      "componentId": "thinking-indicator",
       "pilotStatus": "active",
       "handoffStatus": "source-ready",
       "variantAxes": [

@@ -38,9 +38,9 @@ describe('reusable component promotion policy doc', () => {
 
 describe('recommendChangeClassFromFiles', () => {
   it('keeps touched-file heuristics advisory and bounded', () => {
-    expect(recommendChangeClassFromFiles(['storybook/component-specs/button.json'])).toBe(
-      'reusable-component-advancement'
-    );
+    expect(
+      recommendChangeClassFromFiles(['storybook/component-specs/thinking-indicator.json'])
+    ).toBe('reusable-component-advancement');
     expect(
       recommendChangeClassFromFiles(['storybook/stories/pilot-recipe-contract.stories.tsx'])
     ).toBe('proof-only');
@@ -58,7 +58,7 @@ describe('evaluateReusableComponentPromotionDecision', () => {
     });
 
     const result = evaluateReusableComponentPromotionDecision(status, {
-      changedFiles: ['storybook/component-specs/button.json'],
+      changedFiles: ['storybook/component-specs/thinking-indicator.json'],
       consumer: 'local',
       requestedChangeClass: 'unknown',
     });
@@ -180,7 +180,7 @@ describe('runReusableComponentPromotionGate', () => {
     const stderr = createWritableBuffer();
 
     const exitCode = await runReusableComponentPromotionGate({
-      changedFiles: ['storybook/component-specs/button.json'],
+      changedFiles: ['storybook/component-specs/thinking-indicator.json'],
       consumer: 'ci',
       changeClass: 'unknown',
       now: '2026-03-21T20:00:00.000Z',
@@ -240,7 +240,7 @@ function copyBaseWorkspace() {
   for (const repoRelativePath of [
     'src/figma/sync-ledger.json',
     'storybook/story-inventory.json',
-    'storybook/component-specs/button.json',
+    'storybook/component-specs/thinking-indicator.json',
     'artifacts/storybook/proof-coverage.json',
     'artifacts/chromatic/status.json',
     'artifacts/harness/reusable-component-mapping-status.json',

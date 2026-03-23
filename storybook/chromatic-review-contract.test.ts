@@ -9,7 +9,10 @@ const policyPath = path.join(repoRoot, 'storybook/chromatic-review-policy.md');
 const fixtureDir = path.join(repoRoot, 'scripts/fixtures/chromatic-status');
 const storyInventoryPath = path.join(repoRoot, 'storybook/story-inventory.json');
 const proofCoveragePath = path.join(repoRoot, 'artifacts/storybook/proof-coverage.json');
-const buttonSpecPath = path.join(repoRoot, 'storybook/component-specs/button.json');
+const thinkingIndicatorSpecPath = path.join(
+  repoRoot,
+  'storybook/component-specs/thinking-indicator.json'
+);
 
 const requiredRootKeys = [
   'statusVersion',
@@ -84,8 +87,8 @@ describe('chromatic review policy doc', () => {
     expect(policy).toContain(
       'Deferred, skipped, or out-of-scope runs do not create a third review mode.'
     );
-    expect(policy).toContain('`componentIds`: `["button"]`');
-    expect(policy).toContain('`componentTiers`: `{ "button": "primitive" }`');
+    expect(policy).toContain('`componentIds`: `["thinking-indicator"]`');
+    expect(policy).toContain('`componentTiers`: `{ "thinking-indicator": "primitive" }`');
   });
 });
 
@@ -115,21 +118,21 @@ describe('chromatic status fixtures', () => {
     const proofCoverage = JSON.parse(fs.readFileSync(proofCoveragePath, 'utf8')) as {
       components: Array<{ componentId: string }>;
     };
-    const buttonSpec = JSON.parse(fs.readFileSync(buttonSpecPath, 'utf8')) as {
+    const thinkingIndicatorSpec = JSON.parse(
+      fs.readFileSync(thinkingIndicatorSpecPath, 'utf8')
+    ) as {
       componentId: string;
       tier: string;
     };
-    const buttonInventoryEntry = storyInventory.components.find(
-      (component) => component.componentId === 'button'
+    const inventoryEntry = storyInventory.components.find(
+      (component) => component.componentId === 'thinking-indicator'
     );
 
-    expect(buttonInventoryEntry).toBeDefined();
-    const expectedStoryIds = buttonInventoryEntry?.implementedStoryRefs.map(
-      (story) => story.storyId
-    );
+    expect(inventoryEntry).toBeDefined();
+    const expectedStoryIds = inventoryEntry?.implementedStoryRefs.map((story) => story.storyId);
     const expectedComponentIds = proofCoverage.components.map((component) => component.componentId);
     const expectedComponentTiers = {
-      [buttonSpec.componentId]: buttonSpec.tier,
+      [thinkingIndicatorSpec.componentId]: thinkingIndicatorSpec.tier,
     };
 
     for (const fixtureName of validFixtureNames) {

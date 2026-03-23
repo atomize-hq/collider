@@ -3,7 +3,7 @@ import { expect, within } from 'storybook/test';
 
 import { getPilotRecipeDocsModel } from '../proof-surface-data';
 
-const recipeDocsModel = getPilotRecipeDocsModel('button');
+const recipeDocsModel = getPilotRecipeDocsModel('thinking-indicator');
 
 function PilotRecipeContractDocs() {
   return (
@@ -139,7 +139,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const ButtonRecipe: Story = {
+export const ThinkingIndicatorRecipe: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const heading = await canvas.findByTestId('recipe-docs-heading');
@@ -147,7 +147,7 @@ export const ButtonRecipe: Story = {
     const missingVariant = await canvas.findByTestId('recipe-missing-variant');
     const slotBinding = await canvas.findByTestId('slot-root-background');
 
-    expect(heading.textContent).toContain('button recipe contract');
+    expect(heading.textContent).toContain('thinking-indicator recipe contract');
     expect(defaultState.textContent).toContain(recipeDocsModel.defaults.state);
     expect(missingVariant.textContent).toContain(recipeDocsModel.fallbacks.missingVariantBehavior);
     expect(slotBinding.textContent).toContain('semantic.color.background.surface');

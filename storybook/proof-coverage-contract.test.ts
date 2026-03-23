@@ -21,14 +21,14 @@ describe('createStorybookProofCoverageReport', () => {
     expect(result.errors).toEqual([]);
     expect(result.data.componentFacts).toEqual([
       {
-        componentId: 'button',
+        componentId: 'thinking-indicator',
         generatedArtifactRefs: {
           tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
           recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
           runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
         },
-        implementedKinds: ['default', 'workflow', 'docs'],
-        requiredKinds: ['default', 'workflow', 'docs'],
+        implementedKinds: ['default', 'docs'],
+        requiredKinds: ['default', 'docs'],
         tier: 'primitive',
       },
     ]);
@@ -41,7 +41,7 @@ describe('createStorybookProofCoverageReport', () => {
       {
         "components": [
           {
-            "componentId": "button",
+            "componentId": "thinking-indicator",
             "generatedArtifactRefs": {
               "recipeDocs": "storybook/stories/pilot-recipe-contract.stories.tsx",
               "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx",
@@ -49,13 +49,11 @@ describe('createStorybookProofCoverageReport', () => {
             },
             "implementedKinds": [
               "default",
-              "workflow",
               "docs",
             ],
             "missingKinds": [],
             "requiredKinds": [
               "default",
-              "workflow",
               "docs",
             ],
             "status": "ready",
@@ -82,7 +80,7 @@ describe('createStorybookProofCoverageReport', () => {
       {
         "components": [
           {
-            "componentId": "button",
+            "componentId": "thinking-indicator",
             "generatedArtifactRefs": {
               "recipeDocs": "storybook/stories/pilot-recipe-contract.stories.tsx",
               "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx",
@@ -90,14 +88,12 @@ describe('createStorybookProofCoverageReport', () => {
             },
             "implementedKinds": [
               "default",
-              "docs",
             ],
             "missingKinds": [
-              "workflow",
+              "docs",
             ],
             "requiredKinds": [
               "default",
-              "workflow",
               "docs",
             ],
             "status": "missing-required-kinds",
@@ -163,7 +159,7 @@ describe('storybook proof coverage CLI', () => {
     expect(result.status).toBe(1);
     expect(result.stdout).toBe('');
     expect(result.stderr).toContain(
-      '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "button" references unknown tier "pilot" in componentSpec.tier'
+      '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "thinking-indicator" references unknown tier "pilot" in componentSpec.tier'
     );
     expect(fs.existsSync(outputPath)).toBe(false);
   });

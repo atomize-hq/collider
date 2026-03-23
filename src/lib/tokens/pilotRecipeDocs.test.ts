@@ -7,14 +7,26 @@ describe('buildPilotRecipeDocsModel', () => {
   it('builds a docs model for the current pilot recipe', () => {
     const model = buildPilotRecipeDocsModel(recipeIndex, recipeMap);
 
-    expect(model.componentId).toBe('button');
-    expect(model.sourceFile).toBe('button.recipe.json');
+    expect(model.componentId).toBe('thinking-indicator');
+    expect(model.sourceFile).toBe('thinking-indicator.recipe.json');
     expect(model.status).toBe('pilot');
-    expect(model.variantAxes).toEqual(recipeMap.button.variantAxes);
-    expect(model.defaults).toEqual(recipeMap.button.defaults);
-    expect(model.slots).toEqual(recipeMap.button.slots);
-    expect(model.states).toEqual(recipeMap.button.states);
-    expect(model.fallbacks).toEqual(recipeMap.button.fallbacks);
+
+    const generatedEntryRaw = (recipeMap as unknown as Record<string, unknown>)[model.componentId];
+    expect(generatedEntryRaw).toBeDefined();
+
+    const generatedEntry = generatedEntryRaw as {
+      variantAxes: unknown;
+      defaults: unknown;
+      slots: unknown;
+      states: unknown;
+      fallbacks: unknown;
+    };
+
+    expect(model.variantAxes).toEqual(generatedEntry.variantAxes);
+    expect(model.defaults).toEqual(generatedEntry.defaults);
+    expect(model.slots).toEqual(generatedEntry.slots);
+    expect(model.states).toEqual(generatedEntry.states);
+    expect(model.fallbacks).toEqual(generatedEntry.fallbacks);
   });
 
   it('fails when the source index has no pilot recipe entry', () => {
@@ -51,14 +63,25 @@ describe('buildPilotRecipeDocsModel', () => {
       'Missing generated recipeMap entry'
     );
 
+    const pilotRecipe = (recipeMap as unknown as Record<string, unknown>)['thinking-indicator'] as
+      | undefined
+      | {
+          defaults: unknown;
+          fallbacks: unknown;
+          recipeVersion: unknown;
+          slots: unknown;
+          states: unknown;
+        };
+    expect(pilotRecipe).toBeDefined();
+
     expect(() =>
       buildPilotRecipeDocsModel(recipeIndex, {
-        button: {
-          defaults: recipeMap.button.defaults,
-          fallbacks: recipeMap.button.fallbacks,
-          recipeVersion: recipeMap.button.recipeVersion,
-          slots: recipeMap.button.slots,
-          states: recipeMap.button.states,
+        'thinking-indicator': {
+          defaults: pilotRecipe!.defaults,
+          fallbacks: pilotRecipe!.fallbacks,
+          recipeVersion: pilotRecipe!.recipeVersion,
+          slots: pilotRecipe!.slots,
+          states: pilotRecipe!.states,
         },
       })
     ).toThrow('missing required field "variantAxes"');

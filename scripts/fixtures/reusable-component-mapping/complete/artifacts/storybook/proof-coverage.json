@@ -3,11 +3,11 @@
   "summary": { "componentCount": 1, "readyCount": 1, "failingCount": 0 },
   "components": [
     {
-      "componentId": "button",
+      "componentId": "thinking-indicator",
       "tier": "primitive",
       "status": "ready",
-      "requiredKinds": ["default", "workflow", "docs"],
-      "implementedKinds": ["default", "workflow", "docs"],
+      "requiredKinds": ["default", "docs"],
+      "implementedKinds": ["default", "docs"],
       "missingKinds": [],
       "generatedArtifactRefs": {
         "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",

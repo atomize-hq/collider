@@ -48,11 +48,11 @@ describe('runStorybookProofGate', () => {
           },
           components: [
             {
-              componentId: 'button',
+              componentId: 'thinking-indicator',
               tier: 'primitive',
               status: 'ready',
-              requiredKinds: ['default', 'workflow', 'docs'],
-              implementedKinds: ['default', 'workflow', 'docs'],
+              requiredKinds: ['default', 'docs'],
+              implementedKinds: ['default', 'docs'],
               missingKinds: [],
               generatedArtifactRefs: {
                 tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
@@ -94,7 +94,7 @@ describe('runStorybookProofGate', () => {
         return {
           rootDir: repoRoot,
           errors: [
-            '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "button" references unknown tier "pilot" in componentSpec.tier',
+            '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "thinking-indicator" references unknown tier "pilot" in componentSpec.tier',
           ],
           data: {
             componentFacts: null,
@@ -126,12 +126,12 @@ describe('runStorybookProofGate', () => {
           },
           components: [
             {
-              componentId: 'button',
+              componentId: 'thinking-indicator',
               tier: 'primitive',
               status: 'missing-required-kinds',
-              requiredKinds: ['default', 'workflow', 'docs'],
-              implementedKinds: ['default', 'docs'],
-              missingKinds: ['workflow'],
+              requiredKinds: ['default', 'docs'],
+              implementedKinds: ['default'],
+              missingKinds: ['docs'],
               generatedArtifactRefs: {
                 tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
                 recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
@@ -149,7 +149,7 @@ describe('runStorybookProofGate', () => {
     expect(exitCode).toBe(1);
     expect(stdout.read()).toContain('Proof coverage: 1 components, 0 ready, 1 failing');
     expect(stderr.read()).toContain('[CT-9B_PROOF_GATE_MISSING_REQUIRED_KIND]');
-    expect(stderr.read()).toContain('storybook/component-specs/button.json');
+    expect(stderr.read()).toContain('storybook/component-specs/thinking-indicator.json');
   });
 
   it('fails when the generated report cannot be read back from disk', async () => {
@@ -186,9 +186,9 @@ describe('evaluateStorybookProofGateReport', () => {
         },
         components: [
           {
-            componentId: 'button',
+            componentId: 'thinking-indicator',
             status: 'missing-required-kinds',
-            missingKinds: ['workflow'],
+            missingKinds: ['docs'],
           },
         ],
       },
@@ -250,7 +250,7 @@ describe('storybook proof gate CLI', () => {
     expect(result.status).toBe(1);
     expect(result.stdout).toContain('Proof coverage: 1 components, 0 ready, 1 failing');
     expect(result.stderr).toContain('[CT-9B_PROOF_GATE_MISSING_REQUIRED_KIND]');
-    expect(result.stderr).toContain('componentId "button"');
+    expect(result.stderr).toContain('componentId "thinking-indicator"');
   });
 });
 

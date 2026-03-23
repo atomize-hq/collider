@@ -2,12 +2,12 @@
   "inventoryVersion": "1",
   "components": [
     {
-      "componentId": "button",
+      "componentId": "thinking-indicator",
       "validatorKinds": ["default"],
       "implementedStoryRefs": [
         {
           "kind": "default",
-          "storyId": "contracts-pilot-recipe--button-recipe"
+          "storyId": "contracts-pilot-recipe--thinking-indicator-recipe"
         }
       ]
     }

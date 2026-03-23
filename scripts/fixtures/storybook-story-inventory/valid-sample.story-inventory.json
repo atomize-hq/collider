@@ -3,15 +3,11 @@
   "components": [
     {
       "componentId": "proof-contract-pilot",
-      "validatorKinds": ["default", "workflow", "docs"],
+      "validatorKinds": ["default", "docs"],
       "implementedStoryRefs": [
         {
           "kind": "default",
-          "storyId": "contracts-pilot-recipe--button-recipe"
-        },
-        {
-          "kind": "workflow",
-          "storyId": "foundations-runtime-css-parity--baseline-theme"
+          "storyId": "contracts-pilot-recipe--thinking-indicator-recipe"
         },
         {
           "kind": "docs",

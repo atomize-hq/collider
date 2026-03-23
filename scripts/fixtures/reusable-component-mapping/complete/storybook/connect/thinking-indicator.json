@@ -1,13 +1,13 @@
 {
-  "projectionKind": "figma-code-connect",
+  "projectionKind": "storybook-connect",
   "mappingVersion": "1",
-  "componentId": "button",
-  "componentSpecPath": "storybook/component-specs/button.json",
+  "componentId": "thinking-indicator",
+  "componentSpecPath": "storybook/component-specs/thinking-indicator.json",
   "storyInventoryPath": "storybook/story-inventory.json",
   "proofCoveragePath": "artifacts/storybook/proof-coverage.json",
   "chromaticStatusPath": "artifacts/chromatic/status.json",
-  "codeEntrypoint": "design-tokens/src/recipes/button.recipe.json",
-  "figmaComponentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=button",
+  "codeEntrypoint": "design-tokens/src/recipes/thinking-indicator.recipe.json",
+  "figmaComponentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator",
   "supportedVariantsSource": "design-tokens/dist/tokens.ts",
   "slotNamesSource": "design-tokens/dist/tokens.ts",
   "supportedVariants": [
@@ -16,34 +16,32 @@
   ],
   "slotNames": ["icon", "label", "root"],
   "exampleStoryIds": [
-    "contracts-pilot-recipe--button-recipe",
-    "foundations-runtime-css-parity--baseline-theme",
+    "contracts-pilot-recipe--thinking-indicator-recipe",
     "contracts-generated-tokens--token-registry"
   ],
   "implementedStoryIds": [
-    "contracts-pilot-recipe--button-recipe",
-    "foundations-runtime-css-parity--baseline-theme",
+    "contracts-pilot-recipe--thinking-indicator-recipe",
     "contracts-generated-tokens--token-registry"
   ],
   "publishedStorybookUrl": "https://example.invalid/chromatic/builds/1111111111111111111111111111111111111111",
   "publishedStorybookRevisionGitSha": "1111111111111111111111111111111111111111",
-  "publishedStorybookComponentIds": ["button"],
+  "publishedStorybookComponentIds": ["thinking-indicator"],
   "publishedStorybookStoryIds": [
-    "contracts-pilot-recipe--button-recipe",
-    "foundations-runtime-css-parity--baseline-theme",
+    "contracts-pilot-recipe--thinking-indicator-recipe",
     "contracts-generated-tokens--token-registry"
   ],
   "storyLinkStatus": "resolved",
   "blockingFields": [],
   "sources": {
-    "componentSpec": "storybook/component-specs/button.json",
+    "componentSpec": "storybook/component-specs/thinking-indicator.json",
     "proofCoverage": "artifacts/storybook/proof-coverage.json",
     "storyInventory": "storybook/story-inventory.json",
     "supportedVariantsSource": "design-tokens/dist/tokens.ts",
     "slotNamesSource": "design-tokens/dist/tokens.ts",
     "chromaticStatus": "artifacts/chromatic/status.json"
   },
-  "figma": {
-    "componentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=button"
+  "storybook": {
+    "proofCoverageStatus": "ready",
+    "requiredKinds": ["default", "docs"]
   }
 }

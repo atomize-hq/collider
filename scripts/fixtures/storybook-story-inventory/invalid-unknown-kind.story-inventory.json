@@ -7,7 +7,7 @@
       "implementedStoryRefs": [
         {
           "kind": "default",
-          "storyId": "contracts-pilot-recipe--button-recipe"
+          "storyId": "contracts-pilot-recipe--thinking-indicator-recipe"
         },
         {
           "kind": "visual-review",
