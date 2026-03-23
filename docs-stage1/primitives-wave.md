@@ -3,7 +3,9 @@
 **Status:** Stage 1 — defined, not yet implemented
 **Date:** 2026-03-23
 
-Wave 1 is centered on **AI Elements wrappers** — the conversational UI primitives that are core to the Collider product. These live in `src/components/ai-elements/`. Generic system primitives (button, input, etc.) come in later waves or are introduced on-demand as AI Elements composition requires them.
+Wave 1 is centered on **AI Elements primitives** — the conversational UI primitives that are core to the Collider product. These live in `src/components/ai-elements/`. Generic system primitives (button, input, etc.) come in later waves or are introduced on-demand as composition requires them.
+
+**Transport posture:** All Wave 1 components are mock-first. Props accept Collider-native view models. No AI SDK dependency is installed. Storybook stories drive component development using fixtures and fake stream states. See `docs/collider_frontend_landing_guide.md` for the full rationale.
 
 ---
 
@@ -11,11 +13,42 @@ Wave 1 is centered on **AI Elements wrappers** — the conversational UI primiti
 
 | Tag       | Meaning                                               |
 | --------- | ----------------------------------------------------- |
-| `[NEW]`   | Built from scratch in this codebase                   |
+| `[NEW]`   | Built from scratch in this codebase (Collider-native) |
 | `[WRAP]`  | Thin wrapper around an upstream library component     |
 | `[REUSE]` | Upstream library component used directly (no wrapper) |
 
-All Wave 1 components are `[NEW]` until an upstream `ai-elements` library is declared as a dependency. At that point, re-evaluate each as `[WRAP]` or `[REUSE]` and update this document.
+All Wave 1 components are **`[NEW]`**. AI Elements community Figma files are visual and structural reference only — not an installed dependency. Components are adapted to Collider's dark theme, Roboto Mono, dense layout, and token system. Re-evaluate status only if Substrate contracts later require a vendor UI adapter.
+
+---
+
+## Prerequisite: Collider-native view models
+
+Before implementing any Wave 1 component, define these types in `src/features/chat/types.ts` (or equivalent). Components accept these models, not vendor SDK types:
+
+```ts
+export type MessageRole = 'user' | 'assistant';
+export type MessageState = 'default' | 'streaming' | 'error';
+
+export interface ToolCallViewModel {
+  id: string;
+  name: string;
+  status: 'pending' | 'running' | 'completed' | 'failed';
+  parameters?: Record<string, unknown>;
+  result?: unknown;
+}
+
+export interface MessageViewModel {
+  id: string;
+  role: MessageRole;
+  content: string; // rendered markdown/text
+  state: MessageState;
+  toolCalls?: ToolCallViewModel[];
+  branchIndex?: number;
+  branchTotal?: number;
+}
+```
+
+These types live in `src/features/`, not in `src/components/ai-elements/`. Components import from features; the dependency arrow goes one way.
 
 ---
 
@@ -26,17 +59,24 @@ All Wave 1 components are `[NEW]` until an upstream `ai-elements` library is dec
 **Path:** `src/components/ai-elements/MessageRow.tsx`
 **Figma:** to be mapped when library component node is confirmed
 **Tier:** primitive
-**Description:** A single message row in a conversation transcript. Renders a user or assistant turn with role indicator, content, and optional metadata (timestamp, model label).
+**Description:** A single message row in a conversation transcript. Two visual forms driven by `role`:
 
-**Variants:**
+- `user` — right-aligned bubble (`bg-background-elevated`, `radius-lg`), copy/edit actions below
+- `assistant` — left-aligned, avatar + content + optional `ToolCallRow` slots + branch nav + action toolbar
 
-- `role`: `user` | `assistant`
-- `state`: `default` | `streaming` | `error`
+Accepts `MessageViewModel`. Does not know about transport or streaming state beyond the `state` prop.
+
+**Props key:**
+
+- `message: MessageViewModel`
+- `onCopy?: () => void`
+- `onEdit?: () => void`
+- `onRegenerate?: () => void`
 
 **Story kinds required:** `default`, `docs`
-**Optional story kinds:** `variant-matrix`, `state-matrix`
+**Optional story kinds:** `variant-matrix` (user vs assistant), `state-matrix` (default/streaming/error)
 
-**LOC budget:** TSX ≤200
+**LOC budget:** TSX ≤200. Split into `MessageRowUser` and `MessageRowAssistant` sub-files if needed.
 
 ---
 
@@ -60,7 +100,28 @@ All Wave 1 components are `[NEW]` until an upstream `ai-elements` library is dec
 
 ---
 
-### 3. Citation — `[NEW]`
+### 3. ToolCallRow — `[NEW]`
+
+**Path:** `src/components/ai-elements/ToolCallRow.tsx`
+**Figma:** to be mapped when library component node is confirmed
+**Tier:** primitive
+**Description:** A collapsible tool call card embedded inside `MessageRow` for `role=assistant`. Shows tool name, status badge (pending/running/completed/failed), and an expandable body with parameters (rendered as a `CodeBlock`). Not a standalone component — always used as a child of `MessageRow`.
+
+Accepts `ToolCallViewModel`. No network calls; result data arrives via props.
+
+**Props key:**
+
+- `toolCall: ToolCallViewModel`
+- `defaultExpanded?: boolean`
+
+**Story kinds required:** `default`, `docs`
+**Optional story kinds:** `state-matrix` (pending/running/completed/failed)
+
+**LOC budget:** TSX ≤200
+
+---
+
+### 4. Citation — `[NEW]`
 
 **Path:** `src/components/ai-elements/Citation.tsx`
 **Figma:** to be mapped when library component node is confirmed
@@ -120,11 +181,14 @@ All Wave 1 components are `[NEW]` until an upstream `ai-elements` library is dec
 
 Build in this sequence to unblock composition:
 
-1. `ThinkingIndicator` — standalone, no dependencies, confirms token/animation baseline
-2. `CodeBlock` — standalone, no composition dependencies
-3. `Citation` — standalone chip
-4. `MessageRow` — composes CodeBlock and Citation inside content slot
-5. `Composer` — most interactive, depends on token + focus baseline
+1. **Collider view model types** — `src/features/chat/types.ts` first; no component can land without these
+2. `ThinkingIndicator` — standalone, no composition deps, confirms token/animation baseline
+3. `CodeBlock` — standalone, used by ToolCallRow
+4. `ToolCallRow` — depends on CodeBlock; needed before MessageRow (assistant) can be complete
+5. `MessageRow` — composes CodeBlock + ToolCallRow in assistant variant; user variant is standalone
+6. `Composer` — most interactive, depends on token + focus baseline; can land in parallel with MessageRow
+
+`Citation` is deferred to Wave 2 — it does not appear in the core chat flow visible in the community Figma reference.
 
 ---
 

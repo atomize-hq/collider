@@ -38,7 +38,14 @@ describe('token build contracts', () => {
   it('keeps the figma export token-only and DTCG-shaped', () => {
     const figma = JSON.parse(fs.readFileSync(figmaArtifactPath, 'utf8')) as Record<string, unknown>;
 
-    expect(Object.keys(figma)).toEqual(['$extensions', 'core', 'motion', 'semantic']);
+    expect(Object.keys(figma)).toEqual([
+      '$extensions',
+      'core',
+      'motion',
+      'radius',
+      'semantic',
+      'spacing',
+    ]);
     expect(figma).not.toHaveProperty('recipeMap');
     expect(JSON.stringify(figma)).not.toContain('"componentId"');
   });
@@ -166,7 +173,18 @@ function expectObjectKeysSorted(value: unknown) {
   }
 
   const keys = Object.keys(value);
-  expect(keys).toEqual([...keys].sort((left, right) => left.localeCompare(right)));
+  // V8 enumerates integer-index keys (e.g. '0', '1', '10') in ascending numeric order
+  // before named string keys. Mirror that comparator so the assertion matches runtime behavior.
+  const isIntegerIndex = (k: string) => /^\d+$/.test(k) && String(parseInt(k, 10)) === k;
+  const sorted = [...keys].sort((left, right) => {
+    const li = isIntegerIndex(left);
+    const ri = isIntegerIndex(right);
+    if (li && ri) return parseInt(left, 10) - parseInt(right, 10);
+    if (li) return -1;
+    if (ri) return 1;
+    return left.localeCompare(right);
+  });
+  expect(keys).toEqual(sorted);
   for (const child of Object.values(value)) {
     expectObjectKeysSorted(child);
   }

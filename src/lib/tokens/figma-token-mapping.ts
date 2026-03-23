@@ -1,4 +1,4 @@
-export type TokenLeafType = 'color' | 'duration' | 'string' | 'boolean' | 'number';
+export type TokenLeafType = 'color' | 'dimension' | 'duration' | 'string' | 'boolean' | 'number';
 
 export type FigmaResolvedType = 'COLOR' | 'FLOAT' | 'STRING' | 'BOOLEAN';
 
@@ -15,6 +15,7 @@ export type TokenLeaf = {
 
 const supportedTokenTypes = new Set<TokenLeafType>([
   'color',
+  'dimension',
   'duration',
   'string',
   'boolean',
@@ -64,6 +65,8 @@ function normalizeTokenValue(tokenType: TokenLeafType, value: unknown): FigmaVal
   switch (tokenType) {
     case 'color':
       return parseColorValue(value);
+    case 'dimension':
+      return parseDimensionValue(value);
     case 'duration':
       return parseDurationValue(value);
     case 'string':
@@ -83,6 +86,7 @@ function mapResolvedType(tokenType: TokenLeafType): FigmaResolvedType {
   switch (tokenType) {
     case 'color':
       return 'COLOR';
+    case 'dimension':
     case 'duration':
     case 'number':
       return 'FLOAT';
@@ -146,6 +150,23 @@ function parseColorValue(value: unknown): FigmaColor {
     b: channel(rgbaMatch[3]),
     a: alpha,
   };
+}
+
+function parseDimensionValue(value: unknown): number {
+  if (typeof value === 'number') {
+    return value;
+  }
+
+  if (typeof value !== 'string') {
+    throw new Error('dimension tokens must use string values');
+  }
+
+  const match = /^\s*(-?\d+(?:\.\d+)?)(px|rem|em|%|)?\s*$/.exec(value);
+  if (!match) {
+    throw new Error(`dimension token value ${value} must be a numeric value with optional unit`);
+  }
+
+  return Number(match[1]);
 }
 
 function parseDurationValue(value: unknown): number {
