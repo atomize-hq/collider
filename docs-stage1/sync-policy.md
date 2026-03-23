@@ -51,7 +51,7 @@ Storybook story
 | `pnpm validate:storybook-proof-structure` | Proof artifact structure integrity          |
 | `pnpm validate:publish-proof`             | Publish proof completeness                  |
 | `pnpm validate:sync-ledger`               | Sync ledger freshness                       |
-| `pnpm figma:connect:validate`             | Code Connect dry-run (local, no token)      |
+| `pnpm figma:connect:validate`             | Optional Code Connect CLI check             |
 
 `just sweep` runs most of these. Run `just sweep` before a merge that touches design-system components.
 
@@ -70,7 +70,7 @@ Stage 2 can begin when:
 - [ ] `pnpm build:tokens` produces valid CSS and `pnpm validate:tokens` passes
 - [ ] At least one Wave 1 component has a `storybook/component-specs/<name>.json` record
 - [ ] `storybook/code-connect-bootstrap.md` is committed (`toolchain-installed` status confirmed)
-- [ ] `figma.config.json` is valid and `pnpm figma:connect:validate` exits cleanly
+- [ ] `figma.config.json` is valid and the repo-owned Figma plugin rail / figma-use / Figma MCP surfaces are documented
 
 ### Stage 2 → Stage 3 (organism/layout assembly may begin)
 
@@ -83,7 +83,7 @@ A component graduates from Stage 2 to Stage 3-ready when:
 - [ ] Figma design link is in story `parameters.design`
 - [ ] CT-11B record exists at `figma/code-connect/<name>.json`
 - [ ] `.figma.tsx` exists at `src/components/<subdir>/<name>.figma.tsx`
-- [ ] `pnpm figma:connect:validate` passes (dry-run clean)
+- [ ] Repo-managed Code Connect mapping files are current, or external Code Connect CLI usage is explicitly deferred
 - [ ] Chromatic snapshot baseline exists (build published)
 - [ ] `src/figma/sync-ledger.json` entry is `syncStatus: "in-sync"`
 

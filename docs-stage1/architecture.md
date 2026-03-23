@@ -7,18 +7,18 @@
 
 ## Stack
 
-| Layer             | Technology                       | Version        |
-| ----------------- | -------------------------------- | -------------- |
-| UI framework      | Next.js App Router               | ^16.1.7        |
-| Styling           | Tailwind CSS v4                  | 4.2.1          |
-| Desktop shell     | Tauri                            | v2.10.3        |
-| Language          | TypeScript (strict)              | 5.9.3          |
-| Package manager   | pnpm                             | 10.11.1        |
-| Build tool        | Turbopack (dev) / Next.js build  | —              |
-| Test runner       | Vitest + Playwright              | 4.1.0 / 1.58.2 |
-| Component surface | Storybook                        | 10.2.19        |
-| Design tokens     | Style Dictionary + Tokens Studio | 5.3.3 / 2.0.3  |
-| Design mapping    | Code Connect (repo-managed CLI)  | 1.4.2          |
+| Layer             | Technology                                         | Version        |
+| ----------------- | -------------------------------------------------- | -------------- |
+| UI framework      | Next.js App Router                                 | ^16.1.7        |
+| Styling           | Tailwind CSS v4                                    | 4.2.1          |
+| Desktop shell     | Tauri                                              | v2.10.3        |
+| Language          | TypeScript (strict)                                | 5.9.3          |
+| Package manager   | pnpm                                               | 10.11.1        |
+| Build tool        | Turbopack (dev) / Next.js build                    | —              |
+| Test runner       | Vitest + Playwright                                | 4.1.0 / 1.58.2 |
+| Component surface | Storybook                                          | 10.2.19        |
+| Design tokens     | Style Dictionary + Tokens Studio                   | 5.3.3 / 2.0.3  |
+| Design mapping    | Code Connect mappings + Figma operational surfaces | 1.4.2          |
 
 ---
 

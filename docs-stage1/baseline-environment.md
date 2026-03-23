@@ -55,20 +55,20 @@ Token build uses Style Dictionary v5 with Tokens Studio transforms. Run `pnpm bu
 
 All day-to-day commands go through `just`. Never call `pnpm` scripts directly for the standard lifecycle.
 
-| Command                       | Purpose                                                |
-| ----------------------------- | ------------------------------------------------------ |
-| `just check`                  | Fast lint / format / typecheck (TS + Rust)             |
-| `just fmt`                    | Auto-format everything                                 |
-| `just test-all`               | Unit + Storybook + Rust tests                          |
-| `just preflight`              | **Run before every push.** Checks + LOC guards + tests |
-| `just sweep`                  | Deep analysis (preflight + coverage + e2e)             |
-| `just loc`                    | LOC guards only                                        |
-| `pnpm storybook`              | Storybook dev server (port 6006)                       |
-| `pnpm tauri:dev`              | Tauri desktop dev (starts Next.js + Tauri)             |
-| `pnpm build:tauri`            | Static-export build for Tauri bundle                   |
-| `pnpm build:tokens`           | Rebuild design tokens from source                      |
-| `pnpm figma:connect:validate` | Dry-run Code Connect (no token required)               |
-| `pnpm figma:connect:publish`  | Publish to Figma Dev Mode (token required)             |
+| Command                       | Purpose                                                 |
+| ----------------------------- | ------------------------------------------------------- |
+| `just check`                  | Fast lint / format / typecheck (TS + Rust)              |
+| `just fmt`                    | Auto-format everything                                  |
+| `just test-all`               | Unit + Storybook + Rust tests                           |
+| `just preflight`              | **Run before every push.** Checks + LOC guards + tests  |
+| `just sweep`                  | Deep analysis (preflight + coverage + e2e)              |
+| `just loc`                    | LOC guards only                                         |
+| `pnpm storybook`              | Storybook dev server (port 6006)                        |
+| `pnpm tauri:dev`              | Tauri desktop dev (starts Next.js + Tauri)              |
+| `pnpm build:tauri`            | Static-export build for Tauri bundle                    |
+| `pnpm build:tokens`           | Rebuild design tokens from source                       |
+| `pnpm figma:connect:validate` | Optional Code Connect CLI check; account-tier dependent |
+| `pnpm figma:connect:publish`  | Publish to Figma Dev Mode (token required)              |
 
 ---
 
@@ -89,7 +89,7 @@ Run this before declaring the environment ready for Stage 2:
 - [ ] `just test-all` passes (Vitest unit + Storybook browser tests)
 - [ ] `pnpm storybook` launches at localhost:6006 with no errors
 - [ ] `pnpm build:tokens` produces `src/lib/tokens/tokens.css` and `design-tokens/dist/`
-- [ ] `pnpm figma:connect:validate` exits cleanly (dry-run, no token needed)
+- [ ] Repo-owned Figma plugin rail, Figma MCP, and figma-use surfaces are documented for Figma-side work
 - [ ] `pnpm build:tauri` produces `out/` without errors
 - [ ] `just preflight` passes end-to-end
 

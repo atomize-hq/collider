@@ -8,9 +8,9 @@ This file is the Stage 1 Code Connect bootstrap readiness artifact. It declares 
 
 ---
 
-## Strategy: Repo-Managed CLI
+## Strategy: Repo-Managed Mapping and Figma Surfaces
 
-**Approach:** repo-managed CLI (not Code Connect UI).
+**Approach:** repo-managed mapping files plus the repo-owned Figma plugin, figma-use, and Figma MCP. External Code Connect UI/CLI is optional and account-tier dependent, not the baseline operational path.
 
 Mapping files (`.figma.tsx`) live alongside React components in `src/components/` and are committed to the repo. Changes are reviewed in PRs; rollbacks are git operations.
 
@@ -99,19 +99,19 @@ figma.connect(Button, 'https://www.figma.com/design/<fileKey>?node-id=<nodeId>',
 
 ## Auth Requirements
 
-- `FIGMA_ACCESS_TOKEN` is required for `figma:connect:publish`. Obtain from Figma → Account Settings → Personal Access Tokens (scopes: `File content: read`, `Code Connect: write`). Never commit.
-- `figma:connect:validate` (`--dry-run`) does not require a token and is safe to run offline.
+- `FIGMA_ACCESS_TOKEN` is required for `figma:connect:publish` when using the external Code Connect publish CLI. Obtain from Figma → Account Settings → Personal Access Tokens (scopes: `File content: read`, `Code Connect: write`). Never commit.
+- `figma:connect:validate` is optional and environment-dependent. Do not make it a baseline gate for plugin-rail workflows.
 
 ---
 
 ## npm Script Reference
 
-| Script                        | Network | Token Required | Purpose                                                                 |
-| ----------------------------- | ------- | -------------- | ----------------------------------------------------------------------- |
-| `pnpm figma:connect:validate` | No      | No             | Dry-run parse — validates `.figma.tsx` files locally without publishing |
-| `pnpm figma:connect:publish`  | Yes     | Yes            | Publish code snippet previews to Figma Dev Mode                         |
+| Script                        | Network | Token Required | Purpose                                                                      |
+| ----------------------------- | ------- | -------------- | ---------------------------------------------------------------------------- |
+| `pnpm figma:connect:validate` | Depends | Optional       | Optional Code Connect CLI check; do not require it for plugin-rail workflows |
+| `pnpm figma:connect:publish`  | Yes     | Yes            | Publish code snippet previews to Figma Dev Mode                              |
 
-Neither script is wired into `just check` or `just preflight`. Both are run manually or in a dedicated CI publish pipeline.
+Neither script is wired into `just check` or `just preflight`. Treat `figma:connect:validate` as an optional local check, not a required gate.
 
 ---
 
