@@ -145,12 +145,12 @@ export const ThinkingIndicatorRecipe: Story = {
     const heading = await canvas.findByTestId('recipe-docs-heading');
     const defaultState = await canvas.findByTestId('recipe-default-state');
     const missingVariant = await canvas.findByTestId('recipe-missing-variant');
-    const slotBinding = await canvas.findByTestId('slot-root-background');
+    const slotBinding = await canvas.findByTestId('slot-trigger-color');
 
     expect(heading.textContent).toContain('thinking-indicator recipe contract');
     expect(defaultState.textContent).toContain(recipeDocsModel.defaults.state);
     expect(missingVariant.textContent).toContain(recipeDocsModel.fallbacks.missingVariantBehavior);
-    expect(slotBinding.textContent).toContain('semantic.color.background.surface');
+    expect(slotBinding.textContent).toContain('semantic.color.text.secondary');
   },
 };
 

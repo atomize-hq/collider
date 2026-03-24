@@ -1,24 +1,20 @@
 import figma from '@figma/code-connect';
 
-import { ThinkingIndicator } from '@/components/ai-elements/ThinkingIndicator';
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from '@/components/ai-elements/ThinkingIndicator';
 
-figma.connect(
-  ThinkingIndicator,
-  'https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=1:1',
-  {
-    props: {
-      intent: figma.enum('Intent', {
-        primary: 'primary',
-        secondary: 'secondary',
-      }),
-      label: figma.string('Label'),
-      size: figma.enum('Size', {
-        md: 'md',
-        sm: 'sm',
-      }),
-    },
-    example: ({ intent, label, size }) => (
-      <ThinkingIndicator intent={intent} label={label} size={size} />
-    ),
-  }
-);
+figma.connect(Reasoning, 'https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2130:6', {
+  props: {
+    isStreaming: figma.boolean('Streaming'),
+    open: figma.boolean('Open'),
+  },
+  example: ({ isStreaming, open }) => (
+    <Reasoning isStreaming={isStreaming} open={open}>
+      <ReasoningTrigger />
+      <ReasoningContent>Let me think about this…</ReasoningContent>
+    </Reasoning>
+  ),
+});

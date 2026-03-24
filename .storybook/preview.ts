@@ -1,3 +1,4 @@
+import '../src/lib/tokens/fonts.css';
 import '../src/lib/tokens/tokens.css';
 
 import type { Preview } from '@storybook/nextjs-vite';

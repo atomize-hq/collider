@@ -3,51 +3,46 @@
   "componentId": "thinking-indicator",
   "variantAxes": [
     {
-      "name": "intent",
-      "values": ["primary", "secondary"]
-    },
-    {
-      "name": "size",
-      "values": ["sm", "md"]
+      "name": "state",
+      "values": ["streaming", "expanded", "collapsed", "duration"]
     }
   ],
   "defaults": {
     "variants": {
-      "intent": "primary",
-      "size": "md"
+      "state": "collapsed"
     },
     "state": "rest"
   },
   "slots": {
-    "root": {
-      "background": "{semantic.color.background.surface}"
-    },
-    "label": {
-      "text": "{semantic.color.text.primary}"
+    "trigger": {
+      "color": "{semantic.color.text.secondary}"
     },
     "icon": {
-      "color": "{semantic.color.text.primary}"
+      "color": "{semantic.color.text.secondary}"
+    },
+    "content": {
+      "color": "{semantic.color.text.secondary}"
     }
   },
   "states": {
     "rest": {
-      "root": {
-        "background": "{semantic.color.background.surface}"
+      "trigger": {
+        "color": "{semantic.color.text.secondary}"
       }
     },
     "hover": {
-      "root": {
-        "background": "{semantic.color.background.elevated}"
+      "trigger": {
+        "color": "{semantic.color.text.primary}"
       }
     },
     "focus": {
-      "root": {
-        "background": "{semantic.color.background.overlay}"
+      "trigger": {
+        "outline": "{semantic.color.text.ai}"
       }
     },
     "disabled": {
-      "label": {
-        "text": "{semantic.color.text.secondary}"
+      "trigger": {
+        "color": "{semantic.color.text.tertiary}"
       }
     }
   },

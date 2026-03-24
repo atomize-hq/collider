@@ -9,10 +9,13 @@ const eslintConfig = defineConfig([
     'node_modules/**',
     '.next/**',
     '.agents/**',
+    '.claude/**',
     'out/**',
     'src-tauri/**',
     'storybook-static/**',
     'next-env.d.ts',
+    'src/components/ai-elements/reasoning.tsx',
+    'src/components/ai-elements/shimmer.tsx',
   ]),
 ]);
 

@@ -7,14 +7,13 @@
   "proofCoveragePath": "artifacts/storybook/proof-coverage.json",
   "chromaticStatusPath": "artifacts/chromatic/status.json",
   "codeEntrypoint": "design-tokens/src/recipes/thinking-indicator.recipe.json",
-  "figmaComponentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator",
+  "figmaComponentRef": "figma://file/23PLdynlRYoBYQx9teoC8A#node-id=2130:6",
   "supportedVariantsSource": "design-tokens/dist/tokens.ts",
   "slotNamesSource": "design-tokens/dist/tokens.ts",
   "supportedVariants": [
-    { "name": "intent", "values": ["primary", "secondary"] },
-    { "name": "size", "values": ["sm", "md"] }
+    { "name": "state", "values": ["streaming", "expanded", "collapsed", "duration"] }
   ],
-  "slotNames": ["icon", "label", "root"],
+  "slotNames": ["trigger", "icon", "content", "root"],
   "exampleStoryIds": [
     "ai-elements-thinking-indicator--default",
     "ai-elements-thinking-indicator--variant-matrix",

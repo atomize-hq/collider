@@ -11,22 +11,17 @@
       "handoffStatus": "source-ready",
       "variantAxes": [
         {
-          "name": "intent",
-          "values": ["primary", "secondary"]
-        },
-        {
-          "name": "size",
-          "values": ["sm", "md"]
+          "name": "state",
+          "values": ["streaming", "expanded", "collapsed", "duration"]
         }
       ],
       "defaults": {
         "variants": {
-          "intent": "primary",
-          "size": "md"
+          "state": "collapsed"
         },
         "state": "rest"
       },
-      "slots": ["root", "label", "icon"],
+      "slots": ["trigger", "icon", "content"],
       "states": ["rest", "hover", "focus", "disabled"],
       "fallbacks": {
         "missingVariantBehavior": "use-defaults",

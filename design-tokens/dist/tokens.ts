@@ -309,8 +309,7 @@ export const recipeMap = {
     defaults: {
       state: 'rest',
       variants: {
-        intent: 'primary',
-        size: 'md',
+        state: 'collapsed',
       },
     },
     fallbacks: {
@@ -323,46 +322,42 @@ export const recipeMap = {
     },
     recipeVersion: '1',
     slots: {
+      content: {
+        color: '{semantic.color.text.secondary}',
+      },
       icon: {
-        color: '{semantic.color.text.primary}',
+        color: '{semantic.color.text.secondary}',
       },
-      label: {
-        text: '{semantic.color.text.primary}',
-      },
-      root: {
-        background: '{semantic.color.background.surface}',
+      trigger: {
+        color: '{semantic.color.text.secondary}',
       },
     },
     states: {
       disabled: {
-        label: {
-          text: '{semantic.color.text.secondary}',
+        trigger: {
+          color: '{semantic.color.text.tertiary}',
         },
       },
       focus: {
-        root: {
-          background: '{semantic.color.background.overlay}',
+        trigger: {
+          outline: '{semantic.color.text.ai}',
         },
       },
       hover: {
-        root: {
-          background: '{semantic.color.background.elevated}',
+        trigger: {
+          color: '{semantic.color.text.primary}',
         },
       },
       rest: {
-        root: {
-          background: '{semantic.color.background.surface}',
+        trigger: {
+          color: '{semantic.color.text.secondary}',
         },
       },
     },
     variantAxes: [
       {
-        name: 'intent',
-        values: ['primary', 'secondary'],
-      },
-      {
-        name: 'size',
-        values: ['sm', 'md'],
+        name: 'state',
+        values: ['streaming', 'expanded', 'collapsed', 'duration'],
       },
     ],
   },
