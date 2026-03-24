@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   parseGitStatusOutput,
   runRuntimeCssDriftGuard,
-  runtimeCssCutoverRunbookRelPath,
   runtimeCssManualEditExitCode,
   runtimeCssRelPath,
   tokenSourceRelPath,
@@ -43,7 +42,6 @@ describe('runRuntimeCssDriftGuard', () => {
     expect(result.exitCode).toBe(runtimeCssManualEditExitCode);
     expect(result.message).toContain(runtimeCssRelPath);
     expect(result.message).toContain('`pnpm build:tokens`');
-    expect(result.message).toContain(runtimeCssCutoverRunbookRelPath);
   });
 
   it('passes when only token sources are dirty', () => {

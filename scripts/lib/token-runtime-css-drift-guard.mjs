@@ -9,8 +9,6 @@ import {
 
 export const runtimeCssRelPath = toRepoRelative(runtimeCssPath);
 export const tokenSourceRelPath = toRepoRelative(tokenSourceRoot);
-export const runtimeCssCutoverRunbookRelPath =
-  'figma-ci-sync/threaded-seams/seam-6-governance-validation-and-cutover/runtime-css-cutover-runbook.md';
 export const runtimeCssManualEditExitCode = 2;
 
 export function runRuntimeCssDriftGuard(options = {}) {
@@ -25,8 +23,7 @@ export function runRuntimeCssDriftGuard(options = {}) {
     exitCode: runtimeCssManualEditExitCode,
     message: [
       `Direct edits to ${runtimeCssRelPath} are not allowed after cutover.`,
-      'Recover by running `pnpm build:tokens` from canonical sources',
-      `or follow the rollback steps in ${runtimeCssCutoverRunbookRelPath}.`,
+      'Recover by running `pnpm build:tokens` to regenerate from canonical sources.',
     ].join(' '),
   };
 }

@@ -21,7 +21,7 @@
 
 ## Storybook setup
 
-See also: `.storybook/storybook-version-policy.json` and `docs-stage1/storybook-baseline.md`.
+See also: `.storybook/storybook-version-policy.json` and `docs/stage1/storybook-baseline.md`.
 
 | Concern         | Choice                                                                        |
 | --------------- | ----------------------------------------------------------------------------- |

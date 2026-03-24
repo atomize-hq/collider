@@ -63,7 +63,7 @@ Storybook story
 
 Stage 2 can begin when:
 
-- [ ] This doc (`docs-stage1/sync-policy.md`) and all other Stage 1 docs are committed and reviewed
+- [ ] This doc (`docs/stage1/sync-policy.md`) and all other Stage 1 docs are committed and reviewed
 - [ ] `.storybook/storybook-version-policy.json` is committed and `pnpm validate:storybook-policy` passes
 - [ ] `pnpm storybook` launches cleanly with zero errors
 - [ ] `just preflight` passes

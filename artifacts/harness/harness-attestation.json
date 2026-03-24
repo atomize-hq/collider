@@ -7,7 +7,7 @@
       "category": "canonical-source",
       "status": "satisfied",
       "evidence": {
-        "artifact": "figma-ci-sync/target-state-harness.md",
+        "artifact": "docs/figma-ci-sync/target-state-harness.md",
         "field": "Canonical Source layer",
         "value": "design-tokens/src/tokens/ is sole authoring surface; Figma excluded from canonical status"
       }

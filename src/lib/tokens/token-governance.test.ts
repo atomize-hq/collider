@@ -76,7 +76,7 @@ describe('runTokenGovernance', () => {
           ok: false,
           exitCode: runtimeCssManualEditExitCode,
           message:
-            'Direct edits to src/lib/tokens/tokens.css are not allowed after cutover. Recover by running `pnpm build:tokens` from canonical sources or follow the rollback steps in figma-ci-sync/threaded-seams/seam-6-governance-validation-and-cutover/runtime-css-cutover-runbook.md.',
+            'Direct edits to src/lib/tokens/tokens.css are not allowed after cutover. Recover by running `pnpm build:tokens` to regenerate from canonical sources.',
         };
       },
       runNodeScript(args: string[]) {
@@ -88,7 +88,6 @@ describe('runTokenGovernance', () => {
     expect(exitCode).toBe(runtimeCssManualEditExitCode);
     expect(calls).toEqual(['validate:tokens', 'runtime-css-drift-guard']);
     expect(stderr.read()).toContain('`pnpm build:tokens`');
-    expect(stderr.read()).toContain('runtime-css-cutover-runbook.md');
   });
 
   it('preserves build failure exit code', () => {
