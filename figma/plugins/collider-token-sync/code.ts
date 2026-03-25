@@ -53,32 +53,48 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
     try {
       const collections = await figma.variables.getLocalVariableCollectionsAsync();
 
-      const pulledCollections: PulledCollection[] = [];
+      // Pre-load all variables and default modes for alias resolution.
+      const allVariablesById = new Map<string, Variable>();
+      const defaultModeByCollectionId = new Map<string, string>();
       for (const collection of collections) {
-        const variables: PulledVariable[] = [];
+        defaultModeByCollectionId.set(collection.id, collection.defaultModeId);
         for (const id of collection.variableIds) {
           const variable = await figma.variables.getVariableByIdAsync(id);
+          if (variable) allVariablesById.set(id, variable);
+        }
+      }
+
+      // _strings is a primitive lookup source only — don't write it as a token file.
+      const skipCollectionNames = new Set(['_strings']);
+
+      const pulledCollections: PulledCollection[] = [];
+      for (const collection of collections) {
+        if (skipCollectionNames.has(collection.name)) continue;
+        const variables: PulledVariable[] = [];
+        for (const id of collection.variableIds) {
+          const variable = allVariablesById.get(id);
           if (!variable) continue;
-          const value = variable.valuesByMode[collection.defaultModeId];
-          if (value === undefined) continue;
+          const rawValue = variable.valuesByMode[collection.defaultModeId];
+          if (rawValue === undefined) continue;
+          const resolvedValue = resolveVariableAlias(
+            rawValue,
+            allVariablesById,
+            defaultModeByCollectionId
+          );
+          if (resolvedValue === undefined) continue;
           variables.push({
             name: variable.name,
             resolvedType: variable.resolvedType as PulledVariable['resolvedType'],
-            value: value as PulledVariableValue,
+            value: resolvedValue as PulledVariableValue,
           });
         }
         pulledCollections.push({ name: collection.name, variables });
       }
 
       const dtcg = buildDtcgFromFigmaVariables(pulledCollections);
-      const summaryParts: string[] = [];
-      for (let i = 0; i < collections.length; i++) {
-        const col = collections[i];
-        const pulled = pulledCollections[i];
-        if (col && pulled) {
-          summaryParts.push(`${toCollectionKey(col.name)}: ${pulled.variables.length}`);
-        }
-      }
+      const summaryParts = pulledCollections.map(
+        (col) => `${toCollectionKey(col.name)}: ${col.variables.length}`
+      );
 
       figma.ui.postMessage({
         type: 'PULL_RESULT',
@@ -258,4 +274,31 @@ function isRgba(value: unknown): value is { r: number; g: number; b: number; a?:
 
 function closeTo(left: number, right: number) {
   return Math.abs(left - right) < 1e-6;
+}
+
+function resolveVariableAlias(
+  value: unknown,
+  allVariablesById: Map<string, Variable>,
+  defaultModeByCollectionId: Map<string, string>,
+  depth = 0
+): unknown {
+  if (depth > 10) return undefined;
+  if (
+    value !== null &&
+    typeof value === 'object' &&
+    (value as Record<string, unknown>)['type'] === 'VARIABLE_ALIAS'
+  ) {
+    const alias = value as { type: 'VARIABLE_ALIAS'; id: string };
+    const referenced = allVariablesById.get(alias.id);
+    if (!referenced) return undefined;
+    const modeId = defaultModeByCollectionId.get(referenced.variableCollectionId);
+    if (!modeId) return undefined;
+    return resolveVariableAlias(
+      referenced.valuesByMode[modeId],
+      allVariablesById,
+      defaultModeByCollectionId,
+      depth + 1
+    );
+  }
+  return value;
 }

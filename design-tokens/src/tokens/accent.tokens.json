@@ -1,0 +1,38 @@
+{
+  "light": {
+    "primary": {
+      "$type": "color",
+      "$value": "#155dfc"
+    },
+    "primary-foreground": {
+      "$type": "color",
+      "$value": "#eff6ff"
+    },
+    "sidebar-primary": {
+      "$type": "color",
+      "$value": "#155dfc"
+    },
+    "sidebar-primary-foreground": {
+      "$type": "color",
+      "$value": "#eff6ff"
+    }
+  },
+  "dark": {
+    "primary": {
+      "$type": "color",
+      "$value": "#155dfc"
+    },
+    "primary-foreground": {
+      "$type": "color",
+      "$value": "#eff6ff"
+    },
+    "sidebar-primary": {
+      "$type": "color",
+      "$value": "#2b7fff"
+    },
+    "sidebar-primary-foreground": {
+      "$type": "color",
+      "$value": "#eff6ff"
+    }
+  }
+}

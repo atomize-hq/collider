@@ -73,6 +73,9 @@ function convertVariableToLeaf(variable: PulledVariable): { $type: string; $valu
       if (nameLower.includes('duration')) {
         return { $type: 'duration', $value: `${num}ms` };
       }
+      if (nameLower.includes('weight') || nameLower.includes('opacity')) {
+        return { $type: 'number', $value: num };
+      }
       return { $type: 'dimension', $value: `${num}px` };
     }
     case 'STRING':

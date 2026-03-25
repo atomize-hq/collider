@@ -16,6 +16,46 @@ export const themeRegistry = {
 } as const;
 
 export const tokenMap = {
+  'accent.dark.primary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#155dfc',
+  },
+  'accent.dark.primary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#eff6ff',
+  },
+  'accent.dark.sidebar-primary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#2b7fff',
+  },
+  'accent.dark.sidebar-primary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#eff6ff',
+  },
+  'accent.light.primary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#155dfc',
+  },
+  'accent.light.primary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#eff6ff',
+  },
+  'accent.light.sidebar-primary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#155dfc',
+  },
+  'accent.light.sidebar-primary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#eff6ff',
+  },
   'core.color.amber.300': {
     themeId: 'dark',
     type: 'color',
@@ -105,6 +145,11 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'color',
     value: 'rgba(255, 255, 255, 0.3)',
+  },
+  'font.font-family': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'Poppins',
   },
   'motion.placeholder.durationQuick': {
     themeId: 'dark',
@@ -301,145 +346,2660 @@ export const tokenMap = {
     type: 'dimension',
     value: '32px',
   },
-  'theme.accent': {
+  'tailwind-colors.amber.100': {
     themeId: 'dark',
     type: 'color',
-    value: '#2a2a2a',
+    value: '#fef3c6',
   },
-  'theme.accent-foreground': {
+  'tailwind-colors.amber.200': {
     themeId: 'dark',
     type: 'color',
-    value: '#ffffff',
+    value: '#fee685',
   },
-  'theme.background': {
+  'tailwind-colors.amber.300': {
     themeId: 'dark',
     type: 'color',
-    value: '#171717',
+    value: '#ffd230',
   },
-  'theme.border': {
+  'tailwind-colors.amber.400': {
     themeId: 'dark',
     type: 'color',
-    value: '#303030',
+    value: '#ffb900',
   },
-  'theme.card': {
+  'tailwind-colors.amber.50': {
     themeId: 'dark',
     type: 'color',
-    value: '#202020',
+    value: '#fffbeb',
   },
-  'theme.card-foreground': {
+  'tailwind-colors.amber.500': {
     themeId: 'dark',
     type: 'color',
-    value: '#ffffff',
+    value: '#fe9a00',
   },
-  'theme.destructive': {
+  'tailwind-colors.amber.600': {
     themeId: 'dark',
     type: 'color',
-    value: '#fb2c36',
+    value: '#e17100',
   },
-  'theme.foreground': {
+  'tailwind-colors.amber.700': {
     themeId: 'dark',
     type: 'color',
-    value: '#ffffff',
+    value: '#bb4d00',
   },
-  'theme.input': {
+  'tailwind-colors.amber.800': {
     themeId: 'dark',
     type: 'color',
-    value: '#303030',
+    value: '#973c00',
   },
-  'theme.muted': {
+  'tailwind-colors.amber.900': {
     themeId: 'dark',
     type: 'color',
-    value: '#202020',
+    value: '#7b3306',
   },
-  'theme.muted-foreground': {
+  'tailwind-colors.amber.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#461901',
+  },
+  'tailwind-colors.black': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#000000',
+  },
+  'tailwind-colors.blue.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#dbeafe',
+  },
+  'tailwind-colors.blue.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#bedbff',
+  },
+  'tailwind-colors.blue.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8ec5ff',
+  },
+  'tailwind-colors.blue.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#51a2ff',
+  },
+  'tailwind-colors.blue.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#eff6ff',
+  },
+  'tailwind-colors.blue.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#2b7fff',
+  },
+  'tailwind-colors.blue.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#155dfc',
+  },
+  'tailwind-colors.blue.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#1447e6',
+  },
+  'tailwind-colors.blue.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#193cb8',
+  },
+  'tailwind-colors.blue.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#1c398e',
+  },
+  'tailwind-colors.blue.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#162456',
+  },
+  'tailwind-colors.cyan.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#cefafe',
+  },
+  'tailwind-colors.cyan.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a2f4fd',
+  },
+  'tailwind-colors.cyan.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#53eafd',
+  },
+  'tailwind-colors.cyan.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00d3f2',
+  },
+  'tailwind-colors.cyan.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ecfeff',
+  },
+  'tailwind-colors.cyan.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00b8db',
+  },
+  'tailwind-colors.cyan.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0092b8',
+  },
+  'tailwind-colors.cyan.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#007595',
+  },
+  'tailwind-colors.cyan.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#005f78',
+  },
+  'tailwind-colors.cyan.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#104e64',
+  },
+  'tailwind-colors.cyan.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#053345',
+  },
+  'tailwind-colors.emerald.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#d0fae5',
+  },
+  'tailwind-colors.emerald.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a4f4cf',
+  },
+  'tailwind-colors.emerald.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#5ee9b5',
+  },
+  'tailwind-colors.emerald.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00d492',
+  },
+  'tailwind-colors.emerald.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ecfdf5',
+  },
+  'tailwind-colors.emerald.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00bc7d',
+  },
+  'tailwind-colors.emerald.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#009966',
+  },
+  'tailwind-colors.emerald.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#007a55',
+  },
+  'tailwind-colors.emerald.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#006045',
+  },
+  'tailwind-colors.emerald.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#004f3b',
+  },
+  'tailwind-colors.emerald.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#002c22',
+  },
+  'tailwind-colors.fuchsia.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fae8ff',
+  },
+  'tailwind-colors.fuchsia.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f6cfff',
+  },
+  'tailwind-colors.fuchsia.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f4a8ff',
+  },
+  'tailwind-colors.fuchsia.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ed6aff',
+  },
+  'tailwind-colors.fuchsia.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fdf4ff',
+  },
+  'tailwind-colors.fuchsia.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e12afb',
+  },
+  'tailwind-colors.fuchsia.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c800de',
+  },
+  'tailwind-colors.fuchsia.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a800b7',
+  },
+  'tailwind-colors.fuchsia.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8a0194',
+  },
+  'tailwind-colors.fuchsia.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#721378',
+  },
+  'tailwind-colors.fuchsia.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#4b004f',
+  },
+  'tailwind-colors.gray.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f3f4f6',
+  },
+  'tailwind-colors.gray.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e5e7eb',
+  },
+  'tailwind-colors.gray.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#d1d5dc',
+  },
+  'tailwind-colors.gray.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#99a1af',
+  },
+  'tailwind-colors.gray.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f9fafb',
+  },
+  'tailwind-colors.gray.500': {
     themeId: 'dark',
     type: 'color',
     value: '#6a7282',
   },
-  'theme.popover': {
+  'tailwind-colors.gray.600': {
     themeId: 'dark',
     type: 'color',
-    value: '#202020',
+    value: '#4a5565',
   },
-  'theme.popover-foreground': {
+  'tailwind-colors.gray.700': {
     themeId: 'dark',
     type: 'color',
-    value: '#ffffff',
+    value: '#364153',
   },
-  'theme.primary': {
+  'tailwind-colors.gray.800': {
     themeId: 'dark',
     type: 'color',
-    value: '#8a38f5',
+    value: '#1e2939',
   },
-  'theme.primary-foreground': {
+  'tailwind-colors.gray.900': {
     themeId: 'dark',
     type: 'color',
-    value: '#ffffff',
+    value: '#101828',
   },
-  'theme.ring': {
+  'tailwind-colors.gray.950': {
     themeId: 'dark',
     type: 'color',
-    value: '#8a38f5',
+    value: '#030712',
   },
-  'theme.secondary': {
+  'tailwind-colors.green.100': {
     themeId: 'dark',
     type: 'color',
-    value: '#303030',
+    value: '#dcfce7',
   },
-  'theme.secondary-foreground': {
+  'tailwind-colors.green.200': {
     themeId: 'dark',
     type: 'color',
-    value: '#ffffff',
+    value: '#b9f8cf',
   },
-  'theme.sidebar': {
+  'tailwind-colors.green.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#7bf1a8',
+  },
+  'tailwind-colors.green.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#05df72',
+  },
+  'tailwind-colors.green.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f0fdf4',
+  },
+  'tailwind-colors.green.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00c950',
+  },
+  'tailwind-colors.green.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00a63e',
+  },
+  'tailwind-colors.green.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#008236',
+  },
+  'tailwind-colors.green.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#016630',
+  },
+  'tailwind-colors.green.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0d542b',
+  },
+  'tailwind-colors.green.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#032e15',
+  },
+  'tailwind-colors.indigo.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e0e7ff',
+  },
+  'tailwind-colors.indigo.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c6d2ff',
+  },
+  'tailwind-colors.indigo.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a3b3ff',
+  },
+  'tailwind-colors.indigo.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#7c86ff',
+  },
+  'tailwind-colors.indigo.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#eef2ff',
+  },
+  'tailwind-colors.indigo.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#615fff',
+  },
+  'tailwind-colors.indigo.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#4f39f6',
+  },
+  'tailwind-colors.indigo.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#432dd7',
+  },
+  'tailwind-colors.indigo.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#372aac',
+  },
+  'tailwind-colors.indigo.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#312c85',
+  },
+  'tailwind-colors.indigo.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#1e1a4d',
+  },
+  'tailwind-colors.lime.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ecfcca',
+  },
+  'tailwind-colors.lime.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#d8f999',
+  },
+  'tailwind-colors.lime.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#bbf451',
+  },
+  'tailwind-colors.lime.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9ae600',
+  },
+  'tailwind-colors.lime.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f7fee7',
+  },
+  'tailwind-colors.lime.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#7ccf00',
+  },
+  'tailwind-colors.lime.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#5ea500',
+  },
+  'tailwind-colors.lime.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#497d00',
+  },
+  'tailwind-colors.lime.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#3c6300',
+  },
+  'tailwind-colors.lime.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#35530e',
+  },
+  'tailwind-colors.lime.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#192e03',
+  },
+  'tailwind-colors.neutral.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f5',
+  },
+  'tailwind-colors.neutral.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e5e5e5',
+  },
+  'tailwind-colors.neutral.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#d4d4d4',
+  },
+  'tailwind-colors.neutral.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a1a1a1',
+  },
+  'tailwind-colors.neutral.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fafafa',
+  },
+  'tailwind-colors.neutral.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#737373',
+  },
+  'tailwind-colors.neutral.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#525252',
+  },
+  'tailwind-colors.neutral.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#404040',
+  },
+  'tailwind-colors.neutral.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#262626',
+  },
+  'tailwind-colors.neutral.900': {
     themeId: 'dark',
     type: 'color',
     value: '#171717',
   },
-  'theme.sidebar-accent': {
+  'tailwind-colors.neutral.950': {
     themeId: 'dark',
     type: 'color',
-    value: '#2a2a2a',
+    value: '#0a0a0a',
   },
-  'theme.sidebar-accent-foreground': {
+  'tailwind-colors.orange.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffedd4',
+  },
+  'tailwind-colors.orange.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffd6a7',
+  },
+  'tailwind-colors.orange.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffb86a',
+  },
+  'tailwind-colors.orange.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ff8904',
+  },
+  'tailwind-colors.orange.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fff7ed',
+  },
+  'tailwind-colors.orange.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ff6900',
+  },
+  'tailwind-colors.orange.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f54900',
+  },
+  'tailwind-colors.orange.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ca3500',
+  },
+  'tailwind-colors.orange.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9f2d00',
+  },
+  'tailwind-colors.orange.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#7e2a0c',
+  },
+  'tailwind-colors.orange.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#441306',
+  },
+  'tailwind-colors.pink.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f9e8f2',
+  },
+  'tailwind-colors.pink.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fccee8',
+  },
+  'tailwind-colors.pink.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fda5d5',
+  },
+  'tailwind-colors.pink.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fb64b6',
+  },
+  'tailwind-colors.pink.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fdf2f8',
+  },
+  'tailwind-colors.pink.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f6339a',
+  },
+  'tailwind-colors.pink.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e60076',
+  },
+  'tailwind-colors.pink.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c6005c',
+  },
+  'tailwind-colors.pink.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a3004c',
+  },
+  'tailwind-colors.pink.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#861043',
+  },
+  'tailwind-colors.pink.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#510424',
+  },
+  'tailwind-colors.purple.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f3e8ff',
+  },
+  'tailwind-colors.purple.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e9d4ff',
+  },
+  'tailwind-colors.purple.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#dab2ff',
+  },
+  'tailwind-colors.purple.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c27aff',
+  },
+  'tailwind-colors.purple.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#faf5ff',
+  },
+  'tailwind-colors.purple.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ad46ff',
+  },
+  'tailwind-colors.purple.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9810fa',
+  },
+  'tailwind-colors.purple.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8200db',
+  },
+  'tailwind-colors.purple.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#6e11b0',
+  },
+  'tailwind-colors.purple.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#59168b',
+  },
+  'tailwind-colors.purple.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#3c0366',
+  },
+  'tailwind-colors.red.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffe2e2',
+  },
+  'tailwind-colors.red.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffc9c9',
+  },
+  'tailwind-colors.red.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffa2a2',
+  },
+  'tailwind-colors.red.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ff6467',
+  },
+  'tailwind-colors.red.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fef2f2',
+  },
+  'tailwind-colors.red.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fb2c36',
+  },
+  'tailwind-colors.red.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e7000b',
+  },
+  'tailwind-colors.red.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c10007',
+  },
+  'tailwind-colors.red.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9f0712',
+  },
+  'tailwind-colors.red.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#82181a',
+  },
+  'tailwind-colors.red.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#460809',
+  },
+  'tailwind-colors.rose.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffe4e6',
+  },
+  'tailwind-colors.rose.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffccd3',
+  },
+  'tailwind-colors.rose.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffa1ad',
+  },
+  'tailwind-colors.rose.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ff637e',
+  },
+  'tailwind-colors.rose.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fff1f2',
+  },
+  'tailwind-colors.rose.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ff2056',
+  },
+  'tailwind-colors.rose.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ec003f',
+  },
+  'tailwind-colors.rose.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c70036',
+  },
+  'tailwind-colors.rose.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a50036',
+  },
+  'tailwind-colors.rose.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8b0836',
+  },
+  'tailwind-colors.rose.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#4d0218',
+  },
+  'tailwind-colors.sky.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#dff2fe',
+  },
+  'tailwind-colors.sky.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#b8e6fe',
+  },
+  'tailwind-colors.sky.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#74d4ff',
+  },
+  'tailwind-colors.sky.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00bcff',
+  },
+  'tailwind-colors.sky.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f0f9ff',
+  },
+  'tailwind-colors.sky.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00a6f4',
+  },
+  'tailwind-colors.sky.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0084d1',
+  },
+  'tailwind-colors.sky.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0069a8',
+  },
+  'tailwind-colors.sky.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00598a',
+  },
+  'tailwind-colors.sky.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#024a70',
+  },
+  'tailwind-colors.sky.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#052f4a',
+  },
+  'tailwind-colors.slate.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f1f5f9',
+  },
+  'tailwind-colors.slate.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e2e8f0',
+  },
+  'tailwind-colors.slate.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#cad5e2',
+  },
+  'tailwind-colors.slate.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#90a1b9',
+  },
+  'tailwind-colors.slate.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f8fafc',
+  },
+  'tailwind-colors.slate.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#62748e',
+  },
+  'tailwind-colors.slate.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#45556c',
+  },
+  'tailwind-colors.slate.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#314158',
+  },
+  'tailwind-colors.slate.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#1d293d',
+  },
+  'tailwind-colors.slate.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0f172b',
+  },
+  'tailwind-colors.slate.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#020618',
+  },
+  'tailwind-colors.stone.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f4',
+  },
+  'tailwind-colors.stone.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e7e5e4',
+  },
+  'tailwind-colors.stone.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#d6d3d1',
+  },
+  'tailwind-colors.stone.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a6a09b',
+  },
+  'tailwind-colors.stone.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fafaf9',
+  },
+  'tailwind-colors.stone.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#79716b',
+  },
+  'tailwind-colors.stone.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#57534d',
+  },
+  'tailwind-colors.stone.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#44403b',
+  },
+  'tailwind-colors.stone.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#292524',
+  },
+  'tailwind-colors.stone.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#1c1917',
+  },
+  'tailwind-colors.stone.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0c0a09',
+  },
+  'tailwind-colors.teal.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#cbfbf1',
+  },
+  'tailwind-colors.teal.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#96f7e4',
+  },
+  'tailwind-colors.teal.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#46ecd5',
+  },
+  'tailwind-colors.teal.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00d5be',
+  },
+  'tailwind-colors.teal.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f0fdfa',
+  },
+  'tailwind-colors.teal.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00bba7',
+  },
+  'tailwind-colors.teal.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#009689',
+  },
+  'tailwind-colors.teal.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00786f',
+  },
+  'tailwind-colors.teal.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#005f5a',
+  },
+  'tailwind-colors.teal.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0b4f4a',
+  },
+  'tailwind-colors.teal.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#022f2e',
+  },
+  'tailwind-colors.transparent': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff00',
+  },
+  'tailwind-colors.violet.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ede9fe',
+  },
+  'tailwind-colors.violet.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ddd6ff',
+  },
+  'tailwind-colors.violet.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c4b4ff',
+  },
+  'tailwind-colors.violet.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a684ff',
+  },
+  'tailwind-colors.violet.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f3ff',
+  },
+  'tailwind-colors.violet.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8e51ff',
+  },
+  'tailwind-colors.violet.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#7f22fe',
+  },
+  'tailwind-colors.violet.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#7008e7',
+  },
+  'tailwind-colors.violet.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#5d0ec0',
+  },
+  'tailwind-colors.violet.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#4d179a',
+  },
+  'tailwind-colors.violet.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#2f0d68',
+  },
+  'tailwind-colors.white': {
     themeId: 'dark',
     type: 'color',
     value: '#ffffff',
   },
-  'theme.sidebar-border': {
+  'tailwind-colors.yellow.100': {
     themeId: 'dark',
     type: 'color',
-    value: '#303030',
+    value: '#fef9c2',
   },
-  'theme.sidebar-foreground': {
+  'tailwind-colors.yellow.200': {
     themeId: 'dark',
     type: 'color',
-    value: '#ffffff',
+    value: '#fff085',
   },
-  'theme.sidebar-primary': {
+  'tailwind-colors.yellow.300': {
     themeId: 'dark',
     type: 'color',
-    value: '#8a38f5',
+    value: '#ffdf20',
   },
-  'theme.sidebar-primary-foreground': {
+  'tailwind-colors.yellow.400': {
     themeId: 'dark',
     type: 'color',
-    value: '#ffffff',
+    value: '#fdc700',
   },
-  'theme.sidebar-ring': {
+  'tailwind-colors.yellow.50': {
     themeId: 'dark',
     type: 'color',
-    value: '#8a38f5',
+    value: '#fefce8',
   },
-  'theme.sidebar-width': {
+  'tailwind-colors.yellow.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f0b100',
+  },
+  'tailwind-colors.yellow.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#d08700',
+  },
+  'tailwind-colors.yellow.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a65f00',
+  },
+  'tailwind-colors.yellow.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#894b00',
+  },
+  'tailwind-colors.yellow.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#733e0a',
+  },
+  'tailwind-colors.yellow.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#432004',
+  },
+  'tailwind-colors.zinc.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f4f4f5',
+  },
+  'tailwind-colors.zinc.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e4e4e7',
+  },
+  'tailwind-colors.zinc.300': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#d4d4d8',
+  },
+  'tailwind-colors.zinc.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9f9fa9',
+  },
+  'tailwind-colors.zinc.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fafafa',
+  },
+  'tailwind-colors.zinc.500': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#71717b',
+  },
+  'tailwind-colors.zinc.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#52525c',
+  },
+  'tailwind-colors.zinc.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#3f3f46',
+  },
+  'tailwind-colors.zinc.800': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#27272a',
+  },
+  'tailwind-colors.zinc.900': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#18181b',
+  },
+  'tailwind-colors.zinc.950': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#09090b',
+  },
+  'tailwind-variables.blur.blur-2xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '40px',
+  },
+  'tailwind-variables.blur.blur-3xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '64px',
+  },
+  'tailwind-variables.blur.blur-lg': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'tailwind-variables.blur.blur-md': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'tailwind-variables.blur.blur-none': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.blur.blur-sm': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '8px',
+  },
+  'tailwind-variables.blur.blur-xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'tailwind-variables.blur.blur-xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'tailwind-variables.borderWidth.border-1': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'tailwind-variables.borderWidth.border-2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'tailwind-variables.borderWidth.border-4': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'tailwind-variables.borderWidth.border-8': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '8px',
+  },
+  'tailwind-variables.borderWidth.border-none': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.breakpoints.breakpoint-2xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1536px',
+  },
+  'tailwind-variables.breakpoints.breakpoint-lg': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1024px',
+  },
+  'tailwind-variables.breakpoints.breakpoint-md': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '768px',
+  },
+  'tailwind-variables.breakpoints.breakpoint-sm': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '640px',
+  },
+  'tailwind-variables.breakpoints.breakpoint-xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1280px',
+  },
+  'tailwind-variables.container.container-2xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '672px',
+  },
+  'tailwind-variables.container.container-3xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '768px',
+  },
+  'tailwind-variables.container.container-4xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '896px',
+  },
+  'tailwind-variables.container.container-5xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1024px',
+  },
+  'tailwind-variables.container.container-6xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1152px',
+  },
+  'tailwind-variables.container.container-7xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1280px',
+  },
+  'tailwind-variables.container.container-lg': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '512px',
+  },
+  'tailwind-variables.container.container-md': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '448px',
+  },
+  'tailwind-variables.container.container-sm': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '384px',
+  },
+  'tailwind-variables.container.container-xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '576px',
+  },
+  'tailwind-variables.container.container-xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '320px',
+  },
+  'tailwind-variables.font.mono': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'Roboto Mono',
+  },
+  'tailwind-variables.font.sans': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'Poppins',
+  },
+  'tailwind-variables.font.serif': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'Rokkitt',
+  },
+  'tailwind-variables.font.weight.black': {
+    themeId: 'dark',
+    type: 'number',
+    value: 900,
+  },
+  'tailwind-variables.font.weight.bold': {
+    themeId: 'dark',
+    type: 'number',
+    value: 700,
+  },
+  'tailwind-variables.font.weight.extrabold': {
+    themeId: 'dark',
+    type: 'number',
+    value: 800,
+  },
+  'tailwind-variables.font.weight.extralight': {
+    themeId: 'dark',
+    type: 'number',
+    value: 200,
+  },
+  'tailwind-variables.font.weight.light': {
+    themeId: 'dark',
+    type: 'number',
+    value: 300,
+  },
+  'tailwind-variables.font.weight.medium': {
+    themeId: 'dark',
+    type: 'number',
+    value: 500,
+  },
+  'tailwind-variables.font.weight.normal': {
+    themeId: 'dark',
+    type: 'number',
+    value: 400,
+  },
+  'tailwind-variables.font.weight.semibold': {
+    themeId: 'dark',
+    type: 'number',
+    value: 600,
+  },
+  'tailwind-variables.font.weight.thin': {
+    themeId: 'dark',
+    type: 'number',
+    value: 100,
+  },
+  'tailwind-variables.inset-shadow.2xs.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0000000d',
+  },
+  'tailwind-variables.inset-shadow.2xs.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.inset-shadow.2xs.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.inset-shadow.2xs.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.inset-shadow.2xs.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'tailwind-variables.inset-shadow.sm.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0000000d',
+  },
+  'tailwind-variables.inset-shadow.sm.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'tailwind-variables.inset-shadow.sm.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.inset-shadow.sm.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.inset-shadow.sm.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'tailwind-variables.inset-shadow.xs.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0000000d',
+  },
+  'tailwind-variables.inset-shadow.xs.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'tailwind-variables.inset-shadow.xs.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.inset-shadow.xs.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.inset-shadow.xs.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'tailwind-variables.opacity.opacity-0': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0,
+  },
+  'tailwind-variables.opacity.opacity-100': {
+    themeId: 'dark',
+    type: 'number',
+    value: 100,
+  },
+  'tailwind-variables.opacity.opacity-20': {
+    themeId: 'dark',
+    type: 'number',
+    value: 20,
+  },
+  'tailwind-variables.opacity.opacity-25': {
+    themeId: 'dark',
+    type: 'number',
+    value: 25,
+  },
+  'tailwind-variables.opacity.opacity-30': {
+    themeId: 'dark',
+    type: 'number',
+    value: 30,
+  },
+  'tailwind-variables.opacity.opacity-40': {
+    themeId: 'dark',
+    type: 'number',
+    value: 40,
+  },
+  'tailwind-variables.opacity.opacity-5': {
+    themeId: 'dark',
+    type: 'number',
+    value: 5,
+  },
+  'tailwind-variables.opacity.opacity-50': {
+    themeId: 'dark',
+    type: 'number',
+    value: 50,
+  },
+  'tailwind-variables.opacity.opacity-60': {
+    themeId: 'dark',
+    type: 'number',
+    value: 60,
+  },
+  'tailwind-variables.opacity.opacity-70': {
+    themeId: 'dark',
+    type: 'number',
+    value: 70,
+  },
+  'tailwind-variables.opacity.opacity-75': {
+    themeId: 'dark',
+    type: 'number',
+    value: 75,
+  },
+  'tailwind-variables.opacity.opacity-80': {
+    themeId: 'dark',
+    type: 'number',
+    value: 80,
+  },
+  'tailwind-variables.opacity.opacity-90': {
+    themeId: 'dark',
+    type: 'number',
+    value: 90,
+  },
+  'tailwind-variables.opacity.opacity-95': {
+    themeId: 'dark',
+    type: 'number',
+    value: 95,
+  },
+  'tailwind-variables.opacity.opacty-10': {
+    themeId: 'dark',
+    type: 'number',
+    value: 10,
+  },
+  'tailwind-variables.radius.rounded': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'tailwind-variables.radius.rounded-2xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'tailwind-variables.radius.rounded-3xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'tailwind-variables.radius.rounded-4xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '32px',
+  },
+  'tailwind-variables.radius.rounded-full': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '9999px',
+  },
+  'tailwind-variables.radius.rounded-lg': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'tailwind-variables.radius.rounded-md': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '8px',
+  },
+  'tailwind-variables.radius.rounded-none': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.radius.rounded-sm': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
+  },
+  'tailwind-variables.radius.rounded-xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'tailwind-variables.radius.rounded-xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'tailwind-variables.shadow.2xl.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00000040',
+  },
+  'tailwind-variables.shadow.2xl.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '50px',
+  },
+  'tailwind-variables.shadow.2xl.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-12px',
+  },
+  'tailwind-variables.shadow.2xl.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.2xl.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '25px',
+  },
+  'tailwind-variables.shadow.2xs.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0000000d',
+  },
+  'tailwind-variables.shadow.2xs.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.2xs.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.2xs.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.2xs.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'tailwind-variables.shadow.lg.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0000001a',
+  },
+  'tailwind-variables.shadow.lg.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '15px',
+  },
+  'tailwind-variables.shadow.lg.blur2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
+  },
+  'tailwind-variables.shadow.lg.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-3px',
+  },
+  'tailwind-variables.shadow.lg.spread2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-4px',
+  },
+  'tailwind-variables.shadow.lg.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.lg.x2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.lg.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'tailwind-variables.shadow.lg.y2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'tailwind-variables.shadow.md.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0000001a',
+  },
+  'tailwind-variables.shadow.md.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
+  },
+  'tailwind-variables.shadow.md.blur2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'tailwind-variables.shadow.md.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-1px',
+  },
+  'tailwind-variables.shadow.md.spread2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-2px',
+  },
+  'tailwind-variables.shadow.md.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.md.x2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.md.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'tailwind-variables.shadow.md.y2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'tailwind-variables.shadow.sm.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0000001a',
+  },
+  'tailwind-variables.shadow.sm.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '3px',
+  },
+  'tailwind-variables.shadow.sm.blur2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'tailwind-variables.shadow.sm.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.sm.spread2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-1px',
+  },
+  'tailwind-variables.shadow.sm.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.sm.x2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.sm.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'tailwind-variables.shadow.sm.y2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'tailwind-variables.shadow.xl.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0000001a',
+  },
+  'tailwind-variables.shadow.xl.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '25px',
+  },
+  'tailwind-variables.shadow.xl.blur2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'tailwind-variables.shadow.xl.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-5px',
+  },
+  'tailwind-variables.shadow.xl.spread2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-6px',
+  },
+  'tailwind-variables.shadow.xl.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.xl.x2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.xl.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '20px',
+  },
+  'tailwind-variables.shadow.xl.y2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '8px',
+  },
+  'tailwind-variables.shadow.xs.--tw-shadow-color': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0000000d',
+  },
+  'tailwind-variables.shadow.xs.blur': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'tailwind-variables.shadow.xs.spread': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.xs.x': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.shadow.xs.y': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'tailwind-variables.spacing.<negative>.-0_5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-2px',
+  },
+  'tailwind-variables.spacing.<negative>.-1': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-4px',
+  },
+  'tailwind-variables.spacing.<negative>.-1_5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-6px',
+  },
+  'tailwind-variables.spacing.<negative>.-10': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-40px',
+  },
+  'tailwind-variables.spacing.<negative>.-11': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-44px',
+  },
+  'tailwind-variables.spacing.<negative>.-12': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-48px',
+  },
+  'tailwind-variables.spacing.<negative>.-14': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-56px',
+  },
+  'tailwind-variables.spacing.<negative>.-16': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-64px',
+  },
+  'tailwind-variables.spacing.<negative>.-2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-8px',
+  },
+  'tailwind-variables.spacing.<negative>.-2_5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-10px',
+  },
+  'tailwind-variables.spacing.<negative>.-20': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-80px',
+  },
+  'tailwind-variables.spacing.<negative>.-24': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-96px',
+  },
+  'tailwind-variables.spacing.<negative>.-28': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-112px',
+  },
+  'tailwind-variables.spacing.<negative>.-3': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-12px',
+  },
+  'tailwind-variables.spacing.<negative>.-3_5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-14px',
+  },
+  'tailwind-variables.spacing.<negative>.-32': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-128px',
+  },
+  'tailwind-variables.spacing.<negative>.-36': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-144px',
+  },
+  'tailwind-variables.spacing.<negative>.-4': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-16px',
+  },
+  'tailwind-variables.spacing.<negative>.-40': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-160px',
+  },
+  'tailwind-variables.spacing.<negative>.-44': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-176px',
+  },
+  'tailwind-variables.spacing.<negative>.-48': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-192px',
+  },
+  'tailwind-variables.spacing.<negative>.-5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-20px',
+  },
+  'tailwind-variables.spacing.<negative>.-50': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-200px',
+  },
+  'tailwind-variables.spacing.<negative>.-52': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-208px',
+  },
+  'tailwind-variables.spacing.<negative>.-56': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-224px',
+  },
+  'tailwind-variables.spacing.<negative>.-6': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-24px',
+  },
+  'tailwind-variables.spacing.<negative>.-60': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-240px',
+  },
+  'tailwind-variables.spacing.<negative>.-64': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-256px',
+  },
+  'tailwind-variables.spacing.<negative>.-7': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-28px',
+  },
+  'tailwind-variables.spacing.<negative>.-72': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-288px',
+  },
+  'tailwind-variables.spacing.<negative>.-8': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-32px',
+  },
+  'tailwind-variables.spacing.<negative>.-80': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-320px',
+  },
+  'tailwind-variables.spacing.<negative>.-9': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-36px',
+  },
+  'tailwind-variables.spacing.<negative>.-96': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-384px',
+  },
+  'tailwind-variables.spacing.<negative>.-px': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '-1px',
+  },
+  'tailwind-variables.spacing.0': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0px',
+  },
+  'tailwind-variables.spacing.0_5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'tailwind-variables.spacing.1': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'tailwind-variables.spacing.1_5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
+  },
+  'tailwind-variables.spacing.10': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '40px',
+  },
+  'tailwind-variables.spacing.11': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '44px',
+  },
+  'tailwind-variables.spacing.12': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '48px',
+  },
+  'tailwind-variables.spacing.14': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '56px',
+  },
+  'tailwind-variables.spacing.16': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '64px',
+  },
+  'tailwind-variables.spacing.2': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '8px',
+  },
+  'tailwind-variables.spacing.2_5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'tailwind-variables.spacing.20': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '80px',
+  },
+  'tailwind-variables.spacing.24': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '96px',
+  },
+  'tailwind-variables.spacing.28': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '112px',
+  },
+  'tailwind-variables.spacing.3': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'tailwind-variables.spacing.3_5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '14px',
+  },
+  'tailwind-variables.spacing.32': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '128px',
+  },
+  'tailwind-variables.spacing.36': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '144px',
+  },
+  'tailwind-variables.spacing.4': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'tailwind-variables.spacing.40': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '160px',
+  },
+  'tailwind-variables.spacing.44': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '176px',
+  },
+  'tailwind-variables.spacing.48': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '192px',
+  },
+  'tailwind-variables.spacing.5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '20px',
+  },
+  'tailwind-variables.spacing.50': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '200px',
+  },
+  'tailwind-variables.spacing.52': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '208px',
+  },
+  'tailwind-variables.spacing.56': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '224px',
+  },
+  'tailwind-variables.spacing.6': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'tailwind-variables.spacing.60': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '240px',
+  },
+  'tailwind-variables.spacing.64': {
     themeId: 'dark',
     type: 'dimension',
     value: '256px',
   },
-  'theme.sidebar-width-icon': {
+  'tailwind-variables.spacing.7': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '28px',
+  },
+  'tailwind-variables.spacing.72': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '288px',
+  },
+  'tailwind-variables.spacing.8': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '32px',
+  },
+  'tailwind-variables.spacing.80': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '320px',
+  },
+  'tailwind-variables.spacing.9': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '36px',
+  },
+  'tailwind-variables.spacing.96': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '384px',
+  },
+  'tailwind-variables.spacing.px': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'tailwind-variables.text.--default-font-family': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'Poppins',
+  },
+  'tailwind-variables.text.text-2xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'tailwind-variables.text.text-2xl--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '32px',
+  },
+  'tailwind-variables.text.text-3xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '30px',
+  },
+  'tailwind-variables.text.text-3xl--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '36px',
+  },
+  'tailwind-variables.text.text-4xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '36px',
+  },
+  'tailwind-variables.text.text-4xl--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '40px',
+  },
+  'tailwind-variables.text.text-5xl': {
     themeId: 'dark',
     type: 'dimension',
     value: '48px',
+  },
+  'tailwind-variables.text.text-5xl--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '48px',
+  },
+  'tailwind-variables.text.text-6xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '60px',
+  },
+  'tailwind-variables.text.text-6xl--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '60px',
+  },
+  'tailwind-variables.text.text-7xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '72px',
+  },
+  'tailwind-variables.text.text-7xl--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '72px',
+  },
+  'tailwind-variables.text.text-8xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '96px',
+  },
+  'tailwind-variables.text.text-8xl--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '96px',
+  },
+  'tailwind-variables.text.text-9xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '128px',
+  },
+  'tailwind-variables.text.text-9xl--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '128px',
+  },
+  'tailwind-variables.text.text-base': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'tailwind-variables.text.text-base--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'tailwind-variables.text.text-lg': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '18px',
+  },
+  'tailwind-variables.text.text-lg--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '28px',
+  },
+  'tailwind-variables.text.text-sm': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '14px',
+  },
+  'tailwind-variables.text.text-sm--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '20px',
+  },
+  'tailwind-variables.text.text-xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '20px',
+  },
+  'tailwind-variables.text.text-xl--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '28px',
+  },
+  'tailwind-variables.text.text-xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'tailwind-variables.text.text-xs--line-height': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'theme._external.claude-bg': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#faf9f5',
+  },
+  'theme._external.claude-messsage': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f0eee6',
+  },
+  'theme._external.claude-primary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c96442',
+  },
+  'theme._external.code-1': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0184bc',
+  },
+  'theme._external.code-2': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#4078f2',
+  },
+  'theme._external.code-3': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a626a4',
+  },
+  'theme._external.code-4': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#50a14f',
+  },
+  'theme._external.code-5': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e45649',
+  },
+  'theme._external.code-6': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#b76b01',
+  },
+  'theme._external.code-comment': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a0a1a7',
+  },
+  'theme._external.code-fg': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#383a42',
+  },
+  'theme._external.code-symbol': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#696c77',
+  },
+  'theme._external.streamdown-bg': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme._external.streamdown-fg': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#24292e',
+  },
+  'theme.components.*ring-destructive': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e7000b33',
+  },
+  'theme.components.*ring-focus': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a1a1a180',
+  },
+  'theme.components.Button.variant=destructive bg': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e7000b',
+  },
+  'theme.components.Button.variant=destructive bg:hover': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e7000be5',
+  },
+  'theme.components.Button.variant=ghost bg:hover': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f5',
+  },
+  'theme.components.Button.variant=outline bg': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.components.Button.variant=outline bg:hover': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f5',
+  },
+  'theme.components.Button.variant=outline border': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e5e5e5',
+  },
+  'theme.components.Confirmation.accepted-icon': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#00a63e',
+  },
+  'theme.components.Input.bg': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff00',
+  },
+  'theme.components.Input.bg:hover (Select only)': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff00',
+  },
+  'theme.components.Kbd.bg-tooltip': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff33',
+  },
+  'theme.theme.accent': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f5',
+  },
+  'theme.theme.accent-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#171717',
+  },
+  'theme.theme.background': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.theme.border': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e5e5e5',
+  },
+  'theme.theme.card': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.theme.card-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0a0a0a',
+  },
+  'theme.theme.destructive': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e7000b',
+  },
+  'theme.theme.foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0a0a0a',
+  },
+  'theme.theme.input': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e5e5e5',
+  },
+  'theme.theme.muted': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f5',
+  },
+  'theme.theme.muted-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#737373',
+  },
+  'theme.theme.popover': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.theme.popover-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#0a0a0a',
+  },
+  'theme.theme.primary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#155dfc',
+  },
+  'theme.theme.primary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#eff6ff',
+  },
+  'theme.theme.ring': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a1a1a1',
+  },
+  'theme.theme.secondary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f5',
+  },
+  'theme.theme.secondary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#171717',
+  },
+  'theme.theme.sidebar': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fafafa',
+  },
+  'theme.theme.sidebar-accent': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f5',
+  },
+  'theme.theme.sidebar-accent-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#171717',
+  },
+  'theme.theme.sidebar-border': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e5e5e5',
+  },
+  'theme.theme.sidebar-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#404040',
+  },
+  'theme.theme.sidebar-primary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#155dfc',
+  },
+  'theme.theme.sidebar-primary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#eff6ff',
+  },
+  'theme.theme.sidebar-ring': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a1a1a1',
+  },
+  'theme.theme.sidebar-width': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '256px',
+  },
+  'theme.theme.sidebar-width-icon': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '48px',
+  },
+  'theme.transparent': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff00',
   },
 } as const;
 
