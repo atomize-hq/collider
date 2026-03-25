@@ -301,67 +301,149 @@ export const tokenMap = {
     type: 'dimension',
     value: '32px',
   },
-} as const;
-
-export const recipeMap = {
-  'thinking-indicator': {
-    componentId: 'thinking-indicator',
-    defaults: {
-      state: 'rest',
-      variants: {
-        state: 'collapsed',
-      },
-    },
-    fallbacks: {
-      missingVariantBehavior: 'use-defaults',
-      stateFallbacks: {
-        disabled: 'rest',
-        focus: 'rest',
-        hover: 'rest',
-      },
-    },
-    recipeVersion: '1',
-    slots: {
-      content: {
-        color: '{semantic.color.text.secondary}',
-      },
-      icon: {
-        color: '{semantic.color.text.secondary}',
-      },
-      trigger: {
-        color: '{semantic.color.text.secondary}',
-      },
-    },
-    states: {
-      disabled: {
-        trigger: {
-          color: '{semantic.color.text.tertiary}',
-        },
-      },
-      focus: {
-        trigger: {
-          outline: '{semantic.color.text.ai}',
-        },
-      },
-      hover: {
-        trigger: {
-          color: '{semantic.color.text.primary}',
-        },
-      },
-      rest: {
-        trigger: {
-          color: '{semantic.color.text.secondary}',
-        },
-      },
-    },
-    variantAxes: [
-      {
-        name: 'state',
-        values: ['streaming', 'expanded', 'collapsed', 'duration'],
-      },
-    ],
+  'theme.accent': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#2a2a2a',
+  },
+  'theme.accent-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.background': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#171717',
+  },
+  'theme.border': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#303030',
+  },
+  'theme.card': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#202020',
+  },
+  'theme.card-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.destructive': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fb2c36',
+  },
+  'theme.foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.input': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#303030',
+  },
+  'theme.muted': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#202020',
+  },
+  'theme.muted-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#6a7282',
+  },
+  'theme.popover': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#202020',
+  },
+  'theme.popover-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.primary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8a38f5',
+  },
+  'theme.primary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.ring': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8a38f5',
+  },
+  'theme.secondary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#303030',
+  },
+  'theme.secondary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.sidebar': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#171717',
+  },
+  'theme.sidebar-accent': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#2a2a2a',
+  },
+  'theme.sidebar-accent-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.sidebar-border': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#303030',
+  },
+  'theme.sidebar-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.sidebar-primary': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8a38f5',
+  },
+  'theme.sidebar-primary-foreground': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ffffff',
+  },
+  'theme.sidebar-ring': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8a38f5',
+  },
+  'theme.sidebar-width': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '256px',
+  },
+  'theme.sidebar-width-icon': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '48px',
   },
 } as const;
+
+export const recipeMap = {} as const;
 
 export type ThemeId = (typeof themeRegistry.themes)[number]['id'];
 export type TokenId = keyof typeof tokenMap;

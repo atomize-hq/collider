@@ -4,7 +4,7 @@ This runbook proves the current `CT-7B` plugin-based proof rail for the existing
 
 ## Pilot Inputs
 
-- Pilot file: `Collider Copy pilot` (`figma://file/23PLdynlRYoBYQx9teoC8A`)
+- Pilot file: `Collider Copy pilot` (`figma://file/SVcsU6gVvpezsJYrvBsS3V`)
 - Canonical artifact path: `design-tokens/dist/figma/tokens.json`
 - Canonical local proof URL: `http://localhost:4173/design-tokens/dist/figma/tokens.json`
 

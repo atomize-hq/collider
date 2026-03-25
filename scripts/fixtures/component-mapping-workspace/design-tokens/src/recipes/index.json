@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "1",
+  "recipes": [
+    {
+      "componentId": "thinking-indicator",
+      "sourceFile": "thinking-indicator.recipe.json",
+      "status": "pilot"
+    }
+  ]
+}

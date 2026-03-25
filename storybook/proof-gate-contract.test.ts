@@ -39,28 +39,23 @@ describe('runStorybookProofGate', () => {
       },
       createCoverageReport(result: ProofStructureResult) {
         calls.push('generate:storybook-proof-coverage');
+        const componentCount = result.data.componentFacts?.length ?? 0;
         return {
           proofCoverageVersion: '1',
           summary: {
-            componentCount: result.data.componentFacts?.length ?? 0,
-            readyCount: 1,
+            componentCount,
+            readyCount: componentCount,
             failingCount: 0,
           },
-          components: [
-            {
-              componentId: 'thinking-indicator',
-              tier: 'primitive',
-              status: 'ready',
-              requiredKinds: ['default', 'docs'],
-              implementedKinds: ['default', 'docs'],
-              missingKinds: [],
-              generatedArtifactRefs: {
-                tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
-                recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
-                runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
-              },
-            },
-          ],
+          components: (result.data.componentFacts ?? []).map((fact) => ({
+            componentId: fact.componentId,
+            tier: fact.tier,
+            status: 'ready',
+            requiredKinds: fact.implementedKinds,
+            implementedKinds: fact.implementedKinds,
+            missingKinds: [],
+            generatedArtifactRefs: fact.generatedArtifactRefs,
+          })),
         };
       },
       writeCoverageReport(report: ProofCoverageReport) {
@@ -362,7 +357,10 @@ function prepareFixtureRoot(name: string) {
   fs.cpSync(fixtureRoot, tempRoot, { recursive: true });
   fs.mkdirSync(path.join(tempRoot, 'src/components/ai-elements'), { recursive: true });
   fs.copyFileSync(
-    path.join(repoRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx'),
+    path.join(
+      repoRoot,
+      'scripts/fixtures/storybook-proof-structure/_shared/ThinkingIndicator.stories.tsx'
+    ),
     path.join(tempRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx')
   );
   fs.copyFileSync(

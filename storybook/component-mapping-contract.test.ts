@@ -17,6 +17,7 @@ import {
 
 const chromaticFixtureDir = path.join(repoRoot, 'scripts/fixtures/chromatic-status');
 const componentMappingCliPath = path.join(repoRoot, 'scripts/generate-component-mapping.mjs');
+const workspaceFixtureDir = path.join(repoRoot, 'scripts/fixtures/component-mapping-workspace');
 const fixedNow = new Date('2026-03-21T12:30:00.000Z');
 
 type ChromaticStatusFixture = {
@@ -171,7 +172,7 @@ describe('writeComponentMappingArtifacts', () => {
       componentId: 'thinking-indicator',
       componentSpecPath: 'storybook/component-specs/thinking-indicator.json',
       figma: {
-        componentRef: 'figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator',
+        componentRef: 'figma://file/SVcsU6gVvpezsJYrvBsS3V#component=thinking-indicator',
       },
     });
     expect(completeness).toMatchObject({
@@ -243,11 +244,11 @@ function createWorkspace(
 ) {
   const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'component-mapping-'));
 
-  copyIntoWorkspace(workspace, 'storybook/component-specs/thinking-indicator.json');
-  copyIntoWorkspace(workspace, 'storybook/story-inventory.json');
-  copyIntoWorkspace(workspace, 'artifacts/storybook/proof-coverage.json');
-  copyIntoWorkspace(workspace, 'design-tokens/src/recipes/index.json');
-  copyIntoWorkspace(workspace, 'design-tokens/src/recipes/thinking-indicator.recipe.json');
+  copyFixtureIntoWorkspace(workspace, 'storybook/component-specs/thinking-indicator.json');
+  copyFixtureIntoWorkspace(workspace, 'storybook/story-inventory.json');
+  copyFixtureIntoWorkspace(workspace, 'artifacts/storybook/proof-coverage.json');
+  copyFixtureIntoWorkspace(workspace, 'design-tokens/src/recipes/index.json');
+  copyFixtureIntoWorkspace(workspace, 'design-tokens/src/recipes/thinking-indicator.recipe.json');
 
   if (options.chromaticFixtureName) {
     const status = JSON.parse(
@@ -264,8 +265,8 @@ function createWorkspace(
   return workspace;
 }
 
-function copyIntoWorkspace(workspace: string, repoRelativePath: string) {
-  const source = path.join(repoRoot, repoRelativePath);
+function copyFixtureIntoWorkspace(workspace: string, repoRelativePath: string) {
+  const source = path.join(workspaceFixtureDir, repoRelativePath);
   const destination = path.join(workspace, repoRelativePath);
   fs.mkdirSync(path.dirname(destination), { recursive: true });
   fs.copyFileSync(source, destination);

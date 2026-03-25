@@ -2,7 +2,7 @@
 
 **Status:** Stage 1 — plan locked, partial implementation (dark mode only)
 **Date:** 2026-03-23
-**Figma file:** `23PLdynlRYoBYQx9teoC8A`
+**Figma file:** `SVcsU6gVvpezsJYrvBsS3V`
 
 ---
 

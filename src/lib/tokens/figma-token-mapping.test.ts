@@ -10,9 +10,9 @@ describe('flattenTokenDocument', () => {
     const tokens = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
     const leaves = flattenTokenDocument(tokens);
 
-    expect(leaves).toHaveLength(57);
+    expect(leaves).toHaveLength(85);
     expect(leaves[0]?.name).toBe('core/color/amber/300');
-    expect(leaves.at(-1)?.name).toBe('spacing/8');
+    expect(leaves.at(-1)?.name).toBe('theme/sidebar-width-icon');
   });
 
   it('parses color values from hex, hex8, rgb(), and rgba()', () => {

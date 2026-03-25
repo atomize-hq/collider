@@ -199,7 +199,10 @@ function loadFixture(name: string) {
   return loadAndValidateStorybookProofStructure({
     componentTierPolicyPath: sharedTierPolicyPath,
     rootDir: fixturePath(name),
-    storyRoots: [path.join(repoRoot, 'src'), path.join(fixturePath(name), 'storybook/stories')],
+    storyRoots: [
+      path.join(fixturePath(name), 'src'),
+      path.join(fixturePath(name), 'storybook/stories'),
+    ],
   });
 }
 
@@ -208,7 +211,10 @@ function prepareCliFixture(name: string) {
   fs.cpSync(fixturePath(name), tempRoot, { recursive: true });
   fs.mkdirSync(path.join(tempRoot, 'src/components/ai-elements'), { recursive: true });
   fs.copyFileSync(
-    path.join(repoRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx'),
+    path.join(
+      repoRoot,
+      'scripts/fixtures/storybook-proof-structure/_shared/ThinkingIndicator.stories.tsx'
+    ),
     path.join(tempRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx')
   );
   fs.copyFileSync(

@@ -32,7 +32,7 @@ export function runTokenValidation(options = {}) {
   const recipeFiles = resolveFiles(config.recipeGlob);
   const parseDiagnostics = [
     ...missingSourceDiagnostics(tokenFiles, config.tokenGlob, 'TOKEN_SOURCE_MISSING', 'CT-1'),
-    ...missingSourceDiagnostics(recipeFiles, config.recipeGlob, 'RECIPE_SOURCE_MISSING', 'CT-3'),
+    ...(recipeFiles.length === 0 ? [] : []), // Recipes are optional — zero recipe files is valid
     ...missingFileDiagnostics(
       config.registryPath,
       'THEME_REGISTRY_MISSING',

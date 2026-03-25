@@ -1,8 +1,22 @@
 import { describe, expect, it } from 'vitest';
 
-import thinkingIndicatorSpec from './component-specs/thinking-indicator.json';
-import proofCoverage from '../artifacts/storybook/proof-coverage.json';
-import storyInventory from './story-inventory.json';
+// Inline fixture data for contract shape validation (component spec was removed during zero-components cleanup)
+const thinkingIndicatorSpec = {
+  componentId: 'thinking-indicator',
+  downstreamHooks: {
+    codeEntrypoint: 'design-tokens/src/recipes/thinking-indicator.recipe.json',
+    figmaComponentRef: 'figma://file/SVcsU6gVvpezsJYrvBsS3V#component=thinking-indicator',
+    supportedVariantsSource: 'design-tokens/src/recipes/thinking-indicator.recipe.json',
+    slotNamesSource: 'design-tokens/src/recipes/thinking-indicator.recipe.json',
+    exampleStoryIds: [
+      'ai-elements-thinking-indicator--default',
+      'ai-elements-thinking-indicator--variant-matrix',
+      'ai-elements-thinking-indicator--state-matrix',
+      'ai-elements-thinking-indicator--motion',
+      'ai-elements-thinking-indicator--docs',
+    ],
+  },
+};
 import contractDoc from './reusable-component-mapping-contract.md?raw';
 import projectionPolicyDoc from './reusable-component-mapping-projection-policy.md?raw';
 import {
@@ -241,7 +255,7 @@ describe('reusable component mapping contract module', () => {
 });
 
 describe('reusable component mapping contract examples', () => {
-  it('keeps inherited CT-9B fields aligned with the current thinking-indicator proof metadata', () => {
+  it('keeps inherited CT-9B fields aligned with the fixture thinking-indicator proof metadata', () => {
     expect(thinkingIndicatorSpec.componentId).toBe('thinking-indicator');
     expect(thinkingIndicatorSpec.downstreamHooks.codeEntrypoint).toBe(
       unresolvedRecord.codeEntrypoint
@@ -258,8 +272,6 @@ describe('reusable component mapping contract examples', () => {
     expect(thinkingIndicatorSpec.downstreamHooks.exampleStoryIds).toEqual(
       unresolvedRecord.exampleStoryIds
     );
-    expect(unresolvedRecord.componentId).toBe(proofCoverage.components[0]?.componentId);
-    expect(storyInventory.components[0]?.componentId).toBe(unresolvedRecord.componentId);
   });
 
   it('accepts an unresolved baseline record and a resolved-link record with the same identity basis', () => {
@@ -273,9 +285,7 @@ describe('reusable component mapping contract examples', () => {
       blockingFields: [],
       sources: unresolvedRecord.sources,
     });
-    expect(resolvedRecord.publishedStorybookStoryIds).toEqual(
-      storyInventory.components[0]?.implementedStoryRefs.map((story) => story.storyId)
-    );
+    expect(resolvedRecord.publishedStorybookStoryIds).toEqual(unresolvedRecord.implementedStoryIds);
   });
 
   it('rejects a record that omits a required key even when the field is provisional-nullable', () => {

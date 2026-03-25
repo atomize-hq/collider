@@ -1,0 +1,114 @@
+{
+  "background": {
+    "$type": "color",
+    "$value": "#171717"
+  },
+  "foreground": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "card": {
+    "$type": "color",
+    "$value": "#202020"
+  },
+  "card-foreground": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "popover": {
+    "$type": "color",
+    "$value": "#202020"
+  },
+  "popover-foreground": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "primary": {
+    "$type": "color",
+    "$value": "#8a38f5"
+  },
+  "primary-foreground": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "secondary": {
+    "$type": "color",
+    "$value": "#303030"
+  },
+  "secondary-foreground": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "muted": {
+    "$type": "color",
+    "$value": "#202020"
+  },
+  "muted-foreground": {
+    "$type": "color",
+    "$value": "#6a7282"
+  },
+  "accent": {
+    "$type": "color",
+    "$value": "#2a2a2a"
+  },
+  "accent-foreground": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "destructive": {
+    "$type": "color",
+    "$value": "#fb2c36"
+  },
+  "border": {
+    "$type": "color",
+    "$value": "#303030"
+  },
+  "input": {
+    "$type": "color",
+    "$value": "#303030"
+  },
+  "ring": {
+    "$type": "color",
+    "$value": "#8a38f5"
+  },
+  "sidebar": {
+    "$type": "color",
+    "$value": "#171717"
+  },
+  "sidebar-foreground": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "sidebar-primary": {
+    "$type": "color",
+    "$value": "#8a38f5"
+  },
+  "sidebar-primary-foreground": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "sidebar-accent": {
+    "$type": "color",
+    "$value": "#2a2a2a"
+  },
+  "sidebar-accent-foreground": {
+    "$type": "color",
+    "$value": "#ffffff"
+  },
+  "sidebar-border": {
+    "$type": "color",
+    "$value": "#303030"
+  },
+  "sidebar-ring": {
+    "$type": "color",
+    "$value": "#8a38f5"
+  },
+  "sidebar-width": {
+    "$type": "dimension",
+    "$value": "256px"
+  },
+  "sidebar-width-icon": {
+    "$type": "dimension",
+    "$value": "48px"
+  }
+}

@@ -11,7 +11,7 @@ import {
 
 const thinkingIndicatorSpecPath = path.join(
   repoRoot,
-  'storybook/component-specs/thinking-indicator.json'
+  'scripts/fixtures/reusable-component-mapping/complete/storybook/component-specs/thinking-indicator.json'
 );
 
 type ComponentSpecFixture = {
@@ -107,7 +107,7 @@ describe('validateComponentSpec', () => {
     });
     expect(spec.downstreamHooks).toEqual({
       codeEntrypoint: 'design-tokens/src/recipes/thinking-indicator.recipe.json',
-      figmaComponentRef: 'figma://file/23PLdynlRYoBYQx9teoC8A#component=thinking-indicator',
+      figmaComponentRef: 'figma://file/SVcsU6gVvpezsJYrvBsS3V#component=thinking-indicator',
       supportedVariantsSource: 'design-tokens/dist/tokens.ts',
       slotNamesSource: 'design-tokens/dist/tokens.ts',
       exampleStoryIds: [

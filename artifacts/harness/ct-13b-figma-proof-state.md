@@ -76,7 +76,7 @@ Additionally, CT-13B requires the existence of:
   "publish": {
     "mode": "plugin-import-manual",
     "tokensStudioCarrier": false,
-    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
+    "figmaFile": "figma://file/SVcsU6gVvpezsJYrvBsS3V"
   },
   "verification": {
     "materializationStatus": "passed",

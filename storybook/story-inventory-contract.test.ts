@@ -11,40 +11,13 @@ import {
 const fixtureDir = path.join(repoRoot, 'scripts/fixtures/storybook-story-inventory');
 
 describe('loadAndValidateStoryInventory', () => {
-  it('accepts the committed pilot inventory', () => {
+  it('accepts the committed empty inventory', () => {
     const result = loadAndValidateStoryInventory(
       path.join(repoRoot, 'storybook/story-inventory.json')
     );
 
     expect(result.errors).toEqual([]);
-    expect(result.data.components).toEqual([
-      {
-        componentId: 'thinking-indicator',
-        validatorKinds: ['default', 'variant-matrix', 'state-matrix', 'motion', 'docs'],
-        implementedStoryRefs: [
-          {
-            kind: 'default',
-            storyId: 'ai-elements-thinking-indicator--default',
-          },
-          {
-            kind: 'variant-matrix',
-            storyId: 'ai-elements-thinking-indicator--variant-matrix',
-          },
-          {
-            kind: 'state-matrix',
-            storyId: 'ai-elements-thinking-indicator--state-matrix',
-          },
-          {
-            kind: 'motion',
-            storyId: 'ai-elements-thinking-indicator--motion',
-          },
-          {
-            kind: 'docs',
-            storyId: 'ai-elements-thinking-indicator--docs',
-          },
-        ],
-      },
-    ]);
+    expect(result.data.components).toEqual([]);
   });
 
   it('accepts the valid sample fixture that uses current Storybook story ids', () => {

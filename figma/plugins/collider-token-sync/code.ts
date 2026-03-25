@@ -1,13 +1,21 @@
 /// <reference types="@figma/plugin-typings" />
 
 import { flattenTokenDocument } from '../../../src/lib/tokens/figma-token-mapping';
+import {
+  buildDtcgFromFigmaVariables,
+  toCollectionKey,
+  type PulledCollection,
+  type PulledVariable,
+  type PulledVariableValue,
+} from '../../../src/lib/tokens/dtcg-from-figma';
 
 declare const __html__: string;
 
 type UiToPluginMessage =
   | { type: 'UI_READY' }
   | { type: 'FETCH_URL'; url: string }
-  | { type: 'SYNC'; jsonText: string };
+  | { type: 'SYNC'; jsonText: string }
+  | { type: 'PULL' };
 
 const defaultArtifactUrl = 'http://localhost:4173/design-tokens/dist/figma/tokens.json';
 const collectionName = 'Collider Tokens';
@@ -36,6 +44,51 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
       figma.ui.postMessage({
         type: 'FETCH_ERROR',
         message: `Failed to fetch artifact: ${messageForError(error)}`,
+      });
+    }
+    return;
+  }
+
+  if (msg.type === 'PULL') {
+    try {
+      const collections = await figma.variables.getLocalVariableCollectionsAsync();
+
+      const pulledCollections: PulledCollection[] = [];
+      for (const collection of collections) {
+        const variables: PulledVariable[] = [];
+        for (const id of collection.variableIds) {
+          const variable = await figma.variables.getVariableByIdAsync(id);
+          if (!variable) continue;
+          const value = variable.valuesByMode[collection.defaultModeId];
+          if (value === undefined) continue;
+          variables.push({
+            name: variable.name,
+            resolvedType: variable.resolvedType as PulledVariable['resolvedType'],
+            value: value as PulledVariableValue,
+          });
+        }
+        pulledCollections.push({ name: collection.name, variables });
+      }
+
+      const dtcg = buildDtcgFromFigmaVariables(pulledCollections);
+      const summaryParts: string[] = [];
+      for (let i = 0; i < collections.length; i++) {
+        const col = collections[i];
+        const pulled = pulledCollections[i];
+        if (col && pulled) {
+          summaryParts.push(`${toCollectionKey(col.name)}: ${pulled.variables.length}`);
+        }
+      }
+
+      figma.ui.postMessage({
+        type: 'PULL_RESULT',
+        dtcgJson: JSON.stringify(dtcg),
+        summary: summaryParts.join(', '),
+      });
+    } catch (error) {
+      figma.ui.postMessage({
+        type: 'PULL_ERROR',
+        message: `Pull failed: ${messageForError(error)}`,
       });
     }
     return;

@@ -35,12 +35,12 @@ These are complementary, not duplicates:
 
 ## Canonical Figma File Key
 
-**`23PLdynlRYoBYQx9teoC8A`** is the authoritative Figma file key for this project.
+**`SVcsU6gVvpezsJYrvBsS3V`** is the authoritative Figma file key for this project.
 
 This key is already used consistently in `src/figma/sync-ledger.json`, `figma/code-connect/button.json`, and `storybook/component-specs/button.json`. All `.figma.tsx` node URLs must use this key. The format for Figma node URLs in `.figma.tsx` files is:
 
 ```
-https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=<nodeId>
+https://www.figma.com/design/SVcsU6gVvpezsJYrvBsS3V?node-id=<nodeId>
 ```
 
 ---

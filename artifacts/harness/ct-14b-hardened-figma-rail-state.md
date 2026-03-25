@@ -70,7 +70,7 @@ The determinism invariant is defined at the **variable-value level**: repeated p
   "publish": {
     "mode": "plugin-import-manual",
     "tokensStudioCarrier": false,
-    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
+    "figmaFile": "figma://file/SVcsU6gVvpezsJYrvBsS3V"
   },
   "verification": {
     "materializationStatus": "passed",

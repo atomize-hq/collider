@@ -76,7 +76,7 @@ flowchart TB
   end
 
   subgraph External ["External surfaces"]
-    FIGMA["Figma file\n23PLdynlRYoBYQx9teoC8A"]
+    FIGMA["Figma file\nSVcsU6gVvpezsJYrvBsS3V"]
     OAUTH["Figma OAuth app"]
     VARAPI["Figma Variables API"]
   end

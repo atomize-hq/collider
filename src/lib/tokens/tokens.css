@@ -58,6 +58,34 @@
   --spacing-5: 20px;
   --spacing-6: 24px;
   --spacing-8: 32px;
+  --theme-accent: #2a2a2a;
+  --theme-accent-foreground: #ffffff;
+  --theme-background: #171717;
+  --theme-border: #303030;
+  --theme-card: #202020;
+  --theme-card-foreground: #ffffff;
+  --theme-destructive: #fb2c36;
+  --theme-foreground: #ffffff;
+  --theme-input: #303030;
+  --theme-muted: #202020;
+  --theme-muted-foreground: #6a7282;
+  --theme-popover: #202020;
+  --theme-popover-foreground: #ffffff;
+  --theme-primary: #8a38f5;
+  --theme-primary-foreground: #ffffff;
+  --theme-ring: #8a38f5;
+  --theme-secondary: #303030;
+  --theme-secondary-foreground: #ffffff;
+  --theme-sidebar: #171717;
+  --theme-sidebar-accent: #2a2a2a;
+  --theme-sidebar-accent-foreground: #ffffff;
+  --theme-sidebar-border: #303030;
+  --theme-sidebar-foreground: #ffffff;
+  --theme-sidebar-primary: #8a38f5;
+  --theme-sidebar-primary-foreground: #ffffff;
+  --theme-sidebar-ring: #8a38f5;
+  --theme-sidebar-width: 256px;
+  --theme-sidebar-width-icon: 48px;
 
   /* Legacy runtime compatibility surface */
 

@@ -7,7 +7,6 @@ import {
 import { isObject, readJson, resolveFiles } from './component-recipe-validator-shared.mjs';
 
 const referencePattern = /^\{([^}]+)\}$/;
-const sourceFamilies = ['core', 'semantic', 'motion', 'spacing', 'radius'];
 
 export function loadBuildGraph(options = {}) {
   const themeRegistry = readJson(options.themeRegistryPath ?? themeRegistryPath, true);
@@ -67,10 +66,8 @@ function loadCanonicalSourceTree(options) {
     tree[family] = readJson(filePath, true);
   }
 
-  for (const family of sourceFamilies) {
-    if (!(family in tree)) {
-      throw new Error(`token build setup: missing canonical token file for family "${family}"`);
-    }
+  if (Object.keys(tree).length === 0) {
+    throw new Error('token build setup: no token family files found in token source directory');
   }
 
   return tree;
@@ -86,12 +83,11 @@ function resolveTokenFiles(pattern) {
 }
 
 function inferFamily(filePath) {
-  if (filePath.endsWith('/core.tokens.json')) return 'core';
-  if (filePath.endsWith('/semantic.tokens.json')) return 'semantic';
-  if (filePath.endsWith('/motion.tokens.json')) return 'motion';
-  if (filePath.endsWith('/spacing.tokens.json')) return 'spacing';
-  if (filePath.endsWith('/radius.tokens.json')) return 'radius';
-  return null;
+  // Theme override files live in the themes/ subdirectory and are loaded separately.
+  if (filePath.includes('/themes/')) return null;
+  const base = path.basename(filePath);
+  const match = /^([a-z][a-z0-9-]*)\.tokens\.json$/.exec(base);
+  return match ? match[1] : null;
 }
 
 function resolveThemeChain(themeRegistry, requestedThemeId) {
@@ -114,19 +110,14 @@ function resolveThemeChain(themeRegistry, requestedThemeId) {
 }
 
 function applyThemeChain(sourceTree, themeChain, options) {
-  const themedTree = {
-    core: cloneValue(sourceTree.core),
-    semantic: cloneValue(sourceTree.semantic),
-    motion: cloneValue(sourceTree.motion),
-    spacing: cloneValue(sourceTree.spacing),
-    radius: cloneValue(sourceTree.radius),
-  };
+  const families = Object.keys(sourceTree);
+  const themedTree = Object.fromEntries(families.map((f) => [f, cloneValue(sourceTree[f])]));
 
   const themesRoot = options.themesRoot ?? path.dirname(themeRegistryPath);
   for (const theme of themeChain) {
     const themeFilePath = path.join(themesRoot, theme.file);
     const themeDoc = readJson(themeFilePath, true);
-    for (const family of sourceFamilies) {
+    for (const family of families) {
       if (family in themeDoc) {
         themedTree[family] = deepMerge(themedTree[family], themeDoc[family]);
       }

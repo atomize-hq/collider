@@ -1,0 +1,16 @@
+{
+  "inventoryVersion": "1",
+  "components": [
+    {
+      "componentId": "thinking-indicator",
+      "validatorKinds": ["default", "variant-matrix", "state-matrix", "motion", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-thinking-indicator--default" },
+        { "kind": "variant-matrix", "storyId": "ai-elements-thinking-indicator--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "ai-elements-thinking-indicator--state-matrix" },
+        { "kind": "motion", "storyId": "ai-elements-thinking-indicator--motion" },
+        { "kind": "docs", "storyId": "ai-elements-thinking-indicator--docs" }
+      ]
+    }
+  ]
+}

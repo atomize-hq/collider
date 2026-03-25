@@ -6,33 +6,6 @@
   },
   "components": [
     {
-      "componentId": "thinking-indicator",
-      "pilotStatus": "active",
-      "handoffStatus": "source-ready",
-      "variantAxes": [
-        {
-          "name": "state",
-          "values": ["streaming", "expanded", "collapsed", "duration"]
-        }
-      ],
-      "defaults": {
-        "variants": {
-          "state": "collapsed"
-        },
-        "state": "rest"
-      },
-      "slots": ["trigger", "icon", "content"],
-      "states": ["rest", "hover", "focus", "disabled"],
-      "fallbacks": {
-        "missingVariantBehavior": "use-defaults",
-        "stateFallbacks": {
-          "hover": "rest",
-          "focus": "rest",
-          "disabled": "rest"
-        }
-      }
-    },
-    {
       "componentId": "input",
       "pilotStatus": "deferred",
       "handoffStatus": "source-ready"

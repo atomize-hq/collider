@@ -237,16 +237,31 @@ describe('reusable component promotion gate CLI and workflow contract', () => {
 
 function copyBaseWorkspace() {
   const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'reusable-component-promotion-'));
-  for (const repoRelativePath of [
-    'src/figma/sync-ledger.json',
-    'storybook/story-inventory.json',
-    'storybook/component-specs/thinking-indicator.json',
-    'artifacts/storybook/proof-coverage.json',
-    'artifacts/chromatic/status.json',
-    'artifacts/harness/reusable-component-mapping-status.json',
-  ]) {
-    const sourcePath = path.join(repoRoot, repoRelativePath);
-    const targetPath = path.join(workspace, repoRelativePath);
+  const filesToCopy: Array<{ source: string; dest: string }> = [
+    { source: 'src/figma/sync-ledger.json', dest: 'src/figma/sync-ledger.json' },
+    {
+      source: 'scripts/fixtures/component-mapping-workspace/storybook/story-inventory.json',
+      dest: 'storybook/story-inventory.json',
+    },
+    {
+      source:
+        'scripts/fixtures/reusable-component-mapping/complete/storybook/component-specs/thinking-indicator.json',
+      dest: 'storybook/component-specs/thinking-indicator.json',
+    },
+    {
+      source:
+        'scripts/fixtures/component-mapping-workspace/artifacts/storybook/proof-coverage.json',
+      dest: 'artifacts/storybook/proof-coverage.json',
+    },
+    { source: 'artifacts/chromatic/status.json', dest: 'artifacts/chromatic/status.json' },
+    {
+      source: 'artifacts/harness/reusable-component-mapping-status.json',
+      dest: 'artifacts/harness/reusable-component-mapping-status.json',
+    },
+  ];
+  for (const { source, dest } of filesToCopy) {
+    const sourcePath = path.join(repoRoot, source);
+    const targetPath = path.join(workspace, dest);
     fs.mkdirSync(path.dirname(targetPath), { recursive: true });
     fs.cpSync(sourcePath, targetPath);
   }

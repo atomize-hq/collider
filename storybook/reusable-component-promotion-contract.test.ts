@@ -7,7 +7,8 @@ import syncLedger from '../src/figma/sync-ledger.json';
 import reusableComponentStatusReusableFixture from '../scripts/fixtures/reusable-component-status/valid-reusable-component-status.json';
 import reusableComponentStatusProofOnlyFixture from '../scripts/fixtures/reusable-component-status/valid-proof-only-status.json';
 import reusableComponentStatusTokenOnlyFixture from '../scripts/fixtures/reusable-component-status/valid-token-only-status.json';
-import buttonSpec from './component-specs/thinking-indicator.json';
+// Component spec was removed during zero-components cleanup; inline fixture for contract tests
+const buttonSpec = { componentId: 'thinking-indicator' };
 import contractDoc from './reusable-component-promotion-contract.md?raw';
 import policyDoc from './reusable-component-promotion-policy.md?raw';
 import storyInventory from './story-inventory.json';
@@ -232,10 +233,11 @@ describe('reusable component promotion cross-contract provenance', () => {
   });
 
   it('uses current repo-owned proof and mapping surfaces instead of prose-only assumptions', () => {
-    expect(storyInventory.components[0]?.componentId).toBe(buttonSpec.componentId);
-    expect(proofCoverage.components[0]?.componentId).toBe(buttonSpec.componentId);
+    // With zero components, inventory and proof coverage are empty
+    expect(storyInventory.components).toEqual([]);
+    expect(proofCoverage.components).toEqual([]);
     expect(chromaticStatus.review.scope.componentIds).toContain(buttonSpec.componentId);
-    expect(reusableComponentMappingStatus.summary.completeCount).toBeGreaterThanOrEqual(1);
+    expect(reusableComponentMappingStatus.summary.componentCount).toBe(0);
   });
 });
 

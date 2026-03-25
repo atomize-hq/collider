@@ -160,7 +160,7 @@ Every design-system component story must embed a Figma link via `@storybook/addo
 parameters: {
   design: {
     type: 'figma',
-    url: 'https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=<nodeId>',
+    url: 'https://www.figma.com/design/SVcsU6gVvpezsJYrvBsS3V?node-id=<nodeId>',
   },
 },
 ```

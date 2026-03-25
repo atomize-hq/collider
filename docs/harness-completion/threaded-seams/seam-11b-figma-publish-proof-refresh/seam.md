@@ -61,7 +61,7 @@ open_remediations: []
 - **Touch surface**:
   - `src/figma/sync-ledger.json` (write)
   - `design-tokens/dist/figma/tokens.json` (read-only)
-  - Figma file `figma://file/23PLdynlRYoBYQx9teoC8A` (write target via plugin)
+  - Figma file `figma://file/SVcsU6gVvpezsJYrvBsS3V` (write target via plugin)
   - Proof evidence artifact (new, created during execution)
 
 - **Verification**:

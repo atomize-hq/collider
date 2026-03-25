@@ -30,7 +30,7 @@ Checked-in manifest of expected Figma node state. Analogous to `sync-ledger.json
 ```json
 {
   "manifestVersion": "1",
-  "fileKey": "23PLdynlRYoBYQx9teoC8A",
+  "fileKey": "SVcsU6gVvpezsJYrvBsS3V",
   "components": [
     {
       "componentId": "thinking-indicator",

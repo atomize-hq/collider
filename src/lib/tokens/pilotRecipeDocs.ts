@@ -46,11 +46,14 @@ export type PilotRecipeDocsModel = {
 export function buildPilotRecipeDocsModel(
   sourceRecipeIndex: RecipeIndexContract,
   artifactRecipeMap: Record<string, unknown>
-): PilotRecipeDocsModel {
+): PilotRecipeDocsModel | null {
   const pilotRecipes = sourceRecipeIndex.recipes.filter((entry) => entry.status === 'pilot');
-  if (pilotRecipes.length !== 1) {
+  if (pilotRecipes.length === 0) {
+    return null;
+  }
+  if (pilotRecipes.length > 1) {
     throw new Error(
-      `Expected exactly one pilot recipe entry in design-tokens/src/recipes/index.json, found ${pilotRecipes.length}.`
+      `Expected at most one pilot recipe entry in design-tokens/src/recipes/index.json, found ${pilotRecipes.length}.`
     );
   }
 
@@ -88,7 +91,7 @@ export function buildPilotRecipeDocsModel(
   };
 }
 
-export function loadPilotRecipeDocsModel() {
+export function loadPilotRecipeDocsModel(): PilotRecipeDocsModel | null {
   return buildPilotRecipeDocsModel(recipeIndex, recipeMap);
 }
 

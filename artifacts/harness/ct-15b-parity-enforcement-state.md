@@ -83,7 +83,7 @@ The consumer detects stale state by:
   "publish": {
     "mode": "plugin-import-manual",
     "tokensStudioCarrier": false,
-    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
+    "figmaFile": "figma://file/SVcsU6gVvpezsJYrvBsS3V"
   },
   "verification": {
     "materializationStatus": "passed",

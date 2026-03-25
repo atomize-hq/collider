@@ -49,7 +49,7 @@ candidate_subslices: []
   - CT-7B (ledger schema shape — consumed to know which fields to write)
   - CT-8B (drift gate — consumed to confirm no drift block prevents the proof)
   - `design-tokens/dist/figma/tokens.json` at current revision (read-only input)
-  - Figma file `figma://file/23PLdynlRYoBYQx9teoC8A` (write target via plugin)
+  - Figma file `figma://file/SVcsU6gVvpezsJYrvBsS3V` (write target via plugin)
 
 - **Verification**:
   - JSON schema validation on sync-ledger.json post-update
@@ -85,7 +85,7 @@ Checklist:
 - **Outcome**: Run the plugin-import-manual rail against the Figma file using the current token artifact
 - **Inputs/outputs**: `design-tokens/dist/figma/tokens.json` + Figma plugin -> import result (success/failure)
 - **Thread/contract refs**: CT-8B (drift gate must not block)
-- **Implementation notes**: Open the Figma plugin import UI, load the token file, execute the import against `figma://file/23PLdynlRYoBYQx9teoC8A`. The source-of-truth direction is repo -> Figma, never reverse.
+- **Implementation notes**: Open the Figma plugin import UI, load the token file, execute the import against `figma://file/SVcsU6gVvpezsJYrvBsS3V`. The source-of-truth direction is repo -> Figma, never reverse.
 - **Acceptance criteria**: Plugin import completes without errors, or failure is documented with specific error details
 - **Test notes**: Visual confirmation that Figma variables match the expected token set
 - **Risk/rollback notes**: If import fails, do NOT update the ledger. Document the failure and evaluate whether remediation is needed.

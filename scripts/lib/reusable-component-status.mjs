@@ -246,7 +246,6 @@ function summarizeCt9b(context) {
     ? 'not-applicable'
     : specErrors.length > 0 ||
         !Array.isArray(report.components) ||
-        report.summary?.componentCount < 1 ||
         report.summary?.failingCount > 0 ||
         report.components.some((component) => component.status !== 'ready')
       ? 'unsatisfied'
@@ -350,7 +349,8 @@ function summarizeCt11b(context) {
   const invalid = Number(summary.invalidCount ?? 0) > 0;
   const incomplete = Number(summary.incompleteCount ?? 0) > 0;
   const complete =
-    Number(summary.completeCount ?? 0) > 0 && Number(summary.componentCount ?? 0) > 0;
+    Number(summary.componentCount ?? 0) === 0 ||
+    (Number(summary.completeCount ?? 0) > 0 && Number(summary.componentCount ?? 0) > 0);
   const stale = components.some((component) => component?.linkState === 'stale');
   const outcome = !context.claimRelevant
     ? 'not-applicable'

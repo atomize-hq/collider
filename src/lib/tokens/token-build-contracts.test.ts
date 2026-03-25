@@ -32,9 +32,7 @@ describe('token build contracts', () => {
     );
     expect(typedSource).toContain('export type TokenId = keyof typeof tokenMap;');
     expect(typedSource).toContain('export type RecipeComponentId = keyof typeof recipeMap;');
-    expect(generated.recipeMap['thinking-indicator']).toEqual(
-      graph.recipeMap['thinking-indicator']
-    );
+    expect(generated.recipeMap).toEqual(graph.recipeMap);
   });
 
   it('keeps the figma export token-only and DTCG-shaped', () => {
@@ -47,6 +45,7 @@ describe('token build contracts', () => {
       'radius',
       'semantic',
       'spacing',
+      'theme',
     ]);
     expect(figma).not.toHaveProperty('recipeMap');
     expect(JSON.stringify(figma)).not.toContain('"componentId"');
@@ -114,13 +113,14 @@ describe('token build contracts', () => {
     const modifiedGraph = {
       ...graph,
       recipeMap: {
-        ...graph.recipeMap,
-        'thinking-indicator': {
-          ...graph.recipeMap['thinking-indicator'],
-          defaults: {
-            ...graph.recipeMap['thinking-indicator'].defaults,
-            state: 'hover',
-          },
+        'synthetic-test': {
+          componentId: 'synthetic-test',
+          recipeVersion: '1',
+          variantAxes: [{ name: 'state', values: ['a', 'b'] }],
+          defaults: { state: 'a', variants: { state: 'a' } },
+          slots: {},
+          states: {},
+          fallbacks: { missingVariantBehavior: 'use-defaults', stateFallbacks: {} },
         },
       },
     };

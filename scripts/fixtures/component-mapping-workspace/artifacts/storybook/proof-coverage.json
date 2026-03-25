@@ -1,0 +1,19 @@
+{
+  "proofCoverageVersion": "1",
+  "summary": { "componentCount": 1, "readyCount": 1, "failingCount": 0 },
+  "components": [
+    {
+      "componentId": "thinking-indicator",
+      "tier": "primitive",
+      "status": "ready",
+      "requiredKinds": ["default", "variant-matrix", "state-matrix", "motion", "docs"],
+      "implementedKinds": ["default", "variant-matrix", "state-matrix", "motion", "docs"],
+      "missingKinds": [],
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": "storybook/stories/pilot-recipe-contract.stories.tsx",
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      }
+    }
+  ]
+}

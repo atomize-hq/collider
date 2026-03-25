@@ -12,13 +12,11 @@ const fixtureDir = path.join(repoRoot, 'scripts/fixtures/storybook-proof-structu
 const sharedTierPolicyPath = path.join(fixtureDir, '_shared/component-tier-policy.json');
 
 describe('loadAndValidateStorybookProofStructure', () => {
-  it('accepts the committed pilot proof surfaces', () => {
+  it('accepts the committed zero-component proof surfaces', () => {
     const result = loadAndValidateStorybookProofStructure();
 
     expect(result.errors).toEqual([]);
-    expect(
-      result.data.storyIndex?.fileByStoryId.get('ai-elements-thinking-indicator--default')
-    ).toBe(path.join(repoRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx'));
+    expect(result.data.componentFacts).toEqual([]);
   });
 
   it('accepts the valid fixture pilot', () => {
@@ -26,7 +24,10 @@ describe('loadAndValidateStorybookProofStructure', () => {
 
     expect(result.errors).toEqual([]);
     expect(result.data.storyIndex?.fileByStoryId.get('ai-elements-thinking-indicator--docs')).toBe(
-      path.join(repoRoot, 'src/components/ai-elements/ThinkingIndicator.stories.tsx')
+      path.join(
+        fixturePath('valid-pilot'),
+        'src/components/ai-elements/ThinkingIndicator.stories.tsx'
+      )
     );
     expect(
       result.data.storyIndex?.fileByStoryId.get('contracts-generated-tokens--token-registry')
@@ -140,6 +141,9 @@ function loadFixture(name: string) {
   return loadAndValidateStorybookProofStructure({
     componentTierPolicyPath: sharedTierPolicyPath,
     rootDir: fixturePath(name),
-    storyRoots: [path.join(repoRoot, 'src'), path.join(fixturePath(name), 'storybook/stories')],
+    storyRoots: [
+      path.join(fixturePath(name), 'src'),
+      path.join(fixturePath(name), 'storybook/stories'),
+    ],
   });
 }

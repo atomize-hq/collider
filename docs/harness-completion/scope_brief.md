@@ -45,7 +45,7 @@ execution_horizon:
 
 - **External systems / dependencies**:
   - Figma Variables API (REST, OAuth2)
-  - Figma file `figma://file/23PLdynlRYoBYQx9teoC8A`
+  - Figma file `figma://file/SVcsU6gVvpezsJYrvBsS3V`
   - Current artifact at `design-tokens/dist/figma/tokens.json` (revision `5a567cd7d07860135ab0bfb1d8f2873ef1eec836`)
 
 - **Known unknowns / risks**:
