@@ -50,7 +50,8 @@ export function getTokenDocsModel(): TokenDocsModel {
       themeIds.has(token.themeId),
       `tokenMap.${tokenId} references missing theme "${token.themeId}"`
     );
-    invariant(token.value.length > 0, `tokenMap.${tokenId} is missing a value`);
+    const valueStr = String(token.value);
+    invariant(valueStr.length > 0, `tokenMap.${tokenId} is missing a value`);
 
     const groupId = tokenId.split('.').slice(0, 2).join('.');
     const groupTokens = groups.get(groupId) ?? [];
@@ -59,7 +60,7 @@ export function getTokenDocsModel(): TokenDocsModel {
       id: tokenId,
       themeId: token.themeId,
       type: token.type,
-      value: token.value,
+      value: valueStr,
     });
     groups.set(groupId, groupTokens);
   }

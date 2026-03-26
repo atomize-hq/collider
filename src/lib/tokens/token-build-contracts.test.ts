@@ -40,11 +40,15 @@ describe('token build contracts', () => {
 
     expect(Object.keys(figma)).toEqual([
       '$extensions',
+      'accent',
       'core',
+      'font',
       'motion',
       'radius',
       'semantic',
       'spacing',
+      'tailwind-colors',
+      'tailwind-variables',
       'theme',
     ]);
     expect(figma).not.toHaveProperty('recipeMap');
