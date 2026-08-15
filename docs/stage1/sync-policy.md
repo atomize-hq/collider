@@ -111,7 +111,7 @@ Update the sync ledger entry when:
 
 1. A Code Connect mapping is published (`pnpm figma:connect:publish`)
 2. A Figma library component is visually updated and reconciled with the React component
-3. A token value change is pushed to Figma variables
+3. A token value change is materialized into Figma variables via the repo plugin (`pnpm figma:plugin:build` → run `Collider Token Sync`)
 
 Do not update `syncStatus: "in-sync"` optimistically. It requires a confirmed publish or a manual visual reconciliation.
 
@@ -119,13 +119,13 @@ Do not update `syncStatus: "in-sync"` optimistically. It requires a confirmed pu
 
 ## Who owns what
 
-| Artifact                        | Owner                                                     |
-| ------------------------------- | --------------------------------------------------------- |
-| React component visual fidelity | Code (Stage 2 round-trip)                                 |
-| Figma library component         | Figma (design source)                                     |
-| Code Connect mapping            | Code (repo-managed, reviewed in PR)                       |
-| Design tokens / CSS vars        | Code (`design-tokens/` pipeline)                          |
-| Figma variables                 | Figma (synced via `pnpm figma:sync:variables:enterprise`) |
-| Story inventory                 | Code (`storybook/story-inventory.json`)                   |
-| Sync ledger                     | Code (`src/figma/sync-ledger.json`)                       |
-| Chromatic baseline              | Code + Chromatic CI                                       |
+| Artifact                        | Owner                                                                                                                                                                                                                      |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React component visual fidelity | Code (Stage 2 round-trip)                                                                                                                                                                                                  |
+| Figma library component         | Figma (design source)                                                                                                                                                                                                      |
+| Code Connect mapping            | Code (repo-managed, reviewed in PR)                                                                                                                                                                                        |
+| Design tokens / CSS vars        | Code (`design-tokens/` pipeline)                                                                                                                                                                                           |
+| Figma variables                 | Code → Figma via repo plugin `Collider Token Sync` (`pnpm figma:plugin:build`, mode `plugin-import-manual`); Enterprise Variables REST rail is optional hardening — see [`src/figma/README.md`](../../src/figma/README.md) |
+| Story inventory                 | Code (`storybook/story-inventory.json`)                                                                                                                                                                                    |
+| Sync ledger                     | Code (`src/figma/sync-ledger.json`)                                                                                                                                                                                        |
+| Chromatic baseline              | Code + Chromatic CI                                                                                                                                                                                                        |
