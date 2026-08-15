@@ -3,7 +3,7 @@ name = "app"
 version = "0.1.0"
 description = "A Tauri App"
 authors = ["you"]
-license = ""
+license = "MIT"
 repository = ""
 edition = "2021"
 rust-version = "1.77.2"
@@ -23,3 +23,9 @@ serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
 tauri = { version = "2.10.3", features = [] }
 tauri-plugin-log = "2"
+
+# serde / serde_json are Tauri IPC-command defaults: required as soon as a
+# #[tauri::command] serializes args or return values. Kept ahead of first use;
+# cargo-machete would otherwise flag them as unused.
+[package.metadata.cargo-machete]
+ignored = ["serde", "serde_json"]

@@ -9,6 +9,13 @@ allow = [
   "BSD-3-Clause",
   "Unicode-3.0",
   "Zlib",
+  # Apache-2.0 with the LLVM exception (target-lexicon via cfg-expr). The exception
+  # only relaxes Apache-2.0 terms, so this is strictly more permissive than Apache-2.0.
+  "Apache-2.0 WITH LLVM-exception",
+  # File-level weak copyleft (cssparser, selectors, dtoa-short, option-ext).
+  # Safe to consume as unmodified deps; obligations only apply if we vendor+modify
+  # those specific files. See docs discussion — not viral like GPL.
+  "MPL-2.0",
 ]
 
 [bans]
@@ -17,6 +24,11 @@ wildcards = "allow"
 deny = []
 
 [advisories]
+# Restrict "unmaintained" advisories to our own workspace crates. The remaining
+# unmaintained hits (gtk-rs GTK3 bindings, rust-unic/unic-*, proc-macro-error) are
+# transitive Tauri dependencies with no upstream replacement. Vulnerabilities and
+# unsound advisories are still enforced (deny by default).
+unmaintained = "workspace"
 ignore = []
 
 [sources]
