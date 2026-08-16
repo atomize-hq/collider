@@ -143,6 +143,8 @@ just test-watch   # Vitest unit in watch mode
 
 ### Deep sweep — run before opening a PR
 
+`just sweep` is the required deep gate before any PR or merge — a superset of `just preflight` that adds V8 coverage, knip, cargo-deny, cargo-machete, and Playwright e2e.
+
 ```bash
 just sweep        # Everything: sweep-ts + sweep-rs + storybook + e2e
 just sweep-ts     # prettier + tsc + eslint + vitest coverage + knip
@@ -169,12 +171,16 @@ just build-storybook  # Static Storybook site
 
 ---
 
-## Commit hooks
+## Git hooks
 
-Husky runs on every commit:
+Husky runs on **commit** (`.husky/pre-commit`):
 
 1. **lint-staged** — ESLint + Prettier on staged TS/JS/JSON/CSS files
 2. **cargo fmt check** — if any `.rs` files are staged
+
+…and on **push** (`.husky/pre-push`):
+
+3. **`just preflight`** — token governance + Storybook proof + `just check` + LOC guards + `just test-all`, mirroring CI. Bypass with `git push --no-verify` only when you know why.
 
 ---
 

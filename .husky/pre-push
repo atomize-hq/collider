@@ -1,0 +1,4 @@
+#!/bin/sh
+# Mirror CI before every push: token governance + storybook proof + static
+# checks + LOC guards + full test suite. Bypass in a pinch with `git push --no-verify`.
+just preflight
