@@ -1,5 +1,19 @@
 {
   "proofCoverageVersion": "1",
-  "summary": { "componentCount": 0, "readyCount": 0, "failingCount": 0 },
-  "components": []
+  "summary": { "componentCount": 1, "readyCount": 1, "failingCount": 0 },
+  "components": [
+    {
+      "componentId": "message",
+      "tier": "primitive",
+      "status": "ready",
+      "requiredKinds": ["default", "variant-matrix", "docs"],
+      "implementedKinds": ["default", "variant-matrix", "docs"],
+      "missingKinds": [],
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      }
+    }
+  ]
 }

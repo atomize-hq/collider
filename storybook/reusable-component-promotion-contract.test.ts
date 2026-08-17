@@ -233,9 +233,11 @@ describe('reusable component promotion cross-contract provenance', () => {
   });
 
   it('uses current repo-owned proof and mapping surfaces instead of prose-only assumptions', () => {
-    // With zero components, inventory and proof coverage are empty
-    expect(storyInventory.components).toEqual([]);
-    expect(proofCoverage.components).toEqual([]);
+    // The Message pilot is the first component registered across the proof surfaces.
+    expect(storyInventory.components.map((component) => component.componentId)).toEqual([
+      'message',
+    ]);
+    expect(proofCoverage.components.map((component) => component.componentId)).toEqual(['message']);
     expect(chromaticStatus.review.scope.componentIds).toContain(buttonSpec.componentId);
     expect(reusableComponentMappingStatus.summary.componentCount).toBe(0);
   });

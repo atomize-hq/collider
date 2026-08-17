@@ -11,13 +11,23 @@ import {
 const fixtureDir = path.join(repoRoot, 'scripts/fixtures/storybook-story-inventory');
 
 describe('loadAndValidateStoryInventory', () => {
-  it('accepts the committed empty inventory', () => {
+  it('accepts the committed inventory', () => {
     const result = loadAndValidateStoryInventory(
       path.join(repoRoot, 'storybook/story-inventory.json')
     );
 
     expect(result.errors).toEqual([]);
-    expect(result.data.components).toEqual([]);
+    expect(result.data.components).toEqual([
+      {
+        componentId: 'message',
+        validatorKinds: ['default', 'variant-matrix', 'docs'],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-message--default' },
+          { kind: 'variant-matrix', storyId: 'ai-elements-message--variant-matrix' },
+          { kind: 'docs', storyId: 'ai-elements-message--docs' },
+        ],
+      },
+    ]);
   });
 
   it('accepts the valid sample fixture that uses current Storybook story ids', () => {

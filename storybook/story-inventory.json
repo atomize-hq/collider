@@ -1,4 +1,14 @@
 {
   "inventoryVersion": "1",
-  "components": []
+  "components": [
+    {
+      "componentId": "message",
+      "validatorKinds": ["default", "variant-matrix", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-message--default" },
+        { "kind": "variant-matrix", "storyId": "ai-elements-message--variant-matrix" },
+        { "kind": "docs", "storyId": "ai-elements-message--docs" }
+      ]
+    }
+  ]
 }

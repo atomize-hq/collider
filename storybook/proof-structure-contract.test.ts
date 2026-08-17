@@ -12,11 +12,23 @@ const fixtureDir = path.join(repoRoot, 'scripts/fixtures/storybook-proof-structu
 const sharedTierPolicyPath = path.join(fixtureDir, '_shared/component-tier-policy.json');
 
 describe('loadAndValidateStorybookProofStructure', () => {
-  it('accepts the committed zero-component proof surfaces', () => {
+  it('accepts the committed proof surfaces', () => {
     const result = loadAndValidateStorybookProofStructure();
 
     expect(result.errors).toEqual([]);
-    expect(result.data.componentFacts).toEqual([]);
+    expect(result.data.componentFacts).toEqual([
+      {
+        componentId: 'message',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: ['default', 'variant-matrix', 'docs'],
+        requiredKinds: ['default', 'variant-matrix', 'docs'],
+        tier: 'primitive',
+      },
+    ]);
   });
 
   it('accepts the valid fixture pilot', () => {
