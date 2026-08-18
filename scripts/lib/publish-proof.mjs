@@ -5,8 +5,8 @@ export const defaultPublishProofPath = 'src/figma/publish-proof.json';
 export const publishProofUsage =
   'Usage: node scripts/validate-publish-proof.mjs [path-to-publish-proof.json]';
 export const publishProofArtifactPath = 'design-tokens/dist/figma/tokens.json';
-export const publishProofPilotName = 'Collider - AI Elements';
-export const publishProofPilotFile = 'figma://file/SVcsU6gVvpezsJYrvBsS3V';
+export const publishProofPilotName = 'Collider';
+export const publishProofPilotFile = 'figma://file/23PLdynlRYoBYQx9teoC8A';
 export const publishProofModes = new Set([
   'plugin-import-manual',
   'rest-variables-oauth',

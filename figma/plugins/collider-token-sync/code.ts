@@ -117,33 +117,56 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
       const desired = flattenTokenDocument(payload);
       const desiredByName = new Map(desired.map((entry) => [entry.name, entry]));
 
+      // Upsert semantics: preserve the collection and existing VariableIDs so that
+      // paint bindings on components in this file survive re-syncs. Repo remains
+      // canonical for token *values*; Figma's variable *identity* is durable.
       const collections = await figma.variables.getLocalVariableCollectionsAsync();
-      const existing = collections.find((entry) => entry.name === collectionName);
-      if (existing) {
-        try {
-          existing.remove();
-        } catch (error) {
-          throw new Error(
-            `Cannot remove existing variable collection "${collectionName}". It may be remote/published. Use a copy/pilot file or rename the collection. (${messageForError(
-              error
-            )})`
-          );
-        }
+      let collection = collections.find((entry) => entry.name === collectionName);
+      if (!collection) {
+        collection = figma.variables.createVariableCollection(collectionName);
       }
 
-      const collection = figma.variables.createVariableCollection(collectionName);
-      if (collection.modes.length > 0) {
-        collection.renameMode(collection.modes[0].modeId, modeName);
+      const defaultMode = collection.modes.find(
+        (entry) => entry.modeId === collection!.defaultModeId
+      );
+      if (defaultMode && defaultMode.name !== modeName) {
+        collection.renameMode(defaultMode.modeId, modeName);
       }
       const baseModeId = collection.defaultModeId;
 
-      for (const variable of desired) {
-        const created = figma.variables.createVariable(
-          variable.name,
-          collection,
-          variable.resolvedType
-        );
-        created.setValueForMode(baseModeId, variable.value as PluginVariableValue);
+      const existingByName = new Map<string, Variable>();
+      for (const id of collection.variableIds) {
+        const variable = await figma.variables.getVariableByIdAsync(id);
+        if (variable) {
+          existingByName.set(variable.name, variable);
+        }
+      }
+
+      const toRemove: Variable[] = [];
+      for (const [name, variable] of existingByName) {
+        if (!desiredByName.has(name)) {
+          toRemove.push(variable);
+        }
+      }
+      // Figma variables cannot change resolvedType in place — queue mismatches
+      // for removal so the upsert pass below recreates them cleanly.
+      for (const entry of desired) {
+        const existing = existingByName.get(entry.name);
+        if (existing && existing.resolvedType !== entry.resolvedType) {
+          toRemove.push(existing);
+          existingByName.delete(entry.name);
+        }
+      }
+      for (const variable of toRemove) {
+        variable.remove();
+      }
+
+      for (const entry of desired) {
+        let variable = existingByName.get(entry.name);
+        if (!variable) {
+          variable = figma.variables.createVariable(entry.name, collection, entry.resolvedType);
+        }
+        variable.setValueForMode(baseModeId, entry.value as PluginVariableValue);
       }
 
       const verifyCollections = await figma.variables.getLocalVariableCollectionsAsync();

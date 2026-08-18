@@ -6,7 +6,7 @@
     "gitSha": "9eb468797849e18fde38273a385ca2ad4e2bdd1a"
   },
   "destination": {
-    "name": "Collider - AI Elements"
+    "name": "Collider"
   },
   "materialization": {
     "status": "passed",

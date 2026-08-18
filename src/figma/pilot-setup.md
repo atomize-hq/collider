@@ -4,7 +4,7 @@ This runbook proves the current `CT-7B` plugin-based proof rail for the existing
 
 ## Pilot Inputs
 
-- Pilot file: `Collider Copy pilot` (`figma://file/SVcsU6gVvpezsJYrvBsS3V`)
+- Pilot file: `Collider` (`figma://file/23PLdynlRYoBYQx9teoC8A`)
 - Canonical artifact path: `design-tokens/dist/figma/tokens.json`
 - Canonical local proof URL: `http://localhost:4173/design-tokens/dist/figma/tokens.json`
 
@@ -32,7 +32,7 @@ This runbook proves the current `CT-7B` plugin-based proof rail for the existing
 3. Open the pilot Figma file and run the plugin: `Collider Token Sync`.
 4. Fetch the artifact from the local proof URL:
    `http://localhost:4173/design-tokens/dist/figma/tokens.json`
-5. Sync variables. The plugin will replace the `Collider Tokens` collection deterministically.
+5. Sync variables. The plugin upserts the `Collider Tokens` collection deterministically: existing variables with matching names are updated in place (VariableIDs preserved for downstream bindings), new tokens are created, and stragglers (variables absent from the artifact) are removed.
 
 ## Update The Ledger After The Walkthrough
 

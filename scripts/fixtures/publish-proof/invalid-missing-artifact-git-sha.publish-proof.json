@@ -5,7 +5,7 @@
     "path": "design-tokens/dist/figma/tokens.json"
   },
   "destination": {
-    "name": "Collider - AI Elements",
+    "name": "Collider",
     "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
   },
   "materialization": {
