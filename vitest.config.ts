@@ -15,6 +15,7 @@ export default defineConfig({
       '@radix-ui/react-scroll-area',
       '@radix-ui/react-hover-card',
       '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-progress',
       '@radix-ui/react-tooltip',
       'embla-carousel-react',
       'cmdk',

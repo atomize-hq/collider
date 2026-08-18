@@ -192,6 +192,27 @@ describe('loadAndValidateStoryInventory', () => {
         ],
       },
       {
+        componentId: 'context',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-context--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-context--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-context--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-context--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-context--open-hover-card-flow' },
+          { kind: 'motion', storyId: 'ai-elements-context--hover-card-transition' },
+          { kind: 'docs', storyId: 'ai-elements-context--docs' },
+        ],
+      },
+      {
         componentId: 'prompt-input',
         validatorKinds: [
           'default',
