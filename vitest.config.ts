@@ -12,6 +12,7 @@ export default defineConfig({
       '@radix-ui/react-collapsible',
       '@radix-ui/react-use-controllable-state',
       '@radix-ui/react-select',
+      '@radix-ui/react-scroll-area',
       'motion/react',
       'shiki',
     ],

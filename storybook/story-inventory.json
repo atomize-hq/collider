@@ -134,6 +134,18 @@
         { "kind": "motion", "storyId": "ai-elements-chain-of-thought--collapse-transition" },
         { "kind": "docs", "storyId": "ai-elements-chain-of-thought--docs" }
       ]
+    },
+    {
+      "componentId": "suggestion",
+      "validatorKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-suggestion--default" },
+        { "kind": "variant-matrix", "storyId": "ai-elements-suggestion--variant-matrix" },
+        { "kind": "actions", "storyId": "ai-elements-suggestion--click-action" },
+        { "kind": "keyboard", "storyId": "ai-elements-suggestion--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-suggestion--focus" },
+        { "kind": "docs", "storyId": "ai-elements-suggestion--docs" }
+      ]
     }
   ]
 }

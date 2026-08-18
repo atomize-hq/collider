@@ -1,0 +1,33 @@
+{
+  "specVersion": "1",
+  "componentId": "suggestion",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-suggestion--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-suggestion--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "ai-elements-suggestion--click-action", "kinds": ["actions"] },
+    { "storyId": "ai-elements-suggestion--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-suggestion--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-suggestion--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/suggestion.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2207-395",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-suggestion--default",
+      "ai-elements-suggestion--variant-matrix",
+      "ai-elements-suggestion--click-action",
+      "ai-elements-suggestion--keyboard",
+      "ai-elements-suggestion--focus",
+      "ai-elements-suggestion--docs"
+    ]
+  }
+}
