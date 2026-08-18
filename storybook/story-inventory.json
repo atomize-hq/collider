@@ -167,6 +167,27 @@
         { "kind": "motion", "storyId": "ai-elements-inline-citation--hover-card-transition" },
         { "kind": "docs", "storyId": "ai-elements-inline-citation--docs" }
       ]
+    },
+    {
+      "componentId": "prompt-input",
+      "validatorKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-prompt-input--default" },
+        { "kind": "state-matrix", "storyId": "ai-elements-prompt-input--state-matrix" },
+        { "kind": "keyboard", "storyId": "ai-elements-prompt-input--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-prompt-input--focus" },
+        { "kind": "workflow", "storyId": "ai-elements-prompt-input--workflow" },
+        { "kind": "motion", "storyId": "ai-elements-prompt-input--submit-status-motion" },
+        { "kind": "docs", "storyId": "ai-elements-prompt-input--docs" }
+      ]
     }
   ]
 }

@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "prompt-input",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-prompt-input--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-prompt-input--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-prompt-input--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-prompt-input--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-prompt-input--workflow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-prompt-input--submit-status-motion", "kinds": ["motion"] },
+    { "storyId": "ai-elements-prompt-input--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/prompt-input.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2225-1578",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-prompt-input--default",
+      "ai-elements-prompt-input--state-matrix",
+      "ai-elements-prompt-input--keyboard",
+      "ai-elements-prompt-input--focus",
+      "ai-elements-prompt-input--workflow",
+      "ai-elements-prompt-input--submit-status-motion",
+      "ai-elements-prompt-input--docs"
+    ]
+  }
+}
