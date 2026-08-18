@@ -1,0 +1,46 @@
+{
+  "specVersion": "1",
+  "componentId": "chain-of-thought",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "variant-matrix",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-chain-of-thought--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-chain-of-thought--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "ai-elements-chain-of-thought--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-chain-of-thought--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-chain-of-thought--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-chain-of-thought--expand-collapse-flow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-chain-of-thought--collapse-transition", "kinds": ["motion"] },
+    { "storyId": "ai-elements-chain-of-thought--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/chain-of-thought.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2206-387",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-chain-of-thought--default",
+      "ai-elements-chain-of-thought--variant-matrix",
+      "ai-elements-chain-of-thought--state-matrix",
+      "ai-elements-chain-of-thought--keyboard",
+      "ai-elements-chain-of-thought--focus",
+      "ai-elements-chain-of-thought--expand-collapse-flow",
+      "ai-elements-chain-of-thought--collapse-transition",
+      "ai-elements-chain-of-thought--docs"
+    ]
+  }
+}

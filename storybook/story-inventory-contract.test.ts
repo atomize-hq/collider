@@ -129,6 +129,29 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-task--docs' },
         ],
       },
+      {
+        componentId: 'chain-of-thought',
+        validatorKinds: [
+          'default',
+          'variant-matrix',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-chain-of-thought--default' },
+          { kind: 'variant-matrix', storyId: 'ai-elements-chain-of-thought--variant-matrix' },
+          { kind: 'state-matrix', storyId: 'ai-elements-chain-of-thought--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-chain-of-thought--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-chain-of-thought--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-chain-of-thought--expand-collapse-flow' },
+          { kind: 'motion', storyId: 'ai-elements-chain-of-thought--collapse-transition' },
+          { kind: 'docs', storyId: 'ai-elements-chain-of-thought--docs' },
+        ],
+      },
     ]);
   });
 
