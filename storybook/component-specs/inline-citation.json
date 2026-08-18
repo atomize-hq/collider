@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "inline-citation",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-inline-citation--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-inline-citation--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-inline-citation--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-inline-citation--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-inline-citation--open-hover-card-flow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-inline-citation--hover-card-transition", "kinds": ["motion"] },
+    { "storyId": "ai-elements-inline-citation--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/inline-citation.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2221-1257",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-inline-citation--default",
+      "ai-elements-inline-citation--state-matrix",
+      "ai-elements-inline-citation--keyboard",
+      "ai-elements-inline-citation--focus",
+      "ai-elements-inline-citation--open-hover-card-flow",
+      "ai-elements-inline-citation--hover-card-transition",
+      "ai-elements-inline-citation--docs"
+    ]
+  }
+}

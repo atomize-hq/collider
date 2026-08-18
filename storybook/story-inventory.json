@@ -146,6 +146,27 @@
         { "kind": "focus", "storyId": "ai-elements-suggestion--focus" },
         { "kind": "docs", "storyId": "ai-elements-suggestion--docs" }
       ]
+    },
+    {
+      "componentId": "inline-citation",
+      "validatorKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-inline-citation--default" },
+        { "kind": "state-matrix", "storyId": "ai-elements-inline-citation--state-matrix" },
+        { "kind": "keyboard", "storyId": "ai-elements-inline-citation--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-inline-citation--focus" },
+        { "kind": "workflow", "storyId": "ai-elements-inline-citation--open-hover-card-flow" },
+        { "kind": "motion", "storyId": "ai-elements-inline-citation--hover-card-transition" },
+        { "kind": "docs", "storyId": "ai-elements-inline-citation--docs" }
+      ]
     }
   ]
 }

@@ -13,6 +13,8 @@ export default defineConfig({
       '@radix-ui/react-use-controllable-state',
       '@radix-ui/react-select',
       '@radix-ui/react-scroll-area',
+      '@radix-ui/react-hover-card',
+      'embla-carousel-react',
       'motion/react',
       'shiki',
     ],
