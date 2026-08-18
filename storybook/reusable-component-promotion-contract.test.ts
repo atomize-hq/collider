@@ -233,13 +233,16 @@ describe('reusable component promotion cross-contract provenance', () => {
   });
 
   it('uses current repo-owned proof and mapping surfaces instead of prose-only assumptions', () => {
-    // Message (primitive) then Reasoning (interactive) are the components registered
-    // across the proof surfaces, in Stage-2 loop order.
+    // Story inventory preserves Stage-2 loop order: Message (primitive), Reasoning
+    // (interactive), then CodeBlock (primitive).
     expect(storyInventory.components.map((component) => component.componentId)).toEqual([
       'message',
       'reasoning',
+      'code-block',
     ]);
+    // Proof coverage is generated in componentId-sorted order.
     expect(proofCoverage.components.map((component) => component.componentId)).toEqual([
+      'code-block',
       'message',
       'reasoning',
     ]);

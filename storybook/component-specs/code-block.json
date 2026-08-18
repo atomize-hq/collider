@@ -1,0 +1,33 @@
+{
+  "specVersion": "1",
+  "componentId": "code-block",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "state-matrix", "actions", "async", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-code-block--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-code-block--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "ai-elements-code-block--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-code-block--copy-action", "kinds": ["actions"] },
+    { "storyId": "ai-elements-code-block--async-highlight", "kinds": ["async"] },
+    { "storyId": "ai-elements-code-block--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/code-block.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2199-32",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-code-block--default",
+      "ai-elements-code-block--variant-matrix",
+      "ai-elements-code-block--state-matrix",
+      "ai-elements-code-block--copy-action",
+      "ai-elements-code-block--async-highlight",
+      "ai-elements-code-block--docs"
+    ]
+  }
+}

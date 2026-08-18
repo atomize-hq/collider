@@ -32,6 +32,18 @@
         { "kind": "async", "storyId": "ai-elements-reasoning--streaming-states" },
         { "kind": "docs", "storyId": "ai-elements-reasoning--docs" }
       ]
+    },
+    {
+      "componentId": "code-block",
+      "validatorKinds": ["default", "variant-matrix", "state-matrix", "actions", "async", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-code-block--default" },
+        { "kind": "variant-matrix", "storyId": "ai-elements-code-block--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "ai-elements-code-block--state-matrix" },
+        { "kind": "actions", "storyId": "ai-elements-code-block--copy-action" },
+        { "kind": "async", "storyId": "ai-elements-code-block--async-highlight" },
+        { "kind": "docs", "storyId": "ai-elements-code-block--docs" }
+      ]
     }
   ]
 }

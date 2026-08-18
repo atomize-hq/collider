@@ -16,6 +16,9 @@ const eslintConfig = defineConfig([
     'next-env.d.ts',
     'src/components/ai-elements/reasoning.tsx',
     'src/components/ai-elements/shimmer.tsx',
+    // Vendored ai-elements: intentional invalidate-during-render ref pattern in
+    // the shiki token pipeline trips react-hooks/refs; kept as upstream ships it.
+    'src/components/ai-elements/code-block-body.tsx',
   ]),
 ]);
 

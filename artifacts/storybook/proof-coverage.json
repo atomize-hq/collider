@@ -1,7 +1,20 @@
 {
   "proofCoverageVersion": "1",
-  "summary": { "componentCount": 2, "readyCount": 2, "failingCount": 0 },
+  "summary": { "componentCount": 3, "readyCount": 3, "failingCount": 0 },
   "components": [
+    {
+      "componentId": "code-block",
+      "tier": "primitive",
+      "status": "ready",
+      "requiredKinds": ["default", "variant-matrix", "state-matrix", "actions", "async", "docs"],
+      "implementedKinds": ["default", "variant-matrix", "state-matrix", "actions", "async", "docs"],
+      "missingKinds": [],
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      }
+    },
     {
       "componentId": "message",
       "tier": "primitive",

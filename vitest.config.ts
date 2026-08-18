@@ -11,7 +11,9 @@ export default defineConfig({
       '@storybook/nextjs-vite',
       '@radix-ui/react-collapsible',
       '@radix-ui/react-use-controllable-state',
+      '@radix-ui/react-select',
       'motion/react',
+      'shiki',
     ],
   },
   resolve: {
