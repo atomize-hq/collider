@@ -68,6 +68,37 @@ describe('loadAndValidateStorybookProofStructure', () => {
         ],
         tier: 'interactive',
       },
+      {
+        componentId: 'tool',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: [
+          'default',
+          'variant-matrix',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'async',
+          'docs',
+        ],
+        requiredKinds: [
+          'default',
+          'variant-matrix',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'async',
+          'docs',
+        ],
+        tier: 'interactive',
+      },
     ]);
   });
 

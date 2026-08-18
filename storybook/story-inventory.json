@@ -44,6 +44,31 @@
         { "kind": "async", "storyId": "ai-elements-code-block--async-highlight" },
         { "kind": "docs", "storyId": "ai-elements-code-block--docs" }
       ]
+    },
+    {
+      "componentId": "tool",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
+        "async",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-tool--default" },
+        { "kind": "variant-matrix", "storyId": "ai-elements-tool--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "ai-elements-tool--state-matrix" },
+        { "kind": "keyboard", "storyId": "ai-elements-tool--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-tool--focus" },
+        { "kind": "workflow", "storyId": "ai-elements-tool--expand-collapse-flow" },
+        { "kind": "motion", "storyId": "ai-elements-tool--collapse-transition" },
+        { "kind": "async", "storyId": "ai-elements-tool--tool-call-lifecycle" },
+        { "kind": "docs", "storyId": "ai-elements-tool--docs" }
+      ]
     }
   ]
 }
