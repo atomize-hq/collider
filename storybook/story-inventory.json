@@ -230,6 +230,27 @@
         { "kind": "variant-matrix", "storyId": "ai-elements-image--variant-matrix" },
         { "kind": "docs", "storyId": "ai-elements-image--docs" }
       ]
+    },
+    {
+      "componentId": "open-in-chat",
+      "validatorKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-open-in-chat--default" },
+        { "kind": "state-matrix", "storyId": "ai-elements-open-in-chat--state-matrix" },
+        { "kind": "keyboard", "storyId": "ai-elements-open-in-chat--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-open-in-chat--focus" },
+        { "kind": "workflow", "storyId": "ai-elements-open-in-chat--open-menu-flow" },
+        { "kind": "motion", "storyId": "ai-elements-open-in-chat--menu-open-transition" },
+        { "kind": "docs", "storyId": "ai-elements-open-in-chat--docs" }
+      ]
     }
   ]
 }
