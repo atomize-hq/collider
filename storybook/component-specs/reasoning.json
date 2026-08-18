@@ -1,0 +1,46 @@
+{
+  "specVersion": "1",
+  "componentId": "reasoning",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "async",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-reasoning--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-reasoning--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-reasoning--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-reasoning--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-reasoning--expand-collapse-flow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-reasoning--collapse-transition", "kinds": ["motion"] },
+    { "storyId": "ai-elements-reasoning--streaming-states", "kinds": ["async"] },
+    { "storyId": "ai-elements-reasoning--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/reasoning.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2130-6",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-reasoning--default",
+      "ai-elements-reasoning--state-matrix",
+      "ai-elements-reasoning--keyboard",
+      "ai-elements-reasoning--focus",
+      "ai-elements-reasoning--expand-collapse-flow",
+      "ai-elements-reasoning--collapse-transition",
+      "ai-elements-reasoning--streaming-states",
+      "ai-elements-reasoning--docs"
+    ]
+  }
+}

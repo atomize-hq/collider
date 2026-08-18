@@ -27,6 +27,29 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-message--docs' },
         ],
       },
+      {
+        componentId: 'reasoning',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'async',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-reasoning--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-reasoning--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-reasoning--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-reasoning--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-reasoning--expand-collapse-flow' },
+          { kind: 'motion', storyId: 'ai-elements-reasoning--collapse-transition' },
+          { kind: 'async', storyId: 'ai-elements-reasoning--streaming-states' },
+          { kind: 'docs', storyId: 'ai-elements-reasoning--docs' },
+        ],
+      },
     ]);
   });
 

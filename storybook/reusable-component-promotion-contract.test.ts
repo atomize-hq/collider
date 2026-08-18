@@ -233,11 +233,16 @@ describe('reusable component promotion cross-contract provenance', () => {
   });
 
   it('uses current repo-owned proof and mapping surfaces instead of prose-only assumptions', () => {
-    // The Message pilot is the first component registered across the proof surfaces.
+    // Message (primitive) then Reasoning (interactive) are the components registered
+    // across the proof surfaces, in Stage-2 loop order.
     expect(storyInventory.components.map((component) => component.componentId)).toEqual([
       'message',
+      'reasoning',
     ]);
-    expect(proofCoverage.components.map((component) => component.componentId)).toEqual(['message']);
+    expect(proofCoverage.components.map((component) => component.componentId)).toEqual([
+      'message',
+      'reasoning',
+    ]);
     expect(chromaticStatus.review.scope.componentIds).toContain(buttonSpec.componentId);
     expect(reusableComponentMappingStatus.summary.componentCount).toBe(0);
   });

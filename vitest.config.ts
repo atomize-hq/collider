@@ -5,7 +5,14 @@ import path from 'path';
 
 export default defineConfig({
   optimizeDeps: {
-    include: ['@storybook/nextjs-vite'],
+    // Pre-bundle deps that stories pull in so the Storybook browser project does
+    // not re-optimize and reload mid-test on a cold cache (e.g. CI / just preflight).
+    include: [
+      '@storybook/nextjs-vite',
+      '@radix-ui/react-collapsible',
+      '@radix-ui/react-use-controllable-state',
+      'motion/react',
+    ],
   },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },

@@ -28,6 +28,35 @@ describe('loadAndValidateStorybookProofStructure', () => {
         requiredKinds: ['default', 'variant-matrix', 'docs'],
         tier: 'primitive',
       },
+      {
+        componentId: 'reasoning',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'async',
+          'docs',
+        ],
+        requiredKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'async',
+          'docs',
+        ],
+        tier: 'interactive',
+      },
     ]);
   });
 
