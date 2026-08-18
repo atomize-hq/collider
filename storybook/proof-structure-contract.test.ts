@@ -85,6 +85,17 @@ describe('loadAndValidateStorybookProofStructure', () => {
         tier: 'interactive',
       },
       {
+        componentId: 'image',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: ['default', 'variant-matrix', 'docs'],
+        requiredKinds: ['default', 'variant-matrix', 'docs'],
+        tier: 'primitive',
+      },
+      {
         componentId: 'inline-citation',
         generatedArtifactRefs: {
           tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',

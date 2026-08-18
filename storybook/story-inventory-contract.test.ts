@@ -248,6 +248,15 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-snippet--docs' },
         ],
       },
+      {
+        componentId: 'image',
+        validatorKinds: ['default', 'variant-matrix', 'docs'],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-image--default' },
+          { kind: 'variant-matrix', storyId: 'ai-elements-image--variant-matrix' },
+          { kind: 'docs', storyId: 'ai-elements-image--docs' },
+        ],
+      },
     ]);
   });
 
