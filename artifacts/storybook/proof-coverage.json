@@ -1,6 +1,6 @@
 {
   "proofCoverageVersion": "1",
-  "summary": { "componentCount": 11, "readyCount": 11, "failingCount": 0 },
+  "summary": { "componentCount": 12, "readyCount": 12, "failingCount": 0 },
   "components": [
     {
       "componentId": "chain-of-thought",
@@ -170,6 +170,19 @@
         "async",
         "docs"
       ],
+      "missingKinds": [],
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      }
+    },
+    {
+      "componentId": "snippet",
+      "tier": "primitive",
+      "status": "ready",
+      "requiredKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
+      "implementedKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
       "missingKinds": [],
       "generatedArtifactRefs": {
         "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",

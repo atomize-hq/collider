@@ -179,6 +179,17 @@ describe('loadAndValidateStorybookProofStructure', () => {
         tier: 'interactive',
       },
       {
+        componentId: 'snippet',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: ['default', 'variant-matrix', 'actions', 'keyboard', 'focus', 'docs'],
+        requiredKinds: ['default', 'variant-matrix', 'actions', 'keyboard', 'focus', 'docs'],
+        tier: 'primitive',
+      },
+      {
         componentId: 'sources',
         generatedArtifactRefs: {
           tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',

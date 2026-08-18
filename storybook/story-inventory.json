@@ -209,6 +209,18 @@
         { "kind": "motion", "storyId": "ai-elements-prompt-input--submit-status-motion" },
         { "kind": "docs", "storyId": "ai-elements-prompt-input--docs" }
       ]
+    },
+    {
+      "componentId": "snippet",
+      "validatorKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-snippet--default" },
+        { "kind": "variant-matrix", "storyId": "ai-elements-snippet--variant-matrix" },
+        { "kind": "actions", "storyId": "ai-elements-snippet--copy-action" },
+        { "kind": "keyboard", "storyId": "ai-elements-snippet--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-snippet--focus" },
+        { "kind": "docs", "storyId": "ai-elements-snippet--docs" }
+      ]
     }
   ]
 }
