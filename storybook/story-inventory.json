@@ -69,6 +69,27 @@
         { "kind": "async", "storyId": "ai-elements-tool--tool-call-lifecycle" },
         { "kind": "docs", "storyId": "ai-elements-tool--docs" }
       ]
+    },
+    {
+      "componentId": "sources",
+      "validatorKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-sources--default" },
+        { "kind": "state-matrix", "storyId": "ai-elements-sources--state-matrix" },
+        { "kind": "keyboard", "storyId": "ai-elements-sources--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-sources--focus" },
+        { "kind": "workflow", "storyId": "ai-elements-sources--expand-collapse-flow" },
+        { "kind": "motion", "storyId": "ai-elements-sources--collapse-transition" },
+        { "kind": "docs", "storyId": "ai-elements-sources--docs" }
+      ]
     }
   ]
 }

@@ -240,12 +240,14 @@ describe('reusable component promotion cross-contract provenance', () => {
       'reasoning',
       'code-block',
       'tool',
+      'sources',
     ]);
     // Proof coverage is generated in componentId-sorted order.
     expect(proofCoverage.components.map((component) => component.componentId)).toEqual([
       'code-block',
       'message',
       'reasoning',
+      'sources',
       'tool',
     ]);
     expect(chromaticStatus.review.scope.componentIds).toContain(buttonSpec.componentId);
