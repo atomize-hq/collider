@@ -278,6 +278,18 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-open-in-chat--docs' },
         ],
       },
+      {
+        componentId: 'artifact',
+        validatorKinds: ['default', 'variant-matrix', 'actions', 'keyboard', 'focus', 'docs'],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-artifact--default' },
+          { kind: 'variant-matrix', storyId: 'ai-elements-artifact--variant-matrix' },
+          { kind: 'actions', storyId: 'ai-elements-artifact--copy-action' },
+          { kind: 'keyboard', storyId: 'ai-elements-artifact--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-artifact--focus' },
+          { kind: 'docs', storyId: 'ai-elements-artifact--docs' },
+        ],
+      },
     ]);
   });
 

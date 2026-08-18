@@ -18,6 +18,17 @@ describe('loadAndValidateStorybookProofStructure', () => {
     expect(result.errors).toEqual([]);
     expect(result.data.componentFacts).toEqual([
       {
+        componentId: 'artifact',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: ['default', 'variant-matrix', 'actions', 'keyboard', 'focus', 'docs'],
+        requiredKinds: ['default', 'variant-matrix', 'actions', 'keyboard', 'focus', 'docs'],
+        tier: 'primitive',
+      },
+      {
         componentId: 'chain-of-thought',
         generatedArtifactRefs: {
           tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
