@@ -6,7 +6,7 @@ memory notes or old snapshots as canonical.
 
 - **Registry total:** 48 components
 - **Fresh as of:** 2026-08-19
-- **Progress:** 23/48 done via Stage-2 (all 23 loops committed)
+- **Progress:** 24/48 done via Stage-2 (all 24 loops committed)
 - **Source of truth:** <https://elements.ai-sdk.dev/api/registry/registry.json>
 - **Per-component source:** `https://elements.ai-sdk.dev/api/registry/<name>.json`
 - **Refresh:** fetch the two URLs above, diff against the alphabetical index at the bottom, update statuses,
@@ -22,52 +22,52 @@ memory notes or old snapshots as canonical.
 | 🌉 bridge | Stage-3 assembly primitive, not a Stage-2 loop target                      |
 | ⏸️ parked | Out of the current transcript + coding-agent scope                         |
 
-## ✅ Done (23) — Tier A + Tier B + composer + coding-agent (4/12)
+## ✅ Done (24) — Tier A + Tier B + composer + coding-agent (5/12)
 
 Ordered by loop number.
 
-| #   | Component        | Cluster      | Commit  | Notes                                                       |
-| --- | ---------------- | ------------ | ------- | ----------------------------------------------------------- |
-| 1   | message          | Tier A       | 1d6445b | First component; established the loop shape                 |
-| 2   | reasoning        | Tier A       | 17cf091 | Introduced shimmer                                          |
-| 3   | code-block       | Tier A       | a395f0c | shiki-backed; split into 4 files                            |
-| 4   | tool             | Tier A       | 3759598 | Interactive tier baseline                                   |
-| 5   | sources          | Tier A       | 744ca96 | First primitive tier                                        |
-| 6   | task             | Tier A       | f118a9b | asChild-button reconcile                                    |
-| 7   | chain-of-thought | Tier A       | 39cd15d | Compound flow steps                                         |
-| 8   | suggestion       | Tier A       | 80379f9 | Chip strip                                                  |
-| 9   | inline-citation  | Tier A       | 2b4c5b4 | Hover-card + carousel deps                                  |
-| 10  | prompt-input     | Tier B       | b138a6d | 1464→8 files; 6 new ui prims                                |
-| 11  | context          | Tier B       | ff3a259 | tokenlens + progress                                        |
-| 12  | snippet          | Tier B       | 1729d41 | Monospace copy pill                                         |
-| 13  | image            | Tier B       | 059a6ab | 17 LOC wrapper                                              |
-| 14  | open-in-chat     | Tier B       | 5310d51 | Dropdown with 6 providers                                   |
-| 15  | artifact         | Tier B       | 3583c43 | Bordered file card                                          |
-| 16  | web-preview      | Tier B       | 65437e9 | LOC-split; Figma rebuilt to v3 (d384303)                    |
-| 17  | confirmation     | Tier B       | b5e16bc | New alert ui prim                                           |
-| 18  | plan             | Tier B       | fd21718 | New card ui prim; closed Tier B                             |
-| 19  | attachments      | Composer     | 0f9e385 | 3 variants (grid/inline/list); LOC-split into 2 files       |
-| 20  | agent            | Coding-agent | a6f9012 | New accordion ui prim; 7 memo'd exports; composes CodeBlock |
-| 21  | queue            | Coding-agent | 8afecba | 15 exports, LOC-split (queue + queue-item); zero new deps   |
-| 22  | checkpoint       | Coding-agent | 713f580 | Primitive tier, 62 LOC, 3 exports; zero new deps            |
-| 23  | package-info     | Coding-agent | b5348ea | 9 exports LOC-split; 5 change-type variants; zero new deps  |
+| #   | Component             | Cluster      | Commit  | Notes                                                              |
+| --- | --------------------- | ------------ | ------- | ------------------------------------------------------------------ |
+| 1   | message               | Tier A       | 1d6445b | First component; established the loop shape                        |
+| 2   | reasoning             | Tier A       | 17cf091 | Introduced shimmer                                                 |
+| 3   | code-block            | Tier A       | a395f0c | shiki-backed; split into 4 files                                   |
+| 4   | tool                  | Tier A       | 3759598 | Interactive tier baseline                                          |
+| 5   | sources               | Tier A       | 744ca96 | First primitive tier                                               |
+| 6   | task                  | Tier A       | f118a9b | asChild-button reconcile                                           |
+| 7   | chain-of-thought      | Tier A       | 39cd15d | Compound flow steps                                                |
+| 8   | suggestion            | Tier A       | 80379f9 | Chip strip                                                         |
+| 9   | inline-citation       | Tier A       | 2b4c5b4 | Hover-card + carousel deps                                         |
+| 10  | prompt-input          | Tier B       | b138a6d | 1464→8 files; 6 new ui prims                                       |
+| 11  | context               | Tier B       | ff3a259 | tokenlens + progress                                               |
+| 12  | snippet               | Tier B       | 1729d41 | Monospace copy pill                                                |
+| 13  | image                 | Tier B       | 059a6ab | 17 LOC wrapper                                                     |
+| 14  | open-in-chat          | Tier B       | 5310d51 | Dropdown with 6 providers                                          |
+| 15  | artifact              | Tier B       | 3583c43 | Bordered file card                                                 |
+| 16  | web-preview           | Tier B       | 65437e9 | LOC-split; Figma rebuilt to v3 (d384303)                           |
+| 17  | confirmation          | Tier B       | b5e16bc | New alert ui prim                                                  |
+| 18  | plan                  | Tier B       | fd21718 | New card ui prim; closed Tier B                                    |
+| 19  | attachments           | Composer     | 0f9e385 | 3 variants (grid/inline/list); LOC-split into 2 files              |
+| 20  | agent                 | Coding-agent | a6f9012 | New accordion ui prim; 7 memo'd exports; composes CodeBlock        |
+| 21  | queue                 | Coding-agent | 8afecba | 15 exports, LOC-split (queue + queue-item); zero new deps          |
+| 22  | checkpoint            | Coding-agent | 713f580 | Primitive tier, 62 LOC, 3 exports; zero new deps                   |
+| 23  | package-info          | Coding-agent | b5348ea | 9 exports LOC-split; 5 change-type variants; zero new deps         |
+| 24  | environment-variables | Coding-agent | d673bc1 | Visibility toggle, masked values, copy affordance; new switch prim |
 
-## 🎯 Queue (9) — coding-agent workspace
+## 🎯 Queue (8) — coding-agent workspace
 
 Ordered small→big so we know the new-dep surface before touching the heaviest primitives
 (`terminal`, `sandbox`). Dep column reflects registry probe (2026-08-19).
 
-| Loop | Component             | Cluster      | Rough scope  | New deps this loop                                                     |
-| ---- | --------------------- | ------------ | ------------ | ---------------------------------------------------------------------- |
-| 24   | environment-variables | Coding-agent | small        | shadcn `switch` prim                                                   |
-| 25   | test-results          | Coding-agent | small        | none — reuses badge + collapsible                                      |
-| 26   | file-tree             | Coding-agent | medium       | none — reuses collapsible                                              |
-| 27   | schema-display        | Coding-agent | medium       | none — reuses badge + collapsible                                      |
-| 28   | commit                | Coding-agent | medium       | shadcn `avatar` prim                                                   |
-| 29   | stack-trace           | Coding-agent | small–medium | npm `@radix-ui/react-use-controllable-state`                           |
-| 30   | jsx-preview           | Coding-agent | medium       | npm `react-jsx-parser`                                                 |
-| 31   | terminal              | Coding-agent | medium       | npm `ansi-to-react` (NOT xterm.js — vendor uses ansi-to-react wrapper) |
-| 32   | sandbox               | Coding-agent | large        | shadcn `tabs` prim; composes existing Tool                             |
+| Loop | Component      | Cluster      | Rough scope  | New deps this loop                                                     |
+| ---- | -------------- | ------------ | ------------ | ---------------------------------------------------------------------- |
+| 25   | test-results   | Coding-agent | small        | none — reuses badge + collapsible                                      |
+| 26   | file-tree      | Coding-agent | medium       | none — reuses collapsible                                              |
+| 27   | schema-display | Coding-agent | medium       | none — reuses badge + collapsible                                      |
+| 28   | commit         | Coding-agent | medium       | shadcn `avatar` prim                                                   |
+| 29   | stack-trace    | Coding-agent | small–medium | npm `@radix-ui/react-use-controllable-state`                           |
+| 30   | jsx-preview    | Coding-agent | medium       | npm `react-jsx-parser`                                                 |
+| 31   | terminal       | Coding-agent | medium       | npm `ansi-to-react` (NOT xterm.js — vendor uses ansi-to-react wrapper) |
+| 32   | sandbox        | Coding-agent | large        | shadcn `tabs` prim; composes existing Tool                             |
 
 **Not in queue anymore:** `controls` — registry probe (2026-08-19) revealed it is a wrapper around
 `@xyflow/react`'s `Controls` (zoom/fit-view/lock buttons for a react-flow canvas), not a generic
@@ -129,7 +129,7 @@ Sorted alphabetically for lookup. Status column mirrors the sections above.
 | controls              | ⏸️ parked | Flow-graph   | —    |
 | conversation          | 🌉 bridge | Stage-3      | —    |
 | edge                  | ⏸️ parked | Flow-graph   | —    |
-| environment-variables | 🎯 queue  | Coding-agent | 24   |
+| environment-variables | ✅ done   | Coding-agent | 24   |
 | file-tree             | 🎯 queue  | Coding-agent | 26   |
 | image                 | ✅ done   | Tier B       | 13   |
 | inline-citation       | ✅ done   | Tier A       | 9    |
