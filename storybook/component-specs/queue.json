@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "queue",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-queue--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-queue--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-queue--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-queue--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-queue--expand-collapse-flow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-queue--chevron-rotate", "kinds": ["motion"] },
+    { "storyId": "ai-elements-queue--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/queue.tsx",
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2278:122",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-queue--default",
+      "ai-elements-queue--state-matrix",
+      "ai-elements-queue--keyboard",
+      "ai-elements-queue--focus",
+      "ai-elements-queue--expand-collapse-flow",
+      "ai-elements-queue--chevron-rotate",
+      "ai-elements-queue--docs"
+    ]
+  }
+}

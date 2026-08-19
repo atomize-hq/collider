@@ -307,6 +307,33 @@ describe('loadAndValidateStorybookProofStructure', () => {
         tier: 'interactive',
       },
       {
+        componentId: 'queue',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        requiredKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        tier: 'interactive',
+      },
+      {
         componentId: 'reasoning',
         generatedArtifactRefs: {
           tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',

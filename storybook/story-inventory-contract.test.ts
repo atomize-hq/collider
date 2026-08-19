@@ -401,6 +401,27 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-agent--docs' },
         ],
       },
+      {
+        componentId: 'queue',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-queue--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-queue--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-queue--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-queue--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-queue--expand-collapse-flow' },
+          { kind: 'motion', storyId: 'ai-elements-queue--chevron-rotate' },
+          { kind: 'docs', storyId: 'ai-elements-queue--docs' },
+        ],
+      },
     ]);
   });
 
