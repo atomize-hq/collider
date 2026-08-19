@@ -254,10 +254,12 @@ describe('reusable component promotion cross-contract provenance', () => {
       'web-preview',
       'confirmation',
       'plan',
+      'attachments',
     ]);
     // Proof coverage is generated in componentId-sorted order.
     expect(proofCoverage.components.map((component) => component.componentId)).toEqual([
       'artifact',
+      'attachments',
       'chain-of-thought',
       'code-block',
       'confirmation',
