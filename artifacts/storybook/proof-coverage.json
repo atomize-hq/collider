@@ -1,6 +1,6 @@
 {
   "proofCoverageVersion": "1",
-  "summary": { "componentCount": 23, "readyCount": 23, "failingCount": 0 },
+  "summary": { "componentCount": 24, "readyCount": 24, "failingCount": 0 },
   "components": [
     {
       "componentId": "agent",
@@ -181,6 +181,19 @@
         "motion",
         "docs"
       ],
+      "missingKinds": [],
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      }
+    },
+    {
+      "componentId": "environment-variables",
+      "tier": "primitive",
+      "status": "ready",
+      "requiredKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
+      "implementedKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
       "missingKinds": [],
       "generatedArtifactRefs": {
         "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",

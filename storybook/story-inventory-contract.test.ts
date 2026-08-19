@@ -443,6 +443,18 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-package-info--docs' },
         ],
       },
+      {
+        componentId: 'environment-variables',
+        validatorKinds: ['default', 'variant-matrix', 'actions', 'keyboard', 'focus', 'docs'],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-environment-variables--default' },
+          { kind: 'variant-matrix', storyId: 'ai-elements-environment-variables--variant-matrix' },
+          { kind: 'actions', storyId: 'ai-elements-environment-variables--visibility-action' },
+          { kind: 'keyboard', storyId: 'ai-elements-environment-variables--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-environment-variables--focus' },
+          { kind: 'docs', storyId: 'ai-elements-environment-variables--docs' },
+        ],
+      },
     ]);
   });
 
