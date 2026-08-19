@@ -18,7 +18,7 @@
   },
   "downstreamHooks": {
     "codeEntrypoint": "src/components/ai-elements/checkpoint.tsx",
-    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2280:130",
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2282:139",
     "supportedVariantsSource": null,
     "slotNamesSource": null,
     "exampleStoryIds": [
