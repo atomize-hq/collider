@@ -49,26 +49,29 @@ Ordered by loop number.
 | 19  | attachments      | Composer     | 0f9e385 | 3 variants (grid/inline/list); LOC-split into 2 files       |
 | 20  | agent            | Coding-agent | a6f9012 | New accordion ui prim; 7 memo'd exports; composes CodeBlock |
 
-## 🎯 Queue (13) — coding-agent workspace
+## 🎯 Queue (12) — coding-agent workspace
 
 Ordered small→big so we know the new-dep surface before touching the heaviest primitives
-(`terminal`, `sandbox`).
+(`terminal`, `sandbox`). Dep column reflects registry probe (2026-08-19).
 
-| Loop | Component             | Cluster      | Rough scope  | Notes                                           |
-| ---- | --------------------- | ------------ | ------------ | ----------------------------------------------- |
-| 21   | controls              | Coding-agent | small        | Button cluster                                  |
-| 22   | queue                 | Coding-agent | small        | Task list                                       |
-| 23   | checkpoint            | Coding-agent | small        | State marker                                    |
-| 24   | package-info          | Coding-agent | small        | Dependency card                                 |
-| 25   | environment-variables | Coding-agent | small        | K/V list                                        |
-| 26   | commit                | Coding-agent | medium       | Git diff view                                   |
-| 27   | file-tree             | Coding-agent | medium       | Tree view (likely headless)                     |
-| 28   | schema-display        | Coding-agent | medium       | JSON schema viewer                              |
-| 29   | stack-trace           | Coding-agent | small–medium | Composes code-block                             |
-| 30   | test-results          | Coding-agent | small        | Result list                                     |
-| 31   | jsx-preview           | Coding-agent | medium       | Composes code-block + preview iframe            |
-| 32   | terminal              | Coding-agent | medium       | Likely wraps xterm.js — new dep                 |
-| 33   | sandbox               | Coding-agent | large        | Heaviest; likely e2b/sandpack — biggest new dep |
+| Loop | Component             | Cluster      | Rough scope  | New deps this loop                                                     |
+| ---- | --------------------- | ------------ | ------------ | ---------------------------------------------------------------------- |
+| 21   | queue                 | Coding-agent | small        | none — reuses collapsible + scroll-area + button                       |
+| 22   | checkpoint            | Coding-agent | small        | none — reuses separator + tooltip + button                             |
+| 23   | package-info          | Coding-agent | small        | none — reuses badge                                                    |
+| 24   | environment-variables | Coding-agent | small        | shadcn `switch` prim                                                   |
+| 25   | test-results          | Coding-agent | small        | none — reuses badge + collapsible                                      |
+| 26   | file-tree             | Coding-agent | medium       | none — reuses collapsible                                              |
+| 27   | schema-display        | Coding-agent | medium       | none — reuses badge + collapsible                                      |
+| 28   | commit                | Coding-agent | medium       | shadcn `avatar` prim                                                   |
+| 29   | stack-trace           | Coding-agent | small–medium | npm `@radix-ui/react-use-controllable-state`                           |
+| 30   | jsx-preview           | Coding-agent | medium       | npm `react-jsx-parser`                                                 |
+| 31   | terminal              | Coding-agent | medium       | npm `ansi-to-react` (NOT xterm.js — vendor uses ansi-to-react wrapper) |
+| 32   | sandbox               | Coding-agent | large        | shadcn `tabs` prim; composes existing Tool                             |
+
+**Not in queue anymore:** `controls` — registry probe (2026-08-19) revealed it is a wrapper around
+`@xyflow/react`'s `Controls` (zoom/fit-view/lock buttons for a react-flow canvas), not a generic
+button cluster. Moved to the flow-graph parked cluster below.
 
 ## 🌉 Stage-3 bridge (1)
 
@@ -80,13 +83,14 @@ Ordered small→big so we know the new-dep surface before touching the heaviest 
 - **shimmer** — `src/components/ai-elements/shimmer.tsx`. Landed with the reasoning loop and reused by
   task, chain-of-thought, plan. No dedicated loop needed.
 
-## ⏸️ Parked — flow-graph (6)
+## ⏸️ Parked — flow-graph (7)
 
 Out of scope for the current transcript + coding-agent direction. Would bring `@xyflow/react` as a
 heavyweight dep for the first component; the rest are cheap once installed.
 
 - canvas
 - connection
+- controls (zoom/fit-view/lock buttons for a react-flow canvas)
 - edge
 - node
 - panel
@@ -116,34 +120,34 @@ Sorted alphabetically for lookup. Status column mirrors the sections above.
 | audio-player          | ⏸️ parked | Voice/config | —    |
 | canvas                | ⏸️ parked | Flow-graph   | —    |
 | chain-of-thought      | ✅ done   | Tier A       | 7    |
-| checkpoint            | 🎯 queue  | Coding-agent | 23   |
+| checkpoint            | 🎯 queue  | Coding-agent | 22   |
 | code-block            | ✅ done   | Tier A       | 3    |
-| commit                | 🎯 queue  | Coding-agent | 26   |
+| commit                | 🎯 queue  | Coding-agent | 28   |
 | confirmation          | ✅ done   | Tier B       | 17   |
 | connection            | ⏸️ parked | Flow-graph   | —    |
 | context               | ✅ done   | Tier B       | 11   |
-| controls              | 🎯 queue  | Coding-agent | 21   |
+| controls              | ⏸️ parked | Flow-graph   | —    |
 | conversation          | 🌉 bridge | Stage-3      | —    |
 | edge                  | ⏸️ parked | Flow-graph   | —    |
-| environment-variables | 🎯 queue  | Coding-agent | 25   |
-| file-tree             | 🎯 queue  | Coding-agent | 27   |
+| environment-variables | 🎯 queue  | Coding-agent | 24   |
+| file-tree             | 🎯 queue  | Coding-agent | 26   |
 | image                 | ✅ done   | Tier B       | 13   |
 | inline-citation       | ✅ done   | Tier A       | 9    |
-| jsx-preview           | 🎯 queue  | Coding-agent | 31   |
+| jsx-preview           | 🎯 queue  | Coding-agent | 30   |
 | message               | ✅ done   | Tier A       | 1    |
 | mic-selector          | ⏸️ parked | Voice/config | —    |
 | model-selector        | ⏸️ parked | Voice/config | —    |
 | node                  | ⏸️ parked | Flow-graph   | —    |
 | open-in-chat          | ✅ done   | Tier B       | 14   |
-| package-info          | 🎯 queue  | Coding-agent | 24   |
+| package-info          | 🎯 queue  | Coding-agent | 23   |
 | panel                 | ⏸️ parked | Flow-graph   | —    |
 | persona               | ⏸️ parked | Voice/config | —    |
 | plan                  | ✅ done   | Tier B       | 18   |
 | prompt-input          | ✅ done   | Tier B       | 10   |
-| queue                 | 🎯 queue  | Coding-agent | 22   |
+| queue                 | 🎯 queue  | Coding-agent | 21   |
 | reasoning             | ✅ done   | Tier A       | 2    |
-| sandbox               | 🎯 queue  | Coding-agent | 33   |
-| schema-display        | 🎯 queue  | Coding-agent | 28   |
+| sandbox               | 🎯 queue  | Coding-agent | 32   |
+| schema-display        | 🎯 queue  | Coding-agent | 27   |
 | shimmer               | 🧩 folded | Utility      | —    |
 | snippet               | ✅ done   | Tier B       | 12   |
 | sources               | ✅ done   | Tier A       | 5    |
@@ -151,8 +155,8 @@ Sorted alphabetically for lookup. Status column mirrors the sections above.
 | stack-trace           | 🎯 queue  | Coding-agent | 29   |
 | suggestion            | ✅ done   | Tier A       | 8    |
 | task                  | ✅ done   | Tier A       | 6    |
-| terminal              | 🎯 queue  | Coding-agent | 32   |
-| test-results          | 🎯 queue  | Coding-agent | 30   |
+| terminal              | 🎯 queue  | Coding-agent | 31   |
+| test-results          | 🎯 queue  | Coding-agent | 25   |
 | tool                  | ✅ done   | Tier A       | 4    |
 | toolbar               | ⏸️ parked | Flow-graph   | —    |
 | transcription         | ⏸️ parked | Voice/config | —    |
