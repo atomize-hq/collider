@@ -389,6 +389,18 @@
         { "kind": "motion", "storyId": "ai-elements-queue--chevron-rotate" },
         { "kind": "docs", "storyId": "ai-elements-queue--docs" }
       ]
+    },
+    {
+      "componentId": "checkpoint",
+      "validatorKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-checkpoint--default" },
+        { "kind": "variant-matrix", "storyId": "ai-elements-checkpoint--variant-matrix" },
+        { "kind": "actions", "storyId": "ai-elements-checkpoint--click-action" },
+        { "kind": "keyboard", "storyId": "ai-elements-checkpoint--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-checkpoint--focus" },
+        { "kind": "docs", "storyId": "ai-elements-checkpoint--docs" }
+      ]
     }
   ]
 }

@@ -1,0 +1,33 @@
+{
+  "specVersion": "1",
+  "componentId": "checkpoint",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-checkpoint--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-checkpoint--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "ai-elements-checkpoint--click-action", "kinds": ["actions"] },
+    { "storyId": "ai-elements-checkpoint--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-checkpoint--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-checkpoint--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/checkpoint.tsx",
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2280:130",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-checkpoint--default",
+      "ai-elements-checkpoint--variant-matrix",
+      "ai-elements-checkpoint--click-action",
+      "ai-elements-checkpoint--keyboard",
+      "ai-elements-checkpoint--focus",
+      "ai-elements-checkpoint--docs"
+    ]
+  }
+}
