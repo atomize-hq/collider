@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "confirmation",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-confirmation--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-confirmation--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-confirmation--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-confirmation--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-confirmation--approve-flow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-confirmation--response-transition", "kinds": ["motion"] },
+    { "storyId": "ai-elements-confirmation--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/confirmation.tsx",
+    "figmaComponentRef": null,
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-confirmation--default",
+      "ai-elements-confirmation--state-matrix",
+      "ai-elements-confirmation--keyboard",
+      "ai-elements-confirmation--focus",
+      "ai-elements-confirmation--approve-flow",
+      "ai-elements-confirmation--response-transition",
+      "ai-elements-confirmation--docs"
+    ]
+  }
+}

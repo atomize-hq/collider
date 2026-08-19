@@ -314,6 +314,30 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-web-preview--docs' },
         ],
       },
+      {
+        componentId: 'confirmation',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-confirmation--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-confirmation--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-confirmation--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-confirmation--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-confirmation--approve-flow' },
+          {
+            kind: 'motion',
+            storyId: 'ai-elements-confirmation--response-transition',
+          },
+          { kind: 'docs', storyId: 'ai-elements-confirmation--docs' },
+        ],
+      },
     ]);
   });
 
