@@ -1,6 +1,6 @@
 {
   "proofCoverageVersion": "1",
-  "summary": { "componentCount": 15, "readyCount": 15, "failingCount": 0 },
+  "summary": { "componentCount": 16, "readyCount": 16, "failingCount": 0 },
   "components": [
     {
       "componentId": "artifact",
@@ -340,6 +340,35 @@
         "workflow",
         "motion",
         "async",
+        "docs"
+      ],
+      "missingKinds": [],
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      }
+    },
+    {
+      "componentId": "web-preview",
+      "tier": "interactive",
+      "status": "ready",
+      "requiredKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
+        "docs"
+      ],
+      "implementedKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
         "docs"
       ],
       "missingKinds": [],

@@ -290,6 +290,30 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-artifact--docs' },
         ],
       },
+      {
+        componentId: 'web-preview',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-web-preview--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-web-preview--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-web-preview--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-web-preview--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-web-preview--console-open-flow' },
+          {
+            kind: 'motion',
+            storyId: 'ai-elements-web-preview--console-open-transition',
+          },
+          { kind: 'docs', storyId: 'ai-elements-web-preview--docs' },
+        ],
+      },
     ]);
   });
 
