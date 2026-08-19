@@ -22,7 +22,7 @@ memory notes or old snapshots as canonical.
 | 🌉 bridge | Stage-3 assembly primitive, not a Stage-2 loop target                      |
 | ⏸️ parked | Out of the current transcript + coding-agent scope                         |
 
-## ✅ Done (18) — Tier A + Tier B
+## ✅ Done (19) — Tier A + Tier B + first composer follow-up
 
 Ordered by loop number.
 
