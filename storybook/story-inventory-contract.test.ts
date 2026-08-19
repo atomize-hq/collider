@@ -434,6 +434,15 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-checkpoint--docs' },
         ],
       },
+      {
+        componentId: 'package-info',
+        validatorKinds: ['default', 'variant-matrix', 'docs'],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-package-info--default' },
+          { kind: 'variant-matrix', storyId: 'ai-elements-package-info--variant-matrix' },
+          { kind: 'docs', storyId: 'ai-elements-package-info--docs' },
+        ],
+      },
     ]);
   });
 

@@ -1,0 +1,27 @@
+{
+  "specVersion": "1",
+  "componentId": "package-info",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-package-info--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-package-info--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "ai-elements-package-info--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/package-info.tsx",
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2283:175",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-package-info--default",
+      "ai-elements-package-info--variant-matrix",
+      "ai-elements-package-info--docs"
+    ]
+  }
+}
