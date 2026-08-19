@@ -27,7 +27,7 @@
   },
   "downstreamHooks": {
     "codeEntrypoint": "src/components/ai-elements/confirmation.tsx",
-    "figmaComponentRef": null,
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2263:95",
     "supportedVariantsSource": null,
     "slotNamesSource": null,
     "exampleStoryIds": [
