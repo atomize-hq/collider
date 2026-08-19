@@ -380,6 +380,27 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-attachments--docs' },
         ],
       },
+      {
+        componentId: 'agent',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-agent--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-agent--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-agent--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-agent--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-agent--expand-tool-flow' },
+          { kind: 'motion', storyId: 'ai-elements-agent--expand-transition' },
+          { kind: 'docs', storyId: 'ai-elements-agent--docs' },
+        ],
+      },
     ]);
   });
 

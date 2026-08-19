@@ -18,6 +18,33 @@ describe('loadAndValidateStorybookProofStructure', () => {
     expect(result.errors).toEqual([]);
     expect(result.data.componentFacts).toEqual([
       {
+        componentId: 'agent',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        requiredKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        tier: 'interactive',
+      },
+      {
         componentId: 'artifact',
         generatedArtifactRefs: {
           tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
