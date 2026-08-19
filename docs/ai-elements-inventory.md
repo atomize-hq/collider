@@ -6,7 +6,7 @@ memory notes or old snapshots as canonical.
 
 - **Registry total:** 48 components
 - **Fresh as of:** 2026-08-19
-- **Progress:** 21/48 done via Stage-2 (all 21 loops committed)
+- **Progress:** 22/48 done via Stage-2 (all 22 loops committed)
 - **Source of truth:** <https://elements.ai-sdk.dev/api/registry/registry.json>
 - **Per-component source:** `https://elements.ai-sdk.dev/api/registry/<name>.json`
 - **Refresh:** fetch the two URLs above, diff against the alphabetical index at the bottom, update statuses,
@@ -22,7 +22,7 @@ memory notes or old snapshots as canonical.
 | 🌉 bridge | Stage-3 assembly primitive, not a Stage-2 loop target                      |
 | ⏸️ parked | Out of the current transcript + coding-agent scope                         |
 
-## ✅ Done (21) — Tier A + Tier B + composer + coding-agent (2/12)
+## ✅ Done (22) — Tier A + Tier B + composer + coding-agent (3/12)
 
 Ordered by loop number.
 
@@ -49,15 +49,15 @@ Ordered by loop number.
 | 19  | attachments      | Composer     | 0f9e385 | 3 variants (grid/inline/list); LOC-split into 2 files       |
 | 20  | agent            | Coding-agent | a6f9012 | New accordion ui prim; 7 memo'd exports; composes CodeBlock |
 | 21  | queue            | Coding-agent | 8afecba | 15 exports, LOC-split (queue + queue-item); zero new deps   |
+| 22  | checkpoint       | Coding-agent | 713f580 | Primitive tier, 62 LOC, 3 exports; zero new deps            |
 
-## 🎯 Queue (11) — coding-agent workspace
+## 🎯 Queue (10) — coding-agent workspace
 
 Ordered small→big so we know the new-dep surface before touching the heaviest primitives
 (`terminal`, `sandbox`). Dep column reflects registry probe (2026-08-19).
 
 | Loop | Component             | Cluster      | Rough scope  | New deps this loop                                                     |
 | ---- | --------------------- | ------------ | ------------ | ---------------------------------------------------------------------- |
-| 22   | checkpoint            | Coding-agent | small        | none — reuses separator + tooltip + button                             |
 | 23   | package-info          | Coding-agent | small        | none — reuses badge                                                    |
 | 24   | environment-variables | Coding-agent | small        | shadcn `switch` prim                                                   |
 | 25   | test-results          | Coding-agent | small        | none — reuses badge + collapsible                                      |
@@ -120,7 +120,7 @@ Sorted alphabetically for lookup. Status column mirrors the sections above.
 | audio-player          | ⏸️ parked | Voice/config | —    |
 | canvas                | ⏸️ parked | Flow-graph   | —    |
 | chain-of-thought      | ✅ done   | Tier A       | 7    |
-| checkpoint            | 🎯 queue  | Coding-agent | 22   |
+| checkpoint            | ✅ done   | Coding-agent | 22   |
 | code-block            | ✅ done   | Tier A       | 3    |
 | commit                | 🎯 queue  | Coding-agent | 28   |
 | confirmation          | ✅ done   | Tier B       | 17   |
