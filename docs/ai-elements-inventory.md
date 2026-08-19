@@ -6,7 +6,7 @@ memory notes or old snapshots as canonical.
 
 - **Registry total:** 48 components
 - **Fresh as of:** 2026-08-19
-- **Progress:** 19/48 planned via Stage-2 (18 done · 1 queued at composer)
+- **Progress:** 19/48 done via Stage-2 (all 19 loops committed)
 - **Source of truth:** <https://elements.ai-sdk.dev/api/registry/registry.json>
 - **Per-component source:** `https://elements.ai-sdk.dev/api/registry/<name>.json`
 - **Refresh:** fetch the two URLs above, diff against the alphabetical index at the bottom, update statuses,
@@ -26,49 +26,49 @@ memory notes or old snapshots as canonical.
 
 Ordered by loop number.
 
-| #   | Component        | Cluster | Commit  | Notes                                       |
-| --- | ---------------- | ------- | ------- | ------------------------------------------- |
-| 1   | message          | Tier A  | 1d6445b | First component; established the loop shape |
-| 2   | reasoning        | Tier A  | 17cf091 | Introduced shimmer                          |
-| 3   | code-block       | Tier A  | a395f0c | shiki-backed; split into 4 files            |
-| 4   | tool             | Tier A  | 3759598 | Interactive tier baseline                   |
-| 5   | sources          | Tier A  | 744ca96 | First primitive tier                        |
-| 6   | task             | Tier A  | f118a9b | asChild-button reconcile                    |
-| 7   | chain-of-thought | Tier A  | 39cd15d | Compound flow steps                         |
-| 8   | suggestion       | Tier A  | 80379f9 | Chip strip                                  |
-| 9   | inline-citation  | Tier A  | 2b4c5b4 | Hover-card + carousel deps                  |
-| 10  | prompt-input     | Tier B  | b138a6d | 1464→8 files; 6 new ui prims                |
-| 11  | context          | Tier B  | ff3a259 | tokenlens + progress                        |
-| 12  | snippet          | Tier B  | 1729d41 | Monospace copy pill                         |
-| 13  | image            | Tier B  | 059a6ab | 17 LOC wrapper                              |
-| 14  | open-in-chat     | Tier B  | 5310d51 | Dropdown with 6 providers                   |
-| 15  | artifact         | Tier B  | 3583c43 | Bordered file card                          |
-| 16  | web-preview      | Tier B  | 65437e9 | LOC-split; Figma rebuilt to v3 (d384303)    |
-| 17  | confirmation     | Tier B  | b5e16bc | New alert ui prim                           |
-| 18  | plan             | Tier B  | fd21718 | New card ui prim; closed Tier B             |
+| #   | Component        | Cluster  | Commit  | Notes                                                 |
+| --- | ---------------- | -------- | ------- | ----------------------------------------------------- |
+| 1   | message          | Tier A   | 1d6445b | First component; established the loop shape           |
+| 2   | reasoning        | Tier A   | 17cf091 | Introduced shimmer                                    |
+| 3   | code-block       | Tier A   | a395f0c | shiki-backed; split into 4 files                      |
+| 4   | tool             | Tier A   | 3759598 | Interactive tier baseline                             |
+| 5   | sources          | Tier A   | 744ca96 | First primitive tier                                  |
+| 6   | task             | Tier A   | f118a9b | asChild-button reconcile                              |
+| 7   | chain-of-thought | Tier A   | 39cd15d | Compound flow steps                                   |
+| 8   | suggestion       | Tier A   | 80379f9 | Chip strip                                            |
+| 9   | inline-citation  | Tier A   | 2b4c5b4 | Hover-card + carousel deps                            |
+| 10  | prompt-input     | Tier B   | b138a6d | 1464→8 files; 6 new ui prims                          |
+| 11  | context          | Tier B   | ff3a259 | tokenlens + progress                                  |
+| 12  | snippet          | Tier B   | 1729d41 | Monospace copy pill                                   |
+| 13  | image            | Tier B   | 059a6ab | 17 LOC wrapper                                        |
+| 14  | open-in-chat     | Tier B   | 5310d51 | Dropdown with 6 providers                             |
+| 15  | artifact         | Tier B   | 3583c43 | Bordered file card                                    |
+| 16  | web-preview      | Tier B   | 65437e9 | LOC-split; Figma rebuilt to v3 (d384303)              |
+| 17  | confirmation     | Tier B   | b5e16bc | New alert ui prim                                     |
+| 18  | plan             | Tier B   | fd21718 | New card ui prim; closed Tier B                       |
+| 19  | attachments      | Composer | 0f9e385 | 3 variants (grid/inline/list); LOC-split into 2 files |
 
-## 🎯 Queue (15) — composer + coding-agent workspace
+## 🎯 Queue (14) — coding-agent workspace
 
-Loop order below is my recommended sequence: composer warm-up first, then coding-agent small→big so
-we know the new-dep surface before touching the heaviest primitives (`terminal`, `sandbox`).
+Ordered small→big so we know the new-dep surface before touching the heaviest primitives
+(`terminal`, `sandbox`).
 
-| Loop | Component             | Cluster                     | Rough scope  | Notes                                                           |
-| ---- | --------------------- | --------------------------- | ------------ | --------------------------------------------------------------- |
-| 19   | attachments           | Composer (Tier B follow-up) | small        | New since 2026-08-18; likely a file-chip strip for prompt-input |
-| 20   | agent                 | Coding-agent                | small        | Status pill / worker header                                     |
-| 21   | controls              | Coding-agent                | small        | Button cluster                                                  |
-| 22   | queue                 | Coding-agent                | small        | Task list                                                       |
-| 23   | checkpoint            | Coding-agent                | small        | State marker                                                    |
-| 24   | package-info          | Coding-agent                | small        | Dependency card                                                 |
-| 25   | environment-variables | Coding-agent                | small        | K/V list                                                        |
-| 26   | commit                | Coding-agent                | medium       | Git diff view                                                   |
-| 27   | file-tree             | Coding-agent                | medium       | Tree view (likely headless)                                     |
-| 28   | schema-display        | Coding-agent                | medium       | JSON schema viewer                                              |
-| 29   | stack-trace           | Coding-agent                | small–medium | Composes code-block                                             |
-| 30   | test-results          | Coding-agent                | small        | Result list                                                     |
-| 31   | jsx-preview           | Coding-agent                | medium       | Composes code-block + preview iframe                            |
-| 32   | terminal              | Coding-agent                | medium       | Likely wraps xterm.js — new dep                                 |
-| 33   | sandbox               | Coding-agent                | large        | Heaviest; likely e2b/sandpack — biggest new dep                 |
+| Loop | Component             | Cluster      | Rough scope  | Notes                                           |
+| ---- | --------------------- | ------------ | ------------ | ----------------------------------------------- |
+| 20   | agent                 | Coding-agent | small        | Status pill / worker header                     |
+| 21   | controls              | Coding-agent | small        | Button cluster                                  |
+| 22   | queue                 | Coding-agent | small        | Task list                                       |
+| 23   | checkpoint            | Coding-agent | small        | State marker                                    |
+| 24   | package-info          | Coding-agent | small        | Dependency card                                 |
+| 25   | environment-variables | Coding-agent | small        | K/V list                                        |
+| 26   | commit                | Coding-agent | medium       | Git diff view                                   |
+| 27   | file-tree             | Coding-agent | medium       | Tree view (likely headless)                     |
+| 28   | schema-display        | Coding-agent | medium       | JSON schema viewer                              |
+| 29   | stack-trace           | Coding-agent | small–medium | Composes code-block                             |
+| 30   | test-results          | Coding-agent | small        | Result list                                     |
+| 31   | jsx-preview           | Coding-agent | medium       | Composes code-block + preview iframe            |
+| 32   | terminal              | Coding-agent | medium       | Likely wraps xterm.js — new dep                 |
+| 33   | sandbox               | Coding-agent | large        | Heaviest; likely e2b/sandpack — biggest new dep |
 
 ## 🌉 Stage-3 bridge (1)
 
@@ -112,7 +112,7 @@ Sorted alphabetically for lookup. Status column mirrors the sections above.
 | --------------------- | --------- | ------------ | ---- |
 | agent                 | 🎯 queue  | Coding-agent | 20   |
 | artifact              | ✅ done   | Tier B       | 15   |
-| attachments           | 🎯 queue  | Composer     | 19   |
+| attachments           | ✅ done   | Composer     | 19   |
 | audio-player          | ⏸️ parked | Voice/config | —    |
 | canvas                | ⏸️ parked | Flow-graph   | —    |
 | chain-of-thought      | ✅ done   | Tier A       | 7    |
