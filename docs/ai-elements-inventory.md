@@ -6,7 +6,7 @@ memory notes or old snapshots as canonical.
 
 - **Registry total:** 48 components
 - **Fresh as of:** 2026-08-19
-- **Progress:** 25/48 done via Stage-2 (all 25 loops committed)
+- **Progress:** 26/48 done via Stage-2 (all 26 loops committed)
 - **Source of truth:** <https://elements.ai-sdk.dev/api/registry/registry.json>
 - **Per-component source:** `https://elements.ai-sdk.dev/api/registry/<name>.json`
 - **Refresh:** fetch the two URLs above, diff against the alphabetical index at the bottom, update statuses,
@@ -22,7 +22,7 @@ memory notes or old snapshots as canonical.
 | 🌉 bridge | Stage-3 assembly primitive, not a Stage-2 loop target                      |
 | ⏸️ parked | Out of the current transcript + coding-agent scope                         |
 
-## ✅ Done (25) — Tier A + Tier B + composer + coding-agent (6/12)
+## ✅ Done (26) — Tier A + Tier B + composer + coding-agent (7/12)
 
 Ordered by loop number.
 
@@ -53,15 +53,15 @@ Ordered by loop number.
 | 23  | package-info          | Coding-agent | b5348ea | 9 exports LOC-split; 5 change-type variants; zero new deps                |
 | 24  | environment-variables | Coding-agent | d673bc1 | Visibility toggle, masked values, copy affordance; new switch prim        |
 | 25  | test-results          | Coding-agent | 890da56 | Collapsible suite results, progress, status and error states; no new deps |
+| 26  | file-tree             | Coding-agent | 77f560b | Controlled/uncontrolled hierarchy, selection, keyboard and workflow proof |
 
-## 🎯 Queue (7) — coding-agent workspace
+## 🎯 Queue (6) — coding-agent workspace
 
 Ordered small→big so we know the new-dep surface before touching the heaviest primitives
 (`terminal`, `sandbox`). Dep column reflects registry probe (2026-08-19).
 
 | Loop | Component      | Cluster      | Rough scope  | New deps this loop                                                     |
 | ---- | -------------- | ------------ | ------------ | ---------------------------------------------------------------------- |
-| 26   | file-tree      | Coding-agent | medium       | none — reuses collapsible                                              |
 | 27   | schema-display | Coding-agent | medium       | none — reuses badge + collapsible                                      |
 | 28   | commit         | Coding-agent | medium       | shadcn `avatar` prim                                                   |
 | 29   | stack-trace    | Coding-agent | small–medium | npm `@radix-ui/react-use-controllable-state`                           |
@@ -130,7 +130,7 @@ Sorted alphabetically for lookup. Status column mirrors the sections above.
 | conversation          | 🌉 bridge | Stage-3      | —    |
 | edge                  | ⏸️ parked | Flow-graph   | —    |
 | environment-variables | ✅ done   | Coding-agent | 24   |
-| file-tree             | 🎯 queue  | Coding-agent | 26   |
+| file-tree             | ✅ done   | Coding-agent | 26   |
 | image                 | ✅ done   | Tier B       | 13   |
 | inline-citation       | ✅ done   | Tier A       | 9    |
 | jsx-preview           | 🎯 queue  | Coding-agent | 30   |
