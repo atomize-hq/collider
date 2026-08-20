@@ -455,6 +455,27 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-environment-variables--docs' },
         ],
       },
+      {
+        componentId: 'test-results',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-test-results--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-test-results--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-test-results--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-test-results--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-test-results--expand-collapse-flow' },
+          { kind: 'motion', storyId: 'ai-elements-test-results--suite-expand-transition' },
+          { kind: 'docs', storyId: 'ai-elements-test-results--docs' },
+        ],
+      },
     ]);
   });
 
