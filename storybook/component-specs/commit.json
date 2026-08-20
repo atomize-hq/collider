@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "commit",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-commit--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-commit--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-commit--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-commit--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-commit--expand-workflow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-commit--expand-transition", "kinds": ["motion"] },
+    { "storyId": "ai-elements-commit--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/commit.tsx",
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2305:602",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-commit--default",
+      "ai-elements-commit--state-matrix",
+      "ai-elements-commit--keyboard",
+      "ai-elements-commit--focus",
+      "ai-elements-commit--expand-workflow",
+      "ai-elements-commit--expand-transition",
+      "ai-elements-commit--docs"
+    ]
+  }
+}

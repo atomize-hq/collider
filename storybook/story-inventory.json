@@ -987,6 +987,27 @@
         { "kind": "variant-matrix", "storyId": "ai-elements-schema-display--variant-matrix" },
         { "kind": "docs", "storyId": "ai-elements-schema-display--docs" }
       ]
+    },
+    {
+      "componentId": "commit",
+      "validatorKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-commit--default" },
+        { "kind": "state-matrix", "storyId": "ai-elements-commit--state-matrix" },
+        { "kind": "keyboard", "storyId": "ai-elements-commit--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-commit--focus" },
+        { "kind": "workflow", "storyId": "ai-elements-commit--expand-workflow" },
+        { "kind": "motion", "storyId": "ai-elements-commit--expand-transition" },
+        { "kind": "docs", "storyId": "ai-elements-commit--docs" }
+      ]
     }
   ]
 }
