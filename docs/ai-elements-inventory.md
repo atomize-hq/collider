@@ -6,7 +6,7 @@ memory notes or old snapshots as canonical.
 
 - **Registry total:** 48 components
 - **Fresh as of:** 2026-08-19
-- **Progress:** 27/48 done via Stage-2 (all 27 loops committed)
+- **Progress:** 28/48 done via Stage-2 (all 28 loops committed)
 - **Source of truth:** <https://elements.ai-sdk.dev/api/registry/registry.json>
 - **Per-component source:** `https://elements.ai-sdk.dev/api/registry/<name>.json`
 - **Refresh:** fetch the two URLs above, diff against the alphabetical index at the bottom, update statuses,
@@ -22,7 +22,7 @@ memory notes or old snapshots as canonical.
 | 🌉 bridge | Stage-3 assembly primitive, not a Stage-2 loop target                      |
 | ⏸️ parked | Out of the current transcript + coding-agent scope                         |
 
-## ✅ Done (27) — Tier A + Tier B + composer + coding-agent (8/12)
+## ✅ Done (28) — Tier A + Tier B + composer + coding-agent (9/12)
 
 Ordered by loop number.
 
@@ -55,15 +55,15 @@ Ordered by loop number.
 | 25  | test-results          | Coding-agent | 890da56 | Collapsible suite results, progress, status and error states; no new deps |
 | 26  | file-tree             | Coding-agent | 77f560b | Controlled/uncontrolled hierarchy, selection, keyboard and workflow proof |
 | 27  | schema-display        | Coding-agent | 486f813 | HTTP endpoint card, 5 method colors, 3-file split (471→162/90/133 LOC)    |
+| 28  | commit                | Coding-agent | fa86aa2 | Git commit card w/ file diff; new avatar prim; asChild-div a11y fix       |
 
-## 🎯 Queue (5) — coding-agent workspace
+## 🎯 Queue (4) — coding-agent workspace
 
 Ordered small→big so we know the new-dep surface before touching the heaviest primitives
 (`terminal`, `sandbox`). Dep column reflects registry probe (2026-08-19).
 
 | Loop | Component   | Cluster      | Rough scope  | New deps this loop                                                     |
 | ---- | ----------- | ------------ | ------------ | ---------------------------------------------------------------------- |
-| 28   | commit      | Coding-agent | medium       | shadcn `avatar` prim                                                   |
 | 29   | stack-trace | Coding-agent | small–medium | npm `@radix-ui/react-use-controllable-state`                           |
 | 30   | jsx-preview | Coding-agent | medium       | npm `react-jsx-parser`                                                 |
 | 31   | terminal    | Coding-agent | medium       | npm `ansi-to-react` (NOT xterm.js — vendor uses ansi-to-react wrapper) |
@@ -122,7 +122,7 @@ Sorted alphabetically for lookup. Status column mirrors the sections above.
 | chain-of-thought      | ✅ done   | Tier A       | 7    |
 | checkpoint            | ✅ done   | Coding-agent | 22   |
 | code-block            | ✅ done   | Tier A       | 3    |
-| commit                | 🎯 queue  | Coding-agent | 28   |
+| commit                | ✅ done   | Coding-agent | 28   |
 | confirmation          | ✅ done   | Tier B       | 17   |
 | connection            | ⏸️ parked | Flow-graph   | —    |
 | context               | ✅ done   | Tier B       | 11   |
