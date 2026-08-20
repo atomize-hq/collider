@@ -112,6 +112,10 @@ export const StateMatrix: Story = {
   ),
 };
 
+export const Controlled: Story = {
+  render: () => <ControlledDemo />,
+};
+
 export const SelectionAction: Story = {
   render: () => (
     <Demo

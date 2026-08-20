@@ -6,6 +6,7 @@
     "default",
     "state-matrix",
     "actions",
+    "controlled",
     "keyboard",
     "focus",
     "workflow",
@@ -24,6 +25,10 @@
     {
       "storyId": "ai-elements-file-tree--selection-action",
       "kinds": ["actions"]
+    },
+    {
+      "storyId": "ai-elements-file-tree--controlled",
+      "kinds": ["controlled"]
     },
     {
       "storyId": "ai-elements-file-tree--keyboard",
@@ -60,6 +65,7 @@
       "ai-elements-file-tree--default",
       "ai-elements-file-tree--state-matrix",
       "ai-elements-file-tree--selection-action",
+      "ai-elements-file-tree--controlled",
       "ai-elements-file-tree--keyboard",
       "ai-elements-file-tree--focus",
       "ai-elements-file-tree--selection-workflow",

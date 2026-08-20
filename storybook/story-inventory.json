@@ -933,6 +933,7 @@
         "default",
         "state-matrix",
         "actions",
+        "controlled",
         "keyboard",
         "focus",
         "workflow",
@@ -951,6 +952,10 @@
         {
           "kind": "actions",
           "storyId": "ai-elements-file-tree--selection-action"
+        },
+        {
+          "kind": "controlled",
+          "storyId": "ai-elements-file-tree--controlled"
         },
         {
           "kind": "keyboard",
