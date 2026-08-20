@@ -119,7 +119,8 @@ Green line: `Proof coverage: N components, N ready, 0 failing`.
 
 **Prerequisites:**
 
-- The `figma-use` CLI must be installed and Figma must be running with `--remote-debugging-port=9222`. Verify with `figma-use status`.
+- The `figma-use` CLI must be installed and on `PATH`. It's an npm package (`npm install -g figma-use`), so it lives under whatever Node version was active at install time — commonly `~/.nvm/versions/node/<version>/bin/figma-use`. If `which figma-use` fails in your shell but the binary exists under nvm, either `nvm use <version>` or reinstall globally with your currently-active Node.
+- Figma must be running with `--remote-debugging-port=9222`. Verify with `figma-use status`.
 - Launch (only works if Figma isn't already running): `open -a Figma --args --remote-debugging-port=9222`. If Figma is already open on the wrong port, quit it first.
 - **The canonical file is Collider** (`23PLdynlRYoBYQx9teoC8A`). Figma's most-recent-file default may open the wrong one — the user has an older "Collider Old" file (`BSb9QaMzwE2mv0GQ63buQK`) that sometimes claims focus. Verify: `figma-use status` should print `File: Collider`. If not, ask the user to switch tabs.
 - The only page is `Primitives` (`401:1040`), canvas `Primitives Canvas` (`401:1042`).
