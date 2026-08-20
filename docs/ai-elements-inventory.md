@@ -6,7 +6,7 @@ memory notes or old snapshots as canonical.
 
 - **Registry total:** 48 components
 - **Fresh as of:** 2026-08-19
-- **Progress:** 26/48 done via Stage-2 (all 26 loops committed)
+- **Progress:** 27/48 done via Stage-2 (all 27 loops committed)
 - **Source of truth:** <https://elements.ai-sdk.dev/api/registry/registry.json>
 - **Per-component source:** `https://elements.ai-sdk.dev/api/registry/<name>.json`
 - **Refresh:** fetch the two URLs above, diff against the alphabetical index at the bottom, update statuses,
@@ -22,7 +22,7 @@ memory notes or old snapshots as canonical.
 | 🌉 bridge | Stage-3 assembly primitive, not a Stage-2 loop target                      |
 | ⏸️ parked | Out of the current transcript + coding-agent scope                         |
 
-## ✅ Done (26) — Tier A + Tier B + composer + coding-agent (7/12)
+## ✅ Done (27) — Tier A + Tier B + composer + coding-agent (8/12)
 
 Ordered by loop number.
 
@@ -54,20 +54,20 @@ Ordered by loop number.
 | 24  | environment-variables | Coding-agent | d673bc1 | Visibility toggle, masked values, copy affordance; new switch prim        |
 | 25  | test-results          | Coding-agent | 890da56 | Collapsible suite results, progress, status and error states; no new deps |
 | 26  | file-tree             | Coding-agent | 77f560b | Controlled/uncontrolled hierarchy, selection, keyboard and workflow proof |
+| 27  | schema-display        | Coding-agent | 486f813 | HTTP endpoint card, 5 method colors, 3-file split (471→162/90/133 LOC)    |
 
-## 🎯 Queue (6) — coding-agent workspace
+## 🎯 Queue (5) — coding-agent workspace
 
 Ordered small→big so we know the new-dep surface before touching the heaviest primitives
 (`terminal`, `sandbox`). Dep column reflects registry probe (2026-08-19).
 
-| Loop | Component      | Cluster      | Rough scope  | New deps this loop                                                     |
-| ---- | -------------- | ------------ | ------------ | ---------------------------------------------------------------------- |
-| 27   | schema-display | Coding-agent | medium       | none — reuses badge + collapsible                                      |
-| 28   | commit         | Coding-agent | medium       | shadcn `avatar` prim                                                   |
-| 29   | stack-trace    | Coding-agent | small–medium | npm `@radix-ui/react-use-controllable-state`                           |
-| 30   | jsx-preview    | Coding-agent | medium       | npm `react-jsx-parser`                                                 |
-| 31   | terminal       | Coding-agent | medium       | npm `ansi-to-react` (NOT xterm.js — vendor uses ansi-to-react wrapper) |
-| 32   | sandbox        | Coding-agent | large        | shadcn `tabs` prim; composes existing Tool                             |
+| Loop | Component   | Cluster      | Rough scope  | New deps this loop                                                     |
+| ---- | ----------- | ------------ | ------------ | ---------------------------------------------------------------------- |
+| 28   | commit      | Coding-agent | medium       | shadcn `avatar` prim                                                   |
+| 29   | stack-trace | Coding-agent | small–medium | npm `@radix-ui/react-use-controllable-state`                           |
+| 30   | jsx-preview | Coding-agent | medium       | npm `react-jsx-parser`                                                 |
+| 31   | terminal    | Coding-agent | medium       | npm `ansi-to-react` (NOT xterm.js — vendor uses ansi-to-react wrapper) |
+| 32   | sandbox     | Coding-agent | large        | shadcn `tabs` prim; composes existing Tool                             |
 
 **Not in queue anymore:** `controls` — registry probe (2026-08-19) revealed it is a wrapper around
 `@xyflow/react`'s `Controls` (zoom/fit-view/lock buttons for a react-flow canvas), not a generic
@@ -147,7 +147,7 @@ Sorted alphabetically for lookup. Status column mirrors the sections above.
 | queue                 | ✅ done   | Coding-agent | 21   |
 | reasoning             | ✅ done   | Tier A       | 2    |
 | sandbox               | 🎯 queue  | Coding-agent | 32   |
-| schema-display        | 🎯 queue  | Coding-agent | 27   |
+| schema-display        | ✅ done   | Coding-agent | 27   |
 | shimmer               | 🧩 folded | Utility      | —    |
 | snippet               | ✅ done   | Tier B       | 12   |
 | sources               | ✅ done   | Tier A       | 5    |
