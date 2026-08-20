@@ -552,6 +552,16 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-stack-trace--docs' },
         ],
       },
+      {
+        componentId: 'jsx-preview',
+        validatorKinds: ['default', 'variant-matrix', 'async', 'docs'],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-jsx-preview--default' },
+          { kind: 'variant-matrix', storyId: 'ai-elements-jsx-preview--variant-matrix' },
+          { kind: 'async', storyId: 'ai-elements-jsx-preview--async' },
+          { kind: 'docs', storyId: 'ai-elements-jsx-preview--docs' },
+        ],
+      },
     ]);
   });
 

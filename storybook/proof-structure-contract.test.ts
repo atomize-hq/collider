@@ -295,6 +295,17 @@ describe('loadAndValidateStorybookProofStructure', () => {
         tier: 'interactive',
       },
       {
+        componentId: 'jsx-preview',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: ['default', 'variant-matrix', 'async', 'docs'],
+        requiredKinds: ['default', 'variant-matrix', 'async', 'docs'],
+        tier: 'primitive',
+      },
+      {
         componentId: 'message',
         generatedArtifactRefs: {
           tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
