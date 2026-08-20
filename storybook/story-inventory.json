@@ -1008,6 +1008,27 @@
         { "kind": "motion", "storyId": "ai-elements-commit--expand-transition" },
         { "kind": "docs", "storyId": "ai-elements-commit--docs" }
       ]
+    },
+    {
+      "componentId": "stack-trace",
+      "validatorKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "ai-elements-stack-trace--default" },
+        { "kind": "state-matrix", "storyId": "ai-elements-stack-trace--state-matrix" },
+        { "kind": "keyboard", "storyId": "ai-elements-stack-trace--keyboard" },
+        { "kind": "focus", "storyId": "ai-elements-stack-trace--focus" },
+        { "kind": "workflow", "storyId": "ai-elements-stack-trace--expand-workflow" },
+        { "kind": "motion", "storyId": "ai-elements-stack-trace--expand-transition" },
+        { "kind": "docs", "storyId": "ai-elements-stack-trace--docs" }
+      ]
     }
   ]
 }
