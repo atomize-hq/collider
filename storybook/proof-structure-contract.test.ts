@@ -199,6 +199,35 @@ describe('loadAndValidateStorybookProofStructure', () => {
         tier: 'primitive',
       },
       {
+        componentId: 'file-tree',
+        generatedArtifactRefs: {
+          tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
+          recipeDocs: null,
+          runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
+        },
+        implementedKinds: [
+          'default',
+          'state-matrix',
+          'actions',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        requiredKinds: [
+          'default',
+          'state-matrix',
+          'actions',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        tier: 'interactive',
+      },
+      {
         componentId: 'image',
         generatedArtifactRefs: {
           tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',

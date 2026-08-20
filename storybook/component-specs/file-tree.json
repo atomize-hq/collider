@@ -1,0 +1,70 @@
+{
+  "specVersion": "1",
+  "componentId": "file-tree",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "actions",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    {
+      "storyId": "ai-elements-file-tree--default",
+      "kinds": ["default"]
+    },
+    {
+      "storyId": "ai-elements-file-tree--state-matrix",
+      "kinds": ["state-matrix"]
+    },
+    {
+      "storyId": "ai-elements-file-tree--selection-action",
+      "kinds": ["actions"]
+    },
+    {
+      "storyId": "ai-elements-file-tree--keyboard",
+      "kinds": ["keyboard"]
+    },
+    {
+      "storyId": "ai-elements-file-tree--focus",
+      "kinds": ["focus"]
+    },
+    {
+      "storyId": "ai-elements-file-tree--selection-workflow",
+      "kinds": ["workflow"]
+    },
+    {
+      "storyId": "ai-elements-file-tree--expand-transition",
+      "kinds": ["motion"]
+    },
+    {
+      "storyId": "ai-elements-file-tree--docs",
+      "kinds": ["docs"]
+    }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/file-tree.tsx",
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2298:377",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-file-tree--default",
+      "ai-elements-file-tree--state-matrix",
+      "ai-elements-file-tree--selection-action",
+      "ai-elements-file-tree--keyboard",
+      "ai-elements-file-tree--focus",
+      "ai-elements-file-tree--selection-workflow",
+      "ai-elements-file-tree--expand-transition",
+      "ai-elements-file-tree--docs"
+    ]
+  }
+}

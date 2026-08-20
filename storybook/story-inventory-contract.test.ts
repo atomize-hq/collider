@@ -476,6 +476,29 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-test-results--docs' },
         ],
       },
+      {
+        componentId: 'file-tree',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'actions',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-file-tree--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-file-tree--state-matrix' },
+          { kind: 'actions', storyId: 'ai-elements-file-tree--selection-action' },
+          { kind: 'keyboard', storyId: 'ai-elements-file-tree--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-file-tree--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-file-tree--selection-workflow' },
+          { kind: 'motion', storyId: 'ai-elements-file-tree--expand-transition' },
+          { kind: 'docs', storyId: 'ai-elements-file-tree--docs' },
+        ],
+      },
     ]);
   });
 
