@@ -262,6 +262,7 @@ describe('reusable component promotion cross-contract provenance', () => {
       'environment-variables',
       'test-results',
       'file-tree',
+      'schema-display',
     ]);
     // Proof coverage is generated in componentId-sorted order.
     expect(proofCoverage.components.map((component) => component.componentId)).toEqual([
@@ -284,6 +285,7 @@ describe('reusable component promotion cross-contract provenance', () => {
       'prompt-input',
       'queue',
       'reasoning',
+      'schema-display',
       'snippet',
       'sources',
       'suggestion',
