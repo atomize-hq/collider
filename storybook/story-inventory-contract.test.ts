@@ -562,6 +562,27 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-jsx-preview--docs' },
         ],
       },
+      {
+        componentId: 'terminal',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-terminal--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-terminal--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-terminal--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-terminal--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-terminal--copy-flow' },
+          { kind: 'motion', storyId: 'ai-elements-terminal--streaming-transition' },
+          { kind: 'docs', storyId: 'ai-elements-terminal--docs' },
+        ],
+      },
     ]);
   });
 
