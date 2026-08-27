@@ -13,22 +13,37 @@ import {
   TerminalTitle,
 } from './terminal';
 
+// ANSI helpers for readability.
+const GREEN = '\x1b[32m';
+const YELLOW = '\x1b[33m';
+const BLUE = '\x1b[34m';
+const CYAN = '\x1b[36m';
+const DIM = '\x1b[90m';
+const RESET = '\x1b[0m';
+
 const SAMPLE_OUTPUT = [
-  '\x1b[32m$\x1b[0m pnpm build',
-  'Building...',
-  '\x1b[36mvite\x1b[0m v5.4.0 building for production...',
-  '\x1b[32m✓\x1b[0m 142 modules transformed.',
-  'dist/index.html                     0.42 kB',
-  'dist/assets/index-B3g9jK6X.css      12.14 kB',
-  'dist/assets/index-Bqz8P0Yp.js      184.30 kB',
-  '\x1b[32m✓\x1b[0m built in 2.14s',
+  `${GREEN}✓${RESET} Compiled successfully in 1.2s`,
+  '',
+  `${BLUE}info${RESET}  - Collecting page data...`,
+  `${BLUE}info${RESET}  - Generating static pages (0/3)`,
+  `${GREEN}✓${RESET} Generated static pages (3/3)`,
+  '',
+  `${YELLOW}warn${RESET}  - Using experimental server actions`,
+  '',
+  `Route (app)                              ${CYAN}Size${RESET}     ${CYAN}First Load JS${RESET}`,
+  `┌ ○ /                                     ${GREEN}5.2 kB   87.3 kB${RESET}`,
+  `├ ○ /about                                ${GREEN}2.1 kB   84.2 kB${RESET}`,
+  `└ ○ /contact                              ${GREEN}3.8 kB   85.9 kB${RESET}`,
+  '',
+  `${GREEN}✓${RESET} Build completed successfully!`,
+  `${DIM}Total time: 3.45s${RESET}`,
 ].join('\n');
 
 const STREAMING_OUTPUT = [
-  '\x1b[32m$\x1b[0m pnpm test',
-  '\x1b[36m›\x1b[0m Running Jest...',
-  '\x1b[33m PASS \x1b[0m src/components/Button.test.tsx',
-  '\x1b[33m PASS \x1b[0m src/utils/format.test.ts',
+  `${GREEN}✓${RESET} Compiled successfully in 1.2s`,
+  '',
+  `${BLUE}info${RESET}  - Collecting page data...`,
+  `${BLUE}info${RESET}  - Generating static pages (0/3)`,
 ].join('\n');
 
 const onCopy = fn();
@@ -46,7 +61,7 @@ const Demo = ({
   <div style={{ width: 640 }}>
     <Terminal isStreaming={isStreaming} onClear={clearable ? onClear : undefined} output={output}>
       <TerminalHeader>
-        <TerminalTitle />
+        <TerminalTitle>Build Output</TerminalTitle>
         <div className="flex items-center gap-1">
           <TerminalStatus>streaming…</TerminalStatus>
           <TerminalActions>
