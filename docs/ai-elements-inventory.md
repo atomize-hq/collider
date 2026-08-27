@@ -6,7 +6,7 @@ memory notes or old snapshots as canonical.
 
 - **Registry total:** 48 components
 - **Fresh as of:** 2026-08-19
-- **Progress:** 30/48 done via Stage-2 (all 30 loops committed)
+- **Progress:** 31/48 done via Stage-2 (all 31 loops committed)
 - **Source of truth:** <https://elements.ai-sdk.dev/api/registry/registry.json>
 - **Per-component source:** `https://elements.ai-sdk.dev/api/registry/<name>.json`
 - **Refresh:** fetch the two URLs above, diff against the alphabetical index at the bottom, update statuses,
@@ -22,7 +22,7 @@ memory notes or old snapshots as canonical.
 | 🌉 bridge | Stage-3 assembly primitive, not a Stage-2 loop target                      |
 | ⏸️ parked | Out of the current transcript + coding-agent scope                         |
 
-## ✅ Done (30) — Tier A + Tier B + composer + coding-agent (11/12)
+## ✅ Done (31) — Tier A + Tier B + composer + coding-agent (12/13)
 
 Ordered by loop number.
 
@@ -58,16 +58,16 @@ Ordered by loop number.
 | 28  | commit                | Coding-agent | fa86aa2 | Git commit card w/ file diff; new avatar prim; asChild-div a11y fix            |
 | 29  | stack-trace           | Coding-agent | 1af9d7f | Parses JS stack traces; internal-frames muted; 3-file split (464→151/156/107)  |
 | 30  | jsx-preview           | Coding-agent | 717cdcf | react-jsx-parser wrapper; derived-state refactor for stricter react-hooks lint |
+| 31  | terminal              | Coding-agent | 82df12f | ansi-to-react ANSI output card; 2-file split (273→116/171); streaming caret    |
 
-## 🎯 Queue (2) — coding-agent workspace
+## 🎯 Queue (1) — coding-agent workspace
 
 Ordered small→big so we know the new-dep surface before touching the heaviest primitives
 (`terminal`, `sandbox`). Dep column reflects registry probe (2026-08-19).
 
-| Loop | Component | Cluster      | Rough scope | New deps this loop                                                     |
-| ---- | --------- | ------------ | ----------- | ---------------------------------------------------------------------- |
-| 31   | terminal  | Coding-agent | medium      | npm `ansi-to-react` (NOT xterm.js — vendor uses ansi-to-react wrapper) |
-| 32   | sandbox   | Coding-agent | large       | shadcn `tabs` prim; composes existing Tool                             |
+| Loop | Component | Cluster      | Rough scope | New deps this loop                         |
+| ---- | --------- | ------------ | ----------- | ------------------------------------------ |
+| 32   | sandbox   | Coding-agent | large       | shadcn `tabs` prim; composes existing Tool |
 
 **Not in queue anymore:** `controls` — registry probe (2026-08-19) revealed it is a wrapper around
 `@xyflow/react`'s `Controls` (zoom/fit-view/lock buttons for a react-flow canvas), not a generic
@@ -155,7 +155,7 @@ Sorted alphabetically for lookup. Status column mirrors the sections above.
 | stack-trace           | ✅ done   | Coding-agent | 29   |
 | suggestion            | ✅ done   | Tier A       | 8    |
 | task                  | ✅ done   | Tier A       | 6    |
-| terminal              | 🎯 queue  | Coding-agent | 31   |
+| terminal              | ✅ done   | Coding-agent | 31   |
 | test-results          | ✅ done   | Coding-agent | 25   |
 | tool                  | ✅ done   | Tier A       | 4    |
 | toolbar               | ⏸️ parked | Flow-graph   | —    |
