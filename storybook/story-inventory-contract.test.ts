@@ -583,6 +583,27 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-terminal--docs' },
         ],
       },
+      {
+        componentId: 'sandbox',
+        validatorKinds: [
+          'default',
+          'state-matrix',
+          'keyboard',
+          'focus',
+          'workflow',
+          'motion',
+          'docs',
+        ],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'ai-elements-sandbox--default' },
+          { kind: 'state-matrix', storyId: 'ai-elements-sandbox--state-matrix' },
+          { kind: 'keyboard', storyId: 'ai-elements-sandbox--keyboard' },
+          { kind: 'focus', storyId: 'ai-elements-sandbox--focus' },
+          { kind: 'workflow', storyId: 'ai-elements-sandbox--tab-switch-flow' },
+          { kind: 'motion', storyId: 'ai-elements-sandbox--collapse-transition' },
+          { kind: 'docs', storyId: 'ai-elements-sandbox--docs' },
+        ],
+      },
     ]);
   });
 

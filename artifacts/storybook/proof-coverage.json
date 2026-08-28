@@ -1,6 +1,6 @@
 {
   "proofCoverageVersion": "1",
-  "summary": { "componentCount": 31, "readyCount": 31, "failingCount": 0 },
+  "summary": { "componentCount": 32, "readyCount": 32, "failingCount": 0 },
   "components": [
     {
       "componentId": "agent",
@@ -482,6 +482,35 @@
         "workflow",
         "motion",
         "async",
+        "docs"
+      ],
+      "missingKinds": [],
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      }
+    },
+    {
+      "componentId": "sandbox",
+      "tier": "interactive",
+      "status": "ready",
+      "requiredKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
+        "docs"
+      ],
+      "implementedKinds": [
+        "default",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "motion",
         "docs"
       ],
       "missingKinds": [],
