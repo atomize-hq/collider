@@ -48,7 +48,7 @@ export const TerminalContent = ({ className, children, ...props }: TerminalConte
         <pre className="break-words whitespace-pre-wrap">
           <Ansi>{output}</Ansi>
           {isStreaming && (
-            <span className="ml-0.5 inline-block h-4 w-2 animate-pulse bg-zinc-100" />
+            <span className="ml-0.5 inline-block h-4 w-2 animate-pulse bg-foreground" />
           )}
         </pre>
       )}
@@ -81,7 +81,7 @@ export const Terminal = ({
     <TerminalContext.Provider value={contextValue}>
       <div
         className={cn(
-          'flex flex-col overflow-hidden rounded-lg border bg-zinc-950 text-zinc-100',
+          'flex flex-col overflow-hidden rounded-lg border bg-background text-foreground',
           className
         )}
         {...props}
