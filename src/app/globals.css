@@ -30,6 +30,21 @@
   --ring: var(--accent-dark-primary);
 }
 
+/*
+ * Tailwind v4 defaults the `border` utility to currentColor (a v3→v4 break).
+ * Restore v3 behavior so `border` alone paints in the semantic border color,
+ * matching every ai-elements card that doesn't spell out `border-border`.
+ */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--border);
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
