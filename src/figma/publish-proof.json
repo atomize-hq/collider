@@ -3,7 +3,7 @@
   "mode": "plugin-import-manual",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
-    "gitSha": "fd8110227b5d410ac19bf9089f25e57822df31b5"
+    "gitSha": "ff8ec0d13b84ce3f16e849713d78444dee6db053"
   },
   "destination": {
     "name": "Collider",
@@ -11,8 +11,8 @@
   },
   "materialization": {
     "status": "passed",
-    "attemptedAt": "2026-08-18T20:37:22Z",
-    "notes": "Materialized 597 variables via the repo-owned plugin's upsert rail against the canonical Collider file; existing VariableIDs preserved for downstream component bindings."
+    "attemptedAt": "2026-08-31T16:05:56Z",
+    "notes": "Materialized 699 variables via the repo-owned plugin's upsert rail against the canonical Collider file; existing VariableIDs preserved for downstream component bindings (spot-checked 2019:370 text/primary, 2019:354 background/base, 2220:695 accent/dark/primary). Count rose from 597 with the Phase 2 foundation families: type, motion, elevation, layout, shape, plus radius/spacing/semantic extensions."
   },
   "carrier": {
     "used": false,
