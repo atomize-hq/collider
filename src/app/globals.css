@@ -25,9 +25,9 @@
   --accent-foreground: var(--color-text-primary);
   --destructive: var(--color-text-error);
   --destructive-foreground: var(--color-text-primary);
-  --border: var(--color-background-overlay);
-  --input: var(--color-background-overlay);
-  --ring: var(--accent-dark-primary);
+  --border: var(--semantic-color-border-default);
+  --input: var(--semantic-color-border-default);
+  --ring: var(--semantic-color-interaction-focus-ring);
 }
 
 /*
@@ -42,6 +42,10 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--border);
+  }
+
+  ::selection {
+    background-color: var(--semantic-color-interaction-selection);
   }
 }
 

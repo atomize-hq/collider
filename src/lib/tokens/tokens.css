@@ -11,11 +11,14 @@
   --accent-light-sidebar-primary-foreground: #eff6ff;
   --core-color-amber-300: #e8d1a2;
   --core-color-blue-500: #51a2ff;
+  --core-color-blue-600: #155dfc;
   --core-color-blue-800: #1f4174;
+  --core-color-blue-alpha-30: rgba(21, 93, 252, 0.3);
   --core-color-green-500: #48df3a;
   --core-color-green-800: #0e5e2e;
   --core-color-neutral-300: #b0bac8;
   --core-color-neutral-500: #6a7282;
+  --core-color-neutral-700: #3f3f3f;
   --core-color-neutral-800: #303030;
   --core-color-neutral-850: #2a2a2a;
   --core-color-neutral-900: #202020;
@@ -80,6 +83,11 @@
   --semantic-color-background-overlay: #303030;
   --semantic-color-background-surface: #202020;
   --semantic-color-background-white-10: rgba(255, 255, 255, 0.1);
+  --semantic-color-border-default: #303030;
+  --semantic-color-border-strong: #3f3f3f;
+  --semantic-color-border-subtle: rgba(255, 255, 255, 0.1);
+  --semantic-color-interaction-focus-ring: #155dfc;
+  --semantic-color-interaction-selection: rgba(21, 93, 252, 0.3);
   --semantic-color-status-strip-ai: #8a38f5;
   --semantic-color-status-strip-failure: #5b1d20;
   --semantic-color-status-strip-info: #1f4174;

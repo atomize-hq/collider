@@ -61,10 +61,20 @@ export const tokenMap = {
     type: 'color',
     value: '#e8d1a2',
   },
+  'core.color.blue-alpha.30': {
+    themeId: 'dark',
+    type: 'color',
+    value: 'rgba(21, 93, 252, 0.3)',
+  },
   'core.color.blue.500': {
     themeId: 'dark',
     type: 'color',
     value: '#51a2ff',
+  },
+  'core.color.blue.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#155dfc',
   },
   'core.color.blue.800': {
     themeId: 'dark',
@@ -90,6 +100,11 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'color',
     value: '#6a7282',
+  },
+  'core.color.neutral.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#3f3f3f',
   },
   'core.color.neutral.800': {
     themeId: 'dark',
@@ -410,6 +425,31 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'color',
     value: 'rgba(255, 255, 255, 0.1)',
+  },
+  'semantic.color.border.default': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#303030',
+  },
+  'semantic.color.border.strong': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#3f3f3f',
+  },
+  'semantic.color.border.subtle': {
+    themeId: 'dark',
+    type: 'color',
+    value: 'rgba(255, 255, 255, 0.1)',
+  },
+  'semantic.color.interaction.focus-ring': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#155dfc',
+  },
+  'semantic.color.interaction.selection': {
+    themeId: 'dark',
+    type: 'color',
+    value: 'rgba(21, 93, 252, 0.3)',
   },
   'semantic.color.status-strip.ai': {
     themeId: 'dark',

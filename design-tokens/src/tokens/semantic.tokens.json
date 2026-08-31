@@ -22,6 +22,30 @@
         "$type": "color"
       }
     },
+    "border": {
+      "subtle": {
+        "$value": "{core.color.white-alpha.10}",
+        "$type": "color"
+      },
+      "default": {
+        "$value": "{core.color.neutral.800}",
+        "$type": "color"
+      },
+      "strong": {
+        "$value": "{core.color.neutral.700}",
+        "$type": "color"
+      }
+    },
+    "interaction": {
+      "focus-ring": {
+        "$value": "{core.color.blue.600}",
+        "$type": "color"
+      },
+      "selection": {
+        "$value": "{core.color.blue-alpha.30}",
+        "$type": "color"
+      }
+    },
     "text": {
       "primary": {
         "$value": "{core.color.white}",
