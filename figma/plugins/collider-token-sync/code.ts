@@ -261,7 +261,11 @@ type PluginVariableValue =
 
 function valuesEqual(expected: unknown, actual: unknown) {
   if (typeof expected === 'number' && typeof actual === 'number') {
-    return Object.is(expected, actual);
+    // Figma stores variable floats in single precision, so 0.7 reads back as
+    // 0.699999988079071. Comparing float64 exactly would reject every value
+    // that is not representable in float32; compare in float32 instead.
+    // Colors already sidestep this via closeTo() on each channel.
+    return Object.is(Math.fround(expected), Math.fround(actual));
   }
 
   if (typeof expected === 'string' && typeof actual === 'string') {
