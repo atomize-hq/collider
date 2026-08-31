@@ -40,6 +40,13 @@
   --elevation-role-sheet: 0 12px 32px rgba(0, 0, 0, 0.7);
   --elevation-role-tooltip: 0 2px 6px rgba(0, 0, 0, 0.5);
   --font-font-family: Poppins;
+  --layout-container-doc: 1160px;
+  --layout-container-narrow: 540px;
+  --layout-container-page: 1060px;
+  --layout-container-reading: 680px;
+  --layout-container-shell: 1200px;
+  --layout-gutter-default: 24px;
+  --layout-gutter-tight: 16px;
   --motion-duration-base: 190ms;
   --motion-duration-fast: 130ms;
   --motion-duration-instant: 80ms;

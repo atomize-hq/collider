@@ -1,0 +1,34 @@
+{
+  "container": {
+    "narrow": {
+      "$value": "540px",
+      "$type": "dimension"
+    },
+    "reading": {
+      "$value": "680px",
+      "$type": "dimension"
+    },
+    "page": {
+      "$value": "1060px",
+      "$type": "dimension"
+    },
+    "doc": {
+      "$value": "1160px",
+      "$type": "dimension"
+    },
+    "shell": {
+      "$value": "1200px",
+      "$type": "dimension"
+    }
+  },
+  "gutter": {
+    "tight": {
+      "$value": "16px",
+      "$type": "dimension"
+    },
+    "default": {
+      "$value": "24px",
+      "$type": "dimension"
+    }
+  }
+}

@@ -44,6 +44,7 @@ describe('token build contracts', () => {
       'core',
       'elevation',
       'font',
+      'layout',
       'motion',
       'radius',
       'semantic',

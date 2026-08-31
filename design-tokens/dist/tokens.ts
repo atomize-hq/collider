@@ -211,6 +211,41 @@ export const tokenMap = {
     type: 'string',
     value: 'Poppins',
   },
+  'layout.container.doc': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1160px',
+  },
+  'layout.container.narrow': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '540px',
+  },
+  'layout.container.page': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1060px',
+  },
+  'layout.container.reading': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '680px',
+  },
+  'layout.container.shell': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1200px',
+  },
+  'layout.gutter.default': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'layout.gutter.tight': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
   'motion.duration.base': {
     themeId: 'dark',
     type: 'duration',

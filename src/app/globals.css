@@ -122,6 +122,23 @@
   --shadow-sheet: var(--elevation-role-sheet);
 }
 
+/*
+ * Layout containers bridged from `layout.tokens.json`. Tailwind's
+ * `--container-` namespace drives the max-width and width scales, so these
+ * register as `max-w-page`, `max-w-reading`, and so on. `reading` and `shell`
+ * avoid the names `prose` and `max`, which Tailwind already defines as
+ * max-width keywords (65ch and max-content) and which would win over these.
+ * Gutters have no matching namespace and stay available as
+ * `--layout-gutter-` vars.
+ */
+@theme inline {
+  --container-narrow: var(--layout-container-narrow);
+  --container-reading: var(--layout-container-reading);
+  --container-page: var(--layout-container-page);
+  --container-doc: var(--layout-container-doc);
+  --container-shell: var(--layout-container-shell);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
