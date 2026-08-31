@@ -8,6 +8,17 @@ import { isObject, readJson, resolveFiles } from './component-recipe-validator-s
 
 const referencePattern = /^\{([^}]+)\}$/;
 
+// Families excluded from the Figma variable publish only. These stay fully
+// present in the token source, in `tokens.css`, and in the typed token module —
+// nothing here removes a public token ID, so this is not a CHANGE_POLICY
+// removal event. It exists because these families have zero consumers and
+// together account for 531 of 699 variables, which buries the ~168 variables
+// that are actually part of the design system in Figma's variable picker.
+//   - tailwind-colors / tailwind-variables: raw palette pass-through.
+//   - theme: the light-valued shadcn role set, unused in this dark-only app.
+// To restore any of them to Figma, delete its entry here and republish.
+const figmaExcludedFamilies = new Set(['tailwind-colors', 'tailwind-variables', 'theme']);
+
 export function loadBuildGraph(options = {}) {
   const themeRegistry = readJson(options.themeRegistryPath ?? themeRegistryPath, true);
   const themeId = options.themeId ?? themeRegistry.defaultThemeId;
@@ -29,6 +40,12 @@ export function loadBuildGraph(options = {}) {
 }
 
 export function createFigmaTokenDocument(graph) {
+  const publishedFamilies = Object.fromEntries(
+    Object.entries(graph.materializedTokens).filter(
+      ([family]) => !figmaExcludedFamilies.has(family)
+    )
+  );
+
   return sortDeep({
     $extensions: {
       'com.atomizehq.collider': {
@@ -36,7 +53,7 @@ export function createFigmaTokenDocument(graph) {
         themeId: graph.themeId,
       },
     },
-    ...graph.materializedTokens,
+    ...publishedFamilies,
   });
 }
 

@@ -50,13 +50,25 @@ describe('token build contracts', () => {
       'semantic',
       'shape',
       'spacing',
-      'tailwind-colors',
-      'tailwind-variables',
-      'theme',
       'type',
     ]);
     expect(figma).not.toHaveProperty('recipeMap');
     expect(JSON.stringify(figma)).not.toContain('"componentId"');
+  });
+
+  it('withholds the consumer-less families from Figma while keeping them in runtime css', () => {
+    const figma = JSON.parse(fs.readFileSync(figmaArtifactPath, 'utf8')) as Record<string, unknown>;
+    const runtimeCss = fs.readFileSync(runtimeCssArtifactPath, 'utf8');
+
+    // These families are withheld from the Figma variable publish only — they
+    // have no consumers and would otherwise bury the design-system variables in
+    // Figma's picker. They must stay in runtime css, because withholding them
+    // there would remove public token IDs and become a CHANGE_POLICY migration
+    // event. See `figmaExcludedFamilies` in scripts/lib/token-build-graph.mjs.
+    for (const family of ['tailwind-colors', 'tailwind-variables', 'theme']) {
+      expect(figma).not.toHaveProperty(family);
+      expect(runtimeCss).toContain(`--${family}-`);
+    }
   });
 
   it('emits lexical ordering for css vars, token map keys, and figma json keys', async () => {
