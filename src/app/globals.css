@@ -168,6 +168,19 @@
   border-radius: var(--radius-pill);
 }
 
+/*
+ * Spacing. Tailwind v4 derives its whole spacing scale from one multiplier
+ * rather than per-step keys, so pointing `--spacing` at the 4px base token
+ * makes every p-, m-, and gap- utility token-driven, including fractional
+ * steps like p-0.5 and large ones like p-32 that it generates on demand.
+ * The per-step tokens therefore exist for Figma and design parity rather
+ * than to feed utilities, and the gap and padding role aliases record
+ * Collider-Old usages.
+ */
+@theme inline {
+  --spacing: var(--spacing-1);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

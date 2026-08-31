@@ -3,16 +3,32 @@
     "$value": "0px",
     "$type": "dimension"
   },
+  "0-5": {
+    "$value": "2px",
+    "$type": "dimension"
+  },
   "1": {
     "$value": "4px",
+    "$type": "dimension"
+  },
+  "1-5": {
+    "$value": "6px",
     "$type": "dimension"
   },
   "2": {
     "$value": "8px",
     "$type": "dimension"
   },
+  "2-5": {
+    "$value": "10px",
+    "$type": "dimension"
+  },
   "3": {
     "$value": "12px",
+    "$type": "dimension"
+  },
+  "3-5": {
+    "$value": "14px",
     "$type": "dimension"
   },
   "4": {
@@ -27,6 +43,10 @@
     "$value": "24px",
     "$type": "dimension"
   },
+  "7": {
+    "$value": "28px",
+    "$type": "dimension"
+  },
   "8": {
     "$value": "32px",
     "$type": "dimension"
@@ -38,5 +58,85 @@
   "12": {
     "$value": "48px",
     "$type": "dimension"
+  },
+  "14": {
+    "$value": "56px",
+    "$type": "dimension"
+  },
+  "16": {
+    "$value": "64px",
+    "$type": "dimension"
+  },
+  "20": {
+    "$value": "80px",
+    "$type": "dimension"
+  },
+  "24": {
+    "$value": "96px",
+    "$type": "dimension"
+  },
+  "32": {
+    "$value": "128px",
+    "$type": "dimension"
+  },
+  "gap": {
+    "run-badge": {
+      "$value": "{spacing.1}",
+      "$type": "dimension"
+    },
+    "branch-inner": {
+      "$value": "5px",
+      "$type": "dimension"
+    },
+    "hint-key": {
+      "$value": "{spacing.1-5}",
+      "$type": "dimension"
+    },
+    "toolbar-btn": {
+      "$value": "7px",
+      "$type": "dimension"
+    },
+    "git-file-row": {
+      "$value": "{spacing.2}",
+      "$type": "dimension"
+    },
+    "hint-open": {
+      "$value": "{spacing.2-5}",
+      "$type": "dimension"
+    },
+    "header-path": {
+      "$value": "{spacing.3}",
+      "$type": "dimension"
+    },
+    "hints-bar": {
+      "$value": "15px",
+      "$type": "dimension"
+    }
+  },
+  "padding": {
+    "git-file-row-pl": {
+      "$value": "{spacing.1}",
+      "$type": "dimension"
+    },
+    "block-header-py": {
+      "$value": "5px",
+      "$type": "dimension"
+    },
+    "keycap-px": {
+      "$value": "5px",
+      "$type": "dimension"
+    },
+    "hints-bar-py": {
+      "$value": "{spacing.1-5}",
+      "$type": "dimension"
+    },
+    "block-header-pl": {
+      "$value": "{spacing.2-5}",
+      "$type": "dimension"
+    },
+    "hints-bar-px": {
+      "$value": "{spacing.2-5}",
+      "$type": "dimension"
+    }
   }
 }

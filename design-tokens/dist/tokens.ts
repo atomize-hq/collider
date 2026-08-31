@@ -581,10 +581,20 @@ export const tokenMap = {
     type: 'dimension',
     value: '0px',
   },
+  'spacing.0-5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
   'spacing.1': {
     themeId: 'dark',
     type: 'dimension',
     value: '4px',
+  },
+  'spacing.1-5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
   },
   'spacing.10': {
     themeId: 'dark',
@@ -596,15 +606,50 @@ export const tokenMap = {
     type: 'dimension',
     value: '48px',
   },
+  'spacing.14': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '56px',
+  },
+  'spacing.16': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '64px',
+  },
   'spacing.2': {
     themeId: 'dark',
     type: 'dimension',
     value: '8px',
   },
+  'spacing.2-5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'spacing.20': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '80px',
+  },
+  'spacing.24': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '96px',
+  },
   'spacing.3': {
     themeId: 'dark',
     type: 'dimension',
     value: '12px',
+  },
+  'spacing.3-5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '14px',
+  },
+  'spacing.32': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '128px',
   },
   'spacing.4': {
     themeId: 'dark',
@@ -621,10 +666,85 @@ export const tokenMap = {
     type: 'dimension',
     value: '24px',
   },
+  'spacing.7': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '28px',
+  },
   'spacing.8': {
     themeId: 'dark',
     type: 'dimension',
     value: '32px',
+  },
+  'spacing.gap.branch-inner': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
+  },
+  'spacing.gap.git-file-row': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '8px',
+  },
+  'spacing.gap.header-path': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'spacing.gap.hint-key': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
+  },
+  'spacing.gap.hint-open': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'spacing.gap.hints-bar': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '15px',
+  },
+  'spacing.gap.run-badge': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'spacing.gap.toolbar-btn': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '7px',
+  },
+  'spacing.padding.block-header-pl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'spacing.padding.block-header-py': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
+  },
+  'spacing.padding.git-file-row-pl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'spacing.padding.hints-bar-px': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'spacing.padding.hints-bar-py': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
+  },
+  'spacing.padding.keycap-px': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
   },
   'tailwind-colors.amber.100': {
     themeId: 'dark',
