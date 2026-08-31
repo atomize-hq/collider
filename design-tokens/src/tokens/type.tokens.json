@@ -1,10 +1,10 @@
 {
   "font": {
-    "sans": {
+    "poppins": {
       "$value": "Poppins",
       "$type": "string"
     },
-    "mono": {
+    "roboto-mono": {
       "$value": "Roboto Mono",
       "$type": "string"
     }

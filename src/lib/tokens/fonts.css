@@ -7,7 +7,12 @@
  * request and the fallback stacks. Custom properties resolve lazily, so
  * referencing tokens.css here is safe despite it being imported afterwards.
  */
+/*
+ * Left side is the Tailwind role namespace that utilities read; right side names
+ * the actual typeface. This is where a font swap happens — repoint the role at a
+ * different `--type-font-*` token rather than renaming the token itself.
+ */
 :root {
-  --font-sans: var(--type-font-sans), sans-serif;
-  --font-mono: var(--type-font-mono), monospace;
+  --font-sans: var(--type-font-poppins), sans-serif;
+  --font-mono: var(--type-font-roboto-mono), monospace;
 }

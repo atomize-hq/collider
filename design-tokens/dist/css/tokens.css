@@ -676,8 +676,8 @@
   --theme-theme-sidebar-width: 256px;
   --theme-theme-sidebar-width-icon: 48px;
   --theme-transparent: rgba(255, 255, 255, 0);
-  --type-font-mono: Roboto Mono;
-  --type-font-sans: Poppins;
+  --type-font-poppins: Poppins;
+  --type-font-roboto-mono: Roboto Mono;
   --type-leading-normal: 1.5;
   --type-leading-relaxed: 1.75;
   --type-leading-tight: 1.2;

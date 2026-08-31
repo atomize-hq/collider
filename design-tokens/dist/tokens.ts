@@ -3401,15 +3401,15 @@ export const tokenMap = {
     type: 'color',
     value: '#ffffff00',
   },
-  'type.font.mono': {
-    themeId: 'dark',
-    type: 'string',
-    value: 'Roboto Mono',
-  },
-  'type.font.sans': {
+  'type.font.poppins': {
     themeId: 'dark',
     type: 'string',
     value: 'Poppins',
+  },
+  'type.font.roboto-mono': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'Roboto Mono',
   },
   'type.leading.normal': {
     themeId: 'dark',
