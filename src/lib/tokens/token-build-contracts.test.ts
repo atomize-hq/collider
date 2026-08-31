@@ -42,6 +42,7 @@ describe('token build contracts', () => {
       '$extensions',
       'accent',
       'core',
+      'elevation',
       'font',
       'motion',
       'radius',

@@ -25,6 +25,18 @@
   --core-color-white: #ffffff;
   --core-color-white-alpha-10: rgba(255, 255, 255, 0.1);
   --core-color-white-alpha-30: rgba(255, 255, 255, 0.3);
+  --elevation-level-0: none;
+  --elevation-level-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --elevation-level-2: 0 2px 6px rgba(0, 0, 0, 0.5);
+  --elevation-level-3: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --elevation-level-4: 0 12px 32px rgba(0, 0, 0, 0.7);
+  --elevation-role-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --elevation-role-dropdown: 0 2px 6px rgba(0, 0, 0, 0.5);
+  --elevation-role-flat: none;
+  --elevation-role-modal: 0 12px 32px rgba(0, 0, 0, 0.7);
+  --elevation-role-popover: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --elevation-role-sheet: 0 12px 32px rgba(0, 0, 0, 0.7);
+  --elevation-role-tooltip: 0 2px 6px rgba(0, 0, 0, 0.5);
   --font-font-family: Poppins;
   --motion-duration-base: 190ms;
   --motion-duration-fast: 130ms;

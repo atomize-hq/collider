@@ -107,6 +107,21 @@
   transition-duration: var(--motion-duration-slower);
 }
 
+/*
+ * Elevation bridged from `elevation.tokens.json`. The semantic roles are what
+ * components should reach for (`shadow-card`, `shadow-modal`); the raw
+ * `--elevation-level-*` scale stays available for one-off use via var().
+ * Dark-only single values — there is no light theme to vary against yet.
+ */
+@theme inline {
+  --shadow-card: var(--elevation-role-card);
+  --shadow-dropdown: var(--elevation-role-dropdown);
+  --shadow-tooltip: var(--elevation-role-tooltip);
+  --shadow-popover: var(--elevation-role-popover);
+  --shadow-modal: var(--elevation-role-modal);
+  --shadow-sheet: var(--elevation-role-sheet);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

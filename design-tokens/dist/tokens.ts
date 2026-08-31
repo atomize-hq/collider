@@ -146,6 +146,66 @@ export const tokenMap = {
     type: 'color',
     value: 'rgba(255, 255, 255, 0.3)',
   },
+  'elevation.level.0': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'none',
+  },
+  'elevation.level.1': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 1px 2px rgba(0, 0, 0, 0.4)',
+  },
+  'elevation.level.2': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 2px 6px rgba(0, 0, 0, 0.5)',
+  },
+  'elevation.level.3': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 4px 12px rgba(0, 0, 0, 0.6)',
+  },
+  'elevation.level.4': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 12px 32px rgba(0, 0, 0, 0.7)',
+  },
+  'elevation.role.card': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 1px 2px rgba(0, 0, 0, 0.4)',
+  },
+  'elevation.role.dropdown': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 2px 6px rgba(0, 0, 0, 0.5)',
+  },
+  'elevation.role.flat': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'none',
+  },
+  'elevation.role.modal': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 12px 32px rgba(0, 0, 0, 0.7)',
+  },
+  'elevation.role.popover': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 4px 12px rgba(0, 0, 0, 0.6)',
+  },
+  'elevation.role.sheet': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 12px 32px rgba(0, 0, 0, 0.7)',
+  },
+  'elevation.role.tooltip': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 2px 6px rgba(0, 0, 0, 0.5)',
+  },
   'font.font-family': {
     themeId: 'dark',
     type: 'string',
