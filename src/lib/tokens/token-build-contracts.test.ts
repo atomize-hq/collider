@@ -50,6 +50,7 @@ describe('token build contracts', () => {
       'tailwind-colors',
       'tailwind-variables',
       'theme',
+      'type',
     ]);
     expect(figma).not.toHaveProperty('recipeMap');
     expect(JSON.stringify(figma)).not.toContain('"componentId"');

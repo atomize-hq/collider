@@ -3001,6 +3001,116 @@ export const tokenMap = {
     type: 'color',
     value: '#ffffff00',
   },
+  'type.font.mono': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'Roboto Mono',
+  },
+  'type.font.sans': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'Poppins',
+  },
+  'type.leading.normal': {
+    themeId: 'dark',
+    type: 'number',
+    value: 1.5,
+  },
+  'type.leading.relaxed': {
+    themeId: 'dark',
+    type: 'number',
+    value: 1.75,
+  },
+  'type.leading.tight': {
+    themeId: 'dark',
+    type: 'number',
+    value: 1.2,
+  },
+  'type.role.output-line': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'type.role.path': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'type.role.secondary': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'type.role.status-letter': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'type.size.2xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'type.size.2xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'type.size.base': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'type.size.lg': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '18px',
+  },
+  'type.size.sm': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '14px',
+  },
+  'type.size.xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '20px',
+  },
+  'type.size.xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'type.tracking.normal': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0em',
+  },
+  'type.tracking.wide': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0.025em',
+  },
+  'type.weight.bold': {
+    themeId: 'dark',
+    type: 'number',
+    value: 700,
+  },
+  'type.weight.medium': {
+    themeId: 'dark',
+    type: 'number',
+    value: 500,
+  },
+  'type.weight.regular': {
+    themeId: 'dark',
+    type: 'number',
+    value: 400,
+  },
+  'type.weight.semibold': {
+    themeId: 'dark',
+    type: 'number',
+    value: 600,
+  },
 } as const;
 
 export const recipeMap = {} as const;

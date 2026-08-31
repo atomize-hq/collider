@@ -45,6 +45,39 @@
   }
 }
 
+/*
+ * Typography scale bridged from `type.tokens.json` onto Tailwind's theme
+ * namespaces. Tailwind v4 only generates a utility for a theme key it knows
+ * about, so every scale step has to be declared here — `tailwind.config.ts`
+ * is not loaded (no `@config` directive) and cannot do this.
+ *
+ * xs/sm/base/lg/xl/2xl keep Tailwind's existing values, so this rebinds them
+ * to tokens without moving any type. `2xs` (10px) is the one new step, added
+ * for Collider-Old's status letters.
+ */
+@theme inline {
+  --text-2xs: var(--type-size-2xs);
+  --text-2xs--line-height: 1.4;
+  --text-xs: var(--type-size-xs);
+  --text-sm: var(--type-size-sm);
+  --text-base: var(--type-size-base);
+  --text-lg: var(--type-size-lg);
+  --text-xl: var(--type-size-xl);
+  --text-2xl: var(--type-size-2xl);
+
+  --font-weight-normal: var(--type-weight-regular);
+  --font-weight-medium: var(--type-weight-medium);
+  --font-weight-semibold: var(--type-weight-semibold);
+  --font-weight-bold: var(--type-weight-bold);
+
+  --leading-tight: var(--type-leading-tight);
+  --leading-normal: var(--type-leading-normal);
+  --leading-relaxed: var(--type-leading-relaxed);
+
+  --tracking-normal: var(--type-tracking-normal);
+  --tracking-wide: var(--type-tracking-wide);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
