@@ -78,6 +78,35 @@
   --tracking-wide: var(--type-tracking-wide);
 }
 
+/*
+ * Motion bridged from `motion.tokens.json`. Tailwind v4 has an `--ease-*`
+ * theme namespace, so easings become utilities just by being declared here.
+ * It has no `--duration-*` namespace — `duration-*` is a functional utility
+ * that only takes bare numbers — so the named durations are exposed as
+ * static utilities instead.
+ */
+@theme inline {
+  --ease-out: var(--motion-easing-out);
+  --ease-in-out: var(--motion-easing-in-out);
+  --ease-spring: var(--motion-easing-spring);
+}
+
+@utility duration-instant {
+  transition-duration: var(--motion-duration-instant);
+}
+@utility duration-fast {
+  transition-duration: var(--motion-duration-fast);
+}
+@utility duration-base {
+  transition-duration: var(--motion-duration-base);
+}
+@utility duration-slow {
+  transition-duration: var(--motion-duration-slow);
+}
+@utility duration-slower {
+  transition-duration: var(--motion-duration-slower);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

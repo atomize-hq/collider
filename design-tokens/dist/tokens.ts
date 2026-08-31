@@ -151,10 +151,75 @@ export const tokenMap = {
     type: 'string',
     value: 'Poppins',
   },
-  'motion.placeholder.durationQuick': {
+  'motion.duration.base': {
     themeId: 'dark',
     type: 'duration',
-    value: '150ms',
+    value: '190ms',
+  },
+  'motion.duration.fast': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '130ms',
+  },
+  'motion.duration.instant': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '80ms',
+  },
+  'motion.duration.slow': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '280ms',
+  },
+  'motion.duration.slower': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '420ms',
+  },
+  'motion.easing.in-out': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.45, 0, 0.2, 1)',
+  },
+  'motion.easing.out': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.22, 0.61, 0.2, 1)',
+  },
+  'motion.easing.spring': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.34, 1.3, 0.5, 1)',
+  },
+  'motion.role.appear.duration': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '190ms',
+  },
+  'motion.role.appear.easing': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.22, 0.61, 0.2, 1)',
+  },
+  'motion.role.dismiss.duration': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '130ms',
+  },
+  'motion.role.dismiss.easing': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.45, 0, 0.2, 1)',
+  },
+  'motion.role.hover.duration': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '80ms',
+  },
+  'motion.role.hover.easing': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.22, 0.61, 0.2, 1)',
   },
   'radius.2xl': {
     themeId: 'dark',
