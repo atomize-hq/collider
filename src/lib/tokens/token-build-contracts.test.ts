@@ -43,7 +43,6 @@ describe('token build contracts', () => {
       'accent',
       'core',
       'elevation',
-      'font',
       'layout',
       'motion',
       'radius',
@@ -65,7 +64,7 @@ describe('token build contracts', () => {
     // Figma's picker. They must stay in runtime css, because withholding them
     // there would remove public token IDs and become a CHANGE_POLICY migration
     // event. See `figmaExcludedFamilies` in scripts/lib/token-build-graph.mjs.
-    for (const family of ['tailwind-colors', 'tailwind-variables', 'theme']) {
+    for (const family of ['tailwind-colors', 'tailwind-variables', 'theme', 'font']) {
       expect(figma).not.toHaveProperty(family);
       expect(runtimeCss).toContain(`--${family}-`);
     }
