@@ -6,6 +6,12 @@
 
 This plan is intentionally durable — a fresh session should be able to pick it up from cold.
 
+> **STATUS: COMPLETE (2026-08-31).** All seven files plus the Phase 3 republish landed — 699 Figma variables, up from 597.
+>
+> **CORRECTION — every mention of `tailwind.config.ts` below is wrong.** That file was never loaded: this is Tailwind v4 with no `@config` directive, so its `fontFamily` / `spacing` / `borderRadius` / `colors` entries did nothing. Proved by compiling the real app CSS with and without it — byte-identical output. The file has since been deleted.
+>
+> Wherever this plan says "extend `tailwind.config.ts`", the real mechanism is **`@theme inline` in `src/app/globals.css`**. Tailwind v4 only generates a utility for a theme key it knows about: overriding an _existing_ key works from a plain `:root`, but creating a _new_ one requires `@theme`. Categories with no theme namespace (named durations, extra radius steps) need `@utility` instead. See the `project-ds-phase-2-implementation` memory for the measured namespace table.
+
 ---
 
 ## 0. What Phase 2 actually is
@@ -280,7 +286,7 @@ Live-probe Collider-Old's `SPACING/GAPS` frame (403:1748) and `PADDINGS` frame (
 Every Phase 2 file follows this 10-step drill:
 
 1. **Edit** `design-tokens/src/tokens/<file>.tokens.json` (raw scale + semantic aliases per hybrid pattern).
-2. **Extend** `tailwind.config.ts` with the matching category, referencing `var(--*)`.
+2. ~~**Extend** `tailwind.config.ts` with the matching category, referencing `var(--*)`.~~ **Superseded — see the correction at the top.** Bridge the category in `globals.css` via `@theme inline`, or via `@utility` where Tailwind has no matching namespace.
 3. **Extend** `globals.css` `@theme inline` if any new shadcn-role mappings emerge (rare for foundation additions).
 4. **Build tokens:** `pnpm build:tokens` — regenerates `src/lib/tokens/tokens.css` + `design-tokens/dist/tokens.ts`.
 5. **Font-face check:** if font weights change, bump `src/lib/tokens/fonts.css` Google Fonts URL. (Poppins 700 is fixed as the warm-up, before file 1.)
@@ -356,7 +362,7 @@ From audit + prior loop memory:
 - **Two forked Figma files can share page IDs** (Collider-Old and Atomize both have `Primitives (401:1040)`). Verify by page-list fingerprint before probing.
 - **Publish plugin is idempotent** (upsert, per commit f9e7e36). Preserves VariableIDs. Safe to re-run.
 - **`just preflight` mirrors CI.** If it passes locally, CI passes.
-- **Tailwind v4 dual config** — `tailwind.config.ts` extends + `globals.css @theme inline`. Both matter; think about both.
+- ~~**Tailwind v4 dual config** — `tailwind.config.ts` extends + `globals.css @theme inline`. Both matter; think about both.~~ **Wrong — there was never a dual config.** `globals.css` was always the only live surface; see the correction at the top.
 - **`radius.md` value change (4→5)** is a break to existing `rounded-md` consumers. If it lands, spot-check every card/badge/button story. Alternative: keep 4, add new step.
 
 ---

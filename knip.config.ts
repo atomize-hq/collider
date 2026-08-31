@@ -32,6 +32,12 @@ const config: KnipConfig = {
   },
   ignoreDependencies: [
     '@vitest/coverage-v8',
+    // Consumed only through CSS, which knip does not trace: globals.css does
+    // `@import 'tailwindcss'` and the build runs it via @tailwindcss/postcss.
+    // Nothing imports it from TS since tailwind.config.ts was removed — that
+    // config was dead weight under Tailwind v4, which has no `@config`
+    // directive here and never loaded it.
+    'tailwindcss',
     // Planned UI stack installed ahead of the components that will import it.
     // Remove from here (or from package.json) as each one gets wired up.
     'lucide-react',
