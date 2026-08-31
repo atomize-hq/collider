@@ -1,6 +1,6 @@
 /* Design system font definitions — loaded by both app/globals.css and Storybook preview */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
 
 :root {
   --font-sans: 'Poppins', sans-serif;
