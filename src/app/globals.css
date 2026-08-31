@@ -139,6 +139,31 @@
   --container-shell: var(--layout-container-shell);
 }
 
+/*
+ * Shape. Existing rounded- utilities already resolve to tokens because
+ * `radius.tokens.json` emits the very `--radius-` names Tailwind reads, so
+ * only the two steps Tailwind has no key for are declared here. They use
+ * `@utility` rather than `@theme`, because a theme entry would have to read
+ * `--radius-2xs: var(--radius-2xs)` and that self-reference only resolves by
+ * accident of the unlayered token winning the cascade.
+ *
+ * Opacity has a real `--opacity-` namespace, so the scale bridges normally.
+ * Semantic role aliases stay var-only: they name Collider-Old usages rather
+ * than general-purpose steps, and would only clutter the utility surface.
+ */
+@theme inline {
+  --opacity-disabled: var(--shape-opacity-disabled);
+  --opacity-subtle: var(--shape-opacity-subtle);
+  --opacity-dim: var(--shape-opacity-dim);
+}
+
+@utility rounded-2xs {
+  border-radius: var(--radius-2xs);
+}
+@utility rounded-pill {
+  border-radius: var(--radius-pill);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

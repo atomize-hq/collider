@@ -48,6 +48,7 @@ describe('token build contracts', () => {
       'motion',
       'radius',
       'semantic',
+      'shape',
       'spacing',
       'tailwind-colors',
       'tailwind-variables',

@@ -321,6 +321,11 @@ export const tokenMap = {
     type: 'dimension',
     value: '16px',
   },
+  'radius.2xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
   'radius.full': {
     themeId: 'dark',
     type: 'dimension',
@@ -340,6 +345,36 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'dimension',
     value: '0px',
+  },
+  'radius.pill': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'radius.role.git-file-row': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'radius.role.hints-bar': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
+  },
+  'radius.role.keycap': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'radius.role.run-badge': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
+  },
+  'radius.role.toolbar-btn': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '3px',
   },
   'radius.sm': {
     themeId: 'dark',
@@ -455,6 +490,51 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'color',
     value: '#e8d1a2',
+  },
+  'shape.border.width.default': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'shape.border.width.strong': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'shape.opacity.dim': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.7,
+  },
+  'shape.opacity.disabled': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.35,
+  },
+  'shape.opacity.full': {
+    themeId: 'dark',
+    type: 'number',
+    value: 1,
+  },
+  'shape.opacity.subtle': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.5,
+  },
+  'shape.role.branch-container': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.7,
+  },
+  'shape.role.dot-sep': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.5,
+  },
+  'shape.role.inactive': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.35,
   },
   'spacing.0': {
     themeId: 'dark',
