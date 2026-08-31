@@ -397,10 +397,11 @@ function collectTokenIds(node, trail, inventory) {
 }
 
 function tokenIdPrefix(filePath) {
-  if (filePath.endsWith('/core.tokens.json')) return ['core'];
-  if (filePath.endsWith('/semantic.tokens.json')) return ['semantic'];
-  if (filePath.endsWith('/motion.tokens.json')) return ['motion'];
-  return [];
+  // Theme files publish already-qualified paths (e.g. `semantic.color.…`), so they add no prefix.
+  if (filePath.includes('/themes/')) return [];
+  // Every other token file is keyed by its family name, matching `inferFamily` in the build graph.
+  const match = /\/([a-z][a-z0-9-]*)\.tokens\.json$/.exec(filePath);
+  return match ? [match[1]] : [];
 }
 
 function parseJsonSource(filePath, repoRoot) {
