@@ -38,7 +38,7 @@
     },
     "interaction": {
       "focus-ring": {
-        "$value": "{core.color.blue.600}",
+        "$value": "{core.color.neutral.400}",
         "$type": "color"
       },
       "selection": {

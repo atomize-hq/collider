@@ -495,7 +495,7 @@ export const tokenMap = {
   'semantic.color.interaction.focus-ring': {
     themeId: 'dark',
     type: 'color',
-    value: '#155dfc',
+    value: '#9ca2af',
   },
   'semantic.color.interaction.selection': {
     themeId: 'dark',

@@ -223,11 +223,17 @@
  * gap, so whatever is actually behind the component shows through and the gap
  * is right on every surface.
  *
- * The gap is what makes the indicator legible on an accent-filled control:
- * `--ring` and `--primary` are both blue-600, so a flush ring on a default
- * Button was 1:1 against its own fill and effectively invisible. Width is
- * `border/width/strong` (2px) because WCAG 2.4.11 asks for at least a 2px-thick
- * perimeter — the old `ring-1` failed on size as well as contrast.
+ * The gap is also what makes the ring accent-independent. With an offset, the
+ * ring's adjacent colour is always the GAP — i.e. the surface behind the
+ * control — never the control's own fill. So a themed neutral `--ring` stays
+ * legible whatever the accent is set to, which matters because the accent is
+ * meant to become a user-facing knob. Do NOT alias `--ring` to the accent: it
+ * would be 1:1 against a filled button's own fill, and blue-600 measured only
+ * 2.74 on `background/elevated` and 2.52 on `overlay` in dark — below the 3:1
+ * floor on exactly the surfaces dialogs and menus use.
+ *
+ * Width is `border/width/strong` (2px) because WCAG 2.4.11 asks for at least a
+ * 2px-thick perimeter — the old `ring-1` failed on size as well as contrast.
  */
 @utility focus-ring {
   outline: var(--shape-border-width-strong) solid var(--ring);

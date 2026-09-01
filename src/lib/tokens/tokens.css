@@ -95,7 +95,7 @@
   --semantic-color-border-default: #303030;
   --semantic-color-border-strong: #3f3f3f;
   --semantic-color-border-subtle: rgba(255, 255, 255, 0.1);
-  --semantic-color-interaction-focus-ring: #155dfc;
+  --semantic-color-interaction-focus-ring: #9ca2af;
   --semantic-color-interaction-selection: rgba(21, 93, 252, 0.3);
   --semantic-color-status-strip-ai: #8a38f5;
   --semantic-color-status-strip-failure: #5b1d20;
@@ -695,6 +695,7 @@
   --semantic-color-border-default: #e5e5e5;
   --semantic-color-border-strong: #b0bac8;
   --semantic-color-border-subtle: rgba(0, 0, 0, 0.1);
+  --semantic-color-interaction-focus-ring: #535966;
   --semantic-color-status-strip-ai: #6d28d9;
   --semantic-color-status-strip-neutral: #171717;
   --semantic-color-status-strip-running: #171717;
@@ -748,6 +749,7 @@
   --semantic-color-border-default: #303030;
   --semantic-color-border-strong: #3f3f3f;
   --semantic-color-border-subtle: rgba(255, 255, 255, 0.1);
+  --semantic-color-interaction-focus-ring: #9ca2af;
   --semantic-color-status-strip-ai: #8a38f5;
   --semantic-color-status-strip-neutral: #ffffff;
   --semantic-color-status-strip-running: #ffffff;
