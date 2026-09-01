@@ -41,6 +41,10 @@
     "branch-container": {
       "$value": "{shape.opacity.dim}",
       "$type": "number"
+    },
+    "selection": {
+      "$value": 0.3,
+      "$type": "number"
     }
   }
 }

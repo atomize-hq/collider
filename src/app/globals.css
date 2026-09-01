@@ -88,8 +88,19 @@
     border-color: var(--border);
   }
 
+  /*
+   * Selection follows the accent, and is the mirror of the focus ring: it is a
+   * decorative brand surface rather than a functional indicator, so tracking a
+   * user-set accent is exactly what it should do. It has to be computed here
+   * because DTCG cannot express "alias plus alpha", and a baked rgba could not
+   * follow a runtime knob at all. The ratio stays a token.
+   */
   ::selection {
-    background-color: var(--semantic-color-interaction-selection);
+    background-color: color-mix(
+      in srgb,
+      var(--primary) calc(var(--shape-role-selection) * 100%),
+      transparent
+    );
   }
 }
 

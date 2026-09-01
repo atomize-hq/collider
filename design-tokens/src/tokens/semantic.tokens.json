@@ -40,10 +40,6 @@
       "focus-ring": {
         "$value": "{core.color.neutral.400}",
         "$type": "color"
-      },
-      "selection": {
-        "$value": "{core.color.blue-alpha.30}",
-        "$type": "color"
       }
     },
     "text": {

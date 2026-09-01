@@ -126,12 +126,6 @@
         "$type": "color"
       }
     },
-    "blue-alpha": {
-      "30": {
-        "$value": "rgba(21, 93, 252, 0.3)",
-        "$type": "color"
-      }
-    },
     "violet": {
       "400": {
         "$value": "#a566f7",

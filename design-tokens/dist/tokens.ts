@@ -62,11 +62,6 @@ export const tokenMap = {
     type: 'color',
     value: 'rgba(0, 0, 0, 0.3)',
   },
-  'core.color.blue-alpha.30': {
-    themeId: 'dark',
-    type: 'color',
-    value: 'rgba(21, 93, 252, 0.3)',
-  },
   'core.color.blue.500': {
     themeId: 'dark',
     type: 'color',
@@ -497,11 +492,6 @@ export const tokenMap = {
     type: 'color',
     value: '#9ca2af',
   },
-  'semantic.color.interaction.selection': {
-    themeId: 'dark',
-    type: 'color',
-    value: 'rgba(21, 93, 252, 0.3)',
-  },
   'semantic.color.status-strip.ai': {
     themeId: 'dark',
     type: 'color',
@@ -626,6 +616,11 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'number',
     value: 0.35,
+  },
+  'shape.role.selection': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.3,
   },
   'spacing.0': {
     themeId: 'dark',
