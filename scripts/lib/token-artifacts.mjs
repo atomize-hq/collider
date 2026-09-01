@@ -25,7 +25,8 @@ export async function buildTokenArtifacts(options = {}) {
   const graph = loadBuildGraph(options);
   const artifactManifest = options.artifacts ?? getBuildArtifacts(options);
   const before = captureArtifactContents(artifactManifest);
-  const themeOverrides = await buildThemeOverrideCss(graph, options);
+  const themeVariants = await buildThemeVariants(graph, options);
+  const themeOverrides = themeVariants.map(({ themeId, stagedCss }) => ({ themeId, stagedCss }));
   // Built last so the staged css artifact is left holding the default theme.
   const cssContents = await buildRuntimeCssArtifact(graph.materializedTokens, options);
   const publishedRuntimeCss = buildPublishedRuntimeCss({
@@ -37,7 +38,7 @@ export async function buildTokenArtifacts(options = {}) {
     runtimeInventoryPath: options.runtimeInventoryPath,
   });
   const typedModule = await generateTypedTokenModule(graph);
-  const figmaDocument = serializeJson(createFigmaTokenDocument(graph));
+  const figmaDocument = serializeJson(createFigmaTokenDocument(graph, themeVariants));
 
   const statuses = {
     'typed-tokens': writeTextArtifact(
@@ -109,11 +110,13 @@ function captureArtifactContents(artifacts) {
 
 /**
  * Every registry theme other than the default is materialized through its own
- * build graph so the publication step can diff it against the default and emit a
- * minimal override block. Each one stages to a scratch path so it never disturbs
- * the staged css artifact, which must keep holding the default theme.
+ * build graph, then reused by both consumers: the css publication step diffs the
+ * staged css to emit a minimal override block, and the Figma document diffs the
+ * materialized tokens to emit per-mode values. Each one stages to a scratch path
+ * so it never disturbs the staged css artifact, which must keep the default
+ * theme.
  */
-async function buildThemeOverrideCss(graph, options = {}) {
+async function buildThemeVariants(graph, options = {}) {
   const themes = graph.themeRegistry?.themes ?? [];
   const overrides = [];
 
@@ -133,7 +136,7 @@ async function buildThemeOverrideCss(graph, options = {}) {
         ...options,
         stagedRuntimeCssPath: path.join(scratchDir, 'tokens.css'),
       });
-      overrides.push({ themeId: theme.id, stagedCss });
+      overrides.push({ themeId: theme.id, stagedCss, tokens: themeGraph.materializedTokens });
     } finally {
       fs.rmSync(scratchDir, { force: true, recursive: true });
     }

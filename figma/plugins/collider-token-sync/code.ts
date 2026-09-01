@@ -19,7 +19,7 @@ type UiToPluginMessage =
 
 const defaultArtifactUrl = 'http://localhost:4173/design-tokens/dist/figma/tokens.json';
 const collectionName = 'Collider Tokens';
-const modeName = 'Base';
+const fallbackThemeId = 'dark';
 
 figma.showUI(__html__, { width: 420, height: 520 });
 
@@ -117,6 +117,23 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
       const desired = flattenTokenDocument(payload);
       const desiredByName = new Map(desired.map((entry) => [entry.name, entry]));
 
+      // The artifact publishes the default theme as the document body and every
+      // other registry theme as a partial tree under `$themeOverrides`. Each
+      // theme becomes one mode on the collection.
+      const defaultThemeId = readDefaultThemeId(payload);
+      const overridesByTheme = new Map<string, Map<string, PluginVariableValue>>();
+      const rawOverrides = (payload as { $themeOverrides?: Record<string, unknown> })
+        .$themeOverrides;
+      if (rawOverrides) {
+        for (const themeId of Object.keys(rawOverrides)) {
+          const leaves = flattenTokenDocument(rawOverrides[themeId]);
+          overridesByTheme.set(
+            themeId,
+            new Map(leaves.map((leaf) => [leaf.name, leaf.value as PluginVariableValue]))
+          );
+        }
+      }
+
       // Upsert semantics: preserve the collection and existing VariableIDs so that
       // paint bindings on components in this file survive re-syncs. Repo remains
       // canonical for token *values*; Figma's variable *identity* is durable.
@@ -126,13 +143,33 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
         collection = figma.variables.createVariableCollection(collectionName);
       }
 
+      // The collection's default mode carries the default theme; renaming keeps
+      // its modeId, so existing paint bindings survive the rename.
       const defaultMode = collection.modes.find(
         (entry) => entry.modeId === collection!.defaultModeId
       );
-      if (defaultMode && defaultMode.name !== modeName) {
-        collection.renameMode(defaultMode.modeId, modeName);
+      if (defaultMode && defaultMode.name !== defaultThemeId) {
+        collection.renameMode(defaultMode.modeId, defaultThemeId);
       }
       const baseModeId = collection.defaultModeId;
+
+      const modeIdByTheme = new Map<string, string>([[defaultThemeId, baseModeId]]);
+      for (const themeId of overridesByTheme.keys()) {
+        const existing = collection.modes.find((entry) => entry.name === themeId);
+        if (existing) {
+          modeIdByTheme.set(themeId, existing.modeId);
+          continue;
+        }
+        try {
+          modeIdByTheme.set(themeId, collection.addMode(themeId));
+        } catch (error) {
+          // Mode count is plan-gated in Figma, so this is a likely and very
+          // confusing failure to hit without an explicit explanation.
+          throw new Error(
+            `Could not add a mode for theme "${themeId}": ${messageForError(error)}. Figma limits modes per collection by plan tier.`
+          );
+        }
+      }
 
       const existingByName = new Map<string, Variable>();
       for (const id of collection.variableIds) {
@@ -166,7 +203,10 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
         if (!variable) {
           variable = figma.variables.createVariable(entry.name, collection, entry.resolvedType);
         }
-        variable.setValueForMode(baseModeId, entry.value as PluginVariableValue);
+        for (const [themeId, modeId] of modeIdByTheme) {
+          const override = overridesByTheme.get(themeId)?.get(entry.name);
+          variable.setValueForMode(modeId, override ?? (entry.value as PluginVariableValue));
+        }
       }
 
       const verifyCollections = await figma.variables.getLocalVariableCollectionsAsync();
@@ -214,9 +254,14 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
           );
         }
 
-        const actualValue = actual.valuesByMode[baseModeId] as unknown;
-        if (!valuesEqual(expected.value, actualValue)) {
-          throw new Error(`Verification failed: variable ${expected.name} value does not match`);
+        for (const [themeId, modeId] of modeIdByTheme) {
+          const expectedValue = overridesByTheme.get(themeId)?.get(expected.name) ?? expected.value;
+          const actualValue = actual.valuesByMode[modeId] as unknown;
+          if (!valuesEqual(expectedValue, actualValue)) {
+            throw new Error(
+              `Verification failed: variable ${expected.name} value does not match in mode "${themeId}"`
+            );
+          }
         }
       }
 
@@ -228,7 +273,7 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
           `startedAt=${startedAt}`,
           `finishedAt=${new Date().toISOString()}`,
           `collection=${collectionName}`,
-          `mode=${modeName}`,
+          `modes=${[...modeIdByTheme.keys()].join(', ')}`,
           `variables=${desired.length}`,
         ].join('\n'),
       });
@@ -251,6 +296,13 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
 function messageForError(error: unknown) {
   if (error instanceof Error) return error.message;
   return String(error);
+}
+
+function readDefaultThemeId(payload: unknown) {
+  if (!payload || typeof payload !== 'object') return fallbackThemeId;
+  const extensions = (payload as { $extensions?: Record<string, unknown> }).$extensions;
+  const collider = extensions?.['com.atomizehq.collider'] as { themeId?: unknown } | undefined;
+  return typeof collider?.themeId === 'string' ? collider.themeId : fallbackThemeId;
 }
 
 type PluginVariableValue =

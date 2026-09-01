@@ -6,6 +6,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { preflightBuildArtifacts } from '../../../scripts/lib/token-build-preflight.mjs';
 import { loadBuildGraph } from '../../../scripts/lib/token-build-graph.mjs';
 import { generateTypedTokenModule } from '../../../scripts/lib/token-artifacts.mjs';
+import { flattenTokenDocument } from './figma-token-mapping';
 
 const repoRoot = process.cwd();
 const stagedCssArtifactPath = path.join(repoRoot, 'design-tokens/dist/css/tokens.css');
@@ -40,6 +41,7 @@ describe('token build contracts', () => {
 
     expect(Object.keys(figma)).toEqual([
       '$extensions',
+      '$themeOverrides',
       'accent',
       'core',
       'elevation',
@@ -68,6 +70,21 @@ describe('token build contracts', () => {
       expect(figma).not.toHaveProperty(family);
       expect(runtimeCss).toContain(`--${family}-`);
     }
+  });
+
+  it('carries theme overrides without leaking them into the variable set', () => {
+    const figma = JSON.parse(fs.readFileSync(figmaArtifactPath, 'utf8')) as Record<string, unknown>;
+    const overrides = figma.$themeOverrides as Record<string, unknown>;
+
+    // Non-default themes ride under a `$` key so the token walker skips them:
+    // the document stays a single-theme artifact for every existing reader while
+    // the publish plugin gets one Figma mode per theme out of the same file.
+    expect(Object.keys(overrides)).toEqual(['light']);
+    const withOverrides = flattenTokenDocument(figma).length;
+    const withoutOverrides = flattenTokenDocument(
+      Object.fromEntries(Object.entries(figma).filter(([key]) => key !== '$themeOverrides'))
+    ).length;
+    expect(withOverrides).toBe(withoutOverrides);
   });
 
   it('emits lexical ordering for css vars, token map keys, and figma json keys', async () => {

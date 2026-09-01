@@ -42,12 +42,24 @@ export function loadBuildGraph(options = {}) {
   };
 }
 
-export function createFigmaTokenDocument(graph) {
+export function createFigmaTokenDocument(graph, themeVariants = []) {
   const publishedFamilies = Object.fromEntries(
     Object.entries(graph.materializedTokens).filter(
       ([family]) => !figmaExcludedFamilies.has(family)
     )
   );
+
+  // Non-default themes ride along as DTCG-shaped partial trees under a
+  // `$`-prefixed key, which the token walker skips. The document therefore stays
+  // a valid single-theme artifact for every existing reader, while giving the
+  // publish plugin what it needs to write one Figma mode per theme.
+  const themeOverrides = {};
+  for (const variant of themeVariants) {
+    const overrides = diffTokenTrees(publishedFamilies, variant.tokens);
+    if (Object.keys(overrides).length > 0) {
+      themeOverrides[variant.themeId] = overrides;
+    }
+  }
 
   return sortDeep({
     $extensions: {
@@ -56,8 +68,40 @@ export function createFigmaTokenDocument(graph) {
         themeId: graph.themeId,
       },
     },
+    ...(Object.keys(themeOverrides).length > 0 ? { $themeOverrides: themeOverrides } : {}),
     ...publishedFamilies,
   });
+}
+
+/**
+ * Returns the subtree of `candidate` whose leaf values differ from `base`, keeping
+ * the DTCG leaf shape so the result flattens through the same mapping the base
+ * document uses. Families absent from `base` — the ones withheld from the Figma
+ * publish — are skipped rather than reintroduced by a theme.
+ */
+function diffTokenTrees(base, candidate) {
+  const result = {};
+
+  for (const [key, candidateNode] of Object.entries(candidate)) {
+    const baseNode = isObject(base) ? base[key] : undefined;
+    if (baseNode === undefined) continue;
+
+    if (isObject(candidateNode) && '$value' in candidateNode) {
+      if (JSON.stringify(baseNode.$value) !== JSON.stringify(candidateNode.$value)) {
+        result[key] = candidateNode;
+      }
+      continue;
+    }
+
+    if (isObject(candidateNode)) {
+      const nested = diffTokenTrees(baseNode, candidateNode);
+      if (Object.keys(nested).length > 0) {
+        result[key] = nested;
+      }
+    }
+  }
+
+  return result;
 }
 
 export function sortDeep(value) {
