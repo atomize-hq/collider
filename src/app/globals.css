@@ -213,6 +213,28 @@
 }
 
 /*
+ * Focus. One place for the whole focus treatment, so the ring can be re-tuned
+ * without touching every primitive that wears it.
+ *
+ * `outline` rather than Tailwind's `ring`, for two reasons. A ring is a
+ * box-shadow, so its offset has to be PAINTED — `ring-offset-background`
+ * guesses `background/base` and draws a wrong-coloured halo whenever the
+ * component sits on `surface` or `elevated`. `outline-offset` leaves a real
+ * gap, so whatever is actually behind the component shows through and the gap
+ * is right on every surface.
+ *
+ * The gap is what makes the indicator legible on an accent-filled control:
+ * `--ring` and `--primary` are both blue-600, so a flush ring on a default
+ * Button was 1:1 against its own fill and effectively invisible. Width is
+ * `border/width/strong` (2px) because WCAG 2.4.11 asks for at least a 2px-thick
+ * perimeter — the old `ring-1` failed on size as well as contrast.
+ */
+@utility focus-ring {
+  outline: var(--shape-border-width-strong) solid var(--ring);
+  outline-offset: var(--shape-border-width-strong);
+}
+
+/*
  * Spacing. Tailwind v4 derives its whole spacing scale from one multiplier
  * rather than per-step keys, so pointing `--spacing` at the 4px base token
  * makes every p-, m-, and gap- utility token-driven, including fractional
