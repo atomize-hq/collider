@@ -35,11 +35,11 @@
           "$type": "color"
         },
         "secondary": {
-          "$value": "{core.color.neutral.500}",
+          "$value": "{core.color.neutral.400}",
           "$type": "color"
         },
         "tertiary": {
-          "$value": "{core.color.neutral.300}",
+          "$value": "{core.color.neutral.500}",
           "$type": "color"
         },
         "dim": {
@@ -67,7 +67,7 @@
           "$type": "color"
         },
         "ai": {
-          "$value": "{core.color.violet.500}",
+          "$value": "{core.color.violet.400}",
           "$type": "color"
         }
       },

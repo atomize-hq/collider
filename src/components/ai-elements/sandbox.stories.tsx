@@ -80,13 +80,6 @@ const Demo = ({
 const meta = {
   title: 'AI Elements/Sandbox',
   component: Sandbox,
-  parameters: {
-    a11y: {
-      config: {
-        rules: [{ id: 'color-contrast', enabled: false }],
-      },
-    },
-  },
 } satisfies Meta<typeof Sandbox>;
 
 export default meta;

@@ -132,6 +132,11 @@ export const tokenMap = {
     type: 'color',
     value: '#b0bac8',
   },
+  'core.color.neutral.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9ca2af',
+  },
   'core.color.neutral.50': {
     themeId: 'dark',
     type: 'color',
@@ -141,6 +146,11 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'color',
     value: '#6a7282',
+  },
+  'core.color.neutral.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#535966',
   },
   'core.color.neutral.700': {
     themeId: 'dark',
@@ -191,6 +201,11 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'color',
     value: '#5b1d20',
+  },
+  'core.color.violet.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a566f7',
   },
   'core.color.violet.500': {
     themeId: 'dark',
@@ -540,7 +555,7 @@ export const tokenMap = {
   'semantic.color.text.ai': {
     themeId: 'dark',
     type: 'color',
-    value: '#8a38f5',
+    value: '#a566f7',
   },
   'semantic.color.text.caution': {
     themeId: 'dark',
@@ -570,7 +585,7 @@ export const tokenMap = {
   'semantic.color.text.secondary': {
     themeId: 'dark',
     type: 'color',
-    value: '#6a7282',
+    value: '#9ca2af',
   },
   'semantic.color.text.success': {
     themeId: 'dark',
@@ -580,7 +595,7 @@ export const tokenMap = {
   'semantic.color.text.tertiary': {
     themeId: 'dark',
     type: 'color',
-    value: '#b0bac8',
+    value: '#6a7282',
   },
   'semantic.color.text.warning': {
     themeId: 'dark',

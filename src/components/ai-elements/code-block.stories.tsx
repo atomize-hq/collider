@@ -28,18 +28,6 @@ const meta = {
   // CodeBlock's `code`/`language` are required props; every story overrides via
   // `render`, so these meta-level defaults just satisfy the required-args type.
   args: { code: TS_SNIPPET, language: 'tsx' },
-  parameters: {
-    a11y: {
-      // Known finding, deferred with reason: the header + line-number chrome use
-      // the de-emphasized `text-muted-foreground` token (→ `text-secondary`
-      // #6a7282), which renders ~3.76:1 on the dark base — below WCAG AA-normal
-      // (4.5:1). Raising the token is a deliberate Stage-1 change (it affects
-      // every consumer of `text-secondary`), tracked as a separate follow-up.
-      config: {
-        rules: [{ id: 'color-contrast', enabled: false }],
-      },
-    },
-  },
 } satisfies Meta<typeof CodeBlock>;
 
 export default meta;

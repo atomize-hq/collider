@@ -17,8 +17,16 @@
         "$value": "#b0bac8",
         "$type": "color"
       },
+      "400": {
+        "$value": "#9ca2af",
+        "$type": "color"
+      },
       "500": {
         "$value": "#6a7282",
+        "$type": "color"
+      },
+      "600": {
+        "$value": "#535966",
         "$type": "color"
       },
       "700": {
@@ -125,6 +133,10 @@
       }
     },
     "violet": {
+      "400": {
+        "$value": "#a566f7",
+        "$type": "color"
+      },
       "500": {
         "$value": "#8a38f5",
         "$type": "color"

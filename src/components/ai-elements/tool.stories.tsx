@@ -30,20 +30,6 @@ const STATUS_STATES: ToolUIPart['state'][] = [
 const meta = {
   title: 'AI Elements/Tool',
   component: Tool,
-  parameters: {
-    a11y: {
-      // Known finding, deferred with reason: the header chrome (wrench/chevron)
-      // and the "Parameters"/"Result" section labels use the de-emphasized
-      // `text-muted-foreground` token (→ `text-secondary` #6a7282), which renders
-      // ~3.76:1 on the dark base — below WCAG AA-normal (4.5:1). Raising the token
-      // is a deliberate Stage-1 change (it affects every consumer of
-      // `text-secondary`), tracked as a separate follow-up. The embedded CodeBlock
-      // also carries shiki syntax colors that are runtime values, not tokens.
-      config: {
-        rules: [{ id: 'color-contrast', enabled: false }],
-      },
-    },
-  },
 } satisfies Meta<typeof Tool>;
 
 export default meta;

@@ -58,8 +58,8 @@ Every example in this file uses the same fields so maintainers can follow one tr
 - `Canonical semantic token ID`: `semantic.color.text.secondary`
 - `Theme ID`: `dark`
 - `Compatibility action`: `preserve`
-- `Semantic-to-core resolution`: `semantic.color.text.secondary` -> `{core.color.neutral.500}` -> `core.color.neutral.500`
-- `Current runtime value`: `#6a7282`
+- `Semantic-to-core resolution`: `semantic.color.text.secondary` -> `{core.color.neutral.400}` -> `core.color.neutral.400`
+- `Current runtime value`: `#9ca2af`
 - `Why this action applies`: the runtime variable is still part of the required compatibility surface, but downstream contracts should move to the canonical semantic token ID instead of binding directly to the runtime CSS variable name.
 
 ### Example 4: Legacy statusstrip spelling remains an alias

@@ -23,8 +23,10 @@
   --core-color-neutral-100: #f5f5f5;
   --core-color-neutral-200: #e5e5e5;
   --core-color-neutral-300: #b0bac8;
+  --core-color-neutral-400: #9ca2af;
   --core-color-neutral-50: #fafafa;
   --core-color-neutral-500: #6a7282;
+  --core-color-neutral-600: #535966;
   --core-color-neutral-700: #3f3f3f;
   --core-color-neutral-800: #303030;
   --core-color-neutral-850: #2a2a2a;
@@ -35,6 +37,7 @@
   --core-color-red-500: #fb2c36;
   --core-color-red-700: #c10007;
   --core-color-red-800: #5b1d20;
+  --core-color-violet-400: #a566f7;
   --core-color-violet-500: #8a38f5;
   --core-color-violet-700: #6d28d9;
   --core-color-white: #ffffff;
@@ -104,15 +107,15 @@
   --semantic-color-status-strip-neutral: #ffffff;
   --semantic-color-status-strip-running: #ffffff;
   --semantic-color-status-strip-success: #0e5e2e;
-  --semantic-color-text-ai: #8a38f5;
+  --semantic-color-text-ai: #a566f7;
   --semantic-color-text-caution: #f08000;
   --semantic-color-text-dim: rgba(255, 255, 255, 0.3);
   --semantic-color-text-error: #fb2c36;
   --semantic-color-text-info: #51a2ff;
   --semantic-color-text-primary: #ffffff;
-  --semantic-color-text-secondary: #6a7282;
+  --semantic-color-text-secondary: #9ca2af;
   --semantic-color-text-success: #48df3a;
-  --semantic-color-text-tertiary: #b0bac8;
+  --semantic-color-text-tertiary: #6a7282;
   --semantic-color-text-warning: #e8d1a2;
   --shape-border-width-default: 1px;
   --shape-border-width-strong: 2px;
@@ -759,8 +762,8 @@
   --semantic-color-text-error: #c10007;
   --semantic-color-text-info: #1447e6;
   --semantic-color-text-primary: #171717;
+  --semantic-color-text-secondary: #535966;
   --semantic-color-text-success: #0e5e2e;
-  --semantic-color-text-tertiary: #3f3f3f;
   --semantic-color-text-warning: #8a5300;
 
   /* Legacy runtime compatibility surface */
@@ -805,14 +808,14 @@
   --semantic-color-status-strip-ai: #8a38f5;
   --semantic-color-status-strip-neutral: #ffffff;
   --semantic-color-status-strip-running: #ffffff;
-  --semantic-color-text-ai: #8a38f5;
+  --semantic-color-text-ai: #a566f7;
   --semantic-color-text-caution: #f08000;
   --semantic-color-text-dim: rgba(255, 255, 255, 0.3);
   --semantic-color-text-error: #fb2c36;
   --semantic-color-text-info: #51a2ff;
   --semantic-color-text-primary: #ffffff;
+  --semantic-color-text-secondary: #9ca2af;
   --semantic-color-text-success: #48df3a;
-  --semantic-color-text-tertiary: #b0bac8;
   --semantic-color-text-warning: #e8d1a2;
 
   /* Legacy runtime compatibility surface */

@@ -46,6 +46,17 @@ const preview: Preview = {
     },
   ],
   parameters: {
+    // Runs axe on every story in the `storybook` vitest project. Registering
+    // `@storybook/addon-a11y` in main.ts alone only powers the manual panel —
+    // the checks did not actually execute until the addon's preview annotations
+    // were wired into `.storybook/vitest.setup.ts`.
+    //
+    // `todo` reports violations without failing the run. Turning this to `error`
+    // is the goal, but it is gated on burning down a pre-existing backlog of 78
+    // violations (24 button-name, 17 color-contrast, 5 aria-required-parent,
+    // 2 label, 1 aria-prohibited-attr) that were invisible while the checks were
+    // inert. Do not flip to `error` until that backlog is clear.
+    a11y: { test: 'todo' },
     layout: 'fullscreen',
     controls: {
       matchers: {

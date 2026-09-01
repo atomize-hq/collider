@@ -9,19 +9,6 @@ const TRACE =
 const meta = {
   title: 'AI Elements/Reasoning',
   component: Reasoning,
-  parameters: {
-    a11y: {
-      // Known finding, deferred with reason: the reasoning trace uses the
-      // de-emphasized `text-secondary` token (#6a7282), which renders ~3.76:1 on
-      // the dark base — below WCAG AA-normal (4.5:1), above AA-large (3:1). Raising
-      // the token is a deliberate Stage-1 change (it affects every consumer of
-      // `text-secondary`, e.g. message-branch), tracked as a separate follow-up.
-      // Disable the rule here with that reason rather than hiding the violation.
-      config: {
-        rules: [{ id: 'color-contrast', enabled: false }],
-      },
-    },
-  },
 } satisfies Meta<typeof Reasoning>;
 
 export default meta;
