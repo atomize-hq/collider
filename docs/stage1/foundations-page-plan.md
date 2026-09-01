@@ -8,6 +8,13 @@ This plan is intentionally durable — a fresh session should be able to pick it
 
 > **Scope decided 2026-09-01:** documented spec, not a bare swatch reference. Known token problems are fixed _before_ the page is built, so the page documents a system worth defending.
 
+> **STATUS (2026-09-01): Phase 0 COMPLETE. Phase 1 blocked on one manual step.**
+>
+> - `c6d5e5f` — 0b + 0c: core rungs `neutral.400` / `neutral.600` / `violet.400`, text ladder re-valued, four a11y suppressions retired. Also repaired the accessibility gate itself, which had never actually run.
+> - `b53ed80` — 0a + 0d: accent flattened onto the theme rail, `theme.tokens.json` removed. Breaking migration event, recorded in the commit body.
+> - Figma structural migration done live via `figma-use`: `accent/dark/*` **renamed** to `accent/*` (rename preserves VariableIDs, so all 16 existing bindings survived untouched), the 4 unbound `accent/light/*` deleted, and the Primitives page's explicit mode cleared so it inherits again. File is at 173 variables.
+> - **Remaining:** the plugin value-sync run, which is a manual Figma UI action. It creates the 3 new core variables and writes the changed per-mode values, taking the file 173 → 176. See §2.
+
 ---
 
 ## 0. Why this page exists
@@ -125,9 +132,13 @@ light   primary 17.93  >  secondary 7.03  >  tertiary 4.84  >  dim (alpha)
 
 ## 2. Phase 1 — republish + rebind
 
-1. `pnpm build:tokens`, confirm contract tests still pin the flattened count.
-2. Run the repo-owned plugin (upsert rail — VariableIDs are preserved, re-syncing is safe).
-3. Rebind the 4 accent-bound seed paints to `accent/primary`.
+1. ~~`pnpm build:tokens`, confirm contract tests still pin the flattened count.~~ Done — artifact holds 176 leaves.
+2. ~~Rename/delete the accent variables in Figma.~~ Done via `figma-use`. **Renaming rather than recreating is what made step 3 unnecessary** — VariableIDs survive a rename, so the 16 bindings on `accent/dark/primary` followed it to `accent/primary` with no rebinding at all.
+3. **TODO — manual.** Run the plugin to sync values. It is the only step that cannot be scripted, because the plugin is Figma UI. `pnpm figma:plugin:build` has already been run, so `code.js` is current.
+   - Figma → Plugins → **Collider Token Sync**
+   - Use the **Artifact File** picker (not the URL field — the URL path wants a static server on `localhost:4173`; the file picker does not) and choose `design-tokens/dist/figma/tokens.json`
+   - **Sync Variables**
+   - Expect 173 → 176: creates `core/color/neutral/400`, `core/color/neutral/600`, `core/color/violet/400`, and updates the changed per-mode values for `semantic/color/text/{secondary,tertiary,ai}` plus `accent/sidebar-primary` in light.
 4. Update `src/figma/sync-ledger.json` + `publish-proof.json` with the new count and the migration note.
 
 ---
