@@ -3,7 +3,7 @@
   "mode": "plugin-import-manual",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
-    "gitSha": "b53ed809abc2744767cb15caf375e7b056a1638c"
+    "gitSha": "ceddc2fea1eb64d91a40d69e1da425689a13be08"
   },
   "destination": {
     "name": "Collider",
@@ -11,8 +11,8 @@
   },
   "materialization": {
     "status": "passed",
-    "attemptedAt": "2026-09-01T18:47:30Z",
-    "notes": "Materialized 176 variables across two modes (dark, light) via the repo-owned plugin's upsert rail, fetching the artifact over the local token server (pnpm figma:tokens:serve, localhost:4173). Count moved 177 -> 173 -> 176: the accent family was flattened off its light/dark path segments onto the theme rail (a CHANGE_POLICY removal, commit b53ed80) and theme.tokens.json was retired, then this sync created the three new core rungs neutral/400, neutral/600 and violet/400 added in c6d5e5f. The accent migration was performed as a RENAME in Figma (accent/dark/* -> accent/*) before publishing, because a rename preserves VariableIDs: all 16 node bindings on accent/dark/primary followed to accent/primary with no rebinding pass, and the 4 accent/light/* variables were confirmed to have zero bindings before removal. Post-sync verification: 176 variables, 1146 node bindings across 8 distinct variables, zero dangling references, no residual accent/{light,dark}/* or theme/* variables. Per-mode values spot-checked: text/secondary #9ca2af dark / #535966 light (was #6a7282 in both, the one text token the light pass had missed), text/ai #a566f7 / #6d28d9, text/tertiary #6a7282 in both as the intentional dim step, accent/sidebar-primary #2b7fff dark / #155dfc light \u2014 the first accent value that actually differs by mode. New core anchors are identical across modes as expected. The Primitives page's explicit variable mode was cleared so it inherits the collection default again."
+    "attemptedAt": "2026-09-01T23:54:15Z",
+    "notes": "Materialized 175 variables across two modes (dark, light) via the repo-owned plugin's upsert rail, fetching the artifact over the local token server (pnpm figma:tokens:serve, localhost:4173). Count moved 176 -> 174 -> 175 across two publishes and one scripted deletion. First publish (fb4e7e4) was a pure re-value with no ID change: interaction/focus-ring moved off core/color/blue/600 to a themed neutral, #9ca2af dark / #535966 light, because blue-600 measured 2.74 on background/elevated and 2.52 on background/overlay in dark and so could not serve as a focus ring on the surfaces dialogs and menus use. That token gained its first per-mode value, so light-mode was a new entry rather than an edit. Then semantic/color/interaction/selection and core/color/blue-alpha/30 were REMOVED with figma-use (176 -> 174), because the plugin is upsert-only and cannot delete; ::selection is now computed in the role bridge as color-mix over --primary so it follows a user-set accent, which a baked rgba could not (CHANGE_POLICY removal, commit ceddc2f). A whole-document scan across both pages confirmed zero node bindings, zero other-variable aliases, and zero dangling references before the deletion, and the Foundations page was regenerated first so no binding was left pointing at a removed variable. Second publish added shape/role/selection = 0.3 (174 -> 175), the ratio the role bridge multiplies. Post-sync verification: Figma's 175 variable names reconcile EXACTLY against the artifact's 175 published leaves, no extras on either side. Foundations page regenerated: 561 bound paints, 0 unbound, 0 dead references, 10 effects, 6 frames."
   },
   "carrier": {
     "used": false,
