@@ -3,7 +3,7 @@
   "mode": "plugin-import-manual",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
-    "gitSha": "50f3d3cddbb3221d4f2dc183edb27d201c0cfca5"
+    "gitSha": "b53ed809abc2744767cb15caf375e7b056a1638c"
   },
   "destination": {
     "name": "Collider",
@@ -11,8 +11,8 @@
   },
   "materialization": {
     "status": "passed",
-    "attemptedAt": "2026-09-01T02:08:16Z",
-    "notes": "Materialized 177 variables across two modes (dark, light) via the repo-owned plugin's upsert rail against the canonical Collider file. Count rose from 167 with 10 light-side core anchors. The collection's single 'Base' mode was renamed to 'dark' and a 'light' mode added; renaming preserves modeId (dark is still 2019:0), so all 844 pre-existing node bindings survived with unchanged per-variable counts. Per-mode values spot-checked: semantic/color/background/base #171717 dark / #ffffff light, text/primary inverted, text/info #51a2ff dark / #1447e6 light, core anchors identical across modes as expected. Seeded components follow the page mode — verified by switching the Primitives page to light, confirming Code Block (2199:32) rendered light, then clearing the explicit mode."
+    "attemptedAt": "2026-09-01T18:47:30Z",
+    "notes": "Materialized 176 variables across two modes (dark, light) via the repo-owned plugin's upsert rail, fetching the artifact over the local token server (pnpm figma:tokens:serve, localhost:4173). Count moved 177 -> 173 -> 176: the accent family was flattened off its light/dark path segments onto the theme rail (a CHANGE_POLICY removal, commit b53ed80) and theme.tokens.json was retired, then this sync created the three new core rungs neutral/400, neutral/600 and violet/400 added in c6d5e5f. The accent migration was performed as a RENAME in Figma (accent/dark/* -> accent/*) before publishing, because a rename preserves VariableIDs: all 16 node bindings on accent/dark/primary followed to accent/primary with no rebinding pass, and the 4 accent/light/* variables were confirmed to have zero bindings before removal. Post-sync verification: 176 variables, 1146 node bindings across 8 distinct variables, zero dangling references, no residual accent/{light,dark}/* or theme/* variables. Per-mode values spot-checked: text/secondary #9ca2af dark / #535966 light (was #6a7282 in both, the one text token the light pass had missed), text/ai #a566f7 / #6d28d9, text/tertiary #6a7282 in both as the intentional dim step, accent/sidebar-primary #2b7fff dark / #155dfc light \u2014 the first accent value that actually differs by mode. New core anchors are identical across modes as expected. The Primitives page's explicit variable mode was cleared so it inherits the collection default again."
   },
   "carrier": {
     "used": false,
