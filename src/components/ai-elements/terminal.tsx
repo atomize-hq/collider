@@ -79,7 +79,15 @@ export const Terminal = ({
 
   return (
     <TerminalContext.Provider value={contextValue}>
+      {/*
+        Pinned to the dark theme in every app theme. ansi-to-react emits the raw
+        ANSI palette, which is defined against a dark ground — on a light surface
+        those colours drop to ~2:1. Terminal emulators conventionally stay dark
+        for the same reason, so the component opts out of an enclosing light
+        theme rather than the palette being re-tuned.
+      */}
       <div
+        data-theme="dark"
         className={cn(
           'flex flex-col overflow-hidden rounded-lg border bg-background text-foreground',
           className

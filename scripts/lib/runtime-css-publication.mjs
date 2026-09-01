@@ -42,24 +42,35 @@ export function buildPublishedRuntimeCss(options) {
     '  /* Legacy runtime compatibility surface */',
     ...compatibilityLines,
     '}',
-    ...renderThemeOverrideBlocks(stagedCss, themeOverrides),
+    ...renderThemeOverrideBlocks(stagedCss, themeOverrides, compatibilityLines, themeId),
     '',
   ].join('\n');
 }
 
 /**
  * Non-default themes are emitted as `[data-theme="<id>"]` blocks holding only the
- * declarations whose values differ from the default theme. The legacy
- * compatibility aliases above point at canonical variables rather than at literal
- * values, so they re-resolve under each override block without being repeated.
+ * declarations whose values differ from the default theme.
+ *
+ * The legacy compatibility aliases are repeated in each block. They are declared
+ * as `--color-x: var(--semantic-x)`, and a `var()` in a custom property resolves
+ * on the element that declares it — so the `:root` copies compute against the
+ * default theme and then merely inherit. Without restating them here, theming a
+ * subtree (which is what Storybook's decorator does) would switch the semantic
+ * variables while the legacy aliases stayed on the default theme's values.
  */
-function renderThemeOverrideBlocks(defaultStagedCss, themeOverrides) {
+function renderThemeOverrideBlocks(
+  defaultStagedCss,
+  themeOverrides,
+  compatibilityLines,
+  defaultThemeId
+) {
   if (themeOverrides.length === 0) {
     return [];
   }
 
   const defaults = parseDeclarations(extractCssRootBody(defaultStagedCss));
   const lines = [];
+  const themedNames = new Set();
 
   for (const { themeId, stagedCss } of themeOverrides) {
     const candidate = parseDeclarations(extractCssRootBody(stagedCss));
@@ -71,13 +82,32 @@ function renderThemeOverrideBlocks(defaultStagedCss, themeOverrides) {
       );
     }
 
+    for (const [name] of changed) themedNames.add(name);
     lines.push('');
     lines.push(`[data-theme='${themeId}'] {`);
     for (const [name, value] of changed) {
       lines.push(`  ${name}: ${value};`);
     }
+    lines.push('');
+    lines.push('  /* Legacy runtime compatibility surface */');
+    lines.push(...compatibilityLines);
     lines.push('}');
   }
+
+  // The default theme also gets an explicit block so it can be re-declared
+  // inside another theme's subtree. Without it, `data-theme="dark"` would be
+  // inert (dark lives unqualified in `:root`) and a surface that must stay dark
+  // regardless of app theme — a terminal, whose ANSI palette is defined against
+  // a dark ground — would have no way to opt out of an enclosing light theme.
+  lines.push('');
+  lines.push(`[data-theme='${defaultThemeId}'] {`);
+  for (const name of [...themedNames].sort()) {
+    lines.push(`  ${name}: ${defaults.get(name)};`);
+  }
+  lines.push('');
+  lines.push('  /* Legacy runtime compatibility surface */');
+  lines.push(...compatibilityLines);
+  lines.push('}');
 
   return lines;
 }

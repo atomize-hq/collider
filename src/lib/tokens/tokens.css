@@ -762,4 +762,85 @@
   --semantic-color-text-success: #0e5e2e;
   --semantic-color-text-tertiary: #3f3f3f;
   --semantic-color-text-warning: #8a5300;
+
+  /* Legacy runtime compatibility surface */
+
+  /* Background */
+  --color-background-base: var(--semantic-color-background-base);
+  --color-background-surface: var(--semantic-color-background-surface);
+  --color-background-elevated: var(--semantic-color-background-elevated);
+  --color-background-overlay: var(--semantic-color-background-overlay);
+  --color-background-white-10: var(--semantic-color-background-white-10);
+
+  /* Text */
+  --color-text-primary: var(--semantic-color-text-primary);
+  --color-text-secondary: var(--semantic-color-text-secondary);
+  --color-text-tertiary: var(--semantic-color-text-tertiary);
+  --color-text-dim: var(--semantic-color-text-dim);
+  --color-text-success: var(--semantic-color-text-success);
+  --color-text-error: var(--semantic-color-text-error);
+  --color-text-warning: var(--semantic-color-text-warning);
+  --color-text-caution: var(--semantic-color-text-caution);
+  --color-text-info: var(--semantic-color-text-info);
+  --color-text-ai: var(--semantic-color-text-ai);
+
+  /* StatusStrip */
+  --color-statusstrip-success: var(--semantic-color-status-strip-success);
+  --color-statusstrip-failure: var(--semantic-color-status-strip-failure);
+  --color-statusstrip-info: var(--semantic-color-status-strip-info);
+  --color-statusstrip-running: var(--semantic-color-status-strip-running);
+  --color-statusstrip-neutral: var(--semantic-color-status-strip-neutral);
+  --color-statusstrip-ai: var(--semantic-color-status-strip-ai);
+}
+
+[data-theme='dark'] {
+  --semantic-color-background-base: #171717;
+  --semantic-color-background-elevated: #2a2a2a;
+  --semantic-color-background-overlay: #303030;
+  --semantic-color-background-surface: #202020;
+  --semantic-color-background-white-10: rgba(255, 255, 255, 0.1);
+  --semantic-color-border-default: #303030;
+  --semantic-color-border-strong: #3f3f3f;
+  --semantic-color-border-subtle: rgba(255, 255, 255, 0.1);
+  --semantic-color-status-strip-ai: #8a38f5;
+  --semantic-color-status-strip-neutral: #ffffff;
+  --semantic-color-status-strip-running: #ffffff;
+  --semantic-color-text-ai: #8a38f5;
+  --semantic-color-text-caution: #f08000;
+  --semantic-color-text-dim: rgba(255, 255, 255, 0.3);
+  --semantic-color-text-error: #fb2c36;
+  --semantic-color-text-info: #51a2ff;
+  --semantic-color-text-primary: #ffffff;
+  --semantic-color-text-success: #48df3a;
+  --semantic-color-text-tertiary: #b0bac8;
+  --semantic-color-text-warning: #e8d1a2;
+
+  /* Legacy runtime compatibility surface */
+
+  /* Background */
+  --color-background-base: var(--semantic-color-background-base);
+  --color-background-surface: var(--semantic-color-background-surface);
+  --color-background-elevated: var(--semantic-color-background-elevated);
+  --color-background-overlay: var(--semantic-color-background-overlay);
+  --color-background-white-10: var(--semantic-color-background-white-10);
+
+  /* Text */
+  --color-text-primary: var(--semantic-color-text-primary);
+  --color-text-secondary: var(--semantic-color-text-secondary);
+  --color-text-tertiary: var(--semantic-color-text-tertiary);
+  --color-text-dim: var(--semantic-color-text-dim);
+  --color-text-success: var(--semantic-color-text-success);
+  --color-text-error: var(--semantic-color-text-error);
+  --color-text-warning: var(--semantic-color-text-warning);
+  --color-text-caution: var(--semantic-color-text-caution);
+  --color-text-info: var(--semantic-color-text-info);
+  --color-text-ai: var(--semantic-color-text-ai);
+
+  /* StatusStrip */
+  --color-statusstrip-success: var(--semantic-color-status-strip-success);
+  --color-statusstrip-failure: var(--semantic-color-status-strip-failure);
+  --color-statusstrip-info: var(--semantic-color-status-strip-info);
+  --color-statusstrip-running: var(--semantic-color-status-strip-running);
+  --color-statusstrip-neutral: var(--semantic-color-status-strip-neutral);
+  --color-statusstrip-ai: var(--semantic-color-status-strip-ai);
 }

@@ -12,8 +12,12 @@
  * white card at 1.28:1.
  *
  * Dark is the default, so the variant matches unless light is explicitly set.
+ * Deliberately scoped to any ancestor rather than to `:root`: Storybook's
+ * decorator themes a wrapper div, and a light panel inside a dark shell should
+ * work the same way. Custom properties already inherit, so the token layer is
+ * scope-agnostic too.
  */
-@custom-variant dark (&:where(:root:not([data-theme='light']), :root:not([data-theme='light']) *));
+@custom-variant dark (&:where(:not([data-theme='light'] *):not([data-theme='light'])));
 
 /*
  * shadcn / ai-elements semantic roles bridged onto Collider design tokens.
@@ -22,10 +26,17 @@
  * (bg-secondary, text-foreground, ...) resolve to real values.
  *
  * These are all `var()` indirections onto themed tokens, so the whole shadcn
- * layer follows `[data-theme]` for free. Only the roles that do NOT resolve
- * correctly by theme substitution are repeated in the light block below.
+ * layer follows the theme for free. Only the roles that do NOT resolve correctly
+ * by theme substitution are repeated in the light block below.
+ *
+ * `[data-theme]` is in the selector because a `var()` inside a custom property
+ * resolves on the element that declares it. Declared only on `:root`, these
+ * would compute against the default theme and then merely inherit, so a themed
+ * subtree would move the tokens while these roles stayed dark. Re-declaring them
+ * on the themed element makes them recompute in that scope, at no duplication.
  */
-:root {
+:root,
+[data-theme] {
   --background: var(--color-background-base);
   --foreground: var(--color-text-primary);
   --card: var(--color-background-surface);

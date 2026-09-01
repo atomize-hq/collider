@@ -9,12 +9,18 @@ import {
 
 export const runtimeCssRelPath = toRepoRelative(runtimeCssPath);
 export const tokenSourceRelPath = toRepoRelative(tokenSourceRoot);
+// The emitter is an input to the generated css just as the token files are:
+// changing how the css is rendered legitimately rewrites it while the token
+// source stays untouched. Without this the guard reports that regeneration as a
+// hand edit. Hand edits are still caught, because they move the generated file
+// with none of its inputs dirty.
+export const generatorRelPath = 'scripts/lib/runtime-css-publication.mjs';
 export const runtimeCssManualEditExitCode = 2;
 
 export function runRuntimeCssDriftGuard(options = {}) {
   const readGitStatus = options.readGitStatus ?? readRuntimeCssGitStatus;
   const status = readGitStatus();
-  if (!status.runtimeCssDirty || status.tokenSourceDirty) {
+  if (!status.runtimeCssDirty || status.tokenSourceDirty || status.generatorDirty) {
     return { ok: true, exitCode: 0 };
   }
 
@@ -34,7 +40,7 @@ export function readRuntimeCssGitStatus(options = {}) {
   const platform = options.platform ?? process.platform;
   const result = spawnSync(
     gitCommand,
-    ['status', '--short', '--', runtimeCssRelPath, tokenSourceRelPath],
+    ['status', '--short', '--', runtimeCssRelPath, tokenSourceRelPath, generatorRelPath],
     {
       cwd,
       encoding: 'utf8',
@@ -64,6 +70,7 @@ export function parseGitStatusOutput(stdout) {
     .filter((line) => line.length > 0);
   let runtimeCssDirty = false;
   let tokenSourceDirty = false;
+  let generatorDirty = false;
 
   for (const line of lines) {
     const filePath = normalizeGitStatusPath(line.slice(3));
@@ -71,12 +78,16 @@ export function parseGitStatusOutput(stdout) {
       runtimeCssDirty = true;
       continue;
     }
+    if (filePath === generatorRelPath) {
+      generatorDirty = true;
+      continue;
+    }
     if (filePath === tokenSourceRelPath || filePath.startsWith(`${tokenSourceRelPath}/`)) {
       tokenSourceDirty = true;
     }
   }
 
-  return { runtimeCssDirty, tokenSourceDirty };
+  return { runtimeCssDirty, tokenSourceDirty, generatorDirty };
 }
 
 function normalizeGitStatusPath(filePath) {

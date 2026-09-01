@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  generatorRelPath,
   parseGitStatusOutput,
   runRuntimeCssDriftGuard,
   runtimeCssManualEditExitCode,
@@ -16,6 +17,15 @@ describe('parseGitStatusOutput', () => {
     ).toEqual({
       runtimeCssDirty: true,
       tokenSourceDirty: true,
+      generatorDirty: false,
+    });
+  });
+
+  it('tracks the css generator as its own input', () => {
+    expect(parseGitStatusOutput(` M ${runtimeCssRelPath}\n M ${generatorRelPath}\n`)).toEqual({
+      runtimeCssDirty: true,
+      tokenSourceDirty: false,
+      generatorDirty: true,
     });
   });
 });
@@ -59,6 +69,16 @@ describe('runRuntimeCssDriftGuard', () => {
       runRuntimeCssDriftGuard({
         readGitStatus() {
           return { runtimeCssDirty: true, tokenSourceDirty: true };
+        },
+      })
+    ).toEqual({ ok: true, exitCode: 0 });
+  });
+
+  it('passes when runtime css moved because the generator changed', () => {
+    expect(
+      runRuntimeCssDriftGuard({
+        readGitStatus() {
+          return { runtimeCssDirty: true, tokenSourceDirty: false, generatorDirty: true };
         },
       })
     ).toEqual({ ok: true, exitCode: 0 });
