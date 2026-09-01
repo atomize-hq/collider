@@ -3,7 +3,7 @@
   "mode": "plugin-import-manual",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
-    "gitSha": "dd766700cff03c0129a41191a8b68d80c091b763"
+    "gitSha": "50f3d3cddbb3221d4f2dc183edb27d201c0cfca5"
   },
   "destination": {
     "name": "Collider",
@@ -11,8 +11,8 @@
   },
   "materialization": {
     "status": "passed",
-    "attemptedAt": "2026-08-31T22:28:28Z",
-    "notes": "Materialized 167 variables via the repo-owned plugin's upsert rail against the canonical Collider file; existing VariableIDs preserved for downstream component bindings (spot-checked 2019:370 text/primary, 2019:354 background/base, 2220:695 accent/dark/primary). Count fell from 699 because the tailwind-colors, tailwind-variables, theme, and font families are now withheld from the Figma publish only — they remain in the token source and in tokens.css, so no public token ID was removed. Post-publish verification: 167 variables across the 10 design-system families, and all 844 pre-existing node bindings intact with unchanged per-variable counts."
+    "attemptedAt": "2026-09-01T02:08:16Z",
+    "notes": "Materialized 177 variables across two modes (dark, light) via the repo-owned plugin's upsert rail against the canonical Collider file. Count rose from 167 with 10 light-side core anchors. The collection's single 'Base' mode was renamed to 'dark' and a 'light' mode added; renaming preserves modeId (dark is still 2019:0), so all 844 pre-existing node bindings survived with unchanged per-variable counts. Per-mode values spot-checked: semantic/color/background/base #171717 dark / #ffffff light, text/primary inverted, text/info #51a2ff dark / #1447e6 light, core anchors identical across modes as expected. Seeded components follow the page mode — verified by switching the Primitives page to light, confirming Code Block (2199:32) rendered light, then clearing the explicit mode."
   },
   "carrier": {
     "used": false,
