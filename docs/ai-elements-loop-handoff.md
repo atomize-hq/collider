@@ -143,8 +143,8 @@ figma-use find --name "Package Info"   # → box: 480×264 at (60, 5340), so nex
    - `semantic/color/background/elevated` (#2a2a2a) — nested card, badge, pill
    - `semantic/color/background/overlay` (#303030 approx) — borders, dividers, indicator strokes
    - `semantic/color/text/primary` (#ffffff) — foreground / important text
-   - `semantic/color/text/secondary` (#a3a3a3) — muted text, icon strokes
-   - `accent/dark/primary` (#155dfc) — active/accent surfaces
+   - `semantic/color/text/secondary` (#9ca2af) — muted text, icon strokes
+   - `accent/primary` (#155dfc) — active/accent surfaces
 5. **Icon bindings:** bind on the **VECTOR children** (icons are `<Icon name="lucide:x">` which render as a FRAME containing 1–N VECTOR nodes). Setting the FRAME's stroke makes a visible border around the icon — WRONG. Skip icon frame fills entirely; bind icon vector strokes to `text/secondary`.
 6. **Status/change-type palettes stay as raw Tailwind hex.** These palettes (green=success, red=danger, yellow=warning, blue=info, gray=neutral) are semantic to the concept, not to our design system. Don't remap them to tokens — that flattens meaning. Precedent: status-icons in [feedback_figma_icon_seeding], change-type badges in package-info.
 7. **Reparent to canvas + rename + convert:**

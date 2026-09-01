@@ -10,8 +10,8 @@ describe('flattenTokenDocument', () => {
     const tokens = JSON.parse(fs.readFileSync(artifactPath, 'utf8'));
     const leaves = flattenTokenDocument(tokens);
 
-    expect(leaves).toHaveLength(180);
-    expect(leaves[0]?.name).toBe('accent/dark/primary');
+    expect(leaves).toHaveLength(176);
+    expect(leaves[0]?.name).toBe('accent/primary');
     expect(leaves.at(-1)?.name).toBe('type/weight/semibold');
   });
 

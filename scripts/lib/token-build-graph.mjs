@@ -12,15 +12,14 @@ const referencePattern = /^\{([^}]+)\}$/;
 // present in the token source, in `tokens.css`, and in the typed token module —
 // nothing here removes a public token ID, so this is not a CHANGE_POLICY
 // removal event. It exists because these families have zero consumers and
-// together account for 532 of 699 variables, which buries the 167 variables
-// that are actually part of the design system in Figma's variable picker.
+// together account for the bulk of the emitted variables, which would bury the
+// variables that are actually part of the design system in Figma's picker.
 //   - tailwind-colors / tailwind-variables: raw palette pass-through.
-//   - theme: the light-valued shadcn role set, unused in this dark-only app.
 //   - font: a single legacy `font/font-family` token superseded by the
 //     `type/font/{sans,mono}` pair, which is what fonts.css actually reads.
 //     Publishing both would show two competing Poppins entries in the picker.
 // To restore any of them to Figma, delete its entry here and republish.
-const figmaExcludedFamilies = new Set(['tailwind-colors', 'tailwind-variables', 'theme', 'font']);
+const figmaExcludedFamilies = new Set(['tailwind-colors', 'tailwind-variables', 'font']);
 
 export function loadBuildGraph(options = {}) {
   const themeRegistry = readJson(options.themeRegistryPath ?? themeRegistryPath, true);

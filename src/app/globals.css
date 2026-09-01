@@ -43,8 +43,8 @@
   --card-foreground: var(--color-text-primary);
   --popover: var(--color-background-elevated);
   --popover-foreground: var(--color-text-primary);
-  --primary: var(--accent-dark-primary);
-  --primary-foreground: var(--accent-dark-primary-foreground);
+  --primary: var(--accent-primary);
+  --primary-foreground: var(--accent-primary-foreground);
   --secondary: var(--color-background-elevated);
   --secondary-foreground: var(--color-text-primary);
   --muted: var(--color-background-surface);
@@ -60,15 +60,17 @@
 
 /*
  * Dark is the default theme and lives unqualified in `:root`, so an app with no
- * `data-theme` attribute stays dark. Only three roles need restating here:
- * the accent family is keyed by theme in `accent.tokens.json` rather than
- * through the theme rail, and `--destructive-foreground` sits on a saturated red
- * fill in both themes, so it must stay light instead of following text/primary
- * (which would drop it to 2.79:1 against the light theme's #c10007).
+ * `data-theme` attribute stays dark. Only one role needs restating here:
+ * `--destructive-foreground` sits on a saturated red fill in both themes, so it
+ * must stay light instead of following text/primary, which would drop it to
+ * 2.79:1 against the light theme's #c10007.
+ *
+ * The accent roles used to be restated here too, back when `accent.tokens.json`
+ * keyed them by theme in the token *name* (`accent.light.*` / `accent.dark.*`)
+ * and the switch had to happen at this layer. They now carry one name with a
+ * value per theme, so they ride the theme rail like every other role.
  */
 [data-theme='light'] {
-  --primary: var(--accent-light-primary);
-  --primary-foreground: var(--accent-light-primary-foreground);
   --destructive-foreground: var(--core-color-white);
 }
 

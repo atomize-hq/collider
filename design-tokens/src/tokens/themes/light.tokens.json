@@ -5,6 +5,12 @@
       "themeId": "light"
     }
   },
+  "accent": {
+    "sidebar-primary": {
+      "$type": "color",
+      "$value": "#155dfc"
+    }
+  },
   "semantic": {
     "color": {
       "background": {
