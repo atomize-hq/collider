@@ -204,6 +204,34 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
     card.effects = [e];
     shadowsApplied += 1;
   };
+  // A drop shadow paints OUTSIDE its node's box, but a Figma frame clips its
+  // children by default and the row hugged the card exactly — so every shadow
+  // past level/1 was sheared off at the row boundary. Each card now sits in a
+  // `stage` padded by the furthest reach of any elevation token, measured from
+  // the tokens themselves rather than guessed, and uniform across both sections
+  // so the cards stay in one column.
+  const reach = (list) => {
+    const es = list.map((x) => parseShadow(x.v)).filter(Boolean);
+    const m = (f) => Math.ceil(Math.max(0, ...es.map(f)));
+    // Symmetric on the vertical: a shadow reaches further below than above, and
+    // padding to the exact reach on each side pushes the card off the row's
+    // centre, leaving every label sitting 12px low against its own swatch.
+    const y = Math.max(
+      m((e) => e.radius + e.spread - e.offset.y),
+      m((e) => e.radius + e.spread + e.offset.y)
+    );
+    return { x: m((e) => e.radius + e.spread + Math.abs(e.offset.x)), top: y, bottom: y };
+  };
+  const stage = (card) => {
+    const st = frame('stage', { px: room.x });
+    st.paddingTop = room.top;
+    st.paddingBottom = room.bottom;
+    // Belt and braces: if a token ever outgrows the padding above, let the
+    // shadow overlap rather than reintroduce a hard cut.
+    st.clipsContent = false;
+    st.appendChild(card);
+    return st;
+  };
   root = shell(
     'Elevation',
     'Dark-tuned drop shadows. These are string tokens, not Figma effect variables, so the cards below carry a ' +
@@ -211,8 +239,10 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
       'Values were authored for the dark ground and have not yet been re-tuned for light.'
   );
   const lv = grp('elevation.level.').sort((a, b) => a.leaf.localeCompare(b.leaf));
+  const er = grp('elevation.role.').sort((a, b) => a.leaf.localeCompare(b.leaf));
+  const room = reach(lv.concat(er));
   s = section(root, 'LEVELS', 'The raw ramp, drawn on background/surface cards.');
-  rows = rowsFrame(s, 24);
+  rows = rowsFrame(s, 8);
   lv.forEach((x) => {
     const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('elevation/level/' + x.leaf, x.v, 420));
@@ -221,12 +251,12 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
     card.cornerRadius = 8;
     applyShadow(card, x.v);
     card.appendChild(txt('level ' + x.leaf, { size: 12, fill: 'semantic/color/text/secondary' }));
-    r.appendChild(card);
+    r.appendChild(stage(card));
+    r.clipsContent = false;
     rows.appendChild(r);
   });
-  const er = grp('elevation.role.').sort((a, b) => a.leaf.localeCompare(b.leaf));
   s = section(root, 'ROLE ALIASES', 'Which surface uses which level.');
-  rows = rowsFrame(s, 24);
+  rows = rowsFrame(s, 8);
   er.forEach((x) => {
     const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
     const match = lv.find((l) => l.v === x.v);
@@ -238,7 +268,8 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
     card.cornerRadius = 8;
     applyShadow(card, x.v);
     card.appendChild(txt(x.leaf, { size: 12, fill: 'semantic/color/text/secondary' }));
-    r.appendChild(card);
+    r.appendChild(stage(card));
+    r.clipsContent = false;
     rows.appendChild(r);
   });
   // Self-check: a silently-skipped effect is exactly the failure this section

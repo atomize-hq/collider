@@ -60,3 +60,10 @@ name before rebuilding, so re-running replaces rather than duplicates.
   cards shipped with no effect and no error. `parseShadow` now throws on
   unparsable input, and the builder asserts that every non-`none` token produced
   a shadow before it returns.
+- **A shadow paints outside its node's box, and a Figma frame clips by default.**
+  Once the effects rendered, the row hugged the card exactly and sheared off
+  everything past level/1. Each card sits in a `stage` padded by the furthest
+  reach of any elevation token — `blur + spread ± offset`, measured from the
+  tokens rather than guessed. Keep that padding **symmetric on the vertical**: a
+  shadow reaches further below than above, and padding each side to its exact
+  reach pushes the card off the row's centre and leaves every label 12px low.
