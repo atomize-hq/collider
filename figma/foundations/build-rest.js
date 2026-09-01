@@ -17,16 +17,24 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
   __LIB__;
 
   const out = {};
+  // `w` may be a token name, which BINDS the bar's width to the very token it
+  // documents so the specimen cannot drift from the value it claims to show. A
+  // number is for bars drawn proportionally (durations at 1ms=1px, containers at
+  // 60%) where the pixels deliberately do not equal the token.
   const rect = (w, h, o) => {
     o = o || {};
     const r = figma.createRectangle();
-    r.resize(Math.max(w, 0.01), h);
-    r.cornerRadius = o.radius || 0;
+    const token = typeof w === 'string';
+    r.resize(Math.max(token ? varNum(w) : w, 0.01), h);
+    // A zero-width rectangle cannot exist in Figma, so `spacing/0` is the one
+    // bar that has to stay unbound — it is drawn at the 0.01 floor instead.
+    if (token && varNum(w) > 0) bindVar(r, 'width', w);
+    setRadius(r, o.radius || 0);
     bindFill(r, o.fill || 'semantic/color/text/secondary');
     if (o.opacity != null) r.opacity = o.opacity;
     if (o.stroke) {
       bindStroke(r, o.stroke);
-      r.strokeWeight = o.strokeWeight || 1;
+      num(r, 'strokeWeight', o.strokeWeight || 'shape/border/width/default');
       r.fills = [];
     }
     return r;
@@ -54,33 +62,43 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
     'SPACING SCALE',
     '20 steps from 0 to 128px. Bars are drawn at the token’s actual width.'
   );
-  let rows = rowsFrame(s, 8);
+  let rows = rowsFrame(s, 'spacing/2');
   scale.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('spacing/' + x.leaf, x.v, 280));
-    r.appendChild(rect(px(x.v), 16, { fill: 'accent/primary', radius: 2 }));
+    r.appendChild(rect('spacing/' + x.leaf, 16, { fill: 'accent/primary', radius: 'radius/sm' }));
     rows.appendChild(r);
   });
 
   const gaps = grp('spacing.gap.'),
     pads = grp('spacing.padding.');
   s = section(root, 'SPACING ROLE ALIASES', 'Usage-named steps inherited from Collider-Old atoms.');
-  rows = rowsFrame(s, 8);
+  rows = rowsFrame(s, 'spacing/2');
   gaps
     .concat([])
     .sort((a, b) => px(a.v) - px(b.v))
     .forEach((x) => {
-      const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+      const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
       r.appendChild(nameVal('spacing/gap/' + x.leaf, x.v, 280));
-      r.appendChild(rect(px(x.v), 14, { fill: 'semantic/color/text/tertiary', radius: 2 }));
+      r.appendChild(
+        rect('spacing/gap/' + x.leaf, 14, {
+          fill: 'semantic/color/text/tertiary',
+          radius: 'radius/sm',
+        })
+      );
       rows.appendChild(r);
     });
   pads
     .sort((a, b) => px(a.v) - px(b.v))
     .forEach((x) => {
-      const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+      const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
       r.appendChild(nameVal('spacing/padding/' + x.leaf, x.v, 280));
-      r.appendChild(rect(px(x.v), 14, { fill: 'semantic/color/text/tertiary', radius: 2 }));
+      r.appendChild(
+        rect('spacing/padding/' + x.leaf, 14, {
+          fill: 'semantic/color/text/tertiary',
+          radius: 'radius/sm',
+        })
+      );
       rows.appendChild(r);
     });
 
@@ -92,13 +110,13 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
     'RADIUS',
     'Corner radii drawn on a 72×56 box. `full` clamps to a pill at this size.'
   );
-  rows = rowsFrame(s, 10);
+  rows = rowsFrame(s, 'spacing/2-5');
   radii.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('radius/' + x.leaf, x.v, 280));
     r.appendChild(
       rect(72, 56, {
-        radius: Math.min(px(x.v), 28),
+        radius: 'radius/' + x.leaf,
         fill: 'semantic/color/background/elevated',
         stroke: 'semantic/color/border/strong',
       })
@@ -107,13 +125,13 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
   });
   const rroles = grp('radius.role.').sort((a, b) => px(a.v) - px(b.v));
   s = section(root, 'RADIUS ROLE ALIASES', null);
-  rows = rowsFrame(s, 10);
+  rows = rowsFrame(s, 'spacing/2-5');
   rroles.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('radius/role/' + x.leaf, x.v, 280));
     r.appendChild(
       rect(72, 40, {
-        radius: px(x.v),
+        radius: 'radius/role/' + x.leaf,
         fill: 'semantic/color/background/elevated',
         stroke: 'semantic/color/border/strong',
       })
@@ -127,32 +145,45 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
     'BORDER WIDTHS',
     'Tailwind v4 defaults `border` to currentColor; the role bridge restores the semantic colour.'
   );
-  rows = rowsFrame(s, 10);
+  rows = rowsFrame(s, 'spacing/2-5');
   bw.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('shape/border/width/' + x.leaf, x.v, 280));
     r.appendChild(
-      rect(120, 40, { stroke: 'semantic/color/border/strong', strokeWeight: px(x.v), radius: 4 })
+      rect(120, 40, {
+        stroke: 'semantic/color/border/strong',
+        strokeWeight: 'shape/border/width/' + x.leaf,
+        radius: 'radius/md',
+      })
     );
     rows.appendChild(r);
   });
 
   const op = grp('shape.opacity.').sort((a, b) => Number(b.v) - Number(a.v));
-  s = section(root, 'OPACITY', 'Applied to a solid accent fill on the page ground.');
-  rows = rowsFrame(s, 10);
+  s = section(
+    root,
+    'OPACITY',
+    'Applied to a solid accent fill on the page ground. An opacity variable binds as a percentage, so 0.7 ' +
+      'would land as 0.7% — the value is read from the token and applied, not bound.'
+  );
+  rows = rowsFrame(s, 'spacing/2-5');
   op.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('shape/opacity/' + x.leaf, String(x.v), 280));
-    r.appendChild(rect(120, 36, { fill: 'accent/primary', opacity: Number(x.v), radius: 4 }));
+    r.appendChild(
+      rect(120, 36, { fill: 'accent/primary', opacity: Number(x.v), radius: 'radius/md' })
+    );
     rows.appendChild(r);
   });
   const oroles = grp('shape.role.').sort((a, b) => Number(b.v) - Number(a.v));
   s = section(root, 'OPACITY ROLE ALIASES', null);
-  rows = rowsFrame(s, 10);
+  rows = rowsFrame(s, 'spacing/2-5');
   oroles.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('shape/role/' + x.leaf, String(x.v), 280));
-    r.appendChild(rect(120, 36, { fill: 'accent/primary', opacity: Number(x.v), radius: 4 }));
+    r.appendChild(
+      rect(120, 36, { fill: 'accent/primary', opacity: Number(x.v), radius: 'radius/md' })
+    );
     rows.appendChild(r);
   });
   out.spaceShape = place(root, 2800);
@@ -242,32 +273,34 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
   const er = grp('elevation.role.').sort((a, b) => a.leaf.localeCompare(b.leaf));
   const room = reach(lv.concat(er));
   s = section(root, 'LEVELS', 'The raw ramp, drawn on background/surface cards.');
-  rows = rowsFrame(s, 8);
+  rows = rowsFrame(s, 'spacing/2');
   lv.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('elevation/level/' + x.leaf, x.v, 420));
-    const card = frame('card', { fixedW: 200, py: 26, px: 20 });
+    const card = frame('card', { fixedW: 200, py: 'spacing/6', px: 'spacing/5' });
     bindFill(card, 'semantic/color/background/surface');
-    card.cornerRadius = 8;
+    setRadius(card, 'radius/lg');
     applyShadow(card, x.v);
-    card.appendChild(txt('level ' + x.leaf, { size: 12, fill: 'semantic/color/text/secondary' }));
+    card.appendChild(
+      txt('level ' + x.leaf, { size: 'type/size/xs', fill: 'semantic/color/text/secondary' })
+    );
     r.appendChild(stage(card));
     r.clipsContent = false;
     rows.appendChild(r);
   });
   s = section(root, 'ROLE ALIASES', 'Which surface uses which level.');
-  rows = rowsFrame(s, 8);
+  rows = rowsFrame(s, 'spacing/2');
   er.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     const match = lv.find((l) => l.v === x.v);
     r.appendChild(
       nameVal('elevation/role/' + x.leaf, x.v + (match ? '   →  level/' + match.leaf : ''), 420)
     );
-    const card = frame('card', { fixedW: 200, py: 26, px: 20 });
+    const card = frame('card', { fixedW: 200, py: 'spacing/6', px: 'spacing/5' });
     bindFill(card, 'semantic/color/background/surface');
-    card.cornerRadius = 8;
+    setRadius(card, 'radius/lg');
     applyShadow(card, x.v);
-    card.appendChild(txt(x.leaf, { size: 12, fill: 'semantic/color/text/secondary' }));
+    card.appendChild(txt(x.leaf, { size: 'type/size/xs', fill: 'semantic/color/text/secondary' }));
     r.appendChild(stage(card));
     r.clipsContent = false;
     rows.appendChild(r);
@@ -282,24 +315,26 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
   // ─────────── MOTION ───────────
   root = shell(
     'Motion',
-    'Motion has no rendered form, so this frame is a table rather than a specimen. Duration bars are drawn ' +
-      'proportionally (1ms = 1px) purely to make the ramp legible at a glance — they are not a preview of the ' +
-      'animation. Easing curves are recorded as their CSS value.'
+    'Motion has no rendered form, so this frame is a table rather than a specimen. Each duration bar is bound ' +
+      'to its own token at 1ms = 1px, purely to make the ramp legible at a glance — it is not a preview of ' +
+      'the animation. Easing curves are strings, so they are recorded as their CSS value.'
   );
   const dur = grp('motion.duration.').sort((a, b) => px(a.v) - px(b.v));
   s = section(root, 'DURATIONS', null);
-  rows = rowsFrame(s, 10);
+  rows = rowsFrame(s, 'spacing/2-5');
   dur.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('motion/duration/' + x.leaf, x.v, 300));
-    r.appendChild(rect(px(x.v), 14, { fill: 'accent/primary', radius: 2 }));
+    r.appendChild(
+      rect('motion/duration/' + x.leaf, 14, { fill: 'accent/primary', radius: 'radius/sm' })
+    );
     rows.appendChild(r);
   });
   const eas = grp('motion.easing.');
   s = section(root, 'EASING', null);
-  rows = rowsFrame(s, 10);
+  rows = rowsFrame(s, 'spacing/2-5');
   eas.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('motion/easing/' + x.leaf, x.v, 300));
     rows.appendChild(r);
   });
@@ -312,11 +347,11 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
     mr[role][kind] = t.dark;
   });
   s = section(root, 'ROLE ALIASES', 'Each interaction role pairs one duration with one curve.');
-  rows = rowsFrame(s, 10);
+  rows = rowsFrame(s, 'spacing/2-5');
   Object.keys(mr)
     .sort()
     .forEach((role) => {
-      const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+      const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
       r.appendChild(
         nameVal('motion/role/' + role, mr[role].duration + '   ·   ' + mr[role].easing, 760)
       );
@@ -331,14 +366,14 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
   );
   const cont = grp('layout.container.').sort((a, b) => px(a.v) - px(b.v));
   s = section(root, 'CONTAINERS', 'Max content widths for route shells and reading columns.');
-  rows = rowsFrame(s, 12);
+  rows = rowsFrame(s, 'spacing/3');
   cont.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('layout/container/' + x.leaf, x.v, 280));
     r.appendChild(
       rect(px(x.v) * 0.6, 22, {
         fill: 'semantic/color/background/elevated',
-        radius: 3,
+        radius: 'radius/sm',
         stroke: 'semantic/color/border/strong',
       })
     );
@@ -346,11 +381,13 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
   });
   const gut = grp('layout.gutter.').sort((a, b) => px(a.v) - px(b.v));
   s = section(root, 'GUTTERS', null);
-  rows = rowsFrame(s, 10);
+  rows = rowsFrame(s, 'spacing/2-5');
   gut.forEach((x) => {
-    const r = frame('row', { dir: 'HORIZONTAL', gap: 24, align: 'CENTER', fixedW: W });
+    const r = frame('row', { dir: 'HORIZONTAL', gap: 'spacing/6', align: 'CENTER', fixedW: W });
     r.appendChild(nameVal('layout/gutter/' + x.leaf, x.v, 280));
-    r.appendChild(rect(px(x.v), 16, { fill: 'accent/primary', radius: 2 }));
+    r.appendChild(
+      rect('layout/gutter/' + x.leaf, 16, { fill: 'accent/primary', radius: 'radius/sm' })
+    );
     rows.appendChild(r);
   });
   out.layout = place(root, 7000);

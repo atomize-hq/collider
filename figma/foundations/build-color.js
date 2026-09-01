@@ -22,21 +22,21 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
   let count = 0;
   SECTIONS.forEach((sec) => {
     const s = section(root, sec.label, sec.blurb);
-    const rows = rowsFrame(s, 8);
+    const rows = rowsFrame(s, 'spacing/2');
     sec.rows.forEach((r) => {
       const row = frame('row/' + r.name, {
         dir: 'HORIZONTAL',
-        gap: 20,
+        gap: 'spacing/5',
         align: 'CENTER',
         fixedW: W,
       });
       const sw = figma.createRectangle();
       sw.name = 'swatch';
       sw.resize(64, 48);
-      sw.cornerRadius = 6;
+      setRadius(sw, 'radius/md');
       if (!bindFill(sw, r.name)) sw.fills = [{ type: 'SOLID', color: { r: 1, g: 0, b: 1 } }];
       bindStroke(sw, 'semantic/color/border/default');
-      sw.strokeWeight = 1;
+      bindVar(sw, 'strokeWeight', 'shape/border/width/default');
       row.appendChild(sw);
 
       const valueLine = r.themed ? r.dark + '   /   ' + r.light : r.dark + '   both modes';
@@ -44,7 +44,7 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
 
       const metric = r.metric || sec.metric;
       if (metric && r.crDark != null) {
-        const cr = frame('contrast', { gap: 3, fixedW: 240 });
+        const cr = frame('contrast', { gap: 'spacing/0-5', fixedW: 240 });
         const verdict = (n) =>
           metric === 'text'
             ? n >= 4.5
@@ -59,7 +59,7 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
               : 'ratio only';
         cr.appendChild(
           txt(r.crDark.toFixed(2) + ' / ' + r.crLight.toFixed(2), {
-            size: 11,
+            size: 'type/size/2xs',
             mono: true,
             fill: 'semantic/color/text/secondary',
           })
@@ -71,7 +71,7 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
           metric === 'info' ? 'vs ' + r.against.split('/').slice(-2).join('/') : vd + ' / ' + vl;
         cr.appendChild(
           txt(label, {
-            size: 10,
+            size: 'type/size/2xs',
             style: bad ? 'Medium' : 'Regular',
             fill: bad ? 'semantic/color/text/caution' : 'semantic/color/text/tertiary',
           })
