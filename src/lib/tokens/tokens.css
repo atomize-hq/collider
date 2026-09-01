@@ -10,13 +10,20 @@
   --accent-light-sidebar-primary: #155dfc;
   --accent-light-sidebar-primary-foreground: #eff6ff;
   --core-color-amber-300: #e8d1a2;
+  --core-color-amber-700: #8a5300;
+  --core-color-black-alpha-10: rgba(0, 0, 0, 0.1);
+  --core-color-black-alpha-30: rgba(0, 0, 0, 0.3);
   --core-color-blue-500: #51a2ff;
   --core-color-blue-600: #155dfc;
+  --core-color-blue-700: #1447e6;
   --core-color-blue-800: #1f4174;
   --core-color-blue-alpha-30: rgba(21, 93, 252, 0.3);
   --core-color-green-500: #48df3a;
   --core-color-green-800: #0e5e2e;
+  --core-color-neutral-100: #f5f5f5;
+  --core-color-neutral-200: #e5e5e5;
   --core-color-neutral-300: #b0bac8;
+  --core-color-neutral-50: #fafafa;
   --core-color-neutral-500: #6a7282;
   --core-color-neutral-700: #3f3f3f;
   --core-color-neutral-800: #303030;
@@ -24,9 +31,12 @@
   --core-color-neutral-900: #202020;
   --core-color-neutral-950: #171717;
   --core-color-orange-500: #f08000;
+  --core-color-orange-700: #9a3412;
   --core-color-red-500: #fb2c36;
+  --core-color-red-700: #c10007;
   --core-color-red-800: #5b1d20;
   --core-color-violet-500: #8a38f5;
+  --core-color-violet-700: #6d28d9;
   --core-color-white: #ffffff;
   --core-color-white-alpha-10: rgba(255, 255, 255, 0.1);
   --core-color-white-alpha-30: rgba(255, 255, 255, 0.3);
@@ -729,4 +739,27 @@
   --color-statusstrip-running: var(--semantic-color-status-strip-running);
   --color-statusstrip-neutral: var(--semantic-color-status-strip-neutral);
   --color-statusstrip-ai: var(--semantic-color-status-strip-ai);
+}
+
+[data-theme='light'] {
+  --semantic-color-background-base: #ffffff;
+  --semantic-color-background-elevated: #f5f5f5;
+  --semantic-color-background-overlay: #e5e5e5;
+  --semantic-color-background-surface: #fafafa;
+  --semantic-color-background-white-10: rgba(0, 0, 0, 0.1);
+  --semantic-color-border-default: #e5e5e5;
+  --semantic-color-border-strong: #b0bac8;
+  --semantic-color-border-subtle: rgba(0, 0, 0, 0.1);
+  --semantic-color-status-strip-ai: #6d28d9;
+  --semantic-color-status-strip-neutral: #171717;
+  --semantic-color-status-strip-running: #171717;
+  --semantic-color-text-ai: #6d28d9;
+  --semantic-color-text-caution: #9a3412;
+  --semantic-color-text-dim: rgba(0, 0, 0, 0.3);
+  --semantic-color-text-error: #c10007;
+  --semantic-color-text-info: #1447e6;
+  --semantic-color-text-primary: #171717;
+  --semantic-color-text-success: #0e5e2e;
+  --semantic-color-text-tertiary: #3f3f3f;
+  --semantic-color-text-warning: #8a5300;
 }

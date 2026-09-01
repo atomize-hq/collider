@@ -16,6 +16,7 @@ export function buildPublishedRuntimeCss(options) {
   const {
     stagedCss,
     themeId,
+    themeOverrides = [],
     generatedFileBanner = defaultGeneratedFileBanner,
     runtimeAliasMapPath = defaultRuntimeAliasMapPath,
     runtimeInventoryPath = defaultRuntimeInventoryPath,
@@ -41,8 +42,54 @@ export function buildPublishedRuntimeCss(options) {
     '  /* Legacy runtime compatibility surface */',
     ...compatibilityLines,
     '}',
+    ...renderThemeOverrideBlocks(stagedCss, themeOverrides),
     '',
   ].join('\n');
+}
+
+/**
+ * Non-default themes are emitted as `[data-theme="<id>"]` blocks holding only the
+ * declarations whose values differ from the default theme. The legacy
+ * compatibility aliases above point at canonical variables rather than at literal
+ * values, so they re-resolve under each override block without being repeated.
+ */
+function renderThemeOverrideBlocks(defaultStagedCss, themeOverrides) {
+  if (themeOverrides.length === 0) {
+    return [];
+  }
+
+  const defaults = parseDeclarations(extractCssRootBody(defaultStagedCss));
+  const lines = [];
+
+  for (const { themeId, stagedCss } of themeOverrides) {
+    const candidate = parseDeclarations(extractCssRootBody(stagedCss));
+    const changed = [...candidate].filter(([name, value]) => defaults.get(name) !== value);
+
+    if (changed.length === 0) {
+      throw new Error(
+        `token build setup: theme "${themeId}" resolves identically to the default theme, so it would publish an empty override block`
+      );
+    }
+
+    lines.push('');
+    lines.push(`[data-theme='${themeId}'] {`);
+    for (const [name, value] of changed) {
+      lines.push(`  ${name}: ${value};`);
+    }
+    lines.push('}');
+  }
+
+  return lines;
+}
+
+function parseDeclarations(cssBody) {
+  const declarations = new Map();
+
+  for (const match of cssBody.matchAll(/^\s*(--[a-z0-9-]+):\s*(.+);$/gm)) {
+    declarations.set(match[1], match[2]);
+  }
+
+  return declarations;
 }
 
 export function extractCssCustomProperties(cssSource) {

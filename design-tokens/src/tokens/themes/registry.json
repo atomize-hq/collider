@@ -9,6 +9,12 @@
       "file": "dark.tokens.json",
       "required": true,
       "extends": null
+    },
+    {
+      "id": "light",
+      "file": "light.tokens.json",
+      "required": false,
+      "extends": "dark"
     }
   ]
 }

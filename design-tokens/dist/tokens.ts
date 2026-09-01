@@ -11,6 +11,12 @@ export const themeRegistry = {
       id: 'dark',
       required: true,
     },
+    {
+      extends: 'dark',
+      file: 'light.tokens.json',
+      id: 'light',
+      required: false,
+    },
   ],
   unknownThemeIdBehavior: 'error',
 } as const;
@@ -61,6 +67,21 @@ export const tokenMap = {
     type: 'color',
     value: '#e8d1a2',
   },
+  'core.color.amber.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8a5300',
+  },
+  'core.color.black-alpha.10': {
+    themeId: 'dark',
+    type: 'color',
+    value: 'rgba(0, 0, 0, 0.1)',
+  },
+  'core.color.black-alpha.30': {
+    themeId: 'dark',
+    type: 'color',
+    value: 'rgba(0, 0, 0, 0.3)',
+  },
   'core.color.blue-alpha.30': {
     themeId: 'dark',
     type: 'color',
@@ -75,6 +96,11 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'color',
     value: '#155dfc',
+  },
+  'core.color.blue.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#1447e6',
   },
   'core.color.blue.800': {
     themeId: 'dark',
@@ -91,10 +117,25 @@ export const tokenMap = {
     type: 'color',
     value: '#0e5e2e',
   },
+  'core.color.neutral.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f5',
+  },
+  'core.color.neutral.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e5e5e5',
+  },
   'core.color.neutral.300': {
     themeId: 'dark',
     type: 'color',
     value: '#b0bac8',
+  },
+  'core.color.neutral.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fafafa',
   },
   'core.color.neutral.500': {
     themeId: 'dark',
@@ -131,10 +172,20 @@ export const tokenMap = {
     type: 'color',
     value: '#f08000',
   },
+  'core.color.orange.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9a3412',
+  },
   'core.color.red.500': {
     themeId: 'dark',
     type: 'color',
     value: '#fb2c36',
+  },
+  'core.color.red.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c10007',
   },
   'core.color.red.800': {
     themeId: 'dark',
@@ -145,6 +196,11 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'color',
     value: '#8a38f5',
+  },
+  'core.color.violet.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#6d28d9',
   },
   'core.color.white': {
     themeId: 'dark',

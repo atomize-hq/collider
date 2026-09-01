@@ -25,10 +25,13 @@ export async function buildTokenArtifacts(options = {}) {
   const graph = loadBuildGraph(options);
   const artifactManifest = options.artifacts ?? getBuildArtifacts(options);
   const before = captureArtifactContents(artifactManifest);
+  const themeOverrides = await buildThemeOverrideCss(graph, options);
+  // Built last so the staged css artifact is left holding the default theme.
   const cssContents = await buildRuntimeCssArtifact(graph.materializedTokens, options);
   const publishedRuntimeCss = buildPublishedRuntimeCss({
     stagedCss: cssContents,
     themeId: graph.themeId,
+    themeOverrides,
     generatedFileBanner,
     runtimeAliasMapPath: options.runtimeAliasMapPath,
     runtimeInventoryPath: options.runtimeInventoryPath,
@@ -102,6 +105,41 @@ function captureArtifactContents(artifacts) {
         : null,
     ])
   );
+}
+
+/**
+ * Every registry theme other than the default is materialized through its own
+ * build graph so the publication step can diff it against the default and emit a
+ * minimal override block. Each one stages to a scratch path so it never disturbs
+ * the staged css artifact, which must keep holding the default theme.
+ */
+async function buildThemeOverrideCss(graph, options = {}) {
+  const themes = graph.themeRegistry?.themes ?? [];
+  const overrides = [];
+
+  for (const theme of themes) {
+    if (theme.id === graph.themeId) continue;
+
+    const themeGraph = loadBuildGraph({ ...options, themeId: theme.id });
+    // Style Dictionary always writes `tokens.css` into its build directory, so
+    // the scratch location has to be its own directory rather than a filename.
+    const scratchDir = path.join(
+      path.dirname(options.stagedRuntimeCssPath ?? stagedRuntimeCssPath),
+      `.theme-${theme.id}`
+    );
+
+    try {
+      const stagedCss = await buildRuntimeCssArtifact(themeGraph.materializedTokens, {
+        ...options,
+        stagedRuntimeCssPath: path.join(scratchDir, 'tokens.css'),
+      });
+      overrides.push({ themeId: theme.id, stagedCss });
+    } finally {
+      fs.rmSync(scratchDir, { force: true, recursive: true });
+    }
+  }
+
+  return overrides;
 }
 
 async function buildRuntimeCssArtifact(tokens, options = {}) {

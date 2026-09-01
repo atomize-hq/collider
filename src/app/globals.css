@@ -3,10 +3,27 @@
 @import 'tailwindcss';
 
 /*
+ * Point Tailwind's `dark:` variant at our `data-theme` attribute instead of its
+ * default `prefers-color-scheme`. Without this the two disagree: the token layer
+ * switches on `data-theme` while every `dark:` utility switches on the OS
+ * setting. Shiki is the visible casualty — CodeBlock renders github-light colors
+ * in `token.color` and swaps to github-dark via `dark:!text-[var(--shiki-dark)]`,
+ * so on a light theme with a dark OS it painted dark-theme syntax colors on a
+ * white card at 1.28:1.
+ *
+ * Dark is the default, so the variant matches unless light is explicitly set.
+ */
+@custom-variant dark (&:where(:root:not([data-theme='light']), :root:not([data-theme='light']) *));
+
+/*
  * shadcn / ai-elements semantic roles bridged onto Collider design tokens.
- * Hand-authored (tokens.css is generated). Collider `--color-*` / `--accent-dark-*`
+ * Hand-authored (tokens.css is generated). Collider `--color-*` / `--accent-*`
  * stay canonical; these roles alias them so ai-elements utility classes
- * (bg-secondary, text-foreground, ...) resolve to real dark values.
+ * (bg-secondary, text-foreground, ...) resolve to real values.
+ *
+ * These are all `var()` indirections onto themed tokens, so the whole shadcn
+ * layer follows `[data-theme]` for free. Only the roles that do NOT resolve
+ * correctly by theme substitution are repeated in the light block below.
  */
 :root {
   --background: var(--color-background-base);
@@ -28,6 +45,20 @@
   --border: var(--semantic-color-border-default);
   --input: var(--semantic-color-border-default);
   --ring: var(--semantic-color-interaction-focus-ring);
+}
+
+/*
+ * Dark is the default theme and lives unqualified in `:root`, so an app with no
+ * `data-theme` attribute stays dark. Only three roles need restating here:
+ * the accent family is keyed by theme in `accent.tokens.json` rather than
+ * through the theme rail, and `--destructive-foreground` sits on a saturated red
+ * fill in both themes, so it must stay light instead of following text/primary
+ * (which would drop it to 2.79:1 against the light theme's #c10007).
+ */
+[data-theme='light'] {
+  --primary: var(--accent-light-primary);
+  --primary-foreground: var(--accent-light-primary-foreground);
+  --destructive-foreground: var(--core-color-white);
 }
 
 /*
