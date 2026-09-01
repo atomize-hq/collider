@@ -54,3 +54,9 @@ name before rebuilding, so re-running replaces rather than duplicates.
 - Elevation tokens are CSS strings, not Figma effect variables, so those cards
   carry a hand-parsed effect and do **not** follow the mode switcher. The frame
   says so on its face.
+- **A parser that returns `null` on failure hides a total failure.** The first
+  shadow regex required a literal `p` on the x offset, but every elevation token
+  starts with a bare `0`, so nothing matched — and the `null` path meant all ten
+  cards shipped with no effect and no error. `parseShadow` now throws on
+  unparsable input, and the builder asserts that every non-`none` token produced
+  a shadow before it returns.

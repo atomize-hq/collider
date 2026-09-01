@@ -158,20 +158,51 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
   out.spaceShape = place(root, 2800);
 
   // ─────────── ELEVATION ───────────
+  // A CSS box-shadow length is unitless when it is zero (every token here starts
+  // `0 `), and an optional 4th length is spread. The previous pattern required a
+  // literal `p` on the x offset, so no elevation token ever parsed — and because
+  // a parse failure returned null, all 13 cards shipped with no effect and
+  // nothing reported it. Unparsable input now throws.
+  const SHADOW_RE =
+    /^\s*(-?[\d.]+)(?:px)?\s+(-?[\d.]+)(?:px)?\s+(-?[\d.]+)(?:px)?(?:\s+(-?[\d.]+)(?:px)?)?\s+(rgba?\([^)]*\)|#[0-9a-fA-F]{3,8})\s*$/;
+  const parseColor = (s) => {
+    const fn = s.match(/^rgba?\(([^)]*)\)$/);
+    if (fn) {
+      const c = fn[1]
+        .split(/[,/\s]+/)
+        .filter(Boolean)
+        .map(parseFloat);
+      return { r: c[0] / 255, g: c[1] / 255, b: c[2] / 255, a: c[3] == null ? 1 : c[3] };
+    }
+    let h = s.slice(1);
+    if (h.length < 6)
+      h = h
+        .split('')
+        .map((c) => c + c)
+        .join('');
+    const ch = (i) => parseInt(h.slice(i, i + 2), 16) / 255;
+    return { r: ch(0), g: ch(2), b: ch(4), a: h.length === 8 ? ch(6) : 1 };
+  };
   const parseShadow = (css) => {
     if (!css || css === 'none') return null;
-    const m = String(css).match(/(-?[\d.]+)px?\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+rgba?\(([^)]+)\)/);
-    if (!m) return null;
-    const p = m[4].split(',').map((v) => parseFloat(v.trim()));
+    const m = String(css).match(SHADOW_RE);
+    if (!m) throw new Error('unparsable elevation token: ' + css);
     return {
       type: 'DROP_SHADOW',
-      color: { r: p[0] / 255, g: p[1] / 255, b: p[2] / 255, a: p[3] == null ? 1 : p[3] },
+      color: parseColor(m[5]),
       offset: { x: parseFloat(m[1]), y: parseFloat(m[2]) },
       radius: parseFloat(m[3]),
-      spread: 0,
+      spread: m[4] == null ? 0 : parseFloat(m[4]),
       visible: true,
       blendMode: 'NORMAL',
     };
+  };
+  let shadowsApplied = 0;
+  const applyShadow = (card, css) => {
+    const e = parseShadow(css);
+    if (!e) return;
+    card.effects = [e];
+    shadowsApplied += 1;
   };
   root = shell(
     'Elevation',
@@ -188,8 +219,7 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
     const card = frame('card', { fixedW: 200, py: 26, px: 20 });
     bindFill(card, 'semantic/color/background/surface');
     card.cornerRadius = 8;
-    const e = parseShadow(x.v);
-    if (e) card.effects = [e];
+    applyShadow(card, x.v);
     card.appendChild(txt('level ' + x.leaf, { size: 12, fill: 'semantic/color/text/secondary' }));
     r.appendChild(card);
     rows.appendChild(r);
@@ -206,13 +236,17 @@ return Promise.all(fonts.map((f) => figma.loadFontAsync(f).catch(() => null))).t
     const card = frame('card', { fixedW: 200, py: 26, px: 20 });
     bindFill(card, 'semantic/color/background/surface');
     card.cornerRadius = 8;
-    const e = parseShadow(x.v);
-    if (e) card.effects = [e];
+    applyShadow(card, x.v);
     card.appendChild(txt(x.leaf, { size: 12, fill: 'semantic/color/text/secondary' }));
     r.appendChild(card);
     rows.appendChild(r);
   });
-  out.elevation = place(root, 4200);
+  // Self-check: a silently-skipped effect is exactly the failure this section
+  // already shipped once. Every non-`none` token must have produced a shadow.
+  const wantShadows = lv.concat(er).filter((x) => x.v !== 'none').length;
+  if (shadowsApplied !== wantShadows)
+    throw new Error('elevation: applied ' + shadowsApplied + ' shadows, expected ' + wantShadows);
+  out.elevation = Object.assign(place(root, 4200), { shadowsApplied });
 
   // ─────────── MOTION ───────────
   root = shell(
