@@ -31,6 +31,7 @@
     "validate:sync-ledger": "node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json",
     "validate:publish-proof": "node scripts/validate-publish-proof.mjs",
     "figma:plugin:build": "node scripts/build-figma-plugin.mjs",
+    "figma:foundations:build": "node scripts/build-foundations-page.mjs",
     "figma:tokens:serve": "node scripts/serve-figma-tokens.mjs",
     "figma:sync:variables:enterprise": "node scripts/figma-variables-sync-enterprise.mjs",
     "figma:connect:validate": "figma connect publish --dry-run --skip-update-check",
