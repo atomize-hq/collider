@@ -5,30 +5,36 @@ import type { CSSProperties } from 'react';
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { BundledLanguage, ThemedToken } from 'shiki';
 
-import {
-  addKeysToTokens,
-  createRawTokens,
-  highlightCode,
-  isBold,
-  isItalic,
-  isUnderline,
-} from './code-block-highlight';
+import { addKeysToTokens, createRawTokens, highlightCode } from './code-block-highlight';
 import type { KeyedLine, TokenizedCode } from './code-block-highlight';
+
+// In dual-theme mode shiki puts everything on `htmlStyle` and leaves the token's
+// own `color`, `fontStyle` and `bgColor` undefined — so anything not read back
+// out of a custom property here simply does not render. The light colour arrives
+// as a plain `color` declaration; the dark one and every font style arrive as
+// `--shiki-dark` and `--shiki-{light,dark}-font-style` / `-font-weight` /
+// `-text-decoration`.
+//
+// Per-token backgrounds are dropped by shiki entirely, which is why nothing here
+// paints one: every token sits on the container's `bg-background`, and
+// `code-block-theme.test.ts` measures the palette against that single ground.
+const TOKEN_CLASSES = cn(
+  '[font-style:var(--shiki-light-font-style,inherit)]',
+  '[font-weight:var(--shiki-light-font-weight,inherit)]',
+  '[text-decoration:var(--shiki-light-text-decoration,inherit)]',
+  'dark:!text-[var(--shiki-dark)]',
+  'dark:![font-style:var(--shiki-dark-font-style,inherit)]',
+  'dark:![font-weight:var(--shiki-dark-font-weight,inherit)]',
+  'dark:![text-decoration:var(--shiki-dark-text-decoration,inherit)]'
+);
 
 // Token rendering component
 const TokenSpan = ({ token }: { token: ThemedToken }) => (
   <span
-    className="dark:!bg-[var(--shiki-dark-bg)] dark:!text-[var(--shiki-dark)]"
-    style={
-      {
-        backgroundColor: token.bgColor,
-        color: token.color,
-        fontStyle: isItalic(token.fontStyle) ? 'italic' : undefined,
-        fontWeight: isBold(token.fontStyle) ? 'bold' : undefined,
-        textDecoration: isUnderline(token.fontStyle) ? 'underline' : undefined,
-        ...token.htmlStyle,
-      } as CSSProperties
-    }
+    className={TOKEN_CLASSES}
+    // `color` still carries the raw-token fallback shown before shiki loads,
+    // where `createRawTokens` sets `inherit`; `htmlStyle` overrides it after.
+    style={{ color: token.color, ...token.htmlStyle } as CSSProperties}
   >
     {token.content}
   </span>

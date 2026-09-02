@@ -3,15 +3,6 @@ import { createHighlighter } from 'shiki';
 
 import { COLLIDER_DARK, COLLIDER_LIGHT, loadCodeThemes } from './code-block-theme';
 
-// Shiki uses bitflags for font styles: 1=italic, 2=bold, 4=underline
-// oxlint-disable-next-line eslint(no-bitwise)
-export const isItalic = (fontStyle: number | undefined) => fontStyle && fontStyle & 1;
-// oxlint-disable-next-line eslint(no-bitwise)
-export const isBold = (fontStyle: number | undefined) => fontStyle && fontStyle & 2;
-export const isUnderline = (fontStyle: number | undefined) =>
-  // oxlint-disable-next-line eslint(no-bitwise)
-  fontStyle && fontStyle & 4;
-
 // Transform tokens to include pre-computed keys to avoid noArrayIndexKey lint
 export interface KeyedToken {
   token: ThemedToken;
