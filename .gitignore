@@ -45,6 +45,16 @@ next-env.d.ts
 .agents
 .codex-artifacts/
 
+# harness outputs
+#
+# The promotion gate writes this on every run and never reads it back, and CI
+# regenerates it from a freshly downloaded Chromatic status before uploading it
+# as a build artifact. Nothing consumes the committed copy, so tracking it only
+# produced a snapshot that drifted — the checked-in version sat five months
+# stale, still claiming a Chromatic review that expires after 24 hours was
+# current. Regenerate with `pnpm generate:reusable-component-status`.
+/artifacts/harness/reusable-component-status.json
+
 # figma plugins
 /figma/plugins/**/dist/
 /figma/plugins/**/code.js
