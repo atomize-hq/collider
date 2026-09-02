@@ -195,9 +195,11 @@ export const ToolCallLifecycle: Story = {
   parameters: { chromatic: { disableSnapshot: true } },
   render: () => (
     <div style={columnStyle}>
-      {/* pending: input still streaming, nothing to show yet */}
+      {/* pending: input still streaming, nothing to show yet. The panel is still
+          rendered — the header's `aria-controls` has to resolve to something. */}
       <Tool defaultOpen>
         <ToolHeader type="tool-search" state="input-streaming" />
+        <ToolContent />
       </Tool>
       {/* running: input resolved, awaiting output */}
       <Tool defaultOpen>

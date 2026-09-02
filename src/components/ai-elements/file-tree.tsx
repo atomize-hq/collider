@@ -64,12 +64,15 @@ export const FileTree = ({
 
   return (
     <FileTreeContext.Provider value={contextValue}>
+      {/* The padding lives on the tree element itself. A wrapper div between
+          `tree` and its `treeitem`s reads as a generic role, which breaks the
+          ownership chain axe checks for aria-required-parent. */}
       <div
-        className={cn('rounded-lg border bg-background font-mono text-sm', className)}
+        className={cn('rounded-lg border bg-background p-2 font-mono text-sm', className)}
         role="tree"
         {...props}
       >
-        <div className="p-2">{children}</div>
+        {children}
       </div>
     </FileTreeContext.Provider>
   );

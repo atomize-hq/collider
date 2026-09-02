@@ -4,6 +4,7 @@ import { useControllableState } from '@radix-ui/react-use-controllable-state';
 import type { ComponentProps } from 'react';
 import { createContext, memo, useContext, useMemo } from 'react';
 
+import { Collapsible } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
 const STACK_FRAME_WITH_PARENS_REGEX = /^at\s+(.+?)\s+\((.+):(\d+):(\d+)\)$/;
@@ -155,17 +156,22 @@ export const StackTrace = memo(
       [parsedTrace, trace, isOpen, setIsOpen, onFilePathClick]
     );
 
+    // ONE Collapsible root for the whole component. Header and content used to
+    // mount a Collapsible each, so Radix minted two content ids and the
+    // trigger's `aria-controls` pointed at an element that never rendered.
     return (
       <StackTraceContext.Provider value={contextValue}>
-        <div
-          className={cn(
-            'not-prose w-full overflow-hidden rounded-lg border bg-background font-mono text-sm',
-            className
-          )}
-          {...props}
-        >
-          {children}
-        </div>
+        <Collapsible asChild onOpenChange={setIsOpen} open={isOpen}>
+          <div
+            className={cn(
+              'not-prose w-full overflow-hidden rounded-lg border bg-background font-mono text-sm',
+              className
+            )}
+            {...props}
+          >
+            {children}
+          </div>
+        </Collapsible>
       </StackTraceContext.Provider>
     );
   }

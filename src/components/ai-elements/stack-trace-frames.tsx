@@ -3,7 +3,7 @@
 import type { ComponentProps } from 'react';
 import { memo, useCallback } from 'react';
 
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { CollapsibleContent } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
 import { type StackFrame, useStackTrace } from './stack-trace';
@@ -16,21 +16,18 @@ export type StackTraceContentProps = ComponentProps<typeof CollapsibleContent> &
 
 export const StackTraceContent = memo(
   ({ className, maxHeight = 400, children, ...props }: StackTraceContentProps) => {
-    const { isOpen } = useStackTrace();
     return (
-      <Collapsible open={isOpen}>
-        <CollapsibleContent
-          className={cn(
-            'overflow-auto border-t bg-muted/30',
-            'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=open]:animate-in',
-            className
-          )}
-          style={{ maxHeight }}
-          {...props}
-        >
-          {children}
-        </CollapsibleContent>
-      </Collapsible>
+      <CollapsibleContent
+        className={cn(
+          'overflow-auto border-t bg-muted/30',
+          'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=open]:animate-in',
+          className
+        )}
+        style={{ maxHeight }}
+        {...props}
+      >
+        {children}
+      </CollapsibleContent>
     );
   }
 );
@@ -87,7 +84,9 @@ export const StackTraceFrames = memo(
           <div
             className={cn(
               'text-xs',
-              frame.isInternal ? 'text-muted-foreground/50' : 'text-foreground/90'
+              // Internal frames are de-emphasised, not hidden. At /50 this
+              // landed at 2.67:1 — below AA for body text.
+              frame.isInternal ? 'text-muted-foreground' : 'text-foreground/90'
             )}
             key={frame.raw}
           >

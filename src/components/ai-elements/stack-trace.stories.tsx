@@ -47,15 +47,18 @@ const Demo = ({
       onFilePathClick={withFilePathClick ? onFilePathClick : undefined}
       trace={trace}
     >
-      <StackTraceHeader>
+      <StackTraceHeader
+        actions={
+          <StackTraceActions>
+            <StackTraceCopyButton />
+            <StackTraceExpandButton />
+          </StackTraceActions>
+        }
+      >
         <StackTraceError>
           <StackTraceErrorType />
           <StackTraceErrorMessage />
         </StackTraceError>
-        <StackTraceActions>
-          <StackTraceCopyButton />
-          <StackTraceExpandButton />
-        </StackTraceActions>
       </StackTraceHeader>
       <StackTraceContent>
         <StackTraceFrames showInternalFrames={showInternalFrames} />

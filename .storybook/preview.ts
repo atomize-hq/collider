@@ -52,10 +52,17 @@ const preview: Preview = {
     // were wired into `.storybook/vitest.setup.ts`.
     //
     // `todo` reports violations without failing the run. Turning this to `error`
-    // is the goal, but it is gated on burning down a pre-existing backlog of 78
-    // violations (24 button-name, 17 color-contrast, 5 aria-required-parent,
-    // 2 label, 1 aria-prohibited-attr) that were invisible while the checks were
-    // inert. Do not flip to `error` until that backlog is clear.
+    // is the goal. The original backlog — 541 violation nodes across 78 stories,
+    // invisible while the checks were inert — is down to 15, and every remaining
+    // one is a colour decision rather than a code defect:
+    //
+    //   11  terminal   ansi-to-react's fixed ANSI palette (#0000bb at 1.46:1)
+    //    2  destructive  text/error is 4.28:1 on background/surface, 4.80 on base
+    //    1  sandbox    shiki github-dark's comment colour at 3.72:1
+    //    1  open-in-chat  Radix aria-hides the page behind an open menu without
+    //                    `inert`, so the trigger stays focusable underneath
+    //
+    // Do not flip to `error` until those are resolved or explicitly excluded.
     a11y: { test: 'todo' },
     layout: 'fullscreen',
     controls: {

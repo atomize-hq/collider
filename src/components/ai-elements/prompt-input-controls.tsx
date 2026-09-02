@@ -56,8 +56,15 @@ export const PromptInputButton = ({
 }: PromptInputButtonProps) => {
   const newSize = size ?? (Children.count(props.children) > 1 ? 'sm' : 'icon-sm');
 
+  // A tooltip is described-by, not labelled-by: an icon-only button still has no
+  // accessible name of its own, so the tooltip text doubles as the label. Skipped
+  // when the button already renders text, which would then disagree with it.
+  const hasTextChild = Children.toArray(props.children).some((child) => typeof child === 'string');
+  const tooltipText = typeof tooltip === 'string' ? tooltip : undefined;
+
   const button = (
     <InputGroupButton
+      aria-label={hasTextChild ? undefined : tooltipText}
       className={cn(className)}
       size={newSize}
       type="button"

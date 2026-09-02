@@ -43,7 +43,7 @@ const LINE_NUMBER_CLASSES = cn(
   'before:w-8',
   'before:mr-4',
   'before:text-right',
-  'before:text-muted-foreground/50',
+  'before:text-muted-foreground',
   'before:font-mono',
   'before:select-none'
 );
@@ -157,7 +157,14 @@ export const CodeBlockContent = ({
   const tokenized = asyncTokens ?? syncTokens;
 
   return (
-    <div className="relative overflow-auto">
+    // A scrollable region has to be reachable by keyboard: without a tab stop
+    // the only way to read a wide line is a pointer.
+    <div
+      aria-label={`${language} code`}
+      className="relative overflow-auto focus-visible:focus-ring"
+      role="group"
+      tabIndex={0}
+    >
       <CodeBlockBody showLineNumbers={showLineNumbers} tokenized={tokenized} />
     </div>
   );

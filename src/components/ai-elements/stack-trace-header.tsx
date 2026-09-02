@@ -1,44 +1,42 @@
 'use client';
 
 import { AlertTriangleIcon, CheckIcon, ChevronDownIcon, CopyIcon } from 'lucide-react';
-import type { ComponentProps, KeyboardEvent, MouseEvent } from 'react';
+import type { ComponentProps, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Collapsible, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
 import { useStackTrace } from './stack-trace';
 
-export type StackTraceHeaderProps = ComponentProps<typeof CollapsibleTrigger>;
-
-const activateOnEnterSpace = (event: KeyboardEvent<HTMLDivElement>) => {
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    (event.currentTarget as HTMLDivElement).click();
-  }
+export type StackTraceHeaderProps = ComponentProps<typeof CollapsibleTrigger> & {
+  actions?: ReactNode;
 };
 
-export const StackTraceHeader = memo(({ className, children, ...props }: StackTraceHeaderProps) => {
-  const { isOpen, setIsOpen } = useStackTrace();
-
-  return (
-    <Collapsible onOpenChange={setIsOpen} open={isOpen}>
+// The trigger is a real <button>: `aria-expanded` is not a permitted attribute
+// on a role-less div, and a div needs a hand-rolled Enter/Space handler that a
+// button gets for free. Row-level controls are rendered as a SIBLING of the
+// trigger rather than inside it — nesting a focusable control inside a button
+// is invalid, so `actions` cannot travel through `children`.
+export const StackTraceHeader = memo(
+  ({ className, children, actions, ...props }: StackTraceHeaderProps) => (
+    <div className="flex w-full items-center gap-3 pr-3">
       <CollapsibleTrigger asChild {...props}>
-        <div
+        <button
           className={cn(
-            'flex w-full cursor-pointer items-center gap-3 p-3 text-left transition-colors hover:bg-muted/50 focus-visible:focus-ring',
+            'flex flex-1 cursor-pointer items-center gap-3 overflow-hidden p-3 text-left transition-colors hover:bg-muted/50 focus-visible:focus-ring',
             className
           )}
-          onKeyDown={activateOnEnterSpace}
-          tabIndex={0}
+          type="button"
         >
           {children}
-        </div>
+        </button>
       </CollapsibleTrigger>
-    </Collapsible>
-  );
-});
+      {actions}
+    </div>
+  )
+);
 StackTraceHeader.displayName = 'StackTraceHeader';
 
 export type StackTraceErrorProps = ComponentProps<'div'>;
@@ -149,6 +147,7 @@ export const StackTraceCopyButton = memo(
 
     return (
       <Button
+        aria-label={children ? undefined : 'Copy stack trace'}
         className={cn('size-7', className)}
         onClick={copyToClipboard}
         size="icon"

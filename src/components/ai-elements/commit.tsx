@@ -1,7 +1,7 @@
 'use client';
 
 import { CheckIcon, CopyIcon, GitCommitIcon } from 'lucide-react';
-import type { ComponentProps, HTMLAttributes, KeyboardEvent, MouseEvent } from 'react';
+import type { ComponentProps, HTMLAttributes, KeyboardEvent, MouseEvent, ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -17,28 +17,30 @@ export const Commit = ({ className, children, ...props }: CommitProps) => (
   </Collapsible>
 );
 
-export type CommitHeaderProps = ComponentProps<typeof CollapsibleTrigger>;
-
-const activateOnEnterSpace = (event: KeyboardEvent<HTMLDivElement>) => {
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    (event.currentTarget as HTMLDivElement).click();
-  }
+export type CommitHeaderProps = ComponentProps<typeof CollapsibleTrigger> & {
+  actions?: ReactNode;
 };
 
-export const CommitHeader = ({ className, children, ...props }: CommitHeaderProps) => (
-  <CollapsibleTrigger asChild {...props}>
-    <div
-      className={cn(
-        'group flex cursor-pointer items-center justify-between gap-4 p-3 text-left transition-colors hover:opacity-80 focus-visible:focus-ring',
-        className
-      )}
-      onKeyDown={activateOnEnterSpace}
-      tabIndex={0}
-    >
-      {children}
-    </div>
-  </CollapsibleTrigger>
+// The trigger is a real <button>: `aria-expanded` is not a permitted attribute
+// on a role-less div, and a div needs a hand-rolled Enter/Space handler that a
+// button gets for free. Row-level controls are rendered as a SIBLING of the
+// trigger rather than inside it — nesting a focusable control inside a button
+// is invalid, so `actions` cannot travel through `children`.
+export const CommitHeader = ({ className, children, actions, ...props }: CommitHeaderProps) => (
+  <div className="flex items-center justify-between gap-4 pr-3">
+    <CollapsibleTrigger asChild {...props}>
+      <button
+        className={cn(
+          'group flex flex-1 cursor-pointer items-center gap-4 p-3 text-left transition-colors hover:opacity-80 focus-visible:focus-ring',
+          className
+        )}
+        type="button"
+      >
+        {children}
+      </button>
+    </CollapsibleTrigger>
+    {actions}
+  </div>
 );
 
 export type CommitHashProps = HTMLAttributes<HTMLSpanElement>;
@@ -193,6 +195,7 @@ export const CommitCopyButton = ({
 
   return (
     <Button
+      aria-label={children ? undefined : 'Copy commit hash'}
       className={cn('size-7 shrink-0', className)}
       onClick={copyToClipboard}
       size="icon"

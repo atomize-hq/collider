@@ -99,6 +99,7 @@ export const TerminalCopyButton = ({
 
   return (
     <Button
+      aria-label={children ? undefined : 'Copy terminal output'}
       className={cn('size-7 shrink-0 text-muted-foreground', className)}
       onClick={copyToClipboard}
       size="icon"
@@ -125,6 +126,7 @@ export const TerminalClearButton = ({
 
   return (
     <Button
+      aria-label={children ? undefined : 'Clear terminal'}
       className={cn('size-7 shrink-0 text-muted-foreground', className)}
       onClick={onClear}
       size="icon"

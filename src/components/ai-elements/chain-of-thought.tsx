@@ -47,11 +47,16 @@ export const ChainOfThought = memo(
 
     const chainOfThoughtContext = useMemo(() => ({ isOpen, setIsOpen }), [isOpen, setIsOpen]);
 
+    // ONE Collapsible root for the whole component. Header and content used to
+    // mount a Collapsible each, so Radix minted two content ids and the
+    // trigger's `aria-controls` pointed at an element that never rendered.
     return (
       <ChainOfThoughtContext.Provider value={chainOfThoughtContext}>
-        <div className={cn('not-prose w-full space-y-4', className)} {...props}>
-          {children}
-        </div>
+        <Collapsible asChild onOpenChange={setIsOpen} open={isOpen ?? false}>
+          <div className={cn('not-prose w-full space-y-4', className)} {...props}>
+            {children}
+          </div>
+        </Collapsible>
       </ChainOfThoughtContext.Provider>
     );
   }
@@ -61,24 +66,22 @@ export type ChainOfThoughtHeaderProps = ComponentProps<typeof CollapsibleTrigger
 
 export const ChainOfThoughtHeader = memo(
   ({ className, children, ...props }: ChainOfThoughtHeaderProps) => {
-    const { isOpen, setIsOpen } = useChainOfThought();
+    const { isOpen } = useChainOfThought();
 
     return (
-      <Collapsible onOpenChange={setIsOpen} open={isOpen}>
-        <CollapsibleTrigger
-          className={cn(
-            'flex w-full items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground',
-            className
-          )}
-          {...props}
-        >
-          <BrainIcon className="size-4" />
-          <span className="flex-1 text-left">{children ?? 'Chain of Thought'}</span>
-          <ChevronDownIcon
-            className={cn('size-4 transition-transform', isOpen ? 'rotate-180' : 'rotate-0')}
-          />
-        </CollapsibleTrigger>
-      </Collapsible>
+      <CollapsibleTrigger
+        className={cn(
+          'flex w-full items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground',
+          className
+        )}
+        {...props}
+      >
+        <BrainIcon className="size-4" />
+        <span className="flex-1 text-left">{children ?? 'Chain of Thought'}</span>
+        <ChevronDownIcon
+          className={cn('size-4 transition-transform', isOpen ? 'rotate-180' : 'rotate-0')}
+        />
+      </CollapsibleTrigger>
     );
   }
 );
@@ -90,10 +93,13 @@ export type ChainOfThoughtStepProps = ComponentProps<'div'> & {
   status?: 'complete' | 'active' | 'pending';
 };
 
+// There is no third accessible step below `text-muted-foreground` in the ladder
+// — tertiary is AA-large-only — so a pending step is dimmed on its ICON rather
+// than its text. Colour was the only signal here anyway.
 const stepStatusStyles = {
   active: 'text-foreground',
   complete: 'text-muted-foreground',
-  pending: 'text-muted-foreground/50',
+  pending: 'text-muted-foreground',
 };
 
 export const ChainOfThoughtStep = memo(
@@ -115,7 +121,7 @@ export const ChainOfThoughtStep = memo(
       )}
       {...props}
     >
-      <div className="relative mt-0.5">
+      <div className={cn('relative mt-0.5', status === 'pending' && 'opacity-50')}>
         <Icon className="size-4" />
         <div className="absolute top-7 bottom-0 left-1/2 -mx-px w-px bg-border" />
       </div>
@@ -153,24 +159,18 @@ export const ChainOfThoughtSearchResult = memo(
 export type ChainOfThoughtContentProps = ComponentProps<typeof CollapsibleContent>;
 
 export const ChainOfThoughtContent = memo(
-  ({ className, children, ...props }: ChainOfThoughtContentProps) => {
-    const { isOpen } = useChainOfThought();
-
-    return (
-      <Collapsible open={isOpen}>
-        <CollapsibleContent
-          className={cn(
-            'mt-2 space-y-3',
-            'data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 data-[state=closed]:animate-out data-[state=open]:animate-in text-popover-foreground outline-none',
-            className
-          )}
-          {...props}
-        >
-          {children}
-        </CollapsibleContent>
-      </Collapsible>
-    );
-  }
+  ({ className, children, ...props }: ChainOfThoughtContentProps) => (
+    <CollapsibleContent
+      className={cn(
+        'mt-2 space-y-3',
+        'data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 data-[state=closed]:animate-out data-[state=open]:animate-in text-popover-foreground outline-none',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </CollapsibleContent>
+  )
 );
 
 export type ChainOfThoughtImageProps = ComponentProps<'div'> & {

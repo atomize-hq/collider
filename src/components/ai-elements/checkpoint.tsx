@@ -40,7 +40,15 @@ export const CheckpointTrigger = ({
   tooltip ? (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button size={size} type="button" variant={variant} {...props}>
+        {/* A tooltip is described-by, not labelled-by, so an icon-only trigger
+            still needs a name of its own. */}
+        <Button
+          aria-label={children ? undefined : tooltip}
+          size={size}
+          type="button"
+          variant={variant}
+          {...props}
+        >
           {children}
         </Button>
       </TooltipTrigger>

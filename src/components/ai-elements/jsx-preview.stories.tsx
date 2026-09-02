@@ -5,8 +5,8 @@ import { JSXPreview, JSXPreviewContent, JSXPreviewError } from './jsx-preview';
 
 const SHOWCASE_JSX = `<div className="rounded-lg border bg-card p-6 shadow-sm">
   <div className="flex items-center gap-4 mb-4">
-    <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-      <span className="text-primary text-xl font-bold">AI</span>
+    <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center">
+      <span className="text-primary-foreground text-xl font-bold">AI</span>
     </div>
     <div>
       <h2 className="text-lg font-semibold">AI-Generated Component</h2>

@@ -39,9 +39,17 @@ export const TerminalContent = ({ className, children, ...props }: TerminalConte
   }, [output, autoScroll]);
 
   return (
+    // A scrollable region has to be reachable by keyboard: without a tab stop
+    // the only way to read past the fold is a pointer.
     <div
-      className={cn('max-h-96 overflow-auto p-4 font-mono text-sm leading-relaxed', className)}
+      aria-label="Terminal output"
+      className={cn(
+        'max-h-96 overflow-auto p-4 font-mono text-sm leading-relaxed focus-visible:focus-ring',
+        className
+      )}
       ref={containerRef}
+      role="group"
+      tabIndex={0}
       {...props}
     >
       {children ?? (

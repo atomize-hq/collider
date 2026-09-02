@@ -47,7 +47,7 @@ const ComposerDemo = ({ status = 'ready', initialMessages = [] }: ComposerDemoPr
               <PlusIcon className="size-4" />
             </PromptInputButton>
             <PromptInputSelect onValueChange={setModel} value={model}>
-              <PromptInputSelectTrigger>
+              <PromptInputSelectTrigger aria-label="Model">
                 <PromptInputSelectValue />
               </PromptInputSelectTrigger>
               <PromptInputSelectContent>

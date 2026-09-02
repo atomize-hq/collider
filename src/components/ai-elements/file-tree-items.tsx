@@ -27,8 +27,11 @@ export const FileTreeFolder = ({
 
   const handleSelect = useCallback(() => onSelect?.(path), [onSelect, path]);
 
+  // `asChild` collapses Radix's own wrapper onto the treeitem. Without it the
+  // treeitem sits inside a generic div, which reads as the `generic` role and
+  // breaks the `tree`/`group` ownership chain axe checks.
   return (
-    <Collapsible onOpenChange={() => togglePath(path)} open={isExpanded}>
+    <Collapsible asChild onOpenChange={() => togglePath(path)} open={isExpanded}>
       <div
         aria-expanded={isExpanded}
         aria-selected={isSelected}
@@ -73,7 +76,10 @@ export const FileTreeFolder = ({
           </button>
         </div>
         <CollapsibleContent>
-          <div className="ml-4 border-l pl-2">{children}</div>
+          {/* Nested treeitems need an explicit `group` owner. */}
+          <div className="ml-4 border-l pl-2" role="group">
+            {children}
+          </div>
         </CollapsibleContent>
       </div>
     </Collapsible>

@@ -50,8 +50,10 @@ export const QueueItemContent = ({
 }: QueueItemContentProps) => (
   <span
     className={cn(
-      'line-clamp-1 grow break-words',
-      completed ? 'text-muted-foreground/50 line-through' : 'text-muted-foreground',
+      'line-clamp-1 grow break-words text-muted-foreground',
+      // The strikethrough carries "completed"; a dimmer colour on top of it fell
+      // to 2.68:1 and was a colour-only signal besides.
+      completed && 'line-through',
       className
     )}
     {...props}

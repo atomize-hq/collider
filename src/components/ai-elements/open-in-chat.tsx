@@ -78,7 +78,10 @@ const OpenInProviderItem = ({ provider, ...props }: ProviderItemProps) => {
         rel="noopener"
         target="_blank"
       >
-        <span className="shrink-0">{p.icon}</span>
+        {/* The menu item's own `[&>svg]:size-4` cannot reach through this
+            wrapper, which left every provider mark unsized: five collapsed to
+            0x0 and Scira rendered at its intrinsic 910x934. */}
+        <span className="size-4 shrink-0 [&>svg]:size-full">{p.icon}</span>
         <span className="flex-1">{p.title}</span>
         <ExternalLinkIcon className="size-4 shrink-0" />
       </a>

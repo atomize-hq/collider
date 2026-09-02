@@ -54,7 +54,13 @@ const Demo = ({
 }: DemoProps) => (
   <div style={{ width: 560 }}>
     <Commit defaultOpen={defaultOpen}>
-      <CommitHeader>
+      <CommitHeader
+        actions={
+          <CommitActions>
+            <CommitCopyButton hash={HASH} />
+          </CommitActions>
+        }
+      >
         <CommitAuthor>
           <CommitAuthorAvatar initials="SM" />
         </CommitAuthor>
@@ -68,9 +74,6 @@ const Demo = ({
             <CommitTimestamp date={TWO_DAYS_AGO} />
           </CommitMetadata>
         </CommitInfo>
-        <CommitActions>
-          <CommitCopyButton hash={HASH} />
-        </CommitActions>
       </CommitHeader>
       <CommitContent>
         <CommitFiles>
