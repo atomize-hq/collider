@@ -33,7 +33,8 @@ function RuntimeCssParityProbe() {
       >
         <p
           style={{
-            color: 'var(--color-text-tertiary)',
+            // text/tertiary is AA-large-only; this eyebrow is 14px normal.
+            color: 'var(--color-text-secondary)',
             fontSize: '0.875rem',
             letterSpacing: '0.08em',
             margin: 0,
