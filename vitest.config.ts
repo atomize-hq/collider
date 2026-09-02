@@ -53,6 +53,23 @@ export default defineConfig({
           setupFiles: ['.storybook/vitest.setup.ts'],
         },
       },
+      // The same stories again in the light theme. axe's contrast rule is the
+      // one check whose result depends on the theme, so a single-theme run
+      // gates only half the token system.
+      {
+        extends: true,
+        plugins: [storybookTest({ configDir: path.resolve(__dirname, '.storybook') })],
+        test: {
+          name: 'storybook-light',
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright({}),
+            instances: [{ browser: 'chromium' }],
+          },
+          setupFiles: ['.storybook/vitest.setup.light.ts'],
+        },
+      },
     ],
   },
 });

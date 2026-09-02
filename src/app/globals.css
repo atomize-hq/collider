@@ -54,6 +54,17 @@
   --accent-foreground: var(--color-text-primary);
   --destructive: var(--color-text-error);
   --destructive-foreground: var(--color-text-primary);
+  /*
+   * `destructive` used to be the only status role on the bridge, which meant
+   * `text-destructive` existed and `text-success` did not. Components needing a
+   * non-error status had nothing to reach for and hand-rolled Tailwind palette
+   * pairs instead — `text-green-600 dark:text-green-400` — picking a light value
+   * nobody measured. Every one of those failed AA on white. The tokens were
+   * always correct in both themes; only the bridge was short.
+   */
+  --success: var(--color-text-success);
+  --warning: var(--color-text-warning);
+  --info: var(--color-text-info);
   --border: var(--semantic-color-border-default);
   --input: var(--semantic-color-border-default);
   --ring: var(--semantic-color-interaction-focus-ring);
@@ -282,6 +293,9 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);

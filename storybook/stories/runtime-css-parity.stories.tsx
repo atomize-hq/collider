@@ -71,6 +71,14 @@ function RuntimeCssParityProbe() {
 const meta = {
   title: 'Foundations/Runtime CSS Parity',
   component: RuntimeCssParityProbe,
+  // Pinned to dark because that is the only theme this proof can speak for:
+  // `design-tokens/dist/tokens.ts` ships a flat `tokenMap` whose 653 entries all
+  // carry `themeId: 'dark'`. Light values exist in the generated CSS and in the
+  // Figma export, but never in the TS artifact — so asserting runtime CSS
+  // against it in light compares a light computed colour to a dark token value.
+  // Widening this proof means teaching the token build to emit per-theme values,
+  // not flipping the global here.
+  globals: { theme: 'dark' },
   parameters: {
     layout: 'fullscreen',
   },

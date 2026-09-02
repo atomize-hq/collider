@@ -31,12 +31,18 @@ const SHOWCASE_JSX = `<div className="rounded-lg border bg-card p-6 shadow-sm">
   </div>
 </div>`;
 
+// Deliberately stock Tailwind rather than our status roles: this is the JSX a
+// model emitted, not our chrome, and a fixture that reaches into the design
+// system would misrepresent what the component renders. The pills carry their
+// own opaque ground, like the showcase above, so they read the same in both
+// themes — a `bg-*/20` tint composites against the theme instead, which is what
+// left `text-blue-400` at 2.06:1 once light was audited.
 const CARD_JSX = `<div className="rounded-lg border p-4 space-y-2">
   <div className="text-sm font-medium">Card title</div>
   <div className="text-xs text-muted-foreground">Nested content — supports multiple tags at once.</div>
   <div className="flex gap-2">
-    <span className="rounded bg-blue-500/20 px-2 py-0.5 text-xs text-blue-400">tag</span>
-    <span className="rounded bg-green-500/20 px-2 py-0.5 text-xs text-green-400">demo</span>
+    <span className="rounded bg-blue-100 px-2 py-0.5 text-xs text-blue-800">tag</span>
+    <span className="rounded bg-green-100 px-2 py-0.5 text-xs text-green-800">demo</span>
   </div>
 </div>`;
 

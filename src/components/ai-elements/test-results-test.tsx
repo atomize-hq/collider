@@ -78,7 +78,7 @@ export const Test = ({ name, status, duration, className, children, ...props }: 
 export type TestErrorProps = HTMLAttributes<HTMLDivElement>;
 
 export const TestError = ({ className, children, ...props }: TestErrorProps) => (
-  <div className={cn('mt-2 rounded-md bg-red-50 p-3 dark:bg-red-900/20', className)} {...props}>
+  <div className={cn('mt-2 rounded-md bg-destructive/10 p-3', className)} {...props}>
     {children}
   </div>
 );
@@ -86,7 +86,7 @@ export const TestError = ({ className, children, ...props }: TestErrorProps) => 
 export type TestErrorMessageProps = HTMLAttributes<HTMLParagraphElement>;
 
 export const TestErrorMessage = ({ className, children, ...props }: TestErrorMessageProps) => (
-  <p className={cn('text-sm font-medium text-red-700 dark:text-red-400', className)} {...props}>
+  <p className={cn('text-sm font-medium text-destructive', className)} {...props}>
     {children}
   </p>
 );
@@ -95,7 +95,7 @@ export type TestErrorStackProps = HTMLAttributes<HTMLPreElement>;
 
 export const TestErrorStack = ({ className, children, ...props }: TestErrorStackProps) => (
   <pre
-    className={cn('mt-2 overflow-auto font-mono text-xs text-red-600 dark:text-red-400', className)}
+    className={cn('mt-2 overflow-auto font-mono text-xs text-destructive', className)}
     {...props}
   >
     {children}

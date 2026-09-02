@@ -61,27 +61,18 @@ export const TestResultsSummary = ({ className, children, ...props }: TestResult
     <div className={cn('flex items-center gap-3', className)} {...props}>
       {children ?? (
         <>
-          <Badge
-            className="gap-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-            variant="secondary"
-          >
+          <Badge className="gap-1 bg-success/10 text-success" variant="secondary">
             <CheckCircle2Icon className="size-3" />
             {summary.passed} passed
           </Badge>
           {summary.failed > 0 && (
-            <Badge
-              className="gap-1 bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-              variant="secondary"
-            >
+            <Badge className="gap-1 bg-destructive/10 text-destructive" variant="secondary">
               <XCircleIcon className="size-3" />
               {summary.failed} failed
             </Badge>
           )}
           {summary.skipped > 0 && (
-            <Badge
-              className="gap-1 bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
-              variant="secondary"
-            >
+            <Badge className="gap-1 bg-warning/10 text-warning" variant="secondary">
               <CircleIcon className="size-3" />
               {summary.skipped} skipped
             </Badge>
@@ -132,8 +123,8 @@ export const TestResultsProgress = ({
       {children ?? (
         <>
           <div className="flex h-2 overflow-hidden rounded-full bg-muted">
-            <div className="bg-green-500 transition-all" style={{ width: `${passedPercent}%` }} />
-            <div className="bg-red-500 transition-all" style={{ width: `${failedPercent}%` }} />
+            <div className="bg-success transition-all" style={{ width: `${passedPercent}%` }} />
+            <div className="bg-destructive transition-all" style={{ width: `${failedPercent}%` }} />
           </div>
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>

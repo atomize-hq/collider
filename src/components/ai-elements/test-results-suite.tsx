@@ -23,10 +23,10 @@ type TestSuiteContextValue = {
 const TestSuiteContext = createContext<TestSuiteContextValue>({ name: '', status: 'passed' });
 
 const statusStyles: Record<TestStatus, string> = {
-  failed: 'text-red-600 dark:text-red-400',
-  passed: 'text-green-600 dark:text-green-400',
-  running: 'text-blue-600 dark:text-blue-400',
-  skipped: 'text-yellow-600 dark:text-yellow-400',
+  failed: 'text-destructive',
+  passed: 'text-success',
+  running: 'text-info',
+  skipped: 'text-warning',
 };
 
 const statusIcons: Record<TestStatus, ReactNode> = {
@@ -94,11 +94,9 @@ export const TestSuiteStats = ({
   <div className={cn('ml-auto flex items-center gap-2 text-xs', className)} {...props}>
     {children ?? (
       <>
-        {passed > 0 && <span className="text-green-600 dark:text-green-400">{passed} passed</span>}
-        {failed > 0 && <span className="text-red-600 dark:text-red-400">{failed} failed</span>}
-        {skipped > 0 && (
-          <span className="text-yellow-600 dark:text-yellow-400">{skipped} skipped</span>
-        )}
+        {passed > 0 && <span className="text-success">{passed} passed</span>}
+        {failed > 0 && <span className="text-destructive">{failed} failed</span>}
+        {skipped > 0 && <span className="text-warning">{skipped} skipped</span>}
       </>
     )}
   </div>
