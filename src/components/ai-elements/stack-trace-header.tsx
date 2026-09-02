@@ -27,7 +27,7 @@ export const StackTraceHeader = memo(({ className, children, ...props }: StackTr
       <CollapsibleTrigger asChild {...props}>
         <div
           className={cn(
-            'flex w-full cursor-pointer items-center gap-3 p-3 text-left transition-colors hover:bg-muted/50 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none',
+            'flex w-full cursor-pointer items-center gap-3 p-3 text-left transition-colors hover:bg-muted/50 focus-visible:focus-ring',
             className
           )}
           onKeyDown={activateOnEnterSpace}

@@ -30,7 +30,7 @@ export const CommitHeader = ({ className, children, ...props }: CommitHeaderProp
   <CollapsibleTrigger asChild {...props}>
     <div
       className={cn(
-        'group flex cursor-pointer items-center justify-between gap-4 p-3 text-left transition-colors hover:opacity-80 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none',
+        'group flex cursor-pointer items-center justify-between gap-4 p-3 text-left transition-colors hover:opacity-80 focus-visible:focus-ring',
         className
       )}
       onKeyDown={activateOnEnterSpace}

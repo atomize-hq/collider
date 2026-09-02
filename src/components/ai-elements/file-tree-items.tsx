@@ -45,7 +45,7 @@ export const FileTreeFolder = ({
           <CollapsibleTrigger asChild>
             <button
               aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${name}`}
-              className="flex shrink-0 items-center rounded focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex shrink-0 items-center rounded focus-visible:focus-ring"
               type="button"
             >
               <ChevronRightIcon
@@ -58,7 +58,7 @@ export const FileTreeFolder = ({
           </CollapsibleTrigger>
           <button
             aria-current={isSelected ? 'true' : undefined}
-            className="flex min-w-0 flex-1 items-center gap-1 rounded text-left focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex min-w-0 flex-1 items-center gap-1 rounded text-left focus-visible:focus-ring"
             onClick={handleSelect}
             type="button"
           >
@@ -111,7 +111,7 @@ export const FileTreeFile = ({
     <div
       aria-selected={isSelected}
       className={cn(
-        'flex cursor-pointer items-center gap-1 rounded px-2 py-1 transition-colors hover:bg-muted/50 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none',
+        'flex cursor-pointer items-center gap-1 rounded px-2 py-1 transition-colors hover:bg-muted/50 focus-visible:focus-ring',
         isSelected && 'bg-muted',
         className
       )}
