@@ -114,6 +114,17 @@ const meta = {
   title: 'AI Elements/Terminal',
   component: Terminal,
   args: { output: SAMPLE_OUTPUT },
+  parameters: {
+    a11y: {
+      // ansi-to-react paints the classic ANSI palette as inline styles, and that
+      // palette is fixed: ANSI blue is #0000BB, which reads 1.46:1 on our dark
+      // ground. It is the program's output rather than a design-system colour —
+      // a real terminal lets the user retheme it — so the coloured spans are
+      // excluded from the audit. Everything else in the story, the terminal's own
+      // chrome included, is still checked.
+      context: { exclude: ['[data-slot="terminal-output"] span[style]'] },
+    },
+  },
 } satisfies Meta<typeof Terminal>;
 
 export default meta;

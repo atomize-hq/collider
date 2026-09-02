@@ -51,19 +51,17 @@ const preview: Preview = {
     // the checks did not actually execute until the addon's preview annotations
     // were wired into `.storybook/vitest.setup.ts`.
     //
-    // `todo` reports violations without failing the run. Turning this to `error`
-    // is the goal. The original backlog — 541 violation nodes across 78 stories,
-    // invisible while the checks were inert — is down to 15, and every remaining
-    // one is a colour decision rather than a code defect:
+    // Every story is audited and a violation FAILS the run. This started as 541
+    // violation nodes across 78 stories, invisible because the addon's preview
+    // annotations were never wired into `.storybook/vitest.setup.ts`, so the
+    // checks had never once executed.
     //
-    //   11  terminal   ansi-to-react's fixed ANSI palette (#0000bb at 1.46:1)
-    //    2  destructive  text/error is 4.28:1 on background/surface, 4.80 on base
-    //    1  sandbox    shiki github-dark's comment colour at 3.72:1
-    //    1  open-in-chat  Radix aria-hides the page behind an open menu without
-    //                    `inert`, so the trigger stays focusable underneath
-    //
-    // Do not flip to `error` until those are resolved or explicitly excluded.
-    a11y: { test: 'todo' },
+    // Two exclusions are recorded at the story level rather than here, each with
+    // its measurement and reason: ansi-to-react's fixed ANSI palette in Terminal,
+    // and Radix's `aria-hidden`-without-`inert` menu modality in Open in Chat.
+    // Nothing else is suppressed — keep it that way, and fix the finding instead
+    // of widening the exclusions.
+    a11y: { test: 'error' },
     layout: 'fullscreen',
     controls: {
       matchers: {

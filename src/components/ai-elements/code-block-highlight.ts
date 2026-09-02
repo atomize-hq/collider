@@ -63,7 +63,11 @@ const getHighlighter = (
 
   const highlighterPromise = createHighlighter({
     langs: [language],
-    themes: ['github-light', 'github-dark'],
+    // The high-contrast pair, not plain github-*: github-dark puts comments at
+    // #6A737D, which is 3.72:1 on background/base. The high-contrast comment
+    // colour measures 10.39:1, and the light variant is swapped with it so the
+    // two modes stay a matched pair.
+    themes: ['github-light-high-contrast', 'github-dark-high-contrast'],
   });
 
   highlighterCache.set(language, highlighterPromise);
@@ -119,8 +123,8 @@ export const highlightCode = (
       const result = highlighter.codeToTokens(code, {
         lang: langToUse,
         themes: {
-          dark: 'github-dark',
-          light: 'github-light',
+          dark: 'github-dark-high-contrast',
+          light: 'github-light-high-contrast',
         },
       });
 

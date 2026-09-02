@@ -29,6 +29,7 @@
   --core-color-neutral-950: #171717;
   --core-color-orange-500: #f08000;
   --core-color-orange-700: #9a3412;
+  --core-color-red-400: #ff6467;
   --core-color-red-500: #fb2c36;
   --core-color-red-700: #c10007;
   --core-color-red-800: #5b1d20;
@@ -104,7 +105,7 @@
   --semantic-color-text-ai: #a566f7;
   --semantic-color-text-caution: #f08000;
   --semantic-color-text-dim: rgba(255, 255, 255, 0.3);
-  --semantic-color-text-error: #fb2c36;
+  --semantic-color-text-error: #ff6467;
   --semantic-color-text-info: #51a2ff;
   --semantic-color-text-primary: #ffffff;
   --semantic-color-text-secondary: #9ca2af;
@@ -755,7 +756,7 @@
   --semantic-color-text-ai: #a566f7;
   --semantic-color-text-caution: #f08000;
   --semantic-color-text-dim: rgba(255, 255, 255, 0.3);
-  --semantic-color-text-error: #fb2c36;
+  --semantic-color-text-error: #ff6467;
   --semantic-color-text-info: #51a2ff;
   --semantic-color-text-primary: #ffffff;
   --semantic-color-text-secondary: #9ca2af;

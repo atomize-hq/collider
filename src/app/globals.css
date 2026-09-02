@@ -6,8 +6,9 @@
  * Point Tailwind's `dark:` variant at our `data-theme` attribute instead of its
  * default `prefers-color-scheme`. Without this the two disagree: the token layer
  * switches on `data-theme` while every `dark:` utility switches on the OS
- * setting. Shiki is the visible casualty — CodeBlock renders github-light colors
- * in `token.color` and swaps to github-dark via `dark:!text-[var(--shiki-dark)]`,
+ * setting. Shiki is the visible casualty — CodeBlock renders its light-theme
+ * colors in `token.color` and swaps to the dark theme via
+ * `dark:!text-[var(--shiki-dark)]`,
  * so on a light theme with a dark OS it painted dark-theme syntax colors on a
  * white card at 1.28:1.
  *

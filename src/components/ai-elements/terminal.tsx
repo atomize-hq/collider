@@ -47,6 +47,7 @@ export const TerminalContent = ({ className, children, ...props }: TerminalConte
         'max-h-96 overflow-auto p-4 font-mono text-sm leading-relaxed focus-visible:focus-ring',
         className
       )}
+      data-slot="terminal-output"
       ref={containerRef}
       role="group"
       tabIndex={0}

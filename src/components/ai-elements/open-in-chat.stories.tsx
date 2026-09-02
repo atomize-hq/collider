@@ -39,6 +39,16 @@ const meta = {
   title: 'AI Elements/Open In Chat',
   component: OpenIn,
   args: { query: QUERY },
+  parameters: {
+    a11y: {
+      // Radix implements menu modality by setting `aria-hidden` on everything
+      // behind the open menu, without `inert` — so the trigger underneath stays
+      // focusable in the DOM and axe reads that as hidden-but-reachable. Focus is
+      // in fact held inside the menu. This is Radix's mechanism, not ours, and it
+      // cannot be fixed from here.
+      config: { rules: [{ id: 'aria-hidden-focus', enabled: false }] },
+    },
+  },
 } satisfies Meta<typeof OpenIn>;
 
 export default meta;

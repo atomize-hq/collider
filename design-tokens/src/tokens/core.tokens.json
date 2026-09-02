@@ -75,6 +75,10 @@
       }
     },
     "red": {
+      "400": {
+        "$value": "#ff6467",
+        "$type": "color"
+      },
       "500": {
         "$value": "#fb2c36",
         "$type": "color"

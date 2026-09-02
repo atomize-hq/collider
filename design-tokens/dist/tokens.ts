@@ -162,6 +162,11 @@ export const tokenMap = {
     type: 'color',
     value: '#9a3412',
   },
+  'core.color.red.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ff6467',
+  },
   'core.color.red.500': {
     themeId: 'dark',
     type: 'color',
@@ -540,7 +545,7 @@ export const tokenMap = {
   'semantic.color.text.error': {
     themeId: 'dark',
     type: 'color',
-    value: '#fb2c36',
+    value: '#ff6467',
   },
   'semantic.color.text.info': {
     themeId: 'dark',
