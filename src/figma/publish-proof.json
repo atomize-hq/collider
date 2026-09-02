@@ -3,7 +3,7 @@
   "mode": "plugin-import-manual",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
-    "gitSha": "ceddc2fea1eb64d91a40d69e1da425689a13be08"
+    "gitSha": "dc97a2671dbcc6e2a71873042566f4937b766d9d"
   },
   "destination": {
     "name": "Collider",
@@ -11,8 +11,8 @@
   },
   "materialization": {
     "status": "passed",
-    "attemptedAt": "2026-09-01T23:54:15Z",
-    "notes": "Materialized 175 variables across two modes (dark, light) via the repo-owned plugin's upsert rail, fetching the artifact over the local token server (pnpm figma:tokens:serve, localhost:4173). Count moved 176 -> 174 -> 175 across two publishes and one scripted deletion. First publish (fb4e7e4) was a pure re-value with no ID change: interaction/focus-ring moved off core/color/blue/600 to a themed neutral, #9ca2af dark / #535966 light, because blue-600 measured 2.74 on background/elevated and 2.52 on background/overlay in dark and so could not serve as a focus ring on the surfaces dialogs and menus use. That token gained its first per-mode value, so light-mode was a new entry rather than an edit. Then semantic/color/interaction/selection and core/color/blue-alpha/30 were REMOVED with figma-use (176 -> 174), because the plugin is upsert-only and cannot delete; ::selection is now computed in the role bridge as color-mix over --primary so it follows a user-set accent, which a baked rgba could not (CHANGE_POLICY removal, commit ceddc2f). A whole-document scan across both pages confirmed zero node bindings, zero other-variable aliases, and zero dangling references before the deletion, and the Foundations page was regenerated first so no binding was left pointing at a removed variable. Second publish added shape/role/selection = 0.3 (174 -> 175), the ratio the role bridge multiplies. Post-sync verification: Figma's 175 variable names reconcile EXACTLY against the artifact's 175 published leaves, no extras on either side. Foundations page regenerated: 561 bound paints, 0 unbound, 0 dead references, 10 effects, 6 frames."
+    "attemptedAt": "2026-09-02T00:57:16Z",
+    "notes": "Materialized 176 variables across two modes (dark, light) via the repo-owned plugin's upsert rail, fetching the artifact over the local token server (pnpm figma:tokens:serve, localhost:4173). Count moved 175 -> 176 in a single additive publish, driven by the accessibility gate rather than by a design change: semantic/color/text/error was core/color/red/500 (#fb2c36), which measures 4.80:1 on background/base but 4.28:1 on background/surface, so error text failed AA on every ground except the base one. Dark now points at a NEW core/color/red/400 (#ff6467) at 5.64:1 on surface and 5.78:1 on the tinted error background; light keeps core/color/red/700 (#c10007) at 6.47:1 and is unchanged. Both moves are additive under CHANGE_POLICY \u2014 a new canonical core ID plus a re-valued semantic alias, no rename and no removal, so no runtime-css-aliases entry and no deletion pass was needed. The plugin upserts, so this was a plain re-sync with every existing VariableID preserved. Post-sync verification: Figma's 176 variable names reconcile EXACTLY against the artifact's 176 published leaves, no extras on either side."
   },
   "carrier": {
     "used": false,

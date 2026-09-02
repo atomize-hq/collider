@@ -2,7 +2,7 @@
   "ledgerVersion": "2",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
-    "revision": "ceddc2fea1eb64d91a40d69e1da425689a13be08"
+    "revision": "dc97a2671dbcc6e2a71873042566f4937b766d9d"
   },
   "publish": {
     "mode": "plugin-import-manual",
@@ -11,7 +11,7 @@
   },
   "verification": {
     "materializationStatus": "passed",
-    "lastVerifiedRevision": "ceddc2fea1eb64d91a40d69e1da425689a13be08"
+    "lastVerifiedRevision": "dc97a2671dbcc6e2a71873042566f4937b766d9d"
   },
   "promotion": {
     "parityMode": "required",
