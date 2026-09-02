@@ -10,19 +10,22 @@ export type StorybookArtifactConformanceDiagnostic = {
 
 export type GeneratedTokenArtifactLoader = () => Promise<unknown>;
 
+export type GeneratedTokenEntry = {
+  themeId: string;
+  type: string;
+  value: string;
+};
+
 export type GeneratedTokenArtifact = {
   themeRegistry: {
     defaultThemeId: string;
     themes: Array<{ id: string }>;
   };
-  tokenMap: Record<
-    string,
-    {
-      themeId: string;
-      type: string;
-      value: string;
-    }
-  >;
+  tokenMap: Record<string, GeneratedTokenEntry>;
+  // Only the leaves a non-default theme changes. Optional so a stale artifact
+  // built before the typed module carried its themes still loads — it then
+  // resolves as the default theme, which is what it used to do anyway.
+  themeOverrides?: Record<string, Record<string, GeneratedTokenEntry>>;
 };
 
 export type RuntimeCssParityCheck = {
@@ -166,14 +169,28 @@ export function resolveGeneratedTokenStyleValue(
   artifact: GeneratedTokenArtifact,
   tokenId: string,
   property: 'backgroundColor' | 'color',
-  doc: Document = document
+  doc: Document = document,
+  themeId: string = artifact.themeRegistry.defaultThemeId
 ) {
-  const token = artifact.tokenMap[tokenId];
+  const token = resolveGeneratedTokenEntry(artifact, tokenId, themeId);
   if (!token || typeof token.value !== 'string' || token.value.length === 0) {
-    throw new Error(`Generated token artifact is missing ${tokenId}.value`);
+    throw new Error(`Generated token artifact is missing ${tokenId}.value for theme "${themeId}"`);
   }
 
   return resolveComputedStyleValue(token.value, property, doc);
+}
+
+/**
+ * The value a token resolves to in `themeId`: its override when the theme
+ * changes it, the default-theme entry otherwise. Themes inherit, so a token the
+ * override map does not mention is genuinely shared rather than missing.
+ */
+export function resolveGeneratedTokenEntry(
+  artifact: GeneratedTokenArtifact,
+  tokenId: string,
+  themeId: string = artifact.themeRegistry.defaultThemeId
+): GeneratedTokenEntry | undefined {
+  return artifact.themeOverrides?.[themeId]?.[tokenId] ?? artifact.tokenMap[tokenId];
 }
 
 async function defaultGeneratedTokenArtifactLoader() {

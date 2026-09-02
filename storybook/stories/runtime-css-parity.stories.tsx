@@ -8,6 +8,7 @@ import {
   resolveGeneratedTokenStyleValue,
   type StorybookArtifactConformanceDiagnostic,
 } from '@/lib/tokens/storybook-artifact-conformance';
+import { resolveStorybookThemeId } from '@/lib/tokens/storybookTheme';
 
 function RuntimeCssParityProbe() {
   return (
@@ -71,14 +72,6 @@ function RuntimeCssParityProbe() {
 const meta = {
   title: 'Foundations/Runtime CSS Parity',
   component: RuntimeCssParityProbe,
-  // Pinned to dark because that is the only theme this proof can speak for:
-  // `design-tokens/dist/tokens.ts` ships a flat `tokenMap` whose 653 entries all
-  // carry `themeId: 'dark'`. Light values exist in the generated CSS and in the
-  // Figma export, but never in the TS artifact — so asserting runtime CSS
-  // against it in light compares a light computed colour to a dark token value.
-  // Widening this proof means teaching the token build to emit per-theme values,
-  // not flipping the global here.
-  globals: { theme: 'dark' },
   parameters: {
     layout: 'fullscreen',
   },
@@ -90,7 +83,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const BaselineTheme: Story = {
-  play: async ({ canvasElement }) => {
+  // Runs in whichever theme the project sets, and asserts against that theme's
+  // resolved token values. The typed artifact used to be flattened to the
+  // default theme, which made this a dark-only proof; it now carries
+  // `themeOverrides`, so the same story proves parity in both.
+  play: async ({ canvasElement, globals }) => {
     const { artifact, diagnostics } = await loadGeneratedTokenArtifact();
     if (artifact) {
       diagnostics.push(...createRuntimeCssParityDiagnostics(artifact));
@@ -104,15 +101,20 @@ export const BaselineTheme: Story = {
     const panel = await canvas.findByTestId('runtime-panel');
     const copy = await canvas.findByTestId('runtime-copy');
     const rootStyles = window.getComputedStyle(document.documentElement);
+    const themeId = resolveStorybookThemeId(globals.theme);
     const expectedPanelBackground = resolveGeneratedTokenStyleValue(
       artifact,
       'semantic.color.background.surface',
-      'backgroundColor'
+      'backgroundColor',
+      document,
+      themeId
     );
     const expectedCopyColor = resolveGeneratedTokenStyleValue(
       artifact,
       'semantic.color.text.secondary',
-      'color'
+      'color',
+      document,
+      themeId
     );
 
     expect(rootStyles.getPropertyValue('--color-background-surface').trim()).not.toBe('');

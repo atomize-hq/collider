@@ -103,6 +103,38 @@ function diffTokenTrees(base, candidate) {
   return result;
 }
 
+/**
+ * Flat per-theme override maps, shaped exactly like `graph.tokenMap` but holding
+ * only the leaves whose value differs from the default theme.
+ *
+ * The Figma document has carried its themes since light landed, and the runtime
+ * CSS emits a block per theme — the typed module was the one artifact still
+ * flattened to the default, which quietly made every in-repo proof built on it a
+ * single-theme proof. Emitting the diff rather than a full second map keeps the
+ * artifact small and keeps `tokenMap` the single list of token IDs.
+ */
+export function createThemeOverrideMaps(graph, themeVariants = []) {
+  const overrides = {};
+
+  for (const variant of themeVariants) {
+    const themed = flattenTokenMap(variant.tokens, variant.themeId);
+    const changed = {};
+
+    for (const [tokenId, entry] of Object.entries(themed)) {
+      const base = graph.tokenMap[tokenId];
+      if (!base || JSON.stringify(base.value) !== JSON.stringify(entry.value)) {
+        changed[tokenId] = entry;
+      }
+    }
+
+    if (Object.keys(changed).length > 0) {
+      overrides[variant.themeId] = changed;
+    }
+  }
+
+  return sortDeep(overrides);
+}
+
 export function sortDeep(value) {
   if (Array.isArray(value)) {
     return value.map((entry) => sortDeep(entry));

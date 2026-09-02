@@ -27,13 +27,46 @@ describe('token build contracts', () => {
     const graph = loadBuildGraph();
     const typedSource = fs.readFileSync(typedArtifactPath, 'utf8');
 
-    expect(Object.keys(generated).sort()).toEqual(['recipeMap', 'themeRegistry', 'tokenMap']);
+    expect(Object.keys(generated).sort()).toEqual([
+      'recipeMap',
+      'themeOverrides',
+      'themeRegistry',
+      'tokenMap',
+    ]);
     expect(typedSource).toMatch(
       /export type ThemeId = \(typeof themeRegistry\.themes\)\[number\]\[['"]id['"]\];/
     );
     expect(typedSource).toContain('export type TokenId = keyof typeof tokenMap;');
     expect(typedSource).toContain('export type RecipeComponentId = keyof typeof recipeMap;');
     expect(generated.recipeMap).toEqual(graph.recipeMap);
+  });
+
+  it('carries every non-default theme in the typed module, as a diff of tokenMap', async () => {
+    const generated = await import('../../../design-tokens/dist/tokens');
+    const overrides = generated.themeOverrides as Record<
+      string,
+      Record<string, { themeId: string; type: string; value: unknown }>
+    >;
+    const tokenMap = generated.tokenMap as Record<string, { type: string; value: unknown }>;
+    const nonDefault = generated.themeRegistry.themes
+      .map((theme) => theme.id)
+      .filter((id) => id !== generated.themeRegistry.defaultThemeId);
+
+    // The typed module was flattened to the default theme long after the Figma
+    // document and the runtime CSS both carried every theme, which silently made
+    // each in-repo proof built on it a single-theme proof.
+    expect(Object.keys(overrides).sort()).toEqual([...nonDefault].sort());
+
+    for (const [themeId, entries] of Object.entries(overrides)) {
+      for (const [tokenId, entry] of Object.entries(entries)) {
+        // An override is a diff: it names a token that exists, tags the theme it
+        // belongs to, keeps the base type, and never restates the base value.
+        expect(tokenMap[tokenId], `${themeId} overrides unknown token ${tokenId}`).toBeDefined();
+        expect(entry.themeId).toBe(themeId);
+        expect(entry.type).toBe(tokenMap[tokenId].type);
+        expect(entry.value).not.toEqual(tokenMap[tokenId].value);
+      }
+    }
   });
 
   it('keeps the figma export token-only and DTCG-shaped', () => {

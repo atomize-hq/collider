@@ -3289,6 +3289,121 @@ export const tokenMap = {
   },
 } as const;
 
+export const themeOverrides = {
+  light: {
+    'accent.sidebar-primary': {
+      themeId: 'light',
+      type: 'color',
+      value: '#155dfc',
+    },
+    'semantic.color.background.base': {
+      themeId: 'light',
+      type: 'color',
+      value: '#ffffff',
+    },
+    'semantic.color.background.elevated': {
+      themeId: 'light',
+      type: 'color',
+      value: '#f5f5f5',
+    },
+    'semantic.color.background.overlay': {
+      themeId: 'light',
+      type: 'color',
+      value: '#e5e5e5',
+    },
+    'semantic.color.background.surface': {
+      themeId: 'light',
+      type: 'color',
+      value: '#fafafa',
+    },
+    'semantic.color.background.white-10': {
+      themeId: 'light',
+      type: 'color',
+      value: 'rgba(0, 0, 0, 0.1)',
+    },
+    'semantic.color.border.default': {
+      themeId: 'light',
+      type: 'color',
+      value: '#e5e5e5',
+    },
+    'semantic.color.border.strong': {
+      themeId: 'light',
+      type: 'color',
+      value: '#b0bac8',
+    },
+    'semantic.color.border.subtle': {
+      themeId: 'light',
+      type: 'color',
+      value: 'rgba(0, 0, 0, 0.1)',
+    },
+    'semantic.color.interaction.focus-ring': {
+      themeId: 'light',
+      type: 'color',
+      value: '#535966',
+    },
+    'semantic.color.status-strip.ai': {
+      themeId: 'light',
+      type: 'color',
+      value: '#6d28d9',
+    },
+    'semantic.color.status-strip.neutral': {
+      themeId: 'light',
+      type: 'color',
+      value: '#171717',
+    },
+    'semantic.color.status-strip.running': {
+      themeId: 'light',
+      type: 'color',
+      value: '#171717',
+    },
+    'semantic.color.text.ai': {
+      themeId: 'light',
+      type: 'color',
+      value: '#6d28d9',
+    },
+    'semantic.color.text.caution': {
+      themeId: 'light',
+      type: 'color',
+      value: '#9a3412',
+    },
+    'semantic.color.text.dim': {
+      themeId: 'light',
+      type: 'color',
+      value: 'rgba(0, 0, 0, 0.3)',
+    },
+    'semantic.color.text.error': {
+      themeId: 'light',
+      type: 'color',
+      value: '#c10007',
+    },
+    'semantic.color.text.info': {
+      themeId: 'light',
+      type: 'color',
+      value: '#1447e6',
+    },
+    'semantic.color.text.primary': {
+      themeId: 'light',
+      type: 'color',
+      value: '#171717',
+    },
+    'semantic.color.text.secondary': {
+      themeId: 'light',
+      type: 'color',
+      value: '#535966',
+    },
+    'semantic.color.text.success': {
+      themeId: 'light',
+      type: 'color',
+      value: '#0e5e2e',
+    },
+    'semantic.color.text.warning': {
+      themeId: 'light',
+      type: 'color',
+      value: '#8a5300',
+    },
+  },
+} as const;
+
 export const recipeMap = {} as const;
 
 export type ThemeId = (typeof themeRegistry.themes)[number]['id'];

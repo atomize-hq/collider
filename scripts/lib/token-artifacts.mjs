@@ -16,7 +16,11 @@ import {
   ensureStyleDictionaryHooksRegistered,
 } from '../../design-tokens/build/style-dictionary.config.mjs';
 import { buildPublishedRuntimeCss } from './runtime-css-publication.mjs';
-import { createFigmaTokenDocument, loadBuildGraph } from './token-build-graph.mjs';
+import {
+  createFigmaTokenDocument,
+  createThemeOverrideMaps,
+  loadBuildGraph,
+} from './token-build-graph.mjs';
 
 const newline = '\n';
 const typedFileBanner = `// ${generatedFileBanner.slice(3, -3).trim()}`;
@@ -37,7 +41,10 @@ export async function buildTokenArtifacts(options = {}) {
     runtimeAliasMapPath: options.runtimeAliasMapPath,
     runtimeInventoryPath: options.runtimeInventoryPath,
   });
-  const typedModule = await generateTypedTokenModule(graph);
+  const typedModule = await generateTypedTokenModule(
+    graph,
+    createThemeOverrideMaps(graph, themeVariants)
+  );
   const figmaDocument = serializeJson(createFigmaTokenDocument(graph, themeVariants));
 
   const statuses = {
@@ -69,13 +76,15 @@ export async function buildTokenArtifacts(options = {}) {
   };
 }
 
-export async function generateTypedTokenModule(graph) {
+export async function generateTypedTokenModule(graph, themeOverrides = {}) {
   const sections = [
     typedFileBanner,
     '',
     `export const themeRegistry = ${serializeJson(graph.themeRegistry).trimEnd()} as const;`,
     '',
     `export const tokenMap = ${serializeJson(graph.tokenMap).trimEnd()} as const;`,
+    '',
+    `export const themeOverrides = ${serializeJson(themeOverrides).trimEnd()} as const;`,
     '',
     `export const recipeMap = ${serializeJson(graph.recipeMap).trimEnd()} as const;`,
     '',
