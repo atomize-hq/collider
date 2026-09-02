@@ -73,24 +73,13 @@ const CodeBlockBody = memo(
     showLineNumbers: boolean;
     className?: string;
   }) => {
-    const preStyle = useMemo(
-      () => ({
-        backgroundColor: tokenized.bg,
-        color: tokenized.fg,
-      }),
-      [tokenized.bg, tokenized.fg]
-    );
-
     const keyedLines = useMemo(() => addKeysToTokens(tokenized.tokens), [tokenized.tokens]);
 
+    // The `pre` sets no background or colour of its own, so code inherits the
+    // card's `bg-background` and `text-foreground` and shares a ground with the
+    // rest of the app. Only the token spans are painted, and only by the theme.
     return (
-      <pre
-        className={cn(
-          'm-0 p-4 text-sm dark:!bg-[var(--shiki-dark-bg)] dark:!text-[var(--shiki-dark)]',
-          className
-        )}
-        style={preStyle}
-      >
+      <pre className={cn('m-0 p-4 text-sm', className)}>
         <code
           className={cn(
             'font-mono text-sm',

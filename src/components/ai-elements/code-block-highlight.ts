@@ -1,6 +1,8 @@
 import type { BundledLanguage, BundledTheme, HighlighterGeneric, ThemedToken } from 'shiki';
 import { createHighlighter } from 'shiki';
 
+import { COLLIDER_DARK, COLLIDER_LIGHT, loadCodeThemes } from './code-block-theme';
+
 // Shiki uses bitflags for font styles: 1=italic, 2=bold, 4=underline
 // oxlint-disable-next-line eslint(no-bitwise)
 export const isItalic = (fontStyle: number | undefined) => fontStyle && fontStyle & 1;
@@ -29,10 +31,14 @@ export const addKeysToTokens = (lines: ThemedToken[][]): KeyedLine[] =>
     })),
   }));
 
+// Deliberately no `bg`/`fg`. Shiki reports the vendor theme's own editor colours
+// — in dual-theme mode as a compound declaration string, e.g.
+// `#fff;--shiki-dark-bg:#24292e` — and this component does not use them: code
+// sits on the card's `bg-background` so it shares a ground with the rest of the
+// app. Passing that string to `style.backgroundColor` used to be a no-op only
+// because the CSSOM rejected it as malformed.
 export interface TokenizedCode {
   tokens: ThemedToken[][];
-  fg: string;
-  bg: string;
 }
 
 // Highlighter cache (singleton per language)
@@ -53,6 +59,9 @@ const getTokensCacheKey = (code: string, language: BundledLanguage) => {
   return `${language}:${code.length}:${start}:${end}`;
 };
 
+const createCodeHighlighter = async (language: BundledLanguage) =>
+  createHighlighter({ langs: [language], themes: await loadCodeThemes() });
+
 const getHighlighter = (
   language: BundledLanguage
 ): Promise<HighlighterGeneric<BundledLanguage, BundledTheme>> => {
@@ -61,23 +70,13 @@ const getHighlighter = (
     return cached;
   }
 
-  const highlighterPromise = createHighlighter({
-    langs: [language],
-    // The high-contrast pair, not plain github-*: github-dark puts comments at
-    // #6A737D, which is 3.72:1 on background/base. The high-contrast comment
-    // colour measures 10.39:1, and the light variant is swapped with it so the
-    // two modes stay a matched pair.
-    themes: ['github-light-high-contrast', 'github-dark-high-contrast'],
-  });
-
+  const highlighterPromise = createCodeHighlighter(language);
   highlighterCache.set(language, highlighterPromise);
   return highlighterPromise;
 };
 
 // Create raw tokens for immediate display while highlighting loads
 export const createRawTokens = (code: string): TokenizedCode => ({
-  bg: 'transparent',
-  fg: 'inherit',
   tokens: code.split('\n').map((line) =>
     line === ''
       ? []
@@ -123,16 +122,12 @@ export const highlightCode = (
       const result = highlighter.codeToTokens(code, {
         lang: langToUse,
         themes: {
-          dark: 'github-dark-high-contrast',
-          light: 'github-light-high-contrast',
+          dark: COLLIDER_DARK,
+          light: COLLIDER_LIGHT,
         },
       });
 
-      const tokenized: TokenizedCode = {
-        bg: result.bg ?? 'transparent',
-        fg: result.fg ?? 'inherit',
-        tokens: result.tokens,
-      };
+      const tokenized: TokenizedCode = { tokens: result.tokens };
 
       // Cache the result
       tokensCache.set(tokensCacheKey, tokenized);
