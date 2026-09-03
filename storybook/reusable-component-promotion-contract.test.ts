@@ -311,8 +311,12 @@ describe('reusable component promotion cross-contract provenance', () => {
     expect(Object.keys(chromaticStatus.review.scope.componentTiers).sort()).toEqual(
       storyInventory.components.map((component) => component.componentId).sort()
     );
-    // No Chromatic build has ever been published for this tree; the artifact
-    // records the deferral rather than a stale review of a deleted component.
+    // The Chromatic project is real and CI does publish to it — 20 builds went up
+    // between 2026-03-21 and 2026-03-24. None covered these components: the review
+    // job resolves the proof scope before it publishes, and that scope has thrown
+    // CHROMATIC_REVIEW_EMPTY_SCOPE since 96d5c39, so nothing has reached Chromatic
+    // since 24 Mar. The artifact records that deferral rather than carrying the
+    // March pilot's verdict forward over a component set Chromatic has never seen.
     expect(chromaticStatus.review.diffOutcome).toBe('deferred');
     expect(chromaticStatus.check.conclusion).toBe('skipped');
     expect(reusableComponentMappingStatus.summary.componentCount).toBe(0);
