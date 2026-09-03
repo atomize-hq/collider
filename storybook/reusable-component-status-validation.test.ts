@@ -160,8 +160,11 @@ describe('runReusableComponentStatusValidation', () => {
 
     expect(exitCode).toBe(0);
     expect(stderr.read()).toBe('');
+    // `reviewed` requires a satisfied CT-10B rail. No Chromatic build has been
+    // published for this tree, so the review is deferred and the earned claim
+    // stops one level down at `proof-ready`.
     expect(stdout.read()).toContain(
-      'Highest earned claim: reusable-component-advancement/reusable-component-reviewed'
+      'Highest earned claim: reusable-component-advancement/reusable-component-proof-ready'
     );
   });
 

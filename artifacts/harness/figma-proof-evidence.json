@@ -1,6 +1,13 @@
 {
   "seam": "SEAM-11B",
   "slice": "S1",
+  "status": "superseded",
+  "supersededBy": {
+    "path": "src/figma/publish-proof.json",
+    "reason": "This record proves a 2026-03-22 materialization into Collider-Old (SVcsU6gVvpezsJYrvBsS3V), the file the project used before it retargeted to Collider (23PLdynlRYoBYQx9teoC8A) in f9e7e36 on 2026-08-18. Its measurements are accurate for the file and revision named below and are kept as the SEAM-11B closeout record; they say nothing about the current Figma file. The live proof surface is src/figma/publish-proof.json, verified against src/figma/sync-ledger.json.",
+    "currentFigmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A",
+    "retargetedIn": "f9e7e367e5878304339713cfbbda2473810dc211"
+  },
   "proofMode": "plugin-import-manual",
   "artifactPath": "design-tokens/dist/figma/tokens.json",
   "artifactRevision": "2ee89e27306a1caa846d904ad6229370f371b1b3",

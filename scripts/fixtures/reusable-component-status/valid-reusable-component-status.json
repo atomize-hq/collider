@@ -26,9 +26,9 @@
       "threadId": "THR-06",
       "sourcePath": "artifacts/chromatic/status.json",
       "claimRelevant": true,
-      "sourceVersionOrRevision": "statusVersion:1|revision:e4a9f4f4e0a9dd75744a80cfe6a323882855c16e",
+      "sourceVersionOrRevision": "statusVersion:1|revision:0244cbdf98aa95ccba0ff0f842bf6aa59cada849",
       "freshness": "current",
-      "outcome": "satisfied"
+      "outcome": "deferred"
     },
     "ct11b": {
       "contractId": "CT-11B",
@@ -79,8 +79,8 @@
   },
   "highestEarnedClaim": {
     "profileId": "reusable-component-advancement",
-    "claimId": "reusable-component-parity-current"
+    "claimId": "reusable-component-proof-ready"
   },
-  "reasonCodes": ["ct10b-review-informational", "consumer-policy-blocking-deferred"],
+  "reasonCodes": ["ct10b-review-informational", "ct10b-review-deferred"],
   "enforcementMode": "informational"
 }

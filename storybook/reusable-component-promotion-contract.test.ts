@@ -7,8 +7,6 @@ import syncLedger from '../src/figma/sync-ledger.json';
 import reusableComponentStatusReusableFixture from '../scripts/fixtures/reusable-component-status/valid-reusable-component-status.json';
 import reusableComponentStatusProofOnlyFixture from '../scripts/fixtures/reusable-component-status/valid-proof-only-status.json';
 import reusableComponentStatusTokenOnlyFixture from '../scripts/fixtures/reusable-component-status/valid-token-only-status.json';
-// Component spec was removed during zero-components cleanup; inline fixture for contract tests
-const buttonSpec = { componentId: 'thinking-indicator' };
 import contractDoc from './reusable-component-promotion-contract.md?raw';
 import policyDoc from './reusable-component-promotion-policy.md?raw';
 import storyInventory from './story-inventory.json';
@@ -228,7 +226,7 @@ describe('reusable component promotion cross-contract provenance', () => {
       'ledgerVersion:2|artifactRevision:dc97a2671dbcc6e2a71873042566f4937b766d9d'
     );
     expect(ct9bMarker).toBe('inventoryVersion:1|proofCoverageVersion:1');
-    expect(ct10bMarker).toBe('statusVersion:1|revision:e4a9f4f4e0a9dd75744a80cfe6a323882855c16e');
+    expect(ct10bMarker).toBe('statusVersion:1|revision:0244cbdf98aa95ccba0ff0f842bf6aa59cada849');
     expect(ct11bMarker).toBe('mappingStatusVersion:1');
   });
 
@@ -304,7 +302,19 @@ describe('reusable component promotion cross-contract provenance', () => {
       'tool',
       'web-preview',
     ]);
-    expect(chromaticStatus.review.scope.componentIds).toContain(buttonSpec.componentId);
+    // The chromatic review scope is derived from the same inventory, so the two
+    // must agree exactly. Asserting containment of a single id let the artifact
+    // keep naming a component the inventory no longer had.
+    expect(chromaticStatus.review.scope.componentIds).toEqual(
+      storyInventory.components.map((component) => component.componentId)
+    );
+    expect(Object.keys(chromaticStatus.review.scope.componentTiers).sort()).toEqual(
+      storyInventory.components.map((component) => component.componentId).sort()
+    );
+    // No Chromatic build has ever been published for this tree; the artifact
+    // records the deferral rather than a stale review of a deleted component.
+    expect(chromaticStatus.review.diffOutcome).toBe('deferred');
+    expect(chromaticStatus.check.conclusion).toBe('skipped');
     expect(reusableComponentMappingStatus.summary.componentCount).toBe(0);
   });
 });
