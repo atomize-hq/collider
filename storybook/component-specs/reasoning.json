@@ -29,7 +29,7 @@
   },
   "downstreamHooks": {
     "codeEntrypoint": "src/components/ai-elements/reasoning.tsx",
-    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2130-6",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2463-11775",
     "supportedVariantsSource": null,
     "slotNamesSource": null,
     "exampleStoryIds": [
