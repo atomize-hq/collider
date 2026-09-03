@@ -9,15 +9,15 @@
 
 A component is in drift when any of the following is true:
 
-| Signal              | Drift condition                                                                                                          |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| **Code ↔ Figma**    | The React component's visual output no longer matches the Figma library component for the same variant/state combination |
-| **Code Connect**    | The `.figma.tsx` mapping has props or variant enums that don't match `supportedVariants` in the CT-11B record            |
-| **Figma node URL**  | The node URL in `.figma.tsx` points to a deleted or renamed Figma node                                                   |
-| **Story ↔ Spec**    | `storybook/story-inventory.json` lists story IDs that no longer exist, or required story kinds are missing               |
-| **Token ↔ CSS**     | `src/lib/tokens/tokens.css` is stale vs. `design-tokens/dist/css/tokens.css`                                             |
-| **Figma variables** | Figma variables diverge from the token values in `design-tokens/dist/figma/tokens.json`                                  |
-| **Sync ledger**     | `src/figma/sync-ledger.json` shows a component's `syncStatus` as `out-of-sync` or `pending`                              |
+| Signal              | Drift condition                                                                                                                                          |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Code ↔ Figma**    | The React component's visual output no longer matches the Figma library component for the same variant/state combination                                 |
+| **Code Connect**    | The `.figma.tsx` mapping has props or variant enums that don't match `supportedVariants` in the CT-11B record                                            |
+| **Figma node URL**  | The node URL in `.figma.tsx` points to a deleted or renamed Figma node                                                                                   |
+| **Story ↔ Spec**    | `storybook/story-inventory.json` lists story IDs that no longer exist, or required story kinds are missing                                               |
+| **Token ↔ CSS**     | `src/lib/tokens/tokens.css` is stale vs. `design-tokens/dist/css/tokens.css`                                                                             |
+| **Figma variables** | Figma variables diverge from the token values in `design-tokens/dist/figma/tokens.json` — measured by the repo plugin's read-only **Check Drift** action |
+| **Sync ledger**     | `src/figma/sync-ledger.json` shows a component's `syncStatus` as `out-of-sync` or `pending`                                                              |
 
 ---
 
@@ -52,6 +52,11 @@ Storybook story
 | `pnpm validate:publish-proof`             | Publish proof completeness                  |
 | `pnpm validate:sync-ledger`               | Sync ledger freshness                       |
 | `pnpm figma:connect:validate`             | Optional Code Connect CLI check             |
+
+`validate:figma-parity` checks the sync ledger's internal consistency; it does not read Figma. To
+measure the Figma file itself, run the repo plugin's **Check Drift** action with
+`pnpm figma:tokens:serve` running — it records `artifacts/figma/drift-report.json` stamped with the
+artifact SHA-256 and repo revision. See [`src/figma/README.md`](../../src/figma/README.md).
 
 `just sweep` runs most of these. Run `just sweep` before a merge that touches design-system components.
 
@@ -111,7 +116,7 @@ Update the sync ledger entry when:
 
 1. A Code Connect mapping is published (`pnpm figma:connect:publish`)
 2. A Figma library component is visually updated and reconciled with the React component
-3. A token value change is materialized into Figma variables via the repo plugin (`pnpm figma:plugin:build` → run `Collider Token Sync`)
+3. A token value change is materialized into Figma variables via the repo plugin (`pnpm figma:plugin:build` → run `Collider Token Sync` then **Sync Variables**), confirmed by a clean **Check Drift** report
 
 Do not update `syncStatus: "in-sync"` optimistically. It requires a confirmed publish or a manual visual reconciliation.
 
@@ -119,13 +124,13 @@ Do not update `syncStatus: "in-sync"` optimistically. It requires a confirmed pu
 
 ## Who owns what
 
-| Artifact                        | Owner                                                                                                                                                                                                                      |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| React component visual fidelity | Code (Stage 2 round-trip)                                                                                                                                                                                                  |
-| Figma library component         | Figma (design source)                                                                                                                                                                                                      |
-| Code Connect mapping            | Code (repo-managed, reviewed in PR)                                                                                                                                                                                        |
-| Design tokens / CSS vars        | Code (`design-tokens/` pipeline)                                                                                                                                                                                           |
-| Figma variables                 | Code → Figma via repo plugin `Collider Token Sync` (`pnpm figma:plugin:build`, mode `plugin-import-manual`); Enterprise Variables REST rail is optional hardening — see [`src/figma/README.md`](../../src/figma/README.md) |
-| Story inventory                 | Code (`storybook/story-inventory.json`)                                                                                                                                                                                    |
-| Sync ledger                     | Code (`src/figma/sync-ledger.json`)                                                                                                                                                                                        |
-| Chromatic baseline              | Code + Chromatic CI                                                                                                                                                                                                        |
+| Artifact                        | Owner                                                                                                                                                                                                                                                                                              |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| React component visual fidelity | Code (Stage 2 round-trip)                                                                                                                                                                                                                                                                          |
+| Figma library component         | Figma (design source)                                                                                                                                                                                                                                                                              |
+| Code Connect mapping            | Code (repo-managed, reviewed in PR)                                                                                                                                                                                                                                                                |
+| Design tokens / CSS vars        | Code (`design-tokens/` pipeline)                                                                                                                                                                                                                                                                   |
+| Figma variables                 | Code → Figma via repo plugin `Collider Token Sync` (`pnpm figma:plugin:build`, mode `plugin-import-manual`), one-way; drift back from Figma is _reported_, never written into canon. Enterprise Variables REST rail is optional hardening — see [`src/figma/README.md`](../../src/figma/README.md) |
+| Story inventory                 | Code (`storybook/story-inventory.json`)                                                                                                                                                                                                                                                            |
+| Sync ledger                     | Code (`src/figma/sync-ledger.json`)                                                                                                                                                                                                                                                                |
+| Chromatic baseline              | Code + Chromatic CI                                                                                                                                                                                                                                                                                |

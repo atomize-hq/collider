@@ -1,13 +1,13 @@
 /// <reference types="@figma/plugin-typings" />
 
-import { flattenTokenDocument } from '../../../src/lib/tokens/figma-token-mapping';
 import {
-  buildDtcgFromFigmaVariables,
-  toCollectionKey,
-  type PulledCollection,
-  type PulledVariable,
-  type PulledVariableValue,
-} from '../../../src/lib/tokens/dtcg-from-figma';
+  buildExpectedVariables,
+  compareFigmaVariables,
+  formatDriftReport,
+  type ExpectedVariableSet,
+  type ObservedCollection,
+  type ObservedVariable,
+} from '../../../src/lib/tokens/figma-drift';
 
 declare const __html__: string;
 
@@ -15,13 +15,12 @@ type UiToPluginMessage =
   | { type: 'UI_READY' }
   | { type: 'FETCH_URL'; url: string }
   | { type: 'SYNC'; jsonText: string }
-  | { type: 'PULL' };
+  | { type: 'CHECK'; jsonText: string };
 
 const defaultArtifactUrl = 'http://localhost:4173/design-tokens/dist/figma/tokens.json';
 const collectionName = 'Collider Tokens';
-const fallbackThemeId = 'dark';
 
-figma.showUI(__html__, { width: 420, height: 520 });
+figma.showUI(__html__, { width: 420, height: 560 });
 
 figma.ui.onmessage = async (msg: UiToPluginMessage) => {
   if (!msg || typeof msg.type !== 'string') return;
@@ -49,62 +48,31 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
     return;
   }
 
-  if (msg.type === 'PULL') {
+  // Read-only. Reports where this file disagrees with the published artifact
+  // without writing anything, in either direction. An intentional Figma-side
+  // edit shows up here as a finding to be reviewed and then made in
+  // `design-tokens/src/tokens/`, which stays the only authoring surface.
+  if (msg.type === 'CHECK') {
     try {
-      const collections = await figma.variables.getLocalVariableCollectionsAsync();
-
-      // Pre-load all variables and default modes for alias resolution.
-      const allVariablesById = new Map<string, Variable>();
-      const defaultModeByCollectionId = new Map<string, string>();
-      for (const collection of collections) {
-        defaultModeByCollectionId.set(collection.id, collection.defaultModeId);
-        for (const id of collection.variableIds) {
-          const variable = await figma.variables.getVariableByIdAsync(id);
-          if (variable) allVariablesById.set(id, variable);
-        }
+      const expected = buildExpectedVariables(JSON.parse(msg.jsonText));
+      const observed = await readObservedCollection();
+      if (!observed) {
+        throw new Error(
+          `Collection "${collectionName}" does not exist in this file. Run Sync Variables first.`
+        );
       }
-
-      // _strings is a primitive lookup source only — don't write it as a token file.
-      const skipCollectionNames = new Set(['_strings']);
-
-      const pulledCollections: PulledCollection[] = [];
-      for (const collection of collections) {
-        if (skipCollectionNames.has(collection.name)) continue;
-        const variables: PulledVariable[] = [];
-        for (const id of collection.variableIds) {
-          const variable = allVariablesById.get(id);
-          if (!variable) continue;
-          const rawValue = variable.valuesByMode[collection.defaultModeId];
-          if (rawValue === undefined) continue;
-          const resolvedValue = resolveVariableAlias(
-            rawValue,
-            allVariablesById,
-            defaultModeByCollectionId
-          );
-          if (resolvedValue === undefined) continue;
-          variables.push({
-            name: variable.name,
-            resolvedType: variable.resolvedType as PulledVariable['resolvedType'],
-            value: resolvedValue as PulledVariableValue,
-          });
-        }
-        pulledCollections.push({ name: collection.name, variables });
-      }
-
-      const dtcg = buildDtcgFromFigmaVariables(pulledCollections);
-      const summaryParts = pulledCollections.map(
-        (col) => `${toCollectionKey(col.name)}: ${col.variables.length}`
-      );
-
+      const report = compareFigmaVariables(expected, observed);
       figma.ui.postMessage({
-        type: 'PULL_RESULT',
-        dtcgJson: JSON.stringify(dtcg),
-        summary: summaryParts.join(', '),
+        type: 'CHECK_REPORT',
+        ok: report.ok,
+        report: formatDriftReport(report),
+        json: JSON.stringify(report),
       });
     } catch (error) {
       figma.ui.postMessage({
-        type: 'PULL_ERROR',
-        message: `Pull failed: ${messageForError(error)}`,
+        type: 'CHECK_REPORT',
+        ok: false,
+        report: `Drift check failed: ${messageForError(error)}`,
       });
     }
     return;
@@ -113,156 +81,18 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
   if (msg.type === 'SYNC') {
     const startedAt = new Date().toISOString();
     try {
-      const payload = JSON.parse(msg.jsonText);
-      const desired = flattenTokenDocument(payload);
-      const desiredByName = new Map(desired.map((entry) => [entry.name, entry]));
+      const expected = buildExpectedVariables(JSON.parse(msg.jsonText));
+      const modeIdByTheme = await applyExpectedVariables(expected);
 
-      // The artifact publishes the default theme as the document body and every
-      // other registry theme as a partial tree under `$themeOverrides`. Each
-      // theme becomes one mode on the collection.
-      const defaultThemeId = readDefaultThemeId(payload);
-      const overridesByTheme = new Map<string, Map<string, PluginVariableValue>>();
-      const rawOverrides = (payload as { $themeOverrides?: Record<string, unknown> })
-        .$themeOverrides;
-      if (rawOverrides) {
-        for (const themeId of Object.keys(rawOverrides)) {
-          const leaves = flattenTokenDocument(rawOverrides[themeId]);
-          overridesByTheme.set(
-            themeId,
-            new Map(leaves.map((leaf) => [leaf.name, leaf.value as PluginVariableValue]))
-          );
-        }
-      }
-
-      // Upsert semantics: preserve the collection and existing VariableIDs so that
-      // paint bindings on components in this file survive re-syncs. Repo remains
-      // canonical for token *values*; Figma's variable *identity* is durable.
-      const collections = await figma.variables.getLocalVariableCollectionsAsync();
-      let collection = collections.find((entry) => entry.name === collectionName);
-      if (!collection) {
-        collection = figma.variables.createVariableCollection(collectionName);
-      }
-
-      // The collection's default mode carries the default theme; renaming keeps
-      // its modeId, so existing paint bindings survive the rename.
-      const defaultMode = collection.modes.find(
-        (entry) => entry.modeId === collection!.defaultModeId
-      );
-      if (defaultMode && defaultMode.name !== defaultThemeId) {
-        collection.renameMode(defaultMode.modeId, defaultThemeId);
-      }
-      const baseModeId = collection.defaultModeId;
-
-      const modeIdByTheme = new Map<string, string>([[defaultThemeId, baseModeId]]);
-      for (const themeId of overridesByTheme.keys()) {
-        const existing = collection.modes.find((entry) => entry.name === themeId);
-        if (existing) {
-          modeIdByTheme.set(themeId, existing.modeId);
-          continue;
-        }
-        try {
-          modeIdByTheme.set(themeId, collection.addMode(themeId));
-        } catch (error) {
-          // Mode count is plan-gated in Figma, so this is a likely and very
-          // confusing failure to hit without an explicit explanation.
-          throw new Error(
-            `Could not add a mode for theme "${themeId}": ${messageForError(error)}. Figma limits modes per collection by plan tier.`
-          );
-        }
-      }
-
-      const existingByName = new Map<string, Variable>();
-      for (const id of collection.variableIds) {
-        const variable = await figma.variables.getVariableByIdAsync(id);
-        if (variable) {
-          existingByName.set(variable.name, variable);
-        }
-      }
-
-      const toRemove: Variable[] = [];
-      for (const [name, variable] of existingByName) {
-        if (!desiredByName.has(name)) {
-          toRemove.push(variable);
-        }
-      }
-      // Figma variables cannot change resolvedType in place — queue mismatches
-      // for removal so the upsert pass below recreates them cleanly.
-      for (const entry of desired) {
-        const existing = existingByName.get(entry.name);
-        if (existing && existing.resolvedType !== entry.resolvedType) {
-          toRemove.push(existing);
-          existingByName.delete(entry.name);
-        }
-      }
-      for (const variable of toRemove) {
-        variable.remove();
-      }
-
-      for (const entry of desired) {
-        let variable = existingByName.get(entry.name);
-        if (!variable) {
-          variable = figma.variables.createVariable(entry.name, collection, entry.resolvedType);
-        }
-        for (const [themeId, modeId] of modeIdByTheme) {
-          const override = overridesByTheme.get(themeId)?.get(entry.name);
-          variable.setValueForMode(modeId, override ?? (entry.value as PluginVariableValue));
-        }
-      }
-
-      const verifyCollections = await figma.variables.getLocalVariableCollectionsAsync();
-      const verifyCollection = verifyCollections.find((entry) => entry.name === collectionName);
-      if (!verifyCollection) {
+      // Verify by re-reading the file and running the same comparison the
+      // CHECK path uses, so a write that silently failed cannot pass.
+      const observed = await readObservedCollection();
+      if (!observed) {
         throw new Error(`Verification failed: collection "${collectionName}" not found after sync`);
       }
-      if (verifyCollection.variableIds.length !== desired.length) {
-        throw new Error(
-          `Verification failed: expected ${desired.length} variables, found ${verifyCollection.variableIds.length}`
-        );
-      }
-
-      const foundByName = new Map<string, Variable>();
-      for (const id of verifyCollection.variableIds) {
-        const resolved = await figma.variables.getVariableByIdAsync(id);
-        if (resolved) {
-          foundByName.set(resolved.name, resolved);
-        }
-      }
-
-      const missing = desired
-        .filter((entry) => !foundByName.has(entry.name))
-        .map((entry) => entry.name);
-      if (missing.length > 0) {
-        throw new Error(
-          `Verification failed: missing variables (${missing.length}): ${missing.slice(0, 5).join(', ')}${missing.length > 5 ? ', …' : ''}`
-        );
-      }
-
-      const unexpected = [...foundByName.keys()].filter((name) => !desiredByName.has(name));
-      if (unexpected.length > 0) {
-        throw new Error(
-          `Verification failed: unexpected variables (${unexpected.length}): ${unexpected.slice(0, 5).join(', ')}${unexpected.length > 5 ? ', …' : ''}`
-        );
-      }
-
-      for (const expected of desired) {
-        const actual = foundByName.get(expected.name);
-        if (!actual) continue;
-
-        if (actual.resolvedType !== expected.resolvedType) {
-          throw new Error(
-            `Verification failed: variable ${expected.name} has resolvedType=${actual.resolvedType} (expected ${expected.resolvedType})`
-          );
-        }
-
-        for (const [themeId, modeId] of modeIdByTheme) {
-          const expectedValue = overridesByTheme.get(themeId)?.get(expected.name) ?? expected.value;
-          const actualValue = actual.valuesByMode[modeId] as unknown;
-          if (!valuesEqual(expectedValue, actualValue)) {
-            throw new Error(
-              `Verification failed: variable ${expected.name} value does not match in mode "${themeId}"`
-            );
-          }
-        }
+      const report = compareFigmaVariables(expected, observed);
+      if (!report.ok) {
+        throw new Error(`Verification failed:\n${formatDriftReport(report)}`);
       }
 
       figma.ui.postMessage({
@@ -274,7 +104,7 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
           `finishedAt=${new Date().toISOString()}`,
           `collection=${collectionName}`,
           `modes=${[...modeIdByTheme.keys()].join(', ')}`,
-          `variables=${desired.length}`,
+          `variables=${expected.variables.length}`,
         ].join('\n'),
       });
     } catch (error) {
@@ -293,91 +123,114 @@ figma.ui.onmessage = async (msg: UiToPluginMessage) => {
   }
 };
 
+/**
+ * Upsert semantics: preserve the collection and existing VariableIDs so that
+ * paint bindings on components in this file survive re-syncs. The repo remains
+ * canonical for token *values*; Figma's variable *identity* is durable.
+ */
+async function applyExpectedVariables(expected: ExpectedVariableSet) {
+  const collections = await figma.variables.getLocalVariableCollectionsAsync();
+  let collection = collections.find((entry) => entry.name === collectionName);
+  if (!collection) {
+    collection = figma.variables.createVariableCollection(collectionName);
+  }
+
+  // The collection's default mode carries the default theme; renaming keeps
+  // its modeId, so existing paint bindings survive the rename.
+  const defaultMode = collection.modes.find((entry) => entry.modeId === collection!.defaultModeId);
+  if (defaultMode && defaultMode.name !== expected.defaultThemeId) {
+    collection.renameMode(defaultMode.modeId, expected.defaultThemeId);
+  }
+
+  const modeIdByTheme = new Map<string, string>([
+    [expected.defaultThemeId, collection.defaultModeId],
+  ]);
+  for (const themeId of expected.themeIds) {
+    if (modeIdByTheme.has(themeId)) continue;
+    const existing = collection.modes.find((entry) => entry.name === themeId);
+    if (existing) {
+      modeIdByTheme.set(themeId, existing.modeId);
+      continue;
+    }
+    try {
+      modeIdByTheme.set(themeId, collection.addMode(themeId));
+    } catch (error) {
+      // Mode count is plan-gated in Figma, so this is a likely and very
+      // confusing failure to hit without an explicit explanation.
+      throw new Error(
+        `Could not add a mode for theme "${themeId}": ${messageForError(error)}. Figma limits modes per collection by plan tier.`
+      );
+    }
+  }
+
+  const existingByName = new Map<string, Variable>();
+  for (const variable of await resolveVariables(collection.variableIds)) {
+    existingByName.set(variable.name, variable);
+  }
+
+  const desiredByName = new Map(expected.variables.map((entry) => [entry.name, entry]));
+  const toRemove: Variable[] = [];
+  for (const [name, variable] of existingByName) {
+    if (!desiredByName.has(name)) toRemove.push(variable);
+  }
+  // Figma variables cannot change resolvedType in place — queue mismatches
+  // for removal so the upsert pass below recreates them cleanly.
+  for (const entry of expected.variables) {
+    const existing = existingByName.get(entry.name);
+    if (existing && existing.resolvedType !== entry.resolvedType) {
+      toRemove.push(existing);
+      existingByName.delete(entry.name);
+    }
+  }
+  for (const variable of toRemove) {
+    variable.remove();
+  }
+
+  for (const entry of expected.variables) {
+    let variable = existingByName.get(entry.name);
+    if (!variable) {
+      variable = figma.variables.createVariable(entry.name, collection, entry.resolvedType);
+    }
+    for (const [themeId, modeId] of modeIdByTheme) {
+      variable.setValueForMode(modeId, entry.valuesByTheme[themeId] as VariableValue);
+    }
+  }
+
+  return modeIdByTheme;
+}
+
+/** Snapshot the collection with values keyed by mode *name*, for comparison. */
+async function readObservedCollection(): Promise<ObservedCollection | null> {
+  const collections = await figma.variables.getLocalVariableCollectionsAsync();
+  const collection = collections.find((entry) => entry.name === collectionName);
+  if (!collection) return null;
+
+  const modeNameById = new Map(collection.modes.map((mode) => [mode.modeId, mode.name]));
+  const variables: ObservedVariable[] = [];
+  for (const variable of await resolveVariables(collection.variableIds)) {
+    const valuesByMode: Record<string, unknown> = {};
+    for (const [modeId, value] of Object.entries(variable.valuesByMode)) {
+      const modeName = modeNameById.get(modeId);
+      if (modeName !== undefined) valuesByMode[modeName] = value;
+    }
+    variables.push({ name: variable.name, resolvedType: variable.resolvedType, valuesByMode });
+  }
+
+  return {
+    name: collection.name,
+    modeNames: collection.modes.map((mode) => mode.name),
+    variables,
+  };
+}
+
+// Resolved in parallel — a long sequential await chain is both slow and, over
+// the remote-debug bridge, prone to dropping the socket.
+async function resolveVariables(ids: readonly string[]): Promise<Variable[]> {
+  const resolved = await Promise.all(ids.map((id) => figma.variables.getVariableByIdAsync(id)));
+  return resolved.filter((variable): variable is Variable => variable !== null);
+}
+
 function messageForError(error: unknown) {
   if (error instanceof Error) return error.message;
   return String(error);
-}
-
-function readDefaultThemeId(payload: unknown) {
-  if (!payload || typeof payload !== 'object') return fallbackThemeId;
-  const extensions = (payload as { $extensions?: Record<string, unknown> }).$extensions;
-  const collider = extensions?.['com.atomizehq.collider'] as { themeId?: unknown } | undefined;
-  return typeof collider?.themeId === 'string' ? collider.themeId : fallbackThemeId;
-}
-
-type PluginVariableValue =
-  | string
-  | number
-  | boolean
-  | { r: number; g: number; b: number; a?: number };
-
-function valuesEqual(expected: unknown, actual: unknown) {
-  if (typeof expected === 'number' && typeof actual === 'number') {
-    // Figma stores variable floats in single precision, so 0.7 reads back as
-    // 0.699999988079071. Comparing float64 exactly would reject every value
-    // that is not representable in float32; compare in float32 instead.
-    // Colors already sidestep this via closeTo() on each channel.
-    return Object.is(Math.fround(expected), Math.fround(actual));
-  }
-
-  if (typeof expected === 'string' && typeof actual === 'string') {
-    return expected === actual;
-  }
-
-  if (typeof expected === 'boolean' && typeof actual === 'boolean') {
-    return expected === actual;
-  }
-
-  if (isRgba(expected) && isRgba(actual)) {
-    return (
-      closeTo(expected.r, actual.r) &&
-      closeTo(expected.g, actual.g) &&
-      closeTo(expected.b, actual.b) &&
-      closeTo(expected.a ?? 1, actual.a ?? 1)
-    );
-  }
-
-  return false;
-}
-
-function isRgba(value: unknown): value is { r: number; g: number; b: number; a?: number } {
-  if (!value || typeof value !== 'object') return false;
-  const maybe = value as Record<string, unknown>;
-  return (
-    typeof maybe.r === 'number' &&
-    typeof maybe.g === 'number' &&
-    typeof maybe.b === 'number' &&
-    (maybe.a === undefined || typeof maybe.a === 'number')
-  );
-}
-
-function closeTo(left: number, right: number) {
-  return Math.abs(left - right) < 1e-6;
-}
-
-function resolveVariableAlias(
-  value: unknown,
-  allVariablesById: Map<string, Variable>,
-  defaultModeByCollectionId: Map<string, string>,
-  depth = 0
-): unknown {
-  if (depth > 10) return undefined;
-  if (
-    value !== null &&
-    typeof value === 'object' &&
-    (value as Record<string, unknown>)['type'] === 'VARIABLE_ALIAS'
-  ) {
-    const alias = value as { type: 'VARIABLE_ALIAS'; id: string };
-    const referenced = allVariablesById.get(alias.id);
-    if (!referenced) return undefined;
-    const modeId = defaultModeByCollectionId.get(referenced.variableCollectionId);
-    if (!modeId) return undefined;
-    return resolveVariableAlias(
-      referenced.valuesByMode[modeId],
-      allVariablesById,
-      defaultModeByCollectionId,
-      depth + 1
-    );
-  }
-  return value;
 }

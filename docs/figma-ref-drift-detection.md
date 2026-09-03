@@ -1,5 +1,21 @@
 # Plan: validate:figma-refs — Figma Node ID Drift Detection
 
+> **Status: unimplemented, and its premises are stale.** None of the files below exist
+> (`scripts/validate-figma-refs.mjs`, `scripts/lib/figma-refs.mjs`, `figma/refs-manifest.json`), and
+> the plan is written around Code Connect (`*.figma.tsx`, `storybook/connect/*.json`,
+> `figma/code-connect/*.json`), which was abandoned because it requires an Organization/Enterprise
+> seat. The `fileKey` below is also not the Collider file (`23PLdynlRYoBYQx9teoC8A`).
+>
+> **Component node-ID drift is still unsolved.** Today the only coupling is `figmaComponentRef` in
+> the 32 `storybook/component-specs/*.json` records, validated as "non-empty string or null" — a
+> stale node ID passes preflight silently. If this gets rebuilt, drop the Code Connect inputs and
+> read node IDs from the component specs instead.
+>
+> **Token/variable drift is solved, separately.** The repo plugin's read-only `Check Drift` action
+> compares Figma's variables against `design-tokens/dist/figma/tokens.json` and records
+> `artifacts/figma/drift-report.json`. See [`src/figma/README.md`](../src/figma/README.md) and
+> `src/lib/tokens/figma-drift.ts`. That covers variables only, not component nodes.
+
 ## Context
 
 Figma component node IDs are hardcoded in three places (`*.figma.tsx`, `storybook/connect/*.json`, `figma/code-connect/*.json`) and the sync ledger has no mechanism to detect when components move pages, get recreated, or drift from what's tracked. This builds a two-phase validation script — local cross-file consistency (always) + live Figma API node resolution (gated by `FIGMA_API_TOKEN`) — integrated into the existing `govern:tokens` governance chain.

@@ -1,4 +1,5 @@
-import { spawnSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import http from 'node:http';
 import os from 'node:os';
@@ -8,8 +9,8 @@ import process from 'node:process';
 const port = Number(process.env.FIGMA_TOKEN_SERVER_PORT ?? 4173);
 const artifactPath = path.resolve(process.cwd(), 'design-tokens/dist/figma/tokens.json');
 const artifactUrlPath = '/design-tokens/dist/figma/tokens.json';
-const pullUrlPath = '/figma/pull';
-const tokenSourceDir = path.resolve(process.cwd(), 'design-tokens/src/tokens');
+const driftReportUrlPath = '/figma/drift-report';
+const driftReportPath = path.resolve(process.cwd(), 'artifacts/figma/drift-report.json');
 
 if (!fs.existsSync(artifactPath)) {
   process.stderr.write(
@@ -35,8 +36,8 @@ function handleRequest(req, res) {
     return;
   }
 
-  if (req.method === 'POST' && req.url === pullUrlPath) {
-    handlePull(req, res);
+  if (req.method === 'POST' && req.url === driftReportUrlPath) {
+    handleDriftReport(req, res);
     return;
   }
 
@@ -57,73 +58,68 @@ function handleRequest(req, res) {
   fs.createReadStream(artifactPath).pipe(res);
 }
 
-function handlePull(req, res) {
+// Records the plugin's read-only comparison as a repo artifact, so the sync
+// ledger's `verification.materializationStatus` can cite a measurement instead
+// of a hand-entered claim. This writes a report only — never token sources.
+function handleDriftReport(req, res) {
   const chunks = [];
   req.on('data', (chunk) => chunks.push(chunk));
   req.on('error', (err) => {
     sendJson(res, 400, { error: `Request read error: ${err.message}` });
   });
   req.on('end', () => {
-    let payload;
+    let report;
     try {
-      payload = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+      report = JSON.parse(Buffer.concat(chunks).toString('utf8'));
     } catch {
       sendJson(res, 400, { error: 'Request body must be valid JSON' });
       return;
     }
 
-    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
-      sendJson(res, 400, { error: 'Payload must be a plain object keyed by collection name' });
+    if (!report || typeof report !== 'object' || !Array.isArray(report.findings)) {
+      sendJson(res, 400, { error: 'Payload must be a drift report with a findings array' });
       return;
     }
 
-    const collections = Object.entries(payload).filter(
-      ([key]) => key !== '$extensions' && typeof key === 'string' && key.length > 0
-    );
+    // Stamp provenance here rather than trusting the client: the report is only
+    // meaningful against a specific artifact build.
+    const envelope = {
+      checkedAt: new Date().toISOString(),
+      artifactPath: 'design-tokens/dist/figma/tokens.json',
+      artifactSha256: sha256OfArtifact(),
+      repoRevision: currentRevision(),
+      ...report,
+    };
 
-    if (collections.length === 0) {
-      sendJson(res, 400, { error: 'Payload contains no collection entries' });
-      return;
-    }
-
-    const written = [];
     try {
-      for (const [collectionKey, tree] of collections) {
-        const destPath = path.join(tokenSourceDir, `${collectionKey}.tokens.json`);
-        const content = JSON.stringify(tree, null, 2) + '\n';
-        const tmpPath = path.join(os.tmpdir(), `collider-pull-${collectionKey}-${Date.now()}.json`);
-        fs.writeFileSync(tmpPath, content, 'utf8');
-        fs.renameSync(tmpPath, destPath);
-        written.push(`design-tokens/src/tokens/${collectionKey}.tokens.json`);
-        process.stdout.write(`[FIGMA_PULL] wrote ${destPath}\n`);
-      }
+      fs.mkdirSync(path.dirname(driftReportPath), { recursive: true });
+      const content = JSON.stringify(envelope, null, 2) + '\n';
+      const tmpPath = path.join(os.tmpdir(), `collider-drift-${Date.now()}.json`);
+      fs.writeFileSync(tmpPath, content, 'utf8');
+      fs.renameSync(tmpPath, driftReportPath);
     } catch (err) {
       sendJson(res, 500, { error: `File write error: ${err.message}` });
       return;
     }
 
-    process.stdout.write('[FIGMA_PULL] running pnpm build:tokens…\n');
-    const build = spawnSync('pnpm', ['build:tokens'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-      timeout: 60000,
-    });
-    const buildOk = build.status === 0;
-    const buildOutput = (build.stdout ?? '') + (build.stderr ?? '');
-    if (buildOk) {
-      process.stdout.write('[FIGMA_PULL] build:tokens succeeded\n');
-    } else {
-      process.stderr.write(
-        `[FIGMA_PULL] build:tokens failed (exit ${build.status})\n${buildOutput}\n`
-      );
-    }
-
-    sendJson(res, 200, {
-      written,
-      buildStatus: buildOk ? 'ok' : 'failed',
-      buildOutput: buildOk ? undefined : buildOutput.slice(0, 2000),
-    });
+    const written = path.relative(process.cwd(), driftReportPath);
+    process.stdout.write(
+      `[FIGMA_DRIFT] ${envelope.ok ? 'no drift' : `${envelope.findings.length} finding(s)`} → ${written}\n`
+    );
+    sendJson(res, 200, { written, ok: envelope.ok, findingCount: envelope.findings.length });
   });
+}
+
+function sha256OfArtifact() {
+  return crypto.createHash('sha256').update(fs.readFileSync(artifactPath)).digest('hex');
+}
+
+function currentRevision() {
+  try {
+    return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  } catch {
+    return null;
+  }
 }
 
 function sendJson(res, status, body) {

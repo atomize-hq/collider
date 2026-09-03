@@ -130,27 +130,18 @@
 
       <div class="row">
         <button id="sync" disabled>Sync Variables</button>
+        <button id="check" disabled>Check Drift</button>
         <span id="summary" class="hint"></span>
       </div>
 
+      <div class="hint">
+        <strong>Sync</strong> writes the artifact into this file&rsquo;s variables.
+        <strong>Check Drift</strong> is read-only: it reports where this file disagrees with the
+        artifact. Tokens are authored in <code>design-tokens/src/tokens/</code> only &mdash; fix
+        drift there, rebuild, then sync.
+      </div>
+
       <div id="report" class="report">Waiting for input…</div>
-
-      <hr style="border: none; border-top: 1px solid var(--border); margin: 4px 0" />
-
-      <div>
-        <label>Pull from Figma</label>
-        <div class="hint">
-          Reads all variable collections from the current file and writes them to
-          <code>design-tokens/src/tokens/</code> via the local server.
-        </div>
-      </div>
-
-      <div class="row">
-        <button id="pull">Pull from Figma</button>
-        <span id="pull-summary" class="hint"></span>
-      </div>
-
-      <div id="pull-report" class="report" style="display: none"></div>
     </div>
 
     <script>
@@ -158,13 +149,32 @@
       const fetchBtn = document.getElementById('fetch');
       const fileInput = document.getElementById('file');
       const syncBtn = document.getElementById('sync');
+      const checkBtn = document.getElementById('check');
       const reportEl = document.getElementById('report');
       const summaryEl = document.getElementById('summary');
 
       let loadedJsonText = null;
 
+      const driftReportUrl = 'http://localhost:4173/figma/drift-report';
+
       function send(message) {
         parent.postMessage({ pluginMessage: message }, '*');
+      }
+
+      // Best-effort: the in-panel report is the primary output, and recording it
+      // as a repo artifact is a bonus that needs `pnpm figma:tokens:serve`.
+      async function recordDriftReport(json) {
+        try {
+          const res = await fetch(driftReportUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: json,
+          });
+          const body = await res.json().catch(() => null);
+          return res.ok && body ? `recorded → ${body.written}` : 'not recorded (server error)';
+        } catch {
+          return 'not recorded (start pnpm figma:tokens:serve)';
+        }
       }
 
       function setReport(text, ok = null) {
@@ -178,8 +188,10 @@
         summaryEl.textContent = text;
       }
 
+      // Both actions read the loaded artifact, so they gate together.
       function setReady(ready) {
         syncBtn.disabled = !ready;
+        checkBtn.disabled = !ready;
       }
 
       fetchBtn.onclick = () => {
@@ -194,7 +206,7 @@
         const file = fileInput.files && fileInput.files[0];
         if (!file) return;
         loadedJsonText = await file.text();
-        setReport(`Loaded ${file.name} (${file.size} bytes). Ready to sync.`);
+        setReport(`Loaded ${file.name} (${file.size} bytes). Ready to sync or check.`);
         setReady(true);
         setSummary('Loaded from file');
       };
@@ -204,8 +216,19 @@
           setReport('No artifact loaded yet.', false);
           return;
         }
+        setReady(false);
         setReport('Syncing variables…');
         send({ type: 'SYNC', jsonText: loadedJsonText });
+      };
+
+      checkBtn.onclick = () => {
+        if (!loadedJsonText) {
+          setReport('No artifact loaded yet.', false);
+          return;
+        }
+        setReady(false);
+        setReport('Comparing this file against the artifact…');
+        send({ type: 'CHECK', jsonText: loadedJsonText });
       };
 
       window.onmessage = (event) => {
@@ -221,7 +244,7 @@
           loadedJsonText = msg.jsonText;
           setReady(true);
           setSummary(`Loaded from URL (${msg.byteCount} bytes)`);
-          setReport('Artifact fetched. Ready to sync.');
+          setReport('Artifact fetched. Ready to sync or check.');
           return;
         }
 
@@ -236,78 +259,18 @@
         if (msg.type === 'SYNC_REPORT') {
           const ok = Boolean(msg.ok);
           setReport(msg.report || (ok ? 'Sync succeeded.' : 'Sync failed.'), ok);
-          if (!ok) setReady(true);
+          setReady(true);
           return;
         }
-      };
 
-      // ── Pull from Figma ──────────────────────────────────────────
-      const pullBtn = document.getElementById('pull');
-      const pullReportEl = document.getElementById('pull-report');
-      const pullSummaryEl = document.getElementById('pull-summary');
-      const pullServerUrl = 'http://localhost:4173/figma/pull';
-
-      function setPullReport(text, ok = null) {
-        pullReportEl.style.display = 'block';
-        pullReportEl.textContent = text;
-        pullReportEl.classList.remove('status-ok', 'status-bad');
-        if (ok === true) pullReportEl.classList.add('status-ok');
-        if (ok === false) pullReportEl.classList.add('status-bad');
-      }
-
-      pullBtn.onclick = () => {
-        pullBtn.disabled = true;
-        pullSummaryEl.textContent = '';
-        setPullReport('Reading variables from Figma…');
-        send({ type: 'PULL' });
-      };
-
-      async function postDtcgToServer(dtcgJson, summary) {
-        pullSummaryEl.textContent = summary;
-        setPullReport(`Collected: ${summary}\nPosting to server…`);
-        try {
-          const res = await fetch(pullServerUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: dtcgJson,
-          });
-          const body = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
-          if (res.ok) {
-            const written = Array.isArray(body.written) ? body.written.join('\n  ') : '';
-            const buildLine =
-              body.buildStatus === 'ok'
-                ? '✓ build:tokens succeeded'
-                : `✗ build:tokens failed\n${body.buildOutput ?? ''}`;
-            setPullReport(`Pull succeeded.\n\nFiles written:\n  ${written}\n\n${buildLine}`, true);
-          } else {
-            setPullReport(`Server error: ${body.error ?? res.statusText}`, false);
+        if (msg.type === 'CHECK_REPORT') {
+          const ok = Boolean(msg.ok);
+          setReport(msg.report || (ok ? 'No drift.' : 'Drift check failed.'), ok);
+          setReady(true);
+          if (msg.json) {
+            setSummary('recording…');
+            recordDriftReport(msg.json).then(setSummary);
           }
-        } catch (err) {
-          setPullReport(
-            `Could not reach server at ${pullServerUrl}.\nMake sure pnpm figma:tokens:serve is running.\n\n${err}`,
-            false
-          );
-        } finally {
-          pullBtn.disabled = false;
-        }
-      }
-
-      // Extend existing onmessage handler
-      const _prevOnMessage = window.onmessage;
-      window.onmessage = (event) => {
-        if (_prevOnMessage) _prevOnMessage(event);
-        const msg = event.data && event.data.pluginMessage;
-        if (!msg || typeof msg.type !== 'string') return;
-
-        if (msg.type === 'PULL_RESULT') {
-          postDtcgToServer(msg.dtcgJson, msg.summary);
-          return;
-        }
-
-        if (msg.type === 'PULL_ERROR') {
-          setPullReport(msg.message || 'Pull failed.', false);
-          pullSummaryEl.textContent = '';
-          pullBtn.disabled = false;
           return;
         }
       };
