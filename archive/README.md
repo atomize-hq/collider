@@ -25,9 +25,11 @@ If you are grepping and land here, you are reading history. Check
 SEAM-1 to SEAM-6. The original seam/slice/subslice decomposition of the token pipeline and
 the Figma sync rail. Authored 2026-03-17 to 2026-03-24.
 
-Superseded by what actually shipped. Notably it describes `scripts/validate-component-loop.mjs`
-and `scripts/validate-component-recipe.mjs` as patterns to extend; neither is wired into
-`package.json`, the `justfile`, or CI.
+Superseded by what actually shipped. It describes `scripts/validate-component-loop.mjs` and
+`scripts/validate-component-recipe.mjs` as patterns to extend. The first was deleted on
+2026-09-03 — it validated `loops/<slug>/component-loop.json`, an artifact that never existed.
+The second still exists but is unwired; the recipe validators it fronts (`scripts/lib/component-recipe-validator*.mjs`)
+*are* live inside `govern:tokens`, over zero recipe files.
 
 ### `docs/harness-completion/` — 36 files
 
@@ -53,6 +55,13 @@ the account seat is `pro`, so this rail has never been exercised.
 
 The Tokens Studio exception path. Defined, then never used — `sync-ledger.json` has carried
 `publish.tokensStudioCarrier: false` for the life of the ledger.
+
+### `scripts/figma-variables-smoke.sh`
+
+The smoke test for the Enterprise Variables REST rail — reads local variables, creates a throwaway
+collection and FLOAT variable, verifies the write, optionally cleans up. Moved here so it sits with
+the doc it exercises, `src/figma/rest-variables-oauth.md`, rather than beside the 25 live scripts.
+Not broken; unexercisable — it needs a Figma Enterprise seat and the account seat is `pro`.
 
 ### `storybook/code-connect-bootstrap.md`
 

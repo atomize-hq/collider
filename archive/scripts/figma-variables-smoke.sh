@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
+# ARCHIVED 2026-09-03 — not part of any live workflow.
+# The Enterprise Variables REST rail this exercises was demoted to optional hardening by
+# 0f7c951 (2026-08-15), which made the repo-owned plugin (plugin-import-manual) the default.
+# It needs a Figma Enterprise seat; the account seat is `pro`, so this has never been run.
+# Kept as the executable record of the contract. See archive/src/figma/rest-variables-oauth.md.
 set -euo pipefail
 
 usage() {
   cat <<'EOF'
 Usage:
-  FIGMA_TOKEN=... FIGMA_FILE_KEY=... ./scripts/figma-variables-smoke.sh [--cleanup]
+  FIGMA_TOKEN=... FIGMA_FILE_KEY=... ./archive/scripts/figma-variables-smoke.sh [--cleanup]
 
 Required environment variables:
   FIGMA_TOKEN     Personal access token or OAuth access token with:
