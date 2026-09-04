@@ -1,3 +1,14 @@
+// Docs model for the component recipes discovered through
+// `design-tokens/src/recipes/index.json`.
+//
+// The index is metadata-only: it names a componentId, its source file, and a discovery
+// status. The token payload lives in the generated `recipeMap` inside
+// `design-tokens/dist/tokens.ts`. This module joins the two and asserts the artifact
+// actually carries the fields a docs surface needs.
+//
+// `deferred` entries are excluded — they are recorded but not published. Every other
+// discoverable entry is returned, however many there are.
+
 import recipeIndex from '../../../design-tokens/src/recipes/index.json';
 import { recipeMap } from '../../../design-tokens/dist/tokens';
 
@@ -31,7 +42,7 @@ type RecipeContract = {
   }>;
 };
 
-export type PilotRecipeDocsModel = {
+export type RecipeDocsModel = {
   componentId: string;
   defaults: RecipeContract['defaults'];
   fallbacks: RecipeContract['fallbacks'];
@@ -43,56 +54,56 @@ export type PilotRecipeDocsModel = {
   variantAxes: RecipeContract['variantAxes'];
 };
 
-export function buildPilotRecipeDocsModel(
+const REQUIRED_FIELDS = [
+  'variantAxes',
+  'defaults',
+  'slots',
+  'states',
+  'fallbacks',
+  'recipeVersion',
+] as const satisfies ReadonlyArray<keyof RecipeContract>;
+
+export function buildRecipeDocsModel(
   sourceRecipeIndex: RecipeIndexContract,
   artifactRecipeMap: Record<string, unknown>
-): PilotRecipeDocsModel | null {
-  const pilotRecipes = sourceRecipeIndex.recipes.filter((entry) => entry.status === 'pilot');
-  if (pilotRecipes.length === 0) {
-    return null;
-  }
-  if (pilotRecipes.length > 1) {
-    throw new Error(
-      `Expected at most one pilot recipe entry in design-tokens/src/recipes/index.json, found ${pilotRecipes.length}.`
-    );
-  }
+): RecipeDocsModel[] {
+  return sourceRecipeIndex.recipes
+    .filter((entry) => entry.status !== 'deferred')
+    .map((entry) => buildEntry(entry, artifactRecipeMap));
+}
 
-  const [pilotRecipe] = pilotRecipes;
-  if (!pilotRecipe) {
-    throw new Error('Expected a pilot recipe entry but none was available.');
-  }
+export function loadRecipeDocsModel(): RecipeDocsModel[] {
+  return buildRecipeDocsModel(recipeIndex, recipeMap);
+}
 
-  const artifactRecipe = artifactRecipeMap[pilotRecipe.componentId];
+function buildEntry(
+  entry: RecipeIndexEntry,
+  artifactRecipeMap: Record<string, unknown>
+): RecipeDocsModel {
+  const artifactRecipe = artifactRecipeMap[entry.componentId];
   if (!artifactRecipe || typeof artifactRecipe !== 'object') {
     throw new Error(
-      `Missing generated recipeMap entry for pilot component "${pilotRecipe.componentId}" in design-tokens/dist/tokens.ts.`
+      `Missing generated recipeMap entry for component "${entry.componentId}" in design-tokens/dist/tokens.ts.`
     );
   }
 
-  assertRequiredField(artifactRecipe, 'variantAxes', pilotRecipe.componentId);
-  assertRequiredField(artifactRecipe, 'defaults', pilotRecipe.componentId);
-  assertRequiredField(artifactRecipe, 'slots', pilotRecipe.componentId);
-  assertRequiredField(artifactRecipe, 'states', pilotRecipe.componentId);
-  assertRequiredField(artifactRecipe, 'fallbacks', pilotRecipe.componentId);
-  assertRequiredField(artifactRecipe, 'recipeVersion', pilotRecipe.componentId);
+  for (const field of REQUIRED_FIELDS) {
+    assertRequiredField(artifactRecipe, field, entry.componentId);
+  }
 
   const contract = artifactRecipe as RecipeContract;
 
   return {
-    componentId: pilotRecipe.componentId,
+    componentId: entry.componentId,
     defaults: contract.defaults,
     fallbacks: contract.fallbacks,
     recipeVersion: contract.recipeVersion,
     slots: contract.slots,
-    sourceFile: pilotRecipe.sourceFile,
+    sourceFile: entry.sourceFile,
     states: contract.states,
-    status: pilotRecipe.status,
+    status: entry.status,
     variantAxes: contract.variantAxes,
   };
-}
-
-export function loadPilotRecipeDocsModel(): PilotRecipeDocsModel | null {
-  return buildPilotRecipeDocsModel(recipeIndex, recipeMap);
 }
 
 function assertRequiredField(
@@ -102,7 +113,7 @@ function assertRequiredField(
 ) {
   if (!(field in artifactRecipe)) {
     throw new Error(
-      `Generated recipeMap entry "${componentId}" is missing required field "${field}" for the pilot recipe docs surface.`
+      `Generated recipeMap entry "${componentId}" is missing required field "${field}" for the recipe docs surface.`
     );
   }
 }
