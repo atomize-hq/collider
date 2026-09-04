@@ -113,6 +113,13 @@ check-ts:
     @echo "── eslint ────────────────────────────────────"
     pnpm exec eslint .
 
+# Upstream policy: our intentional deviations from shadcn / ai-elements are still
+# in place, and the upstream API we depend on has not been refactored away.
+# No network — pattern-matches the working tree, finishes in milliseconds.
+check-upstream:
+    @echo "── upstream policy ───────────────────────────"
+    pnpm validate:upstream-policy
+
 # Fast Rust check: fmt + clippy
 check-rs:
     @echo "── cargo fmt ─────────────────────────────────"
@@ -120,8 +127,8 @@ check-rs:
     @echo "── clippy ────────────────────────────────────"
     pnpm cargo:clippy
 
-# Fast full check: TS + Rust
-check: check-ts check-rs
+# Fast full check: TS + upstream policy + Rust
+check: check-ts check-upstream check-rs
 
 # ══════════════════════════════════════════════════════════════════════════════
 # LOC — lines-of-code guards via tokei (code lines only; blanks + comments excluded)

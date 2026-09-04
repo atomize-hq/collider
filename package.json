@@ -19,6 +19,7 @@
     "validate:storybook-tier-policy": "node scripts/validate-storybook-tier-policy.mjs",
     "validate:storybook-story-inventory": "node scripts/validate-storybook-story-inventory.mjs",
     "validate:storybook-proof-structure": "node scripts/validate-storybook-proof-structure.mjs",
+    "validate:upstream-policy": "node scripts/validate-upstream-policy.mjs",
     "generate:storybook-proof-coverage": "node scripts/generate-storybook-proof-coverage.mjs",
     "generate:component-mapping": "node scripts/generate-component-mapping.mjs",
     "generate:reusable-component-status": "node scripts/generate-reusable-component-status.mjs",
