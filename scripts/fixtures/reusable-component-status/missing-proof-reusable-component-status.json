@@ -37,7 +37,7 @@
       "claimRelevant": true,
       "sourceVersionOrRevision": "mappingStatusVersion:1",
       "freshness": "current",
-      "outcome": "satisfied"
+      "outcome": "not-applicable"
     }
   },
   "claimProfiles": {
@@ -84,7 +84,8 @@
   "reasonCodes": [
     "ct9b-proof-coverage-missing",
     "ct10b-review-informational",
-    "ct10b-review-deferred"
+    "ct10b-review-deferred",
+    "ct11b-mapping-retired"
   ],
   "enforcementMode": "informational"
 }

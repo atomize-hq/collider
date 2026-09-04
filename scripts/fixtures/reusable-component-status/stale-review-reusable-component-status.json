@@ -37,7 +37,7 @@
       "claimRelevant": true,
       "sourceVersionOrRevision": "mappingStatusVersion:1",
       "freshness": "current",
-      "outcome": "satisfied"
+      "outcome": "not-applicable"
     }
   },
   "claimProfiles": {
@@ -81,6 +81,6 @@
     "profileId": "reusable-component-advancement",
     "claimId": "reusable-component-proof-ready"
   },
-  "reasonCodes": ["ct10b-review-informational", "ct10b-review-stale"],
+  "reasonCodes": ["ct10b-review-informational", "ct10b-review-stale", "ct11b-mapping-retired"],
   "enforcementMode": "informational"
 }

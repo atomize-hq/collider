@@ -211,7 +211,12 @@ describe('reusable component promotion contract fixtures', () => {
       'ct10b',
     ]);
     expect(reusableComponentStatusReusableFixture.railSummaries.ct11b.freshness).toBe('current');
-    expect(reusableComponentStatusReusableFixture.railSummaries.ct11b.outcome).toBe('satisfied');
+    // Code Connect is retired, so the mapping rail has nothing to measure. It reports
+    // `not-applicable` rather than `satisfied` — an empty mapping is not a passed check.
+    expect(reusableComponentStatusReusableFixture.railSummaries.ct11b.outcome).toBe(
+      'not-applicable'
+    );
+    expect(reusableComponentStatusReusableFixture.reasonCodes).toContain('ct11b-mapping-retired');
   });
 });
 

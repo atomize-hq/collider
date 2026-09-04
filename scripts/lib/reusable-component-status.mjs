@@ -348,15 +348,22 @@ function summarizeCt11b(context) {
     : [];
   const invalid = Number(summary.invalidCount ?? 0) > 0;
   const incomplete = Number(summary.incompleteCount ?? 0) > 0;
+  // Code Connect is retired, so no component carries a mapping and this rail has
+  // nothing to measure. An empty mapping used to read as `satisfied` — a check
+  // reporting a pass it never performed. `not-applicable` says the rail is out of
+  // play instead. The retirement is data-driven, not deleted: the moment a mapping
+  // status carries components again, every branch below resumes on its own.
+  const retired = Number(summary.componentCount ?? 0) === 0;
   const complete =
-    Number(summary.componentCount ?? 0) === 0 ||
-    (Number(summary.completeCount ?? 0) > 0 && Number(summary.componentCount ?? 0) > 0);
+    retired || (Number(summary.completeCount ?? 0) > 0 && Number(summary.componentCount ?? 0) > 0);
   const stale = components.some((component) => component?.linkState === 'stale');
   const outcome = !context.claimRelevant
     ? 'not-applicable'
     : stale || invalid || incomplete || !complete
       ? 'unsatisfied'
-      : 'satisfied';
+      : retired
+        ? 'not-applicable'
+        : 'satisfied';
 
   return buildRail(base, {
     freshness: stale ? 'stale' : 'current',
@@ -370,14 +377,20 @@ function summarizeCt11b(context) {
           ? ['ct11b-mapping-invalid']
           : incomplete || !complete
             ? ['ct11b-mapping-incomplete']
-            : [],
+            : retired
+              ? ['ct11b-mapping-retired']
+              : [],
   });
 }
 
 function determineHighestEarnedClaim(changeClass, rails) {
   const proofReady = isCurrentSatisfied(rails.ct9b);
   const reviewReady = isCurrentSatisfied(rails.ct10b);
-  const mappingReady = isCurrentSatisfied(rails.ct11b);
+  // A rail that is out of play must not hold the ladder down the way a failing one
+  // does. With Code Connect retired, treating ct11b's `not-applicable` as a failure
+  // would pin the claim at `reusable-component-reviewed` forever — a rung whose name
+  // says mapping is pending, when it is retired. `unsatisfied` still blocks.
+  const mappingReady = isCurrentSatisfiedOrOutOfPlay(rails.ct11b);
   const paritySatisfied = isCurrentSatisfied(rails.ct8b);
   const parityDeferred =
     rails.ct8b.summary.freshness === 'current' && rails.ct8b.summary.outcome === 'deferred';
@@ -612,6 +625,16 @@ function isCurrentSatisfied(rail) {
     rail.summary.claimRelevant &&
     rail.summary.freshness === 'current' &&
     rail.summary.outcome === 'satisfied'
+  );
+}
+
+// `not-applicable` is not a pass — it means the rail has nothing to measure, and it
+// stays visible as `not-applicable` in railSummaries so a reader can tell the two
+// apart. It only stops the rail from blocking the claim ladder.
+function isCurrentSatisfiedOrOutOfPlay(rail) {
+  return (
+    isCurrentSatisfied(rail) ||
+    (rail.summary.freshness === 'current' && rail.summary.outcome === 'not-applicable')
   );
 }
 
