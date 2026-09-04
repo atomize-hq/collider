@@ -41,7 +41,8 @@
       "stack-trace",
       "jsx-preview",
       "terminal",
-      "sandbox"
+      "sandbox",
+      "badge"
     ],
     "selectedStoryIds": [
       "ai-elements-message--default",
@@ -248,7 +249,10 @@
       "ai-elements-sandbox--focus",
       "ai-elements-sandbox--tab-switch-flow",
       "ai-elements-sandbox--collapse-transition",
-      "ai-elements-sandbox--docs"
+      "ai-elements-sandbox--docs",
+      "primitives-badge--default",
+      "primitives-badge--variant-matrix",
+      "primitives-badge--docs"
     ]
   },
   "build": {
@@ -291,7 +295,8 @@
         "stack-trace",
         "jsx-preview",
         "terminal",
-        "sandbox"
+        "sandbox",
+        "badge"
       ],
       "componentTiers": {
         "message": "primitive",
@@ -325,7 +330,8 @@
         "stack-trace": "interactive",
         "jsx-preview": "primitive",
         "terminal": "interactive",
-        "sandbox": "interactive"
+        "sandbox": "interactive",
+        "badge": "primitive"
       },
       "storyIds": [
         "ai-elements-message--default",
@@ -532,7 +538,10 @@
         "ai-elements-sandbox--focus",
         "ai-elements-sandbox--tab-switch-flow",
         "ai-elements-sandbox--collapse-transition",
-        "ai-elements-sandbox--docs"
+        "ai-elements-sandbox--docs",
+        "primitives-badge--default",
+        "primitives-badge--variant-matrix",
+        "primitives-badge--docs"
       ]
     }
   },

@@ -1,0 +1,27 @@
+{
+  "specVersion": "1",
+  "componentId": "badge",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-badge--default", "kinds": ["default"] },
+    { "storyId": "primitives-badge--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-badge--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/badge.tsx",
+    "figmaComponentRef": null,
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-badge--default",
+      "primitives-badge--variant-matrix",
+      "primitives-badge--docs"
+    ]
+  }
+}

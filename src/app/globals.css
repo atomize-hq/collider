@@ -55,6 +55,14 @@
   --destructive: var(--color-text-error);
   --destructive-foreground: var(--color-text-primary);
   /*
+   * `--destructive` is a TEXT color — `semantic.color.text.error` is tuned to
+   * read on a dark ground (5.64:1 on `background/surface`). Used as a *fill* it
+   * fails: white on the dark theme's #ff6467 measures 2.89:1. One value cannot
+   * serve both roles, so the solid destructive surface gets its own, dark enough
+   * for white in either theme (6.42:1).
+   */
+  --destructive-surface: var(--core-color-red-700);
+  /*
    * `destructive` used to be the only status role on the bridge, which meant
    * `text-destructive` existed and `text-success` did not. Components needing a
    * non-error status had nothing to reach for and hand-rolled Tailwind palette
@@ -293,6 +301,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-surface: var(--destructive-surface);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-info: var(--info);

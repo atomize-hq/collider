@@ -61,18 +61,18 @@ export const TestResultsSummary = ({ className, children, ...props }: TestResult
     <div className={cn('flex items-center gap-3', className)} {...props}>
       {children ?? (
         <>
-          <Badge className="gap-1 bg-success/10 text-success" variant="secondary">
+          <Badge className="gap-1" variant="success">
             <CheckCircle2Icon className="size-3" />
             {summary.passed} passed
           </Badge>
           {summary.failed > 0 && (
-            <Badge className="gap-1 bg-destructive/10 text-destructive" variant="secondary">
+            <Badge className="gap-1" variant="error">
               <XCircleIcon className="size-3" />
               {summary.failed} failed
             </Badge>
           )}
           {summary.skipped > 0 && (
-            <Badge className="gap-1 bg-warning/10 text-warning" variant="secondary">
+            <Badge className="gap-1" variant="warning">
               <CircleIcon className="size-3" />
               {summary.skipped} skipped
             </Badge>

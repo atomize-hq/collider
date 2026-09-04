@@ -1,6 +1,6 @@
 {
   "proofCoverageVersion": "1",
-  "summary": { "componentCount": 32, "readyCount": 32, "failingCount": 0 },
+  "summary": { "componentCount": 33, "readyCount": 33, "failingCount": 0 },
   "components": [
     {
       "componentId": "agent",
@@ -66,6 +66,19 @@
         "motion",
         "docs"
       ],
+      "missingKinds": [],
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      }
+    },
+    {
+      "componentId": "badge",
+      "tier": "primitive",
+      "status": "ready",
+      "requiredKinds": ["default", "variant-matrix", "docs"],
+      "implementedKinds": ["default", "variant-matrix", "docs"],
       "missingKinds": [],
       "generatedArtifactRefs": {
         "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",

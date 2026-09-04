@@ -604,6 +604,15 @@ describe('loadAndValidateStoryInventory', () => {
           { kind: 'docs', storyId: 'ai-elements-sandbox--docs' },
         ],
       },
+      {
+        componentId: 'badge',
+        validatorKinds: ['default', 'variant-matrix', 'docs'],
+        implementedStoryRefs: [
+          { kind: 'default', storyId: 'primitives-badge--default' },
+          { kind: 'variant-matrix', storyId: 'primitives-badge--variant-matrix' },
+          { kind: 'docs', storyId: 'primitives-badge--docs' },
+        ],
+      },
     ]);
   });
 
