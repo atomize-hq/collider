@@ -53,8 +53,8 @@
     },
     "tokenReference": {
       "type": "string",
-      "pattern": "^\\{(core|semantic|motion)(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+\\}$",
-      "description": "Brace-wrapped DTCG-style CT-1 token reference string such as {semantic.color.text.secondary}."
+      "pattern": "^\\{(accent|core|semantic|motion)(\\.[a-z0-9]+(?:-[a-z0-9]+)*)+\\}$",
+      "description": "Brace-wrapped DTCG-style CT-1 token reference string such as {semantic.color.text.secondary}. The prefix is the token source filename, so accent.tokens.json contributes the accent.* namespace."
     },
     "referenceTree": {
       "oneOf": [

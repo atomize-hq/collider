@@ -1,0 +1,51 @@
+{
+  "recipeVersion": "1",
+  "componentId": "badge",
+  "variantAxes": [
+    {
+      "name": "variant",
+      "values": ["default", "secondary", "destructive", "outline", "success", "warning", "error"]
+    }
+  ],
+  "defaults": {
+    "variants": {
+      "variant": "default"
+    },
+    "state": "rest"
+  },
+  "slots": {
+    "root": {
+      "background": "{accent.primary}"
+    },
+    "label": {
+      "text": "{accent.primary-foreground}"
+    },
+    "icon": {
+      "color": "{accent.primary-foreground}"
+    }
+  },
+  "states": {
+    "rest": {
+      "root": {
+        "background": "{accent.primary}"
+      }
+    },
+    "hover": {
+      "root": {
+        "background": "{accent.primary}"
+      }
+    },
+    "focus": {
+      "root": {
+        "outline": "{semantic.color.interaction.focus-ring}"
+      }
+    }
+  },
+  "fallbacks": {
+    "missingVariantBehavior": "use-defaults",
+    "stateFallbacks": {
+      "hover": "rest",
+      "focus": "rest"
+    }
+  }
+}

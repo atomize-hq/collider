@@ -13,8 +13,17 @@ const artifactRecipe = {
 };
 
 describe('buildRecipeDocsModel', () => {
-  it('returns an empty list for the live recipe index, which carries no recipes', () => {
-    expect(buildRecipeDocsModel(recipeIndex, recipeMap)).toEqual([]);
+  it('joins every live index entry against the generated recipeMap', () => {
+    const result = buildRecipeDocsModel(recipeIndex, recipeMap);
+    const discoverable = recipeIndex.recipes.filter((entry) => entry.status !== 'deferred');
+
+    expect(result.map((entry) => entry.componentId)).toEqual(
+      discoverable.map((entry) => entry.componentId)
+    );
+    for (const entry of result) {
+      expect(entry.variantAxes.length).toBeGreaterThan(0);
+      expect(Object.keys(entry.slots).length).toBeGreaterThan(0);
+    }
   });
 
   it('returns an empty list for an explicitly empty recipes array', () => {

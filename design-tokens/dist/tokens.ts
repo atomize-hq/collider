@@ -3404,7 +3404,59 @@ export const themeOverrides = {
   },
 } as const;
 
-export const recipeMap = {} as const;
+export const recipeMap = {
+  badge: {
+    componentId: 'badge',
+    defaults: {
+      state: 'rest',
+      variants: {
+        variant: 'default',
+      },
+    },
+    fallbacks: {
+      missingVariantBehavior: 'use-defaults',
+      stateFallbacks: {
+        focus: 'rest',
+        hover: 'rest',
+      },
+    },
+    recipeVersion: '1',
+    slots: {
+      icon: {
+        color: '{accent.primary-foreground}',
+      },
+      label: {
+        text: '{accent.primary-foreground}',
+      },
+      root: {
+        background: '{accent.primary}',
+      },
+    },
+    states: {
+      focus: {
+        root: {
+          outline: '{semantic.color.interaction.focus-ring}',
+        },
+      },
+      hover: {
+        root: {
+          background: '{accent.primary}',
+        },
+      },
+      rest: {
+        root: {
+          background: '{accent.primary}',
+        },
+      },
+    },
+    variantAxes: [
+      {
+        name: 'variant',
+        values: ['default', 'secondary', 'destructive', 'outline', 'success', 'warning', 'error'],
+      },
+    ],
+  },
+} as const;
 
 export type ThemeId = (typeof themeRegistry.themes)[number]['id'];
 export type TokenId = keyof typeof tokenMap;

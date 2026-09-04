@@ -6,6 +6,40 @@
   },
   "components": [
     {
+      "componentId": "badge",
+      "pilotStatus": "active",
+      "handoffStatus": "ready-for-docs",
+      "variantAxes": [
+        {
+          "name": "variant",
+          "values": [
+            "default",
+            "secondary",
+            "destructive",
+            "outline",
+            "success",
+            "warning",
+            "error"
+          ]
+        }
+      ],
+      "defaults": {
+        "variants": {
+          "variant": "default"
+        },
+        "state": "rest"
+      },
+      "slots": ["root", "label", "icon"],
+      "states": ["rest", "hover", "focus"],
+      "fallbacks": {
+        "missingVariantBehavior": "use-defaults",
+        "stateFallbacks": {
+          "hover": "rest",
+          "focus": "rest"
+        }
+      }
+    },
+    {
       "componentId": "input",
       "pilotStatus": "deferred",
       "handoffStatus": "source-ready"

@@ -1,4 +1,10 @@
 {
   "schemaVersion": "1",
-  "recipes": []
+  "recipes": [
+    {
+      "componentId": "badge",
+      "sourceFile": "badge.recipe.json",
+      "status": "active"
+    }
+  ]
 }
