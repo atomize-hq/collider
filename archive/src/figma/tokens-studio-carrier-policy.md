@@ -1,5 +1,11 @@
 # Tokens Studio Carrier Policy
 
+> **ARCHIVED 2026-09-03 — not a live policy.** The carrier was never used:
+> `src/figma/sync-ledger.json` has carried `publish.tokensStudioCarrier: false` for the
+> life of the ledger, and `src/figma/publish-proof.json` records `carrier.used: false`.
+> Kept as the record of the exception path that was defined and then not taken.
+> Live surface: [`src/figma/README.md`](../../../src/figma/README.md).
+
 This document defines the only allowed exception path for Tokens Studio within `SEAM-5B`. Tokens Studio may temporarily carry the repo-approved artifact, but it is never the canonical source, the permanent rail, or the hardening target.
 
 ## Entry Rule
@@ -10,7 +16,7 @@ This document defines the only allowed exception path for Tokens Studio within `
 
 ## Recording Rule
 
-- Every carrier-assisted attempt must reuse the seam-owned publish-proof contract in [`src/figma/publish-proof-contract.md`](./publish-proof-contract.md).
+- Every carrier-assisted attempt must reuse the seam-owned publish-proof contract in [`src/figma/publish-proof-contract.md`](../../../src/figma/publish-proof-contract.md).
 - Carrier-assisted attempts must record `mode` as `tokens-studio-carried`.
 - Carrier-assisted attempts must set `carrier.used=true`.
 - Carrier-assisted attempts must fill `carrier.reason` with the exact blocker that required temporary carriage.

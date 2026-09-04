@@ -1,5 +1,13 @@
 # Code Connect Bootstrap
 
+> **ARCHIVED 2026-09-03 — Code Connect is retired.** No component in this repo carries a
+> Code Connect mapping: zero `.figma.tsx` files, zero stories with a `design:` parameter,
+> and `figma/code-connect/` was empty from its creation until it was removed. The CT-11B
+> mapping rail reports `not-applicable` (see `1383a87`). The status line below still names
+> `thinking-indicator`, a component deleted in `96d5c39`. Kept because the code that
+> implements this rail was deliberately retained for a possible future revival.
+> Live surface: [`docs/stage1/sync-policy.md`](../../docs/stage1/sync-policy.md).
+
 ## Status
 
 `toolchain-installed, thinking-indicator-mapped`

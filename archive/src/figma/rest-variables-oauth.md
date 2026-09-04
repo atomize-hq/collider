@@ -1,5 +1,11 @@
 # Enterprise Variables API Rail (Future)
 
+> **ARCHIVED 2026-09-03 — not a live runbook.** Superseded by `0f7c951` (2026-08-15),
+> which made the repo-owned plugin (`plugin-import-manual`) the documented default rail.
+> This rail needs a Figma Enterprise seat; the account seat is `pro`, so it has never
+> been exercised. Kept as the record of the contract, not as instructions.
+> Live surface: [`src/figma/README.md`](../../../src/figma/README.md).
+
 This document is intentionally **not** part of Collider's v1 operator flow. It exists only to capture the future Enterprise-only rail contract for writing variables through the Figma Variables REST API.
 
 In v1, the repo-owned plugin (`plugin-import-manual`) remains the canonical rail.
@@ -42,7 +48,7 @@ In v1, the repo-owned plugin (`plugin-import-manual`) remains the canonical rail
 
 ## Publish-Proof Alignment
 
-- Hardened attempts must reuse the seam-owned publish-proof contract in [`src/figma/publish-proof-contract.md`](./publish-proof-contract.md).
+- Hardened attempts must reuse the seam-owned publish-proof contract in [`src/figma/publish-proof-contract.md`](../../../src/figma/publish-proof-contract.md).
 - For an Enterprise attempt, `mode` must be `rest-variables-oauth`.
 - Hardened attempts must keep `carrier.used=false`. If Tokens Studio is involved at all, the attempt falls under the carrier exception policy instead of the hardened rail.
 - This contract constrains publish-proof values and ownership expectations only. It does not add a second schema surface.

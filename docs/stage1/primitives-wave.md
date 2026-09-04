@@ -237,4 +237,8 @@ And a native mapping at:
 src/components/ai-elements/<name>.figma.tsx
 ```
 
-These are created after the React component is implemented and after the Figma library node is confirmed. See `storybook/code-connect-bootstrap.md` for the full pattern.
+**Retired.** Code Connect is not part of this project's rails; no component carries a
+mapping and none will be created. The bootstrap doc that described this pattern is
+archived at `archive/storybook/code-connect-bootstrap.md`. A component's Figma node is
+recorded in `storybook/component-specs/<id>.json` under
+`downstreamHooks.figmaComponentRef` instead.

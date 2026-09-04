@@ -7,15 +7,15 @@
 
 ## App setup
 
-| Concern    | Choice                              | Notes                                         |
-| ---------- | ----------------------------------- | --------------------------------------------- |
-| Framework  | Next.js 16 App Router               | Turbopack for dev                             |
-| Styling    | Tailwind v4 + CSS custom properties | Token vars feed Tailwind theme                |
-| Desktop    | Tauri v2 static-export bundle       | `pnpm build:tauri` → `out/` → loaded by Tauri |
-| Fonts      | Roboto Mono (used in design system) | Loaded at root layout or via tokens           |
-| Path alias | `@/*` → `./src/*`                   | Defined in `tsconfig.json`                    |
-| Lint       | ESLint 9 + Prettier 3               | Enforced in pre-commit hooks                  |
-| Dead code  | Knip                                | `pnpm check`                                  |
+| Concern    | Choice                                      | Notes                                                                                                                                            |
+| ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Framework  | Next.js 16 App Router                       | Turbopack for dev                                                                                                                                |
+| Styling    | Tailwind v4 + CSS custom properties         | Token vars feed Tailwind theme                                                                                                                   |
+| Desktop    | Tauri v2 static-export bundle               | `pnpm build:tauri` → `out/` → loaded by Tauri                                                                                                    |
+| Fonts      | Poppins (UI sans) + Roboto Mono (code/data) | Declared in `design-tokens/src/tokens/font.tokens.json`; webfonts imported and `--font-sans` / `--font-mono` bound in `src/lib/tokens/fonts.css` |
+| Path alias | `@/*` → `./src/*`                           | Defined in `tsconfig.json`                                                                                                                       |
+| Lint       | ESLint 9 + Prettier 3                       | Enforced in pre-commit hooks                                                                                                                     |
+| Dead code  | Knip                                        | `pnpm check`                                                                                                                                     |
 
 ---
 

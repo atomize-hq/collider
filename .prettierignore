@@ -7,3 +7,4 @@ src-tauri/target/
 src-tauri/gen/
 pnpm-lock.yaml
 scripts/fixtures/token-validation/invalid-json/design-tokens/src/tokens/core.tokens.json
+archive/

@@ -95,7 +95,7 @@ Look at a comparable existing spec to copy the pattern:
 
 Write the spec at `storybook/component-specs/<name>.json`. Copy the shape from a comparable existing spec. Leave `figmaComponentRef` as `null` for now (it gets filled at the end of step 5 with `"23PLdynlRYoBYQx9teoC8A#<node-id>"` — the code↔Figma link).
 
-**Do NOT create Code Connect mappings or add a per-component entry to `src/figma/sync-ledger.json`.** Code Connect is explicitly deferred for this project (see `docs/stage1/sync-policy.md`) — the sanctioned Stage-2-complete state is `figmaComponentRef` in the spec, nothing more. The `sync-ledger.json` tracks the token artifact only, not components; it has no per-component array. Skip both rails.
+**Do NOT create Code Connect mappings or add a per-component entry to `src/figma/sync-ledger.json`.** Code Connect is retired for this project (see `docs/stage1/sync-policy.md`, "Code Connect is retired") — the sanctioned Stage-2-complete state is `figmaComponentRef` in the spec, nothing more. The `sync-ledger.json` tracks the token artifact only, not components; it has no per-component array. Skip both rails.
 
 Append the entry to `storybook/story-inventory.json` (**loop order** — after the previous loop's entry).
 

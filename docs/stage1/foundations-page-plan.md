@@ -233,7 +233,9 @@ Phase 0 before Phase 2 is the whole point of the "fix first" decision: every fra
 - Reference dumps (this session's scratchpad, `audit/`): `atomize-foundations.txt`, `collider-old-foundations.txt`, `atomize-collections.txt`, `collider-old-primitives-canvas.txt`.
 - Token source: `design-tokens/src/tokens/*.tokens.json` + `themes/`.
 - Role bridge: [src/app/globals.css](../../src/app/globals.css).
-- Change policy: `docs/figma-ci-sync/threaded-seams/seam-1-canonical-token-source/slice-3-conformance-and-change-control/subslice-3-token-and-theme-change-policy.md`.
+- Change policy: `design-tokens/src/tokens/CHANGE_POLICY.md` (the live surface). Its
+  original derivation is archived at
+  `archive/docs/figma-ci-sync/threaded-seams/seam-1-canonical-token-source/slice-3-conformance-and-change-control/subslice-3-token-and-theme-change-policy.md`.
 - Ledger + proof: `src/figma/sync-ledger.json`, `src/figma/publish-proof.json`.
 - Figma file: **Collider** `23PLdynlRYoBYQx9teoC8A`; Primitives page `401:1040`, canvas `401:1042`.
 
