@@ -120,6 +120,18 @@ check-upstream:
     @echo "── upstream policy ───────────────────────────"
     pnpm validate:upstream-policy
 
+# Check what ai-elements needs from src/components/ui: every imported export still
+# exists, and every `[data-slot=x]` a component styles is one some component emits.
+#
+# NOT in `check` yet — it currently reports one real defect. `button-group.tsx` styles
+# `[data-slot=select-trigger]`, which only the v4 Select emits; our pre-v4 Select
+# declares no slots, so those two rules have never once matched. The shadcn v4 migration
+# resolves it, and wiring this into `check` is that migration's acceptance criterion.
+# Run `pnpm validate:consumer-contract --report` for the full API surface.
+check-contract:
+    @echo "── consumer contract ─────────────────────────"
+    pnpm validate:consumer-contract
+
 # Fast Rust check: fmt + clippy
 check-rs:
     @echo "── cargo fmt ─────────────────────────────────"

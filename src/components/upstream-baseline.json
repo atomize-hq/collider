@@ -1,0 +1,377 @@
+{
+  "baselineVersion": "1",
+  "capturedAt": "2026-09-05",
+  "note": "Content hashes of the upstream registry payloads this repo was last compared against. Regenerate with `pnpm baseline:upstream`; a changed hash means upstream moved, not that we did.",
+  "primitives": {
+    "registry": "https://ui.shadcn.com/r/styles/new-york-v4",
+    "style": "new-york-v4",
+    "components": {
+      "accordion": {
+        "status": "tracked",
+        "sha256": "99de242681eb4312",
+        "bytes": 2038
+      },
+      "alert": {
+        "status": "tracked",
+        "sha256": "d03dcae5cdb63c38",
+        "bytes": 1604
+      },
+      "avatar": {
+        "status": "tracked",
+        "sha256": "0c5c48b8a1dff4fd",
+        "bytes": 2906
+      },
+      "badge": {
+        "status": "tracked",
+        "sha256": "13a9380dfff853ee",
+        "bytes": 1766
+      },
+      "button": {
+        "status": "tracked",
+        "sha256": "79dd6f75f8136394",
+        "bytes": 2382
+      },
+      "button-group": {
+        "status": "tracked",
+        "sha256": "a9ac862707ff8d78",
+        "bytes": 2203
+      },
+      "card": {
+        "status": "tracked",
+        "sha256": "ef8305b12c3112da",
+        "bytes": 1977
+      },
+      "carousel": {
+        "status": "tracked",
+        "sha256": "70ba30941a3adb44",
+        "bytes": 5557
+      },
+      "collapsible": {
+        "status": "tracked",
+        "sha256": "c6598e5584f4258b",
+        "bytes": 795
+      },
+      "command": {
+        "status": "tracked",
+        "sha256": "319e9264567dd46f",
+        "bytes": 4819
+      },
+      "dropdown-menu": {
+        "status": "tracked",
+        "sha256": "d954efb735f13734",
+        "bytes": 8408
+      },
+      "hover-card": {
+        "status": "tracked",
+        "sha256": "73f59aa759656501",
+        "bytes": 1516
+      },
+      "input": {
+        "status": "tracked",
+        "sha256": "0c9457181f6ddc80",
+        "bytes": 952
+      },
+      "input-group": {
+        "status": "tracked",
+        "sha256": "e379899ac50d6cab",
+        "bytes": 5086
+      },
+      "progress": {
+        "status": "tracked",
+        "sha256": "e012e1f7e6e66d11",
+        "bytes": 725
+      },
+      "scroll-area": {
+        "status": "tracked",
+        "sha256": "8b73bb9be5130007",
+        "bytes": 1629
+      },
+      "select": {
+        "status": "tracked",
+        "sha256": "962830436bd0b7ee",
+        "bytes": 6343
+      },
+      "separator": {
+        "status": "tracked",
+        "sha256": "ad7d5403fe337160",
+        "bytes": 684
+      },
+      "spinner": {
+        "status": "tracked",
+        "sha256": "5d040fc49cb54c02",
+        "bytes": 321
+      },
+      "switch": {
+        "status": "tracked",
+        "sha256": "743676f33f823ffa",
+        "bytes": 1398
+      },
+      "tabs": {
+        "status": "tracked",
+        "sha256": "e1df6e2f95ece373",
+        "bytes": 3772
+      },
+      "textarea": {
+        "status": "tracked",
+        "sha256": "5cafcfeeee29534f",
+        "bytes": 749
+      },
+      "tooltip": {
+        "status": "tracked",
+        "sha256": "611e4305879b2773",
+        "bytes": 1820
+      }
+    }
+  },
+  "aiElements": {
+    "registry": "https://registry.ai-sdk.dev",
+    "components": {
+      "agent": {
+        "status": "orphaned"
+      },
+      "artifact": {
+        "status": "tracked",
+        "sha256": "d73559a7df3538d3",
+        "bytes": 3331
+      },
+      "attachment-parts": {
+        "status": "orphaned"
+      },
+      "attachments": {
+        "status": "orphaned"
+      },
+      "chain-of-thought": {
+        "status": "tracked",
+        "sha256": "dc1200a59c027dd9",
+        "bytes": 6309
+      },
+      "checkpoint": {
+        "status": "tracked",
+        "sha256": "de2fe8bce08c2758",
+        "bytes": 1591
+      },
+      "code-block": {
+        "status": "tracked",
+        "sha256": "aa091ef9223f5763",
+        "bytes": 4446
+      },
+      "code-block-body": {
+        "status": "split",
+        "splitOf": "code-block"
+      },
+      "code-block-highlight": {
+        "status": "split",
+        "splitOf": "code-block"
+      },
+      "code-block-parts": {
+        "status": "split",
+        "splitOf": "code-block"
+      },
+      "code-block-theme": {
+        "status": "split",
+        "splitOf": "code-block"
+      },
+      "commit": {
+        "status": "orphaned"
+      },
+      "commit-files": {
+        "status": "orphaned"
+      },
+      "confirmation": {
+        "status": "tracked",
+        "sha256": "91d34ea897e0f825",
+        "bytes": 4136
+      },
+      "context": {
+        "status": "tracked",
+        "sha256": "ceaf01f1c95aac26",
+        "bytes": 9760
+      },
+      "context-usage": {
+        "status": "split",
+        "splitOf": "context"
+      },
+      "environment-variables": {
+        "status": "orphaned"
+      },
+      "environment-variables-parts": {
+        "status": "orphaned"
+      },
+      "file-tree": {
+        "status": "orphaned"
+      },
+      "file-tree-items": {
+        "status": "orphaned"
+      },
+      "image": {
+        "status": "tracked",
+        "sha256": "624eae4c1a057b61",
+        "bytes": 564
+      },
+      "inline-citation": {
+        "status": "tracked",
+        "sha256": "00738feeec450845",
+        "bytes": 6503
+      },
+      "inline-citation-carousel": {
+        "status": "split",
+        "splitOf": "inline-citation"
+      },
+      "jsx-preview": {
+        "status": "orphaned"
+      },
+      "jsx-preview-parts": {
+        "status": "orphaned"
+      },
+      "message": {
+        "status": "tracked",
+        "sha256": "f30f81e3dd357dfb",
+        "bytes": 10796
+      },
+      "message-branch": {
+        "status": "split",
+        "splitOf": "message"
+      },
+      "open-in-chat": {
+        "status": "tracked",
+        "sha256": "baed61ccaa990226",
+        "bytes": 16493
+      },
+      "open-in-chat-providers": {
+        "status": "split",
+        "splitOf": "open-in-chat"
+      },
+      "package-info": {
+        "status": "orphaned"
+      },
+      "package-info-parts": {
+        "status": "orphaned"
+      },
+      "plan": {
+        "status": "tracked",
+        "sha256": "09d70f4657335463",
+        "bytes": 3436
+      },
+      "prompt-input": {
+        "status": "tracked",
+        "sha256": "e9551ce9685296ac",
+        "bytes": 37820
+      },
+      "prompt-input-actions": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-context": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-controls": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-helpers": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-hooks": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-parts": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-select": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "queue": {
+        "status": "tracked",
+        "sha256": "ecfd6a5f78e5aa06",
+        "bytes": 6232
+      },
+      "queue-item": {
+        "status": "split",
+        "splitOf": "queue"
+      },
+      "reasoning": {
+        "status": "tracked",
+        "sha256": "68371ed6eff5cee5",
+        "bytes": 5239
+      },
+      "sandbox": {
+        "status": "orphaned"
+      },
+      "schema-display": {
+        "status": "orphaned"
+      },
+      "schema-display-parts": {
+        "status": "orphaned"
+      },
+      "schema-display-property": {
+        "status": "orphaned"
+      },
+      "shimmer": {
+        "status": "tracked",
+        "sha256": "a4b2f7dacc898d6e",
+        "bytes": 1548
+      },
+      "snippet": {
+        "status": "orphaned"
+      },
+      "sources": {
+        "status": "tracked",
+        "sha256": "99ec3be1614088f3",
+        "bytes": 1858
+      },
+      "stack-trace": {
+        "status": "orphaned"
+      },
+      "stack-trace-frames": {
+        "status": "orphaned"
+      },
+      "stack-trace-header": {
+        "status": "orphaned"
+      },
+      "suggestion": {
+        "status": "tracked",
+        "sha256": "3bdfa3a7ae1f7f71",
+        "bytes": 1269
+      },
+      "task": {
+        "status": "tracked",
+        "sha256": "1b566d9cda580442",
+        "bytes": 2345
+      },
+      "terminal": {
+        "status": "orphaned"
+      },
+      "terminal-parts": {
+        "status": "orphaned"
+      },
+      "test-results": {
+        "status": "orphaned"
+      },
+      "test-results-suite": {
+        "status": "orphaned"
+      },
+      "test-results-test": {
+        "status": "orphaned"
+      },
+      "tool": {
+        "status": "tracked",
+        "sha256": "c4ac8a0dede6e001",
+        "bytes": 4843
+      },
+      "web-preview": {
+        "status": "tracked",
+        "sha256": "eed21ffd907a5089",
+        "bytes": 6703
+      },
+      "web-preview-console": {
+        "status": "split",
+        "splitOf": "web-preview"
+      }
+    }
+  }
+}

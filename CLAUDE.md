@@ -30,3 +30,20 @@ by copy, so the CLI that installed a file can also silently overwrite it.
   by `just check`. That file is the answer to "why does this differ from upstream?".
 - Adding a deliberate deviation means adding an entry. A failing rule is either a real
   regression or a deviation that has become obsolete — decide which, don't delete to go green.
+- [`src/components/upstream-baseline.json`](src/components/upstream-baseline.json) pins the
+  registry payload hashes we last compared against, so a finding is reproducible instead of
+  true-on-the-day-it-was-measured. Refresh with `pnpm baseline:upstream` when adopting an
+  upstream revision; `just check` reads the file, never the network.
+- **26 of 63 ai-elements files are orphaned** — they 404 upstream, so "re-adopt from the
+  registry" is not available for them at any vintage. The baseline records which. Those are
+  ours permanently, whether or not we planned it.
+- `just check-contract` checks what ai-elements needs from `src/components/ui`: every
+  imported export still exists, and every `[data-slot=x]` a component styles is one some
+  component emits. Not in `just check` yet — see the justfile for why.
+
+### shadcn registry vintage
+
+Primitives are on the pre-v4 `new-york` style (`components.json`), authored for React 18 +
+Tailwind 3, while the app runs React 19 + Tailwind 4. A migration to the v4-shaped baseline
+is planned; the baseline file already pins `new-york-v4` as the target. Do not migrate
+components piecemeal — a mixed vintage is what produced both known structural defects.
