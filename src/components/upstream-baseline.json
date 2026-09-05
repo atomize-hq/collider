@@ -124,36 +124,41 @@
     }
   },
   "aiElements": {
-    "registry": "https://registry.ai-sdk.dev",
+    "registry": "https://elements.ai-sdk.dev/api/registry",
     "components": {
       "agent": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "cf1f7b066f8a2fe7",
+        "bytes": 3978
       },
       "artifact": {
         "status": "tracked",
-        "sha256": "d73559a7df3538d3",
-        "bytes": 3331
+        "sha256": "acabdfc7f977bb88",
+        "bytes": 3374
       },
       "attachment-parts": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "attachments"
       },
       "attachments": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "4fa02d79baf076b2",
+        "bytes": 11387
       },
       "chain-of-thought": {
         "status": "tracked",
-        "sha256": "dc1200a59c027dd9",
-        "bytes": 6309
+        "sha256": "5ccfddc925c98161",
+        "bytes": 6237
       },
       "checkpoint": {
         "status": "tracked",
-        "sha256": "de2fe8bce08c2758",
-        "bytes": 1591
+        "sha256": "c6c0aaf4123fc4fc",
+        "bytes": 1645
       },
       "code-block": {
         "status": "tracked",
-        "sha256": "aa091ef9223f5763",
-        "bytes": 4446
+        "sha256": "ebb49caa19633483",
+        "bytes": 13815
       },
       "code-block-body": {
         "status": "split",
@@ -172,61 +177,73 @@
         "splitOf": "code-block"
       },
       "commit": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "ec929111d28e081c",
+        "bytes": 9784
       },
       "commit-files": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "commit"
       },
       "confirmation": {
         "status": "tracked",
-        "sha256": "91d34ea897e0f825",
-        "bytes": 4136
+        "sha256": "68e5fa3bc8961531",
+        "bytes": 3889
       },
       "context": {
         "status": "tracked",
-        "sha256": "ceaf01f1c95aac26",
-        "bytes": 9760
+        "sha256": "ef122d0a025ad8d0",
+        "bytes": 9907
       },
       "context-usage": {
         "status": "split",
         "splitOf": "context"
       },
       "environment-variables": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "c8f63a6d8ab1c9bb",
+        "bytes": 7940
       },
       "environment-variables-parts": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "environment-variables"
       },
       "file-tree": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "bc9730ca4f1db9be",
+        "bytes": 7658
       },
       "file-tree-items": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "file-tree"
       },
       "image": {
         "status": "tracked",
-        "sha256": "624eae4c1a057b61",
-        "bytes": 564
+        "sha256": "9360ca3e8945a64c",
+        "bytes": 493
       },
       "inline-citation": {
         "status": "tracked",
-        "sha256": "00738feeec450845",
-        "bytes": 6503
+        "sha256": "9aec10df2f14d1e6",
+        "bytes": 6719
       },
       "inline-citation-carousel": {
         "status": "split",
         "splitOf": "inline-citation"
       },
       "jsx-preview": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "fac1e742140fa2d2",
+        "bytes": 7442
       },
       "jsx-preview-parts": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "jsx-preview"
       },
       "message": {
         "status": "tracked",
-        "sha256": "f30f81e3dd357dfb",
-        "bytes": 10796
+        "sha256": "db7d416e1515b8e3",
+        "bytes": 8572
       },
       "message-branch": {
         "status": "split",
@@ -234,28 +251,31 @@
       },
       "open-in-chat": {
         "status": "tracked",
-        "sha256": "baed61ccaa990226",
-        "bytes": 16493
+        "sha256": "f109f8b79480df7e",
+        "bytes": 16624
       },
       "open-in-chat-providers": {
         "status": "split",
         "splitOf": "open-in-chat"
       },
       "package-info": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "1e390ddf6a9de134",
+        "bytes": 6049
       },
       "package-info-parts": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "package-info"
       },
       "plan": {
         "status": "tracked",
-        "sha256": "09d70f4657335463",
-        "bytes": 3436
+        "sha256": "97a210d4bba6868d",
+        "bytes": 3562
       },
       "prompt-input": {
         "status": "tracked",
-        "sha256": "e9551ce9685296ac",
-        "bytes": 37820
+        "sha256": "9402979f8ce84d58",
+        "bytes": 38976
       },
       "prompt-input-actions": {
         "status": "split",
@@ -287,8 +307,8 @@
       },
       "queue": {
         "status": "tracked",
-        "sha256": "ecfd6a5f78e5aa06",
-        "bytes": 6232
+        "sha256": "6d46ac152f237f8f",
+        "bytes": 6256
       },
       "queue-item": {
         "status": "split",
@@ -296,77 +316,96 @@
       },
       "reasoning": {
         "status": "tracked",
-        "sha256": "68371ed6eff5cee5",
-        "bytes": 5239
+        "sha256": "f2047dec91f18c92",
+        "bytes": 6263
       },
       "sandbox": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "f218135ced794e77",
+        "bytes": 3416
       },
       "schema-display": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "cb64d37e8df27d4b",
+        "bytes": 12734
       },
       "schema-display-parts": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "schema-display"
       },
       "schema-display-property": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "schema-display"
       },
       "shimmer": {
         "status": "tracked",
-        "sha256": "a4b2f7dacc898d6e",
-        "bytes": 1548
+        "sha256": "24bcb9b1dd45d616",
+        "bytes": 2121
       },
       "snippet": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "04e34edeea7330a7",
+        "bytes": 3231
       },
       "sources": {
         "status": "tracked",
-        "sha256": "99ec3be1614088f3",
-        "bytes": 1858
+        "sha256": "6fa3ca4cc72a87e3",
+        "bytes": 1864
       },
       "stack-trace": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "fe3999ac2c7b97f1",
+        "bytes": 13799
       },
       "stack-trace-frames": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "stack-trace"
       },
       "stack-trace-header": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "stack-trace"
       },
       "suggestion": {
         "status": "tracked",
-        "sha256": "3bdfa3a7ae1f7f71",
-        "bytes": 1269
+        "sha256": "4fbf7d90cac64b77",
+        "bytes": 1354
       },
       "task": {
         "status": "tracked",
-        "sha256": "1b566d9cda580442",
-        "bytes": 2345
+        "sha256": "ecc83dc185a0b0fe",
+        "bytes": 2351
       },
       "terminal": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "b8516497a8ae6abd",
+        "bytes": 6144
       },
       "terminal-parts": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "terminal"
       },
       "test-results": {
-        "status": "orphaned"
+        "status": "tracked",
+        "sha256": "85e5dc066e70d8fb",
+        "bytes": 11448
       },
       "test-results-suite": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "test-results"
       },
       "test-results-test": {
-        "status": "orphaned"
+        "status": "split",
+        "splitOf": "test-results"
       },
       "tool": {
         "status": "tracked",
-        "sha256": "c4ac8a0dede6e001",
-        "bytes": 4843
+        "sha256": "b142e6ab3889bb9e",
+        "bytes": 5046
       },
       "web-preview": {
         "status": "tracked",
-        "sha256": "eed21ffd907a5089",
-        "bytes": 6703
+        "sha256": "015aeaf7c2ad253e",
+        "bytes": 7106
       },
       "web-preview-console": {
         "status": "split",

@@ -2,10 +2,13 @@
 // Pins what upstream looked like when we last compared against it.
 //
 // Every earlier comparison in this repo ran against unversioned registry URLs, which
-// makes a finding true on the day it was measured and unreproducible after. Worse, it
-// hides the case that actually matters: a component vanishing from the registry. Those
-// are not drift, they are orphans — files we own permanently whether we planned to or
-// not — and an unversioned diff reports them as "unchanged".
+// makes a finding true on the day it was measured and unreproducible after.
+//
+// The ai-elements base below is load-bearing and easy to get wrong. `registry.ai-sdk.dev`
+// also answers, and serves a SUBSET — roughly 20 of our components resolve there and the
+// rest 404, which reads exactly like "upstream deleted them" and is not. The canonical
+// endpoint is the one docs/ai-elements-inventory.md records. Check that file before
+// changing this constant.
 //
 // Writes src/components/upstream-baseline.json. Network-bound and deliberate: run it
 // when adopting an upstream revision, not on every check. `just check` reads the file,
@@ -24,7 +27,7 @@ import { listSourceFiles, primitivesDir, consumersDir } from './lib/consumer-con
 
 const SHADCN_STYLE = 'new-york-v4';
 const SHADCN_BASE = `https://ui.shadcn.com/r/styles/${SHADCN_STYLE}`;
-const AI_ELEMENTS_BASE = 'https://registry.ai-sdk.dev';
+const AI_ELEMENTS_BASE = 'https://elements.ai-sdk.dev/api/registry';
 const OUT_FILE = 'src/components/upstream-baseline.json';
 const CONCURRENCY = 6;
 
@@ -42,6 +45,12 @@ const consumers = await resolveAll(consumerNames, (name) => `${AI_ELEMENTS_BASE}
 // A file whose own name 404s may still be one of our LOC splits of a component that
 // does resolve (`prompt-input-controls` under `prompt-input`). Anything left over has
 // no upstream at all.
+//
+// One split does not prefix-match its base, because we named the file singular and the
+// registry component plural. It is a split, not an orphan — attachments.tsx re-exports
+// it — so state that rather than letting a naming slip read as a missing upstream.
+const SPLIT_OVERRIDES = { 'attachment-parts': 'attachments' };
+
 const trackedConsumers = new Set(
   Object.entries(consumers)
     .filter(([, entry]) => entry.status === 'tracked')
@@ -51,9 +60,11 @@ for (const [name, entry] of Object.entries(consumers)) {
   if (entry.status !== 'absent') {
     continue;
   }
-  const base = [...trackedConsumers]
-    .filter((candidate) => name.startsWith(`${candidate}-`))
-    .sort((left, right) => right.length - left.length)[0];
+  const base =
+    SPLIT_OVERRIDES[name] ??
+    [...trackedConsumers]
+      .filter((candidate) => name.startsWith(`${candidate}-`))
+      .sort((left, right) => right.length - left.length)[0];
   if (base) {
     consumers[name] = { status: 'split', splitOf: base };
   } else {

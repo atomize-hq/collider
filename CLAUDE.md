@@ -34,9 +34,12 @@ by copy, so the CLI that installed a file can also silently overwrite it.
   registry payload hashes we last compared against, so a finding is reproducible instead of
   true-on-the-day-it-was-measured. Refresh with `pnpm baseline:upstream` when adopting an
   upstream revision; `just check` reads the file, never the network.
-- **26 of 63 ai-elements files are orphaned** — they 404 upstream, so "re-adopt from the
-  registry" is not available for them at any vintage. The baseline records which. Those are
-  ours permanently, whether or not we planned it.
+- The ai-elements registry is `https://elements.ai-sdk.dev/api/registry/<name>.json`, as
+  recorded in [`docs/ai-elements-inventory.md`](docs/ai-elements-inventory.md). Do not use
+  `registry.ai-sdk.dev` — it answers, and serves a **subset**, so the components it lacks
+  come back 404 and read as deleted upstream when they are not.
+- All 63 vendored ai-elements files trace to a live upstream component: 33 tracked, 30 our
+  own LOC splits, 0 orphaned.
 - `just check-contract` checks what ai-elements needs from `src/components/ui`: every
   imported export still exists, and every `[data-slot=x]` a component styles is one some
   component emits. Not in `just check` yet — see the justfile for why.

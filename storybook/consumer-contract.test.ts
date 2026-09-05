@@ -127,16 +127,18 @@ describe('the pinned upstream baseline', () => {
     }
   });
 
-  it('records that a large share of ai-elements has no upstream left', () => {
+  it('resolves every vendored file to a live upstream component', () => {
     const statuses = Object.values(baseline.aiElements.components).map(
       (entry) => (entry as { status: string }).status
     );
-    const orphaned = statuses.filter((status) => status === 'orphaned').length;
 
-    // Not a threshold to satisfy — a fact to keep visible. These files 404 upstream, so
-    // "re-adopt from the registry" is not available for them at any vintage. If this
-    // number drops, upstream restored something and the baseline should be refreshed.
-    expect(orphaned).toBeGreaterThan(20);
-    expect(statuses.filter((status) => status === 'tracked').length).toBeGreaterThan(15);
+    // An orphan here means a component was pulled upstream — a real event worth stopping
+    // for. It is also what a WRONG registry base looks like: `registry.ai-sdk.dev` also
+    // answers and serves a subset, so probing it 404s ~26 of these and manufactures
+    // orphans that do not exist. Check the base against docs/ai-elements-inventory.md
+    // before believing this assertion failed for the interesting reason.
+    expect(baseline.aiElements.registry).toBe('https://elements.ai-sdk.dev/api/registry');
+    expect(statuses.filter((status) => status === 'orphaned')).toEqual([]);
+    expect(statuses.filter((status) => status === 'tracked').length).toBeGreaterThan(30);
   });
 });
