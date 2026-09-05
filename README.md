@@ -114,7 +114,7 @@ just check-rs     # Rust only
 ```bash
 just loc          # Rust + TS/TSX
 just loc-rs       # Rust only  (max 400 code lines per file)
-just loc-ts       # TS/TSX only (TSX max 200, TS max 300 — excludes tests + stories)
+just loc-ts       # TS/TSX only (max 300 code lines — excludes tests + stories)
 ```
 
 ### Tests

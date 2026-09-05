@@ -76,7 +76,7 @@ Accepts `MessageViewModel`. Does not know about transport or streaming state bey
 **Story kinds required:** `default`, `docs`
 **Optional story kinds:** `variant-matrix` (user vs assistant), `state-matrix` (default/streaming/error)
 
-**LOC budget:** TSX ≤200. Split into `MessageRowUser` and `MessageRowAssistant` sub-files if needed.
+**LOC budget:** TSX ≤300. Split into `MessageRowUser` and `MessageRowAssistant` sub-files if needed.
 
 ---
 
@@ -96,7 +96,7 @@ Accepts `MessageViewModel`. Does not know about transport or streaming state bey
 **Story kinds required:** `default`, `docs`
 **Optional story kinds:** `variant-matrix`, `actions`
 
-**LOC budget:** TSX ≤200
+**LOC budget:** TSX ≤300
 
 ---
 
@@ -117,7 +117,7 @@ Accepts `ToolCallViewModel`. No network calls; result data arrives via props.
 **Story kinds required:** `default`, `docs`
 **Optional story kinds:** `state-matrix` (pending/running/completed/failed)
 
-**LOC budget:** TSX ≤200
+**LOC budget:** TSX ≤300
 
 ---
 
@@ -136,7 +136,7 @@ Accepts `ToolCallViewModel`. No network calls; result data arrives via props.
 **Story kinds required:** `default`, `docs`
 **Optional story kinds:** `variant-matrix`, `actions`
 
-**LOC budget:** TSX ≤200
+**LOC budget:** TSX ≤300
 
 ---
 
@@ -154,7 +154,7 @@ Accepts `ToolCallViewModel`. No network calls; result data arrives via props.
 **Story kinds required:** `default`, `docs`, `state-matrix`, `focus`, `keyboard`
 **Optional story kinds:** `controlled`, `actions`
 
-**LOC budget:** TSX ≤200. If it exceeds this, split into `ComposerInput` and `ComposerToolbar`.
+**LOC budget:** TSX ≤300. If it exceeds this, split into `ComposerInput` and `ComposerToolbar`.
 
 ---
 
@@ -174,7 +174,7 @@ Accepts `ToolCallViewModel`. No network calls; result data arrives via props.
 **Story kinds required:** `default`, `variant-matrix`, `state-matrix`, `motion`, `docs`
 **Optional story kinds:** `actions`, `controlled`, `keyboard`, `focus`
 
-**LOC budget:** TSX ≤200
+**LOC budget:** TSX ≤300
 
 ---
 

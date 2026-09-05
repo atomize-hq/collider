@@ -11,7 +11,7 @@ Hand this doc + [ai-elements-inventory.md](./ai-elements-inventory.md) to a fres
 
 Adapting one ai-elements registry entry into the collider repo end-to-end. Every loop touches:
 
-1. `src/components/ai-elements/<name>.tsx` (and split siblings if > 200 LOC)
+1. `src/components/ai-elements/<name>.tsx` (and split siblings if > 300 LOC)
 2. `src/components/ai-elements/<name>.stories.tsx`
 3. `storybook/component-specs/<name>.json`
 4. `storybook/story-inventory.json` (append entry)
@@ -56,7 +56,7 @@ Adapt the vendor source into `src/components/ai-elements/<name>.tsx`:
 
 **LOC caps (enforced by `just loc`):**
 
-- TSX: max 200 lines per file
+- TSX: max 300 lines per file
 - TS: max 300 lines per file
 - Rust: max 400 lines per file
 

@@ -77,7 +77,7 @@ All day-to-day commands go through `just`. Never call `pnpm` scripts directly fo
 - `just preflight` must pass locally before every push. No exceptions.
 - Pre-commit hooks (Husky + lint-staged) run ESLint + Prettier on staged files.
 - Husky hooks mirror CI. Local pass = CI pass.
-- LOC guards are enforced in `just preflight`: TSX ≤200, TS ≤300, Rust ≤400 code lines.
+- LOC guards are enforced in `just preflight`: TSX/TS ≤300, Rust ≤400 code lines.
 
 ---
 

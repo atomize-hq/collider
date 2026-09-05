@@ -9,7 +9,7 @@ Next.js + Tailwind + Tauri (Rust) desktop app with Storybook.
 - `just test-all` — unit + storybook + Rust tests
 - `just sweep` — deep analysis before PR/merge (superset of preflight + coverage + knip + cargo-deny + cargo-machete + e2e)
 - `just fmt` — auto-format everything
-- `just loc` — LOC guards (TSX max 200, TS max 300, Rust max 400 code lines per file)
+- `just loc` — LOC guards (TSX/TS max 300, Rust max 400 code lines per file)
 
 ## Standards
 

@@ -129,4 +129,4 @@ Before any new route, layout, or feature is introduced:
 - [ ] Does not call Node.js APIs directly (use `src/bridge/` instead)
 - [ ] Tauri command calls are gated behind the bridge adapter
 - [ ] Storybook story can render without a live Tauri process
-- [ ] LOC limits respected (TSX ≤200, TS ≤300, Rust ≤400 code lines)
+- [ ] LOC limits respected (TSX/TS ≤300, Rust ≤400 code lines)
