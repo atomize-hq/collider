@@ -14,7 +14,7 @@
 > **Token/variable drift is solved, separately.** The repo plugin's read-only `Check Drift` action
 > compares Figma's variables against `design-tokens/dist/figma/tokens.json` and records
 > `artifacts/figma/drift-report.json`. See [`src/figma/README.md`](../src/figma/README.md) and
-> `src/lib/tokens/figma-drift.ts`. That covers variables only, not component nodes.
+> the `@atomize-hq/figma-token-rail` package. That covers variables only, not component nodes.
 
 ## Context
 
@@ -109,7 +109,7 @@ For each node ID from the manifest:
 - **Name mismatch**: `[FIGMA_REFS_NAME_MISMATCH] thinking-indicator: expected "Reasoning" but got "Reasoning_OLD"`
 - **Variant axis mismatch** (ComponentSet only): `[FIGMA_REFS_VARIANT_MISMATCH] thinking-indicator: expected state=[streaming,expanded,collapsed,duration]`
 
-If `FIGMA_API_TOKEN` is not set: print `[FIGMA_REFS_LIVE_CHECK_SKIPPED] FIGMA_API_TOKEN not set — live node resolution skipped` and pass. This matches the pattern used by `figma-variables-sync-enterprise.mjs`.
+If `FIGMA_API_TOKEN` is not set: print `[FIGMA_REFS_LIVE_CHECK_SKIPPED] FIGMA_API_TOKEN not set — live node resolution skipped` and pass. This matches the pattern used by `scripts/lib/figma-variables-sync-enterprise.mjs`.
 
 ### Success output
 

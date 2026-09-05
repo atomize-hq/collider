@@ -70,3 +70,11 @@ next-env.d.ts
 # the prior conversation. Machine-local and per-developer — a shared id would
 # resume someone else's thread.
 /.context/
+
+# Figma plugin build output. Source lives in @atomize-hq/figma-token-rail and is
+# stamped with figma/token-sync.config.json; rebuild with `pnpm figma:plugin:build`.
+figma/plugins/collider-token-sync/code.js
+figma/plugins/collider-token-sync/code.js.map
+figma/plugins/collider-token-sync/ui.html
+figma/plugins/collider-token-sync/manifest.json
+

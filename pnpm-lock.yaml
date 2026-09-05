@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@atomize-hq/figma-token-rail':
+        specifier: git+ssh://git@github.com/atomize-hq/figma-token-rail.git#v0.3.0
+        version: git+https://git@github.com:atomize-hq/figma-token-rail.git#b00a82d8e730c41c2d95f66d34d15e5a22706d40(esbuild@0.25.12)
       '@radix-ui/react-accordion':
         specifier: ^1.2.20
         version: 1.2.20(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -244,6 +247,15 @@ packages:
 
   '@asamuzakjp/css-color@3.2.0':
     resolution: {integrity: sha512-K1A6z8tS3XsmCMM86xoWdn7Fkdn9m6RSVtocUrJYIwZnFVkng/PvkEoWtOWmP+Scc6saYWHWZYbndEEXxl24jw==}
+
+  '@atomize-hq/figma-token-rail@git+https://git@github.com:atomize-hq/figma-token-rail.git#b00a82d8e730c41c2d95f66d34d15e5a22706d40':
+    resolution: {commit: b00a82d8e730c41c2d95f66d34d15e5a22706d40, repo: git@github.com:atomize-hq/figma-token-rail.git, type: git}
+    version: 0.3.0
+    peerDependencies:
+      esbuild: '>=0.20.0'
+    peerDependenciesMeta:
+      esbuild:
+        optional: true
 
   '@babel/code-frame@7.29.0':
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
@@ -6153,6 +6165,10 @@ snapshots:
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
       lru-cache: 10.4.3
+
+  '@atomize-hq/figma-token-rail@git+https://git@github.com:atomize-hq/figma-token-rail.git#b00a82d8e730c41c2d95f66d34d15e5a22706d40(esbuild@0.25.12)':
+    optionalDependencies:
+      esbuild: 0.25.12
 
   '@babel/code-frame@7.29.0':
     dependencies:

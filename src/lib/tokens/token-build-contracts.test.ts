@@ -6,7 +6,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { preflightBuildArtifacts } from '../../../scripts/lib/token-build-preflight.mjs';
 import { loadBuildGraph } from '../../../scripts/lib/token-build-graph.mjs';
 import { generateTypedTokenModule } from '../../../scripts/lib/token-artifacts.mjs';
-import { flattenTokenDocument } from './figma-token-mapping';
+import { flattenTokenDocument } from '@atomize-hq/figma-token-rail';
 
 const repoRoot = process.cwd();
 const stagedCssArtifactPath = path.join(repoRoot, 'design-tokens/dist/css/tokens.css');
