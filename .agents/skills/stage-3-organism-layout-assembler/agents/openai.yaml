@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Stage 3 Layout Assembler'
+  short_description: 'Assemble verified components into layouts and screens'
+  default_prompt: 'Use $stage-3-organism-layout-assembler to compose verified primitives and components into organisms, layouts, and route-level screens while preserving Tauri boundaries and design sync.'

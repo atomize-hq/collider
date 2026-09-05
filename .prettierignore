@@ -8,3 +8,12 @@ src-tauri/gen/
 pnpm-lock.yaml
 scripts/fixtures/token-validation/invalid-json/design-tokens/src/tokens/core.tokens.json
 archive/
+
+# Vendored skill payload: 48 component references and 80 runnable demos copied
+# from the ai-elements registry. Left byte-for-byte as upstream ships them so a
+# re-sync is a clean diff — the same policy the eslint config applies to the
+# vendored components in src/components/ai-elements. SKILL.md is ours and is
+# formatted normally.
+.agents/skills/ai-elements/references/
+.agents/skills/ai-elements/scripts/
+

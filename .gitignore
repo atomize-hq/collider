@@ -41,8 +41,14 @@ next-env.d.ts
 
 # storybook
 /storybook-static/
-.claude
-.agents
+
+# agent tooling
+#
+# .agents/skills is the canonical skill pack and .claude/skills symlinks into it.
+# Both are tracked: the pack carries durable workflow knowledge and schemas, and
+# an untracked copy drifted from the repo for six months with nothing able to
+# catch it. Personal, per-developer Claude Code settings stay ignored.
+.claude/settings.local.json
 .codex-artifacts/
 
 # harness outputs

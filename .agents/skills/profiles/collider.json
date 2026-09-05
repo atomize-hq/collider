@@ -1,0 +1,39 @@
+{
+  "$comment": "Collider's values for the x-repo-profile extension points in ../schemas. Pass with --profile to check an artifact against Collider's vocabulary as well as the portable shape. A different repo writes its own file here and changes nothing in schemas/.",
+
+  "artifact-path": {
+    "const": "design-tokens/dist/figma/tokens.json"
+  },
+
+  "publish-modes": {
+    "enum": ["plugin-import-manual", "rest-variables-oauth", "tokens-studio-carried"],
+    "description": "Collider publishes through the repo-owned Figma plugin. The REST rail is Enterprise/full-seat gated and the Tokens Studio carrier was defined and never used."
+  },
+
+  "promotion-levels": {
+    "enum": [
+      "A-source-valid",
+      "B-projection-valid",
+      "C-consumption-valid",
+      "D-publish-valid",
+      "E-promotion-complete"
+    ]
+  },
+
+  "tier-policy": {
+    "enum": ["primitive", "interactive", "workflow"],
+    "description": "Mirrors storybook/component-tier-policy.json tierOrder. Keep the two in step."
+  },
+
+  "tier-names": {
+    "items": { "enum": ["primitive", "interactive", "workflow"] }
+  },
+
+  "consumer-ids": {
+    "items": { "type": "string", "pattern": "^THR-[0-9]{2}$" }
+  },
+
+  "generated-artifacts": {
+    "description": "Collider's three generated proof surfaces: token docs, recipe docs, runtime CSS parity."
+  }
+}
