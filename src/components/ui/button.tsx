@@ -16,7 +16,10 @@ const buttonVariants = cva(
           'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
         secondary: 'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+        // `text-primary` is the accent (#155dfc), which is 3.42:1 on our dark ground —
+        // link text must not derive from it. `info` is the themed readable blue:
+        // 6.80:1 dark, 6.83:1 light.
+        link: 'text-info underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-9 px-4 py-2',

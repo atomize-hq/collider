@@ -46,6 +46,13 @@
       "reason": "Added size not present upstream. ai-elements toolbars need a 32px icon button; without it they set `className=\"h-8 w-8\"` at every call site."
     },
     {
+      "id": "button-link-not-accent",
+      "file": "src/components/ui/button.tsx",
+      "require": ["link: 'text-info"],
+      "reason": "Upstream's link variant is `text-primary`, which resolves to the accent (#155dfc) and gives 3.42:1 on the dark ground — below the 4.5:1 minimum for text. The accent is becoming a user knob, so no text colour may derive from it. `info` is a themed role: 6.80:1 dark, 6.83:1 light.",
+      "instead": "text-info"
+    },
+    {
       "id": "hover-card-portal",
       "file": "src/components/ui/hover-card.tsx",
       "require": ["HoverCardPrimitive\\.Portal"],
