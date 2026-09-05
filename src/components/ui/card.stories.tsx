@@ -91,12 +91,15 @@ export const VariantMatrix: Story = {
       </Card>
     </div>
   ),
+  // KNOWN BROKEN — characterization, not acceptance. See the ButtonGroup story for why.
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Pins the defect rather than asserting the fix: the action currently renders below
-    // the title because CardHeader forces a column. When the v4 CardHeader lands, this
-    // flips to `toBeGreaterThan` and the story becomes the migration's visual proof.
+    // Pins the defect: the action renders BELOW the title because CardHeader forces a
+    // column, so its top edge clears the title's bottom edge. The desired state is the
+    // opposite relation — action top ABOVE title bottom, i.e. the two overlap
+    // vertically because they share a row — so the migration replaces this with
+    // `toBeLessThan`, with tolerance for baseline differences.
     const title = canvas.getByText('Header with an action');
     const action = canvas.getByRole('button', { name: 'Edit' });
 

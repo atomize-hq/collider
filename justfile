@@ -121,7 +121,9 @@ check-upstream:
     pnpm validate:upstream-policy
 
 # Check what ai-elements needs from src/components/ui: every imported export still
-# exists, and every `[data-slot=x]` a component styles is one some component emits.
+# exists, and every `[data-slot=x]` a component styles is emitted by the component that
+# OWNS that slot name — not merely declared somewhere in the tree, which any file could
+# satisfy by accident.
 #
 # NOT in `check` yet — it currently reports one real defect. `button-group.tsx` styles
 # `[data-slot=select-trigger]`, which only the v4 Select emits; our pre-v4 Select

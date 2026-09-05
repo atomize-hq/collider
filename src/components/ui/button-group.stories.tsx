@@ -75,13 +75,20 @@ export const VariantMatrix: Story = {
       </ButtonGroup>
     </div>
   ),
+  // KNOWN BROKEN — characterization, not acceptance. This asserts today's defect so the
+  // migration has something that visibly changes. Replace it with the desired-state
+  // assertion in the same commit that migrates Select; a green test encoding the defect
+  // is a sentinel, never proof the composition works.
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Environment' });
+    const group = trigger.closest('[data-slot="button-group"]')!;
 
-    // Pins the dead slot. Our Select emits no `data-slot`, so ButtonGroup's rules cannot
-    // reach it. After the v4 migration this becomes `toBe('select-trigger')` and the
-    // width rule takes effect.
+    // Run buttonGroupVariants' own selector rather than checking an attribute on one
+    // element: this is the query the two CSS rules make, so an empty result IS the
+    // defect. Post-migration it returns the trigger, and the desired-state assertion
+    // then has to prove the resulting width and corner radius, which this cannot.
+    expect(group.querySelectorAll('[data-slot="select-trigger"]')).toHaveLength(0);
     expect(trigger.getAttribute('data-slot')).toBeNull();
   },
 };

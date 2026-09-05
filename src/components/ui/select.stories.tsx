@@ -15,16 +15,6 @@ import {
 const meta = {
   title: 'Primitives/Select',
   component: Select,
-  parameters: {
-    a11y: {
-      // Same Radix mechanism the Open In Chat story documents: modality is
-      // implemented by setting `aria-hidden` on everything behind the open listbox
-      // without `inert`, so the trigger underneath stays focusable in the DOM and axe
-      // reads that as hidden-but-reachable. Focus is in fact held inside the listbox.
-      // Radix's mechanism, not ours, and not fixable from here.
-      config: { rules: [{ id: 'aria-hidden-focus', enabled: false }] },
-    },
-  },
 } satisfies Meta<typeof Select>;
 
 export default meta;
@@ -37,6 +27,18 @@ const stack = { display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth:
 // the open listbox `aria-hidden`, so a story holding several Selects fails
 // `aria-hidden-focus` on the siblings the moment one opens.
 export const Default: Story = {
+  parameters: {
+    a11y: {
+      // Scoped to this story, the only one that opens the listbox. Same Radix mechanism
+      // the Open In Chat story documents: modality is implemented by setting
+      // `aria-hidden` on everything behind the open listbox without `inert`, so the
+      // trigger underneath stays focusable in the DOM and axe reads that as
+      // hidden-but-reachable. Focus is in fact held inside the listbox. At meta level
+      // this would also disable the rule for the closed-state stories, where the
+      // exception does not apply and a real violation could hide.
+      config: { rules: [{ id: 'aria-hidden-focus', enabled: false }] },
+    },
+  },
   render: () => (
     <div style={{ maxWidth: '18rem' }}>
       <Select>

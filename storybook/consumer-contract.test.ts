@@ -14,6 +14,7 @@ import {
   extractSelectedSlots,
   listSourceFiles,
   primitivesDir,
+  resolveSlotOwner,
   summarizeConsumerContract,
 } from '../scripts/lib/consumer-contract.mjs';
 
@@ -40,17 +41,23 @@ describe('the live consumer contract', () => {
     // When the migration lands, this expectation becomes `[]` and `check-contract` joins
     // `just check` — that edit is the acceptance criterion, not incidental churn.
     expect(slotErrors).toHaveLength(1);
-    expect(slotErrors[0]).toContain('nothing declares data-slot="select-trigger"');
-    expect(slotErrors[0]).toContain('src/components/ui/button-group.tsx');
+    expect(slotErrors[0]).toContain('src/components/ui/select.tsx does not emit');
+    expect(slotErrors[0]).toContain('data-slot="select-trigger"');
+    expect(slotErrors[0]).toContain('Selected by: src/components/ui/button-group.tsx');
   });
 
   it('covers a real surface, so a broken extractor cannot pass vacuously', () => {
     const summary = summarizeConsumerContract(contract);
 
     expect(summary.primitiveCount).toBeGreaterThan(20);
-    expect(summary.consumerCount).toBeGreaterThan(50);
     expect(summary.importedExports).toBeGreaterThan(50);
     expect(summary.declaredSlots).toBeGreaterThan(10);
+
+    // Scanning a directory is not the same as consuming from it: about a third of the
+    // ai-elements files import no primitive at all, and reporting the scan count as
+    // "consumers" overstated the surface.
+    expect(summary.consumerCount).toBeLessThan(summary.scannedFileCount);
+    expect(summary.consumerCount).toBeGreaterThan(40);
   });
 });
 
@@ -84,6 +91,20 @@ describe('extractors', () => {
     expect([...imports.get('card')!].sort()).toEqual(['Card', 'CardProps']);
   });
 
+  it('resolves a slot to its owning component by longest match', () => {
+    const files = new Map([
+      ['button', 'src/components/ui/button.tsx'],
+      ['button-group', 'src/components/ui/button-group.tsx'],
+      ['select', 'src/components/ui/select.tsx'],
+    ]);
+
+    expect(resolveSlotOwner('select-trigger', files)).toBe('select');
+    // Longest match, or `button-group-separator` would be attributed to button.
+    expect(resolveSlotOwner('button-group-separator', files)).toBe('button-group');
+    expect(resolveSlotOwner('button', files)).toBe('button');
+    expect(resolveSlotOwner('nothing-here', files)).toBeNull();
+  });
+
   it('tells a declared slot apart from a selected one', () => {
     const source = `<div data-slot="card-header" className="has-data-[slot=card-action]:grid-cols-2 [&>[data-slot=select-trigger]]:w-fit" />`;
 
@@ -97,19 +118,31 @@ describe('the pinned upstream baseline', () => {
     fs.readFileSync(path.resolve(repoRoot, 'src/components/upstream-baseline.json'), 'utf8')
   );
 
-  it('pins every primitive against a content hash, not a moving URL', () => {
+  it('pins every primitive against a full payload digest, not a moving URL', () => {
     const names = listSourceFiles(path.resolve(repoRoot, primitivesDir)).map((file: string) =>
       path.basename(file).replace(/\.tsx?$/, '')
     );
 
+    expect(baseline.baselineVersion).toBe('2');
     expect(baseline.primitives.style).toBe('new-york-v4');
+    // The two upstreams play different roles during the migration and must not be read
+    // as one authority: components.json still points at the pre-v4 style.
+    expect(baseline.primitives.role).toBe('migration-target');
+    expect(baseline.aiElements.role).toBe('current-source');
     expect(Object.keys(baseline.primitives.components).sort()).toEqual(names.sort());
+
     for (const entry of Object.values(baseline.primitives.components) as Array<{
       status: string;
-      sha256: string;
+      payloadSha256: string;
+      files: Record<string, string>;
+      registryDependencies: string[];
     }>) {
       expect(entry.status).toBe('tracked');
-      expect(entry.sha256).toMatch(/^[0-9a-f]{16}$/);
+      // Full digest of the whole registry payload — a truncated hash of one file cannot
+      // detect a change to a sibling file, a dependency, or the item's metadata.
+      expect(entry.payloadSha256).toMatch(/^[0-9a-f]{64}$/);
+      expect(Object.keys(entry.files).length).toBeGreaterThan(0);
+      expect(Array.isArray(entry.registryDependencies)).toBe(true);
     }
   });
 
@@ -140,5 +173,11 @@ describe('the pinned upstream baseline', () => {
     expect(baseline.aiElements.registry).toBe('https://elements.ai-sdk.dev/api/registry');
     expect(statuses.filter((status) => status === 'orphaned')).toEqual([]);
     expect(statuses.filter((status) => status === 'tracked').length).toBeGreaterThan(30);
+
+    // `error` means listed upstream but unfetchable — an incident, never a removal. The
+    // fetcher refuses to write a baseline containing one, so seeing it here means the
+    // file was hand-edited.
+    expect(statuses.filter((status) => status === 'error')).toEqual([]);
+    expect(baseline.aiElements.indexedComponents).toBeGreaterThan(100);
   });
 });

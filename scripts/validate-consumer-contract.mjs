@@ -56,9 +56,10 @@ try {
 
   const summary = summarizeConsumerContract(contract);
   console.log(
-    `✓ Consumer contract holds (${summary.consumerCount} consumers → ` +
-      `${summary.importedExports} imports across ${summary.consumedPrimitives}/${summary.primitiveCount} primitives; ` +
-      `${summary.selectedSlots}/${summary.declaredSlots} slots selected)`
+    `✓ Consumer contract holds (${summary.consumerCount} of ${summary.scannedFileCount} scanned ` +
+      `files import primitives → ${summary.importedExports} imports across ` +
+      `${summary.consumedPrimitives}/${summary.primitiveCount} primitives; ` +
+      `${summary.selectedSlots} of ${summary.declaredSlots} slots selected)`
   );
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));
