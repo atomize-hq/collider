@@ -7,11 +7,7 @@ export const publishProofUsage =
 export const publishProofArtifactPath = 'design-tokens/dist/figma/tokens.json';
 export const publishProofPilotName = 'Collider';
 export const publishProofPilotFile = 'figma://file/23PLdynlRYoBYQx9teoC8A';
-export const publishProofModes = new Set([
-  'plugin-import-manual',
-  'rest-variables-oauth',
-  'tokens-studio-carried',
-]);
+export const publishProofModes = new Set(['plugin-import-manual', 'tokens-studio-carried']);
 export const materializationStatuses = new Set(['passed', 'failed']);
 
 const shaPattern = /^[a-f0-9]{40}$/;
@@ -54,7 +50,7 @@ export function validatePublishProof(data) {
 
   if (!publishProofModes.has(data.mode)) {
     errors.push(
-      '[CT-7B_PUBLISH_PROOF_INVALID_MODE] mode must be plugin-import-manual, rest-variables-oauth, or tokens-studio-carried'
+      '[CT-7B_PUBLISH_PROOF_INVALID_MODE] mode must be plugin-import-manual or tokens-studio-carried'
     );
   }
 

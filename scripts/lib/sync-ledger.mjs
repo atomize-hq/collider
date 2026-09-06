@@ -26,11 +26,7 @@ export const basePromotionKeys = ['parityMode', 'highestEarnedLevel'];
 export const exceptionRequiredKeys = ['code', 'message', 'blocking', 'status'];
 export const exceptionOptionalKeys = ['field'];
 export const syncLedgerArtifactPath = 'design-tokens/dist/figma/tokens.json';
-export const publishModes = new Set([
-  'plugin-import-manual',
-  'rest-variables-oauth',
-  'tokens-studio-carried',
-]);
+export const publishModes = new Set(['plugin-import-manual', 'tokens-studio-carried']);
 export const materializationStatuses = new Set(['not-run', 'passed', 'failed']);
 export const parityModes = new Set(['deferred', 'required']);
 export const earnedLevels = new Set([
@@ -230,7 +226,7 @@ function validatePublish(errors, publish) {
 
   if (!publishModes.has(publish.mode)) {
     errors.push(
-      '[CT-8B_INVALID_PUBLISH_MODE] publish.mode must be plugin-import-manual, rest-variables-oauth, or tokens-studio-carried'
+      '[CT-8B_INVALID_PUBLISH_MODE] publish.mode must be plugin-import-manual or tokens-studio-carried'
     );
   }
 

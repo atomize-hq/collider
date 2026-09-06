@@ -124,32 +124,66 @@ to success.
 
 **Acceptance criteria:**
 
-- [ ] Deleted: `scripts/figma-variables-sync-enterprise.mjs`,
+- [x] Deleted: `scripts/figma-variables-sync-enterprise.mjs`,
       `scripts/lib/figma-variables-sync-enterprise.mjs`
-- [ ] `figma:sync:variables:enterprise` gone from `package.json`;
+- [x] `figma:sync:variables:enterprise` gone from `package.json`;
       `figma-sync-variables-enterprise` gone from the `justfile`
-- [ ] Enum **and error message** updated in `scripts/lib/sync-ledger.mjs:31,233` and
+- [x] Enum **and error message** updated in `scripts/lib/sync-ledger.mjs:31,233` and
       `scripts/lib/publish-proof.mjs:12,57`
-- [ ] Both fixtures repointed to `plugin-import-manual` **in the same change**
-- [ ] Schema and profile enums updated: `.agents/skills/schemas/sync-ledger.schema.json:34`,
+- [x] Both fixtures repointed to `plugin-import-manual` **in the same change**
+- [x] Schema and profile enums updated: `.agents/skills/schemas/sync-ledger.schema.json:34`,
       `.agents/skills/profiles/collider.json:9`
-- [ ] `src/figma/parity-policy.md:10,29` states the mode is **retired**, not deferred —
+- [x] `src/figma/parity-policy.md:10,29` states the mode is **retired**, not deferred —
       line 29 is a written commitment, so rewrite it rather than dropping the sentence
-- [ ] `src/figma/README.md:16` and `src/figma/publish-proof-contract.md:14` updated
+- [x] `src/figma/README.md:16` and `src/figma/publish-proof-contract.md:14` updated
 
 **Verification:**
 
-- [ ] `pnpm vitest run src/lib/tokens/figma-sync-policy.test.ts` passes
-- [ ] The contradictory-carrier fixture still fails **naming the carrier contradiction**, not an
+- [x] `pnpm vitest run src/lib/tokens/figma-sync-policy.test.ts` passes
+- [x] The contradictory-carrier fixture still fails **naming the carrier contradiction**, not an
       invalid mode — read the message, do not accept a red result
-- [ ] `just preflight` passes
-- [ ] **S5**: `grep -rn "rest-variables-oauth"` over tracked sources and generated output returns
+- [x] `just preflight` passes
+- [x] **S5**: `grep -rn "rest-variables-oauth"` over tracked sources and generated output returns
       nothing, excluding `archive/`, `SPEC.md`, `tasks/` and `docs/consultations/`
+
+**Reconciliation against T1's frozen baseline** — the reason the capture had to come first:
+
+```
+### invalid-contradictory-mode.sync-ledger.json
+  mode  : rest-variables-oauth -> plugin-import-manual
+  errors: UNCHANGED -> ["[CT-8B_FORBIDDEN_PARITY_DEFERRED_REASON] …"]
+
+### valid-required.sync-ledger.json
+  mode  : rest-variables-oauth -> plugin-import-manual
+  errors: UNCHANGED -> []
+  state : UNCHANGED -> verified-current
+
+fixtures changed: 2 of 11
+```
+
+Exactly two fixtures moved, each in exactly one field, and `invalid-contradictory-mode` still
+fails on the **carrier/parity** contradiction rather than an invalid mode. That is the
+regression this task's verification was watching for, and it is now measured rather than
+eyeballed. The baseline file keeps the retired mode's name on purpose — it is the
+pre-retirement reference T9 reconciles against, so **S5 exempts it** and
+`pnpm baseline:rail` refuses to overwrite it.
+
+**Not in the criteria, found while doing it:**
+
+- `docs/figma-ref-drift-detection.md` cited the deleted file twice as a pattern to copy — the
+  token-skip behaviour and the dependency-injection shape. Both rewritten to stand alone;
+  the DI reference now points at `sync-ledger.mjs:171` / `figma-parity.mjs:79`, which carry
+  the same pattern and are not going anywhere.
+- `parity-policy.md:10` records real history (`b72315a` relaxed the trigger) and had to keep
+  saying so while losing the literal string. It now names the rail descriptively.
+- `pnpm check` (knip) was **already red at `HEAD`** before this task — verified by stashing.
+  `@figma/plugin-typings` is an orphan the extraction left behind. Not T3's doing; fixed
+  separately so this diff stays about the retirement.
 
 **Dependencies:** **T1** — the fixture capture must complete before this task edits those fixtures or their validators
 **Files likely touched:** 2 deleted, 2 validators, 2 fixtures, 3 docs, 1 schema, 1 profile,
 `package.json`, `justfile`
-**Scope:** L — atomic by necessity, not by choice
+**Scope:** L — atomic by necessity, not by choice. **Done**: 2 files deleted, 2 validators, 2 fixtures, 1 schema, 1 profile, 4 docs, `package.json`, `justfile`.
 
 ---
 

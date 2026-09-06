@@ -13,7 +13,7 @@ This directory documents Collider's live Figma convergence posture under `CT-7B`
 
 - `plugin-import-manual` is the default proof rail for current convergence work.
 - The repo-owned Figma plugin (`Collider Token Sync`) is the canonical implementation of `plugin-import-manual`.
-- `rest-variables-oauth` exists only as a future Enterprise-only rail (Figma Variables REST API) and is not part of the v1 operator flow.
+- The Enterprise-only rail (Figma Variables REST API) is **retired**. It was seat-gated and never ran to success; its publish mode, script and `just` recipe were removed. It is not a deferred option.
 - `tokens-studio-carried` is optional temporary carriage only. It is never a permanent required rail.
 - No Figma write-back or bidirectional sync is allowed by this policy.
 - The plugin's read-only `Check Drift` action is the sanctioned way to observe Figma-side change. It

@@ -31,7 +31,7 @@
         "mode": {
           "type": "string",
           "x-repo-profile": "publish-modes",
-          "enum": ["plugin-import-manual", "rest-variables-oauth", "tokens-studio-carried"],
+          "enum": ["plugin-import-manual", "tokens-studio-carried"],
           "description": "REPO PROFILE. Which rail actually moved the artifact into Figma. Extend this enum per repo."
         },
         "tokensStudioCarrier": { "type": "boolean" },

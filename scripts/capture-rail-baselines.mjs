@@ -169,7 +169,7 @@ function readJson(relativePath) {
  * this refuses to overwrite one that has drifted. Re-running on an unchanged
  * tree is a no-op; re-running after a deliberate change stops and says what
  * moved, and `--force` is the only way past it. Without this, the first person
- * to run the capture after T3 repoints the two `rest-variables-oauth` fixtures
+ * to run the capture after T3 repoints the two fixtures carrying the retired
  * would silently replace the pre-retirement reference with a post-retirement
  * one, and T9 would reconcile a file against itself.
  */

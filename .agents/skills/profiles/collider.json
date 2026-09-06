@@ -6,8 +6,8 @@
   },
 
   "publish-modes": {
-    "enum": ["plugin-import-manual", "rest-variables-oauth", "tokens-studio-carried"],
-    "description": "Collider publishes through the repo-owned Figma plugin. The REST rail is Enterprise/full-seat gated and the Tokens Studio carrier was defined and never used."
+    "enum": ["plugin-import-manual", "tokens-studio-carried"],
+    "description": "Collider publishes through the repo-owned Figma plugin. The Enterprise Variables REST rail was retired — seat-gated, never run to success, and its code is gone. The Tokens Studio carrier was defined and never used."
   },
 
   "promotion-levels": {

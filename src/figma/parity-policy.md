@@ -6,10 +6,10 @@ This file is the canonical parity-policy surface for Collider's `CT-8B` ledger.
 
 - The current parity posture is `promotion.parityMode="required"`, at
   `promotion.highestEarnedLevel="E-promotion-complete"`.
-- Promoted in `b72315a` (2026-03-22). That commit also relaxed the trigger below from
-  `rest-variables-oauth` to `plugin-import-manual`, which is what made the promotion legal
-  — but it left this section reading `deferred`, so the doc contradicted its own ledger for
-  five months. Corrected 2026-09-03.
+- Promoted in `b72315a` (2026-03-22). That commit also relaxed the trigger below from the
+  Enterprise Variables REST rail to `plugin-import-manual`, which is what made the promotion
+  legal — but it left this section reading `deferred`, so the doc contradicted its own ledger
+  for five months. Corrected 2026-09-03.
 - `src/figma/sync-ledger.json` is the machine-readable truth. If it and this section
   disagree again, the ledger is right and this section is stale.
 
@@ -26,7 +26,11 @@ This file is the canonical parity-policy surface for Collider's `CT-8B` ledger.
 
 Promotion from deferred to required is allowed only when all of the following are true:
 
-- the active publish rail is `plugin-import-manual` (canonical v1 path per CT-15B provisional assumptions; `rest-variables-oauth` remains deferred until Enterprise API becomes available without seat restrictions)
+- the active publish rail is `plugin-import-manual` (canonical v1 path per CT-15B provisional
+  assumptions). This previously held the Enterprise Variables REST rail open as a deferred
+  future path. That rail is **retired**, not deferred: seat-gated, never run to success, and
+  its code, script, recipe and ledger mode are gone. Reviving it is a new feature, not a
+  revert.
 - the current artifact revision is recorded in `artifact.revision`
 - `verification.materializationStatus="passed"` for that same revision
 - `verification.lastVerifiedRevision` matches `artifact.revision`

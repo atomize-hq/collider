@@ -5,7 +5,7 @@
     "revision": "2222222222222222222222222222222222222222"
   },
   "publish": {
-    "mode": "rest-variables-oauth",
+    "mode": "plugin-import-manual",
     "tokensStudioCarrier": false,
     "figmaFile": "figma://file/fixture-invalid-contradictory"
   },

@@ -109,7 +109,7 @@ For each node ID from the manifest:
 - **Name mismatch**: `[FIGMA_REFS_NAME_MISMATCH] thinking-indicator: expected "Reasoning" but got "Reasoning_OLD"`
 - **Variant axis mismatch** (ComponentSet only): `[FIGMA_REFS_VARIANT_MISMATCH] thinking-indicator: expected state=[streaming,expanded,collapsed,duration]`
 
-If `FIGMA_API_TOKEN` is not set: print `[FIGMA_REFS_LIVE_CHECK_SKIPPED] FIGMA_API_TOKEN not set — live node resolution skipped` and pass. This matches the pattern used by `scripts/lib/figma-variables-sync-enterprise.mjs`.
+If `FIGMA_API_TOKEN` is not set: print `[FIGMA_REFS_LIVE_CHECK_SKIPPED] FIGMA_API_TOKEN not set — live node resolution skipped` and pass. A missing token is a skip, never a failure — a gate that needs a credential to go green cannot run in CI. (The retired Enterprise sync rail carried this pattern; that file is gone, so this is the specification, not a cross-reference.)
 
 ### Success output
 
@@ -157,7 +157,7 @@ No `justfile` changes needed — it slots into the existing `govern:tokens` orch
 - Error format: `[SCREAMING_SNAKE_CODE] message` on stderr
 - Success format: `✓ message` on stdout
 - `writeLine(stream, message)` helper — copy from `figma-parity.mjs:110`
-- Dependency injection pattern — `options.fetch`, `options.readJson`, `options.env`, etc. — copy from `figma-variables-sync-enterprise.mjs`
+- Dependency injection pattern — every CLI entry point takes `options = {}` and falls back to the real dependency, so tests inject `args`, `stdout`, `stderr` and the validator itself. Copy from `sync-ledger.mjs:171` or `figma-parity.mjs:79`
 - Exit codes: 0 = pass, 1 = validation failure, 3 = unexpected runtime error
 
 ---

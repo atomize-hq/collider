@@ -5,7 +5,7 @@
     "revision": "3333333333333333333333333333333333333333"
   },
   "publish": {
-    "mode": "rest-variables-oauth",
+    "mode": "plugin-import-manual",
     "tokensStudioCarrier": false,
     "figmaFile": "figma://file/fixture-valid-required-sync-ledger"
   },

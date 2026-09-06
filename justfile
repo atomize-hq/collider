@@ -64,10 +64,6 @@ figma-plugin-build:
 figma-token-server:
     pnpm figma:tokens:serve
 
-# Enterprise-only rail (Figma Variables REST API; requires Enterprise/full-seat access)
-figma-sync-variables-enterprise:
-    pnpm figma:sync:variables:enterprise
-
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers
 # ══════════════════════════════════════════════════════════════════════════════
