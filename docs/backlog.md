@@ -347,16 +347,33 @@ internal to it, "make the rail installable" and "stop the repo owning rail logic
 piece of work, not two. Do not do BL-3's npm publish as a standalone step without deciding
 this first — it would publish a boundary this item moves.
 
-**BL-3's CI break is not subsumed and still blocks BL-2.** Two things survive this item
-unchanged:
+**BL-3's CI break is not subsumed and still blocks BL-2.** `pnpm install --frozen-lockfile`
+fails in all 8 jobs while the dependency is a private `git+ssh` URL, whatever the package is
+called or contains. That is true today and stays true until BL-3 is done.
 
-1. `pnpm install --frozen-lockfile` fails in all 8 jobs while the dependency is a private
-   git+ssh URL, whatever the package is called or contains.
-2. **The dev-time dependency does not go away.** `just preflight` has to keep failing on a
-   token regression, so the verifier must be installed. `pnpm dlx` on every preflight means a
-   network round-trip and silent version drift, which is worse. The repo ends up owning no
-   rail code while still declaring the dependency — that is the intended end state, not a
-   compromise.
+### The `package.json` entry should not survive this
+
+The rail is in `dependencies` today for one reason: Collider **imports** it, at
+`figma-token-rail.test.ts`, `token-build-contracts.test.ts:9`, and
+`build-figma-plugin.mjs:18` (`require.resolve`). Imports need module resolution, and module
+resolution needs `node_modules`.
+
+This item removes all three. The tests become an expectations file plus a CLI invocation, the
+build script becomes a CLI invocation, and the `$themeOverrides` assertion moves into the
+package's own suite. Nothing in Collider imports anything afterwards, so the requirement
+drops from "resolvable module" to "runnable command" — a PATH question, not a `package.json`
+question.
+
+This tooling is not part of what builds or runs a Tauri desktop app, and it should not appear
+in the manifest that describes what does. Leaving it there is also what makes all 8 CI jobs
+pay an install cost for something only the token pipeline uses.
+
+**What replaces it is the open question,** and it is the one thing `package.json` was giving
+away for free: a pinned, reproducible, CI-cached version. Whatever carries the pack has to
+provide an equivalent. Note that `skills-lock.json` (tracked, 2026-03-17) already sketches
+exactly this — `ai-elements` vendored from `vercel/ai-elements` with a `computedHash` — and
+**nothing in the repo reads it**. Finishing that mechanism, or deliberately replacing it, is
+part of the plan doc in step 2, not a detail to settle in passing.
 
 ### Prerequisite: the repo's gates do not see `.agents`
 
