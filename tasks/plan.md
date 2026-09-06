@@ -122,13 +122,20 @@ scheduled them.
 - [x] T5: Decide the delivery contract — `SPEC.md` §10; mechanism proof moved to T14
 - [x] T6: Fix the plugin UI's hardcoded values and placeholder substitution — `1f529ed`; S4 byte-identical
 
-**Checkpoint: Foundation**
+**Checkpoint: Foundation** — all six tasks landed; the review is the only thing outstanding.
 
-- [ ] `just preflight` green; `pnpm check` green including `pack-check`
-- [ ] **S5** holds over sources, generated output and the packed tarball
-- [ ] **S7** holds by enforcement, not discovery
-- [ ] Baselines from T1 stored and digested
-- [ ] The delivery contract is written down, including offline local behaviour
+- [x] `just preflight` green; `pnpm check` green including `pack-check`. Collider's knip was
+      **already red at HEAD** before this work, on two leftovers from the extraction — fixed in
+      `c788854` so the gate means something again.
+- [x] **S5** holds over sources, generated output **and the packed tarball** — checked by
+      unpacking it. One deliberate exemption, recorded in the criterion: the frozen
+      pre-retirement baseline must keep naming the mode, or T9 has nothing to reconcile against.
+- [x] **S7** holds by enforcement, not discovery — a lint error, a failing test and a
+      mis-formatted file were each introduced, observed red, and reverted. The tsc leg is
+      deliberately not claimed here; it belongs to the package (see T2).
+- [x] Baselines from T1 stored and digested, and protected: the capture refuses to overwrite a
+      baseline that has drifted, which T3 then exercised for real.
+- [x] The delivery contract is written down, including offline local behaviour — `SPEC.md` §10
 - [ ] **Review with human before Phase 2** — T7 renames a repo
 
 ### Phase 2: A complete, self-contained package

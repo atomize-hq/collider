@@ -321,7 +321,14 @@ working substitution sat next to three hardcoded values, and nothing connected t
 
 - [x] Placeholders exist in `ui.html` for the artifact origin and the token-source path, and
       both are substituted at build time
-- [x] No `localhost:4173` or Collider path remains in the pack's sources
+- [x] No `localhost:4173` or Collider path remains in the pack's sources — **no Collider path
+      anywhere**, verified inside the packed tarball. Four `localhost:4173` remain and are
+      deliberate: they are all the same neutral default `artifactUrl`, in `src/config.ts`, its
+      build output, the example config and the README documenting it. A config default has to
+      be something; what the criterion was about was values baked into `ui.html` where no
+      config could reach them, and those are gone. (Whether `artifactUrl` should have a default
+      at all, rather than being required, is a separate question — a consumer omitting it
+      currently gets localhost silently.)
 - [x] Missing placeholder, and unresolved placeholder, each fail loudly — one `substitute()`
       helper replaces both ad-hoc `replaceAll` chains and refuses either kind of drift. A
       placeholder the template no longer carries means a configured value has silently stopped
