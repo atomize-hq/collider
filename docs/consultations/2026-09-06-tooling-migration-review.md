@@ -1070,3 +1070,541 @@ The repaired inventory, full baseline, governance-fixture reconciliation, provis
 The remaining mandatory changes are concrete: repair the T3 dependency; replace the operative S2 procedure; close the bootstrap identity and trust contract in T5; review migrated source before public pushes; and make the production installers and exact candidate installation part of Phase 2 acceptance.
 
 Start T1 now. Do not start T3 before that capture is complete, do not pass the Phase 2 checkpoint with an untested production installer, and do not accept T17 without the corrected local and required-CI failure proofs.
+
+---
+
+# Round 4 — first review with implementation evidence, 2026-09-06
+
+Advisory only; verify against local project truth and authoritative docs; do not reduce scope
+without user approval.
+
+**Task/spec:** the `ds-skills` migration, unchanged in direction.
+**Current approach:** 8 of 18 tasks landed (T1–T7, T9). Rounds 1–3 reviewed a plan; this is the
+first round with real implementation evidence, and it asks what the remaining tasks must change.
+
+## Prompt sent
+
+```text
+We are already working on this project task.
+
+Task/spec: Same migration you reviewed three times as a PLAN — move every executable Figma-design-token-rail code path out of a product repo (Tauri v2 + Next.js desktop app) into a single installable CLI, so the product repo contributes only JSON data and owns no rail logic. You returned ADJUST three times; round 3 said "start T1 now" with per-boundary hold points.
+
+THIS IS THE FIRST REVIEW WITH IMPLEMENTATION EVIDENCE. 8 of 18 tasks have landed. This is a NEW conversation with no memory of the previous three. Judge what was built, and tell me what the REMAINING tasks must change as a consequence.
+
+Current approach: unchanged in direction. The agent-skill pack absorbs a previously-extracted token-rail package into one installable CLI; data crosses the consumer boundary and code does not; the "rest-variables-oauth" publish mode is deleted entirely; delivery is a GitHub Releases installer rather than npm.
+
+================================================================
+WHAT LANDED, AND WHAT MEASURING IT CHANGED
+================================================================
+
+T1 — baselines captured before anything moved. Three committed artifacts: exact plugin-manifest bytes plus digest from the CURRENT builder; the full normalized rail mapping (176 ordered variables, resolved types, per-theme values), not five summary fields; and all 11 governance-fixture outcomes with verbatim diagnostics. Deterministic: re-running on an unchanged tree is a no-op diff.
+
+I then found I had built the exact trap the spec warns about. The capture command rewrote all three baselines unconditionally, so the first person to run it after the retirement task would have silently replaced the pre-retirement reference with a post-retirement one, leaving the later reconciliation comparing a file against itself. It now refuses to overwrite a drifted baseline and exits non-zero; --force is the only way past. Verified both directions.
+
+T2 — the ".agents subtree is invisible to every gate" premise was wrong in both directions. Of 162 files: 80 are vendored upstream payload already excluded with a recorded reason, 81 are Markdown/JSON/YAML, and ONE is an executable — a 332-line dependency-free JSON-Schema validator with no tests. The formatter already covered the subtree (proven by deliberately mis-formatting a file). The type-checker's blindness was structural, not an exclusion: a `**` glob does not match a leading-dot directory. That same mechanism means NO `.mjs` file anywhere in the product repo is type-checked — 35 more files, 27 measured errors, filed as separate backlog rather than folded in. Lint and test are now wired, with a real 6-case test for the one script so the test glob is not permanently inert. The type-check leg was deliberately NOT built product-side, because that file moves into the package where the package's own gate covers it; building product-side machinery for a subtree that is leaving is the stale invariant the success criterion explicitly rules out.
+
+T3 — publish mode retired as one atomic change (two scripts deleted, both validators' enums AND error messages, the portable schema, the repo profile, both fixtures, four docs). Reconciled against T1's frozen baseline: exactly 2 of 11 fixtures moved, each in exactly one field, and NO diagnostic reason changed. The fixture that was supposed to keep failing still fails on the same parity/carrier contradiction code rather than on an invalid mode — the specific regression being watched for, now measured rather than eyeballed.
+
+T4 — REST rail removed from the package (13 exports, 19 tests). TWO gates asserted the deleted export; the task's criteria named only one. The second surfaced by running the gate rather than reading the plan, and would have gone red on a correct build.
+
+T5 — delivery contract settled, and one measurement overturned the plan. I fetched the reference implementation's bootstrap anonymously at two different release tags: BYTE-IDENTICAL, same 4458 bytes, same SHA-256, and neither copy contains its own tag anywhere. Version selection happens entirely at runtime — an explicit flag if supplied, otherwise "latest". So the widely-copied one-liner `curl .../<older-tag>/install.sh | bash` installs the LATEST release right now, not after some future drift. Under `curl | bash` there is no argv, so a copied one-liner cannot carry a pin the script can read.
+
+Our contract therefore makes the bootstrap a RELEASE ASSET with its identity baked in at release time, and has no version flag at all — the asset IS the version, so there is nothing to disagree with. CI never pipes: it downloads the bootstrap, verifies it against the product repo's reviewed record, then executes. The independent trust anchor is that reviewed record, not the SHA256SUMS published beside the archive (whoever can replace the archive can replace its checksum list), so the negative test is a modified asset WITH a matching modified checksum. Immutable releases are now enabled on the repository — not a repo-object field and not a CLI flag; it has dedicated endpoints, and only releases created AFTER enabling are immutable, which is why it was done now rather than at release time.
+
+T6 — the plugin UI had one consumer's paths baked in for every consumer: a hardcoded hostname twice and a hardcoded token-authoring directory. Substitution was two ad-hoc replace chains; it now goes through one helper that fails on either kind of drift (a placeholder the template no longer has, meaning a configured value silently stopped reaching the plugin; and an unresolved placeholder). Escaping is context-correct: HTML text is HTML-escaped, the URL landing inside a script block is JSON-encoded. Verified with a third, hostile configuration (different scheme/host/port, a path containing quotes and a backslash, a plugin name containing angle brackets and quotes). The manifest is still byte-identical to the T1 baseline, same digest.
+
+T7 — repository renamed. Verified rather than assumed that the product repo's dependency still resolves: ls-remote on the exact SSH URL, on the HTTPS form the lockfile records, and a throwaway fresh install through the redirect that produced a built package. Two things surfaced: the lockfile's field labelled `commit:` is actually the ANNOTATED TAG OBJECT, not a commit; and the git dependency only installs at the pinned package-manager version — a newer one blocks lifecycle scripts for git dependencies unless allowlisted, the product repo allowlists nothing, and the package's build output is gitignored, so a newer package manager fails the install outright.
+
+I also caught my own verification lying: my "no references remain" grep piped through `grep -v node_modules`, and one surviving reference was on a line that CONTAINS the literal string "node_modules". The filter matched line content, not path. The gate caught what the check hid.
+
+T9 — the blocking disposition inventory. Every path carrying rail semantics, with present callers and exactly one of four dispositions. Found by three recorded passes (import graph, caller graph, boundary pass) so the result is reproducible rather than remembered.
+
+================================================================
+THE FOUR FINDINGS I MOST WANT JUDGED
+================================================================
+
+(1) A CONSUMER NO TASK HAD NAMED. A 647-line status generator imports the ledger loader and the conformance evaluator and reads two ledger fields directly, inside a 36-line function that produces one rail of a status report. It feeds one of the 8 CI jobs. An exit status cannot satisfy it — it needs structured output. The other 611 lines are unrelated (visual-review status, story inventory, claim profiles) and are explicitly NOT claimed. This forces a --json output mode into the CLI contract task, which did not have one.
+
+(2) A VALIDATOR WITH ZERO CALLERS, AND A DEEPER PROBLEM UNDER IT. `validate:publish-proof` is invoked by nothing — not the task runner, not the governance chain, not any of the 8 CI jobs. A 229-line validator and 5 fixtures exist for a gate nobody connected. The record it validates is a hand-written attestation that a human ran the plugin and imported tokens into the design tool; nothing publishes automatically (the one thing that could was the rail just deleted in T3). Worse: that proof record and the governance ledger carry FIVE DUPLICATED FACTS (mode, artifact path, artifact revision, materialization status, carrier flag). They agree today. Nothing checks that they agree. The ledger is gated for internal consistency and staleness; the proof — the upstream source record the ledger's own contract doc says the ledger "may embed" — is gated by nothing but one incidental line inside a unit test. So the only machine-readable evidence that anyone actually pushed to the design tool is unverified, and the gated derivative restates its facts without ever comparing them.
+
+(3) BOTH VALIDATORS HARDCODE PRODUCT-REPO CONSTANTS. The publish-proof validator asserts, with a literal-equality helper, that the destination name equals the product repo's name and the destination file equals one specific design-tool file key. The ledger validator does the same with one specific artifact path. A second consumer would fail validation for not being the first consumer. The implementation task's criteria say promotion levels and exception codes must come from the profile; these are the same class and are not covered.
+
+(4) THE DELIVERY MECHANISM CHANGED after your third review, on the measurement in T5 above.
+
+================================================================
+WHAT REMAINS
+================================================================
+
+T8 CLI contract and scaffold (dispatch, help, version, failure behaviour; unimplemented commands must exit non-zero rather than succeed as placeholders)
+T10 move the rail modules into the package
+T11 move skills, schemas, profiles, templates in — preparation only, product repo untouched, plus a disclosure review before the first public push
+T12 implement the ledger and publish-proof commands
+T13 implement the figma commands
+T14 production installers, self-contained plugin builder, expanded packaging gate
+T15 cut the release (ask first)
+T16 prove anonymous cold acquisition and provision every environment; name the required CI job
+T17 consumer cutover — activate callers, move skill assets, delete superseded code and the dependency, in one atomic change
+T18 clean-environment evidence, plus proving a deliberate regression turns the required CI job red
+
+Three commands the inventory found the contract does not have: a parity command (the parity check is its own governance step with its own policy module), a serve command, and a baseline command. Without all three the product repo cannot reach zero rail executables.
+
+================================================================
+CONSTRAINTS AND VALIDATION
+================================================================
+
+SETTLED BY THE PROJECT OWNER, NOT UP FOR DEBATE: the pack absorbs the rail into one installable CLI; the publish mode is removed entirely; delivery is the release-asset installer and the repository is public.
+
+Validation available: the product repo's aggregate pre-push command is green (276 unit + 458 browser tests); the package's own full check is green including a packing gate that installs a tarball into a throwaway consumer. NO CI JOB runs the aggregate pre-push command — it is the pre-push hook, and CI runs its constituent parts as 8 separate jobs. Three of those jobs enforce the rail surface.
+
+What I want, in priority order:
+
+(a) Given real implementation evidence rather than a plan, is the approach still right? Direct keep / adjust / pivot.
+
+(b) THE MAIN QUESTION: what must change in T8 and T10–T18 because of what landed? Be specific about which task acquires which obligation. I would rather restructure the remaining tasks now than discover at T17 that something has no home.
+
+(c) Judge finding (2) specifically. My current recommendation moved from "wire the unwired validator" to "wire it AND cross-check the two records against each other, because duplicated-and-unchecked is the actual defect." Is that right, or is the correct answer to collapse the two records into one, or to delete the proof record as a snapshot nothing reads?
+
+(d) Findings (1) and (3) both mean the CLI contract task is under-specified. What else is likely under-specified that I have not hit yet, given the pattern in what I did hit — every miss so far was found by running a gate or walking an import graph, never by reading the plan.
+
+(e) What in the landed work is weaker than it looks? I am specifically worried that I am marking tasks complete on evidence I generated myself, and that several verifications are one-shot manual proofs rather than tests that will still be true in a month.
+
+Do not reduce the task or replace it with an easier alternative. Preserve the requested scope and project conventions.
+
+Is the current approach the best way forward? Give a direct keep, adjust, or pivot recommendation; tradeoffs; what to keep/change first; inspections; validation; and pitfalls.
+```
+
+## Response
+
+Recommendation: ADJUST
+
+Keep the architecture. Restructure the remaining task contracts and acceptance gates before proceeding beyond T8. No pivot is warranted.
+
+The implementation evidence strengthens the case for extraction: the product owns more rail behavior, more consumers, and more consumer-specific assumptions than the plan accounted for. Those discoveries do not undermine the single-CLI boundary. They show why moving the originally named files would not have completed the migration.
+
+The important adjustment is this:
+
+The remaining work must be organized around complete caller behavior, record relationships, and installed-artifact execution—not merely around moving modules and implementing command names.
+
+I am evaluating the implementation evidence you supplied, not independently certifying the diffs or test logs. The connected repository lookup did not provide accessible source. Accordingly, I distinguish reported findings from additional inspection requirements below.
+
+Keep the frozen baselines, the scoped T2 decision, the atomic retirement, the renamed repository, and the release-asset installer. Keep the unrelated .mjs backlog separate. Do not move the other 611 lines of the status generator.
+
+1. Finding (2): keep the proof, wire validation, and enforce its relationship to the ledger
+
+Your revised recommendation is right. Wiring the validator alone would fix reachability while leaving the actual consistency defect intact.
+
+Two individually valid records can contradict each other. Conversely, two records can agree perfectly while both contain an unsupported claim. Your design should distinguish those problems.
+
+Keep two responsibilities, not two independent sources of the same facts
+
+The proof record represents an attestation about a particular publication/import: what someone says they imported, into which destination, using which artifact revision.
+
+The ledger represents governance state, including whether that attestation supports the state the ledger currently claims.
+
+Those responsibilities justify retaining both records. The fact that the proof currently has no operational validator caller is evidence of missing enforcement, not evidence that the source record is disposable—particularly when the ledger’s own contract identifies it as a source it may embed.
+
+My recommendation for this migration is:
+
+Retain the proof as the source attestation. Make the ledger’s duplicated publication facts a checked projection of an explicitly identified proof, rather than independently authored authority.
+
+That does not require a new event store, signature system, or wholesale ledger redesign.
+
+Define the relationship before implementing the comparison
+
+T8 should specify, for each of the five duplicated facts, its meaning, source, and required relationship. T12 should implement that specification.
+
+The relationship needs to establish that the records concern the same consumer, destination, artifact, revision, and publication claim. Use an unambiguous source reference and the existing identity/revision mechanism, adding a digest or equivalent exact binding where the present references are insufficient.
+
+Do not just search for “the proof file” and compare whichever record happens to be there.
+
+Also distinguish publication history from currentness. A valid attestation about revision A does not become false merely because the current tokens advance to revision B. It may instead cease to support a ledger claim that B is materialized. Do not “repair” that situation by rewriting the attestation to B.
+
+The gate should therefore check both:
+
+The shared publication claims agree for the exact referenced publication.
+
+That publication is sufficient for the ledger’s present claim under the existing staleness and governance rules.
+
+These checks should not silently copy one record over the other.
+
+Absence needs a defined meaning
+
+Do not make every pre-publication repository invalid simply because no publication has happened. Define when proof is required.
+
+A state that makes no materialization claim may legitimately lack proof, depending on the existing policy. A state claiming successful/current materialization must not obtain a pass by omitting it. A present but malformed or contradictory proof must not be ignored.
+
+Do not overstate what the gate proves
+
+The resulting gate can establish:
+
+“This attestation is well formed, refers to the expected destination and artifact, and consistently supports the ledger’s claims.”
+
+It cannot establish:
+
+“The claimed human import definitely happened, and the remote Figma file still contains those values.”
+
+That limitation does not justify deleting the proof or restoring the removed REST mechanism. It means the CLI and status report must describe validated attestation and consistency, not independently observed remote synchronization.
+
+Why not collapse the records now?
+
+Collapsing the files would remove one duplication opportunity, but it would not establish that publication happened or resolve historical-versus-current semantics. It could also erase a useful distinction between source evidence and governance assessment.
+
+Removing redundant ledger fields may become appropriate once their consumers have migrated. It is not necessary to make that redesign a prerequisite for this extraction. Within the requested scope, keep both, bind them explicitly, and enforce the relationship.
+
+2. What each remaining task must acquire
+   T8 — Expand from CLI scaffold to complete boundary contract
+
+T8 is now the highest-leverage task. It should not close on dispatch, help, version, and placeholder failure behavior alone.
+
+First, turn T9 into a caller-contract matrix. For every retained caller, record its replacement command, JSON inputs, outputs consumed, failure behavior, side effects, owning implementation task, and regression test. Every disposition must have a destination; every executable destination must have a task.
+
+Add the independently invocable parity, serve, and baseline commands. Also specify the structured ledger/conformance output required by the status generator.
+
+Second, define --json as an interface, not a formatting convenience. For finite machine-consumed commands, require a documented result schema/version, stable diagnostic codes, deterministic ordering where relevant, and no progress messages or human commentary on stdout.
+
+Distinguish a completed evaluation reporting nonconformance from an invocation that could not evaluate its inputs. Preserve useful structured diagnostics on expected validation failures. Missing executables, malformed output, unsupported result versions, and process failures must not become “empty rail,” “not applicable,” or successful status.
+
+Exact exit codes should follow project conventions, but their meanings must be explicit. A subprocess helper that throws on nonzero exit must not accidentally discard the valid failure report the caller needs.
+
+Third, specify the status projection. The CLI must return everything currently derived by the 36-line rail function, including the two fields currently read directly from the ledger. Returning raw ledger JSON and expecting the product to reconstruct conformance would preserve the prohibited logic under a different interface.
+
+The product may invoke the CLI, parse its result, and insert/render the rail result. It must not retain rail evaluation or rail-specific fallback policy.
+
+Fourth, specify configuration ownership. Separate portable invariants from consumer expectations. Destination name, Figma file key, artifact path, promotion levels, and exception configuration need declared JSON owners, requiredness, and validation behavior. Expected values must come from the profile/configuration—not from the record being checked against them.
+
+Do not solve portability by weakening literal-equality checks into “any string is acceptable.”
+
+Fifth, specify environmental and filesystem behavior. Resolve configuration precedence, repository-root discovery, relative paths, installed-resource lookup, supported runtime prerequisites, missing files, unknown schema versions, time inputs for staleness, and permitted write locations. Help/version should work outside a consumer repository.
+
+Checks must be read-only. Baseline capture must be explicitly mutating. Serve needs a separately defined readiness/shutdown contract.
+
+T8 hold point: no retained T9 caller lacks an input/output/failure contract or implementation owner.
+
+T10 — Move complete behavior, including the newly discovered semantics
+
+T10 must include the status rail computation and the standalone parity policy module, not just the previously named ledger and conformance modules.
+
+Extract reusable evaluation logic so that human output, machine output, standalone commands, and status projection share the same decisions. Do not implement a second evaluator solely for JSON output.
+
+Preserve a reviewable distinction between:
+
+Relocation: behavior remains equivalent to the reconciled post-T3 reference.
+
+Intentional changes: proof–ledger consistency enforcement, portability corrections, and newly specified boundary behavior.
+
+Otherwise a regression could be explained away as “part of the move,” or a necessary new check could be hidden by rebaselining.
+
+Carry the relevant tests with the code. Record where moved assertions now execute; a lower product test count is not itself a regression if the tests moved into the package.
+
+T10 hold point: the package can evaluate the relevant fixture inputs without importing product code or depending on its checkout layout.
+
+T11 — Move assets, prove their coverage, and close the disclosure boundary
+
+T11 remains preparation-only on the product side, but it acquires several explicit obligations.
+
+Move the owned 332-line validator and its six tests into a location genuinely covered by the package’s gates. “The package check is green” is insufficient unless the moved executable is actually included. Preserve the deliberate decision not to build temporary product-side type-check machinery.
+
+Retain justified upstream exclusions by provenance and path. Do not accidentally classify newly moved owned code as vendored payload.
+
+Review operational instructions inside skills, Markdown, YAML, templates, and examples. These can retain obsolete commands, install URLs, product paths, or inline rail logic even when the import graph is clean.
+
+The disclosure review must cover all consumer-derived material that will become public: profiles, fixtures, baselines, token values, file identifiers, generated output, source maps, and the history/refs being pushed—not merely the final archive contents. Consumer-specific values must live in declared JSON, not portable validators; any such values intentionally published as examples need explicit review.
+
+Also prove how installed skill assets are discovered after the product copy disappears.
+
+T11 hold point: disclosure review occurs before newly moved consumer-derived content is pushed publicly, not merely before T15 publishes a release.
+
+T12 — Own validation, proof–ledger consistency, status output, and parity
+
+Give T12 explicit ownership of:
+
+Ledger and proof validation; their cross-record relationship; the machine-readable rail-status result; and the independently invocable parity command.
+
+Keeping parity independently invocable preserves its existing governance-step identity. Do not make its replacement merely an incidental side effect of another command.
+
+Generalize all consumer constants identified in finding (3). Audit the rest of both validators for the same pattern, including defaults and error messages. A configurable profile must not be allowed to re-enable the retired publish mode or override non-negotiable portable invariants.
+
+Retain the eleven governance fixtures and five proof fixtures, with the approved retirement reconciliation. Add tests where each record passes its individual validation but their shared claims disagree.
+
+For the five duplicated facts, use schema-valid mutations in each direction wherever representable. Also cover missing required proof, wrong source binding, wrong destination/revision, and valid historical proof that no longer supports the current claim.
+
+Use a genuinely different second consumer with different destination identity, artifact path, and policy data. Test both legitimate acceptance and mismatched-record rejection.
+
+T12 hold point: the status caller can obtain its complete rail result without loading or interpreting either record itself.
+
+T13 — Own Figma behavior, serve, and baseline commands
+
+Assign serve and baseline explicitly to T13. Baseline orchestration may depend on T12’s evaluators, but it still needs one command owner.
+
+For the builder, preserve the original consumer’s exact manifest baseline and complete normalized mapping. For alternate configurations, test the intended changed output rather than demanding the original digest universally.
+
+Promote T6’s configuration substitution checks into durable tests, including the HTML-parsing and network-permission issues discussed below.
+
+Serve needs tests for actual readiness, occupied ports, shutdown, and access only to the intended resources. It must not become a generic server for the product checkout merely because that makes migration easy. Specify bind behavior and ensure generated plugin URLs and the served endpoint agree.
+
+Baseline needs separate verification and capture/update behavior. Verification must never rewrite expected data and must fail when the required reference is missing. Preserve the non-overwrite guard; test that failure leaves all three artifacts unchanged, not just the one that first differed. Automated gates must not use --force.
+
+Keep the original T1 reference and an explicit reconciliation record. Do not convert the frozen reference into an automatically refreshed “current baseline.”
+
+T13 hold point: all builder, serve, and baseline behavior is reachable through installed CLI commands, without product-owned implementations.
+
+T14 — Test the release product, not just a package tarball
+
+The existing packing gate remains valuable, but it does not establish the new delivery contract.
+
+T14 must test the actual staged release archive and production installer behavior, including resources and runtime dependencies. The installed CLI must build the plugin and run its commands without reaching into the package source tree, product node_modules, or undeclared developer tooling. A declared runtime prerequisite is acceptable; an accidental one is not.
+
+Add a pre-release consumer-cutover rehearsal in a disposable checkout. Exercise the proposed caller changes against the staged candidate before publishing it. Product activation still belongs to T17.
+
+Most importantly, close the entire verification chain:
+
+Reviewed consumer record
+→ verified bootstrap bytes
+→ verified selected payload bytes
+→ installed executable and resources
+
+Verifying the bootstrap alone is insufficient if it subsequently trusts a replaceable archive plus a replaceable checksum list.
+
+Either the reviewed record must bind the payload digests, or the verified bootstrap must contain and enforce those digests. A baked tag/name without a payload integrity binding is not the same property.
+
+Test modified bootstrap and modified payload scenarios, including matching modified checksum metadata, while the reviewed consumer record remains unchanged. Rejection must occur before untrusted execution.
+
+Cover installation failure without damaging an existing installation, paths with spaces, supported platform selection, and error propagation in both shell and PowerShell.
+
+T14 hold point: the exact candidate assets have passed installed-artifact and prospective consumer integration tests. Local installer-fixture tests do not replace T16’s real anonymous acquisition.
+
+T15 — Publish exactly what was tested, with approval
+
+Keep the explicit approval requirement.
+
+The approval packet should identify the source commit, release tag, candidate asset inventory, bootstrap/payload digests, and associated test evidence. Do not test candidate A and rebuild candidate B during publication without re-establishing that evidence.
+
+Record annotated-tag identity separately from the peeled commit identity. Git explicitly distinguishes dereferencing a tag object from resolving the commit it names; a field labelled commit is not sufficient evidence of object type.
+Git
+
+Stage the complete release as a draft, attach every asset, then publish. GitHub’s immutable-release contract prevents adding, replacing, or deleting individual assets after publication; this changes release assembly, not merely release security.
+GitHub Docs
+
+Verify the actual published release’s immutable status. The earlier repository-setting check is useful preparation, not proof about a future release.
+
+A defective immutable release requires a new release and a new reviewed consumer pin—not an attempted repair of the old assets.
+
+T16 — Split into early contract selection and later acquisition/provisioning
+
+T16a must happen alongside T8, not after T15.
+
+Identify the actual developer, agent, hook, and CI environments that invoke the rail. Select supported platforms, runtime prerequisites, installation location, and noninteractive executable resolution.
+
+Name the real enforcement checks now: workflow file, job identifier, emitted check context, applicable trigger conditions, and required-check/ruleset binding.
+
+The supplied evidence does not name those jobs, so I cannot honestly identify the existing required check. It is not the aggregate pre-push command. Preserve the eight-job structure unless there is a separate reason to change it, and account for all three rail-using jobs.
+
+T16b remains after T15 and before T17.
+
+Prove anonymous acquisition of the exact release with fresh relevant caches and no usable authentication or existing rail installation. Then provision each required environment. Installing in one CI job does not establish availability in the others.
+
+Bind invocation to the installed, verified executable rather than trusting whichever ds-skills happens to appear first on a developer’s PATH.
+
+Check conditional execution carefully. GitHub documents that a conditionally skipped job can report success even when it is required; merely marking a check required does not prove its commands ran.
+GitHub Docs
+
+T16 hold point: the exact release is anonymously obtainable, every rail caller environment can execute it, and the required enforcement path is identified and exercised.
+
+T17 — Make the entire consumer cutover atomic
+
+T17 must activate all retained callers from T9, including the previously unnamed status generator and the newly wired proof relationship check.
+
+Replace only the status generator’s rail-specific behavior. Preserve unrelated status behavior, and compare the unaffected report portions before and after migration.
+
+Remove direct ledger-field reads, evaluator imports, local parity implementation, serve implementation, baseline implementation, moved skill executables, and superseded wrappers. No fallback to the former implementation when the CLI is missing.
+
+Remove the tooling dependency and corresponding lockfile edges. The temporary package-manager-specific Git installation concern ends here; it does not justify broadening the migration into support for arbitrary package-manager versions.
+
+Audit inline workflow/task-runner bodies as well as executable files. Moving an algorithm into YAML or a generated wrapper does not satisfy the ownership boundary.
+
+The existing generated-plugin exception stays narrow: generated output is allowed; product-owned builder source and handwritten/generated governance implementations are not.
+
+T17 hold point: one consumer change switches all required callers and removes the superseded implementations without an intermediate split-authority state.
+
+T18 — Demonstrate enforcement through the real installed path
+
+T18 must be more than a final green run.
+
+Record exact consumer/package revisions, installed release identity and digests, environment/runtime versions, invoked executable path, baseline identities, and actual CI run/check results.
+
+The deliberate regression should target the newly important seam. For example, create a schema-valid proof–ledger disagreement that leaves each record individually valid. Demonstrate that the designated required governance check runs the installed CLI, reports the relationship failure, and turns red.
+
+Malformed JSON that only makes a linter fail would not establish this.
+
+Exercise every independent enforcement path across T14–T18: parity failure, structured status failure handling, missing/wrong CLI, baseline drift without rewriting, and acquisition tampering. Not every mutation needs a separate live PR, but every boundary needs a durable test, and T18 must demonstrate the real required CI path.
+
+Re-run T9’s recorded inventory passes against the final tree.
+
+T18 hold point: passing and deliberately failing behavior are both demonstrated through the real installed CLI and the real enforcement configuration.
+
+3. What else is under-specified—and where to inspect
+
+The recurring pattern is not simply “the plan missed some files.” It missed ways behavior enters, leaves, or is indirectly depended upon.
+
+Follow data consumers as well as imports
+
+Finding (1) shows why searching imports of the known rail module is insufficient. Search readers of the ledger/proof paths, characteristic field names, report fields, generated artifacts, and configuration keys. A consumer can duplicate rail semantics without importing a rail module at all.
+
+Add data-flow inspection to T9’s existing passes. Include dynamic subprocess calls, task aliases, hooks, skill instructions, and inline CI bodies.
+
+Inspect failure consumers
+
+For each caller, determine what it does with nonzero exit, empty stdout, invalid JSON, timeout, and unavailable inputs. A correctly failing CLI can still leave CI green if a wrapper swallows its error or treats missing output as an empty result.
+
+This belongs jointly to T8’s contract and T17/T18’s caller tests.
+
+Inspect ambient dependencies
+
+Run from outside the repository, from a nested directory with an explicit root, and from an installation path containing spaces. Remove access to source checkouts and undeclared build tools.
+
+Check resource lookup, current working directory assumptions, environment overrides, and hidden package-manager lifecycle dependencies. These are the installed-artifact counterparts of the hardcoded product constants you already found.
+
+Inspect schema/runtime/profile disagreement
+
+Your retirement touched multiple validators, a portable schema, fixtures, and error messages. That is evidence that allowed values and expectations exist in several representations.
+
+T12 should test agreement among those representations. A second consumer must pass the portable schema and runtime validation; an obsolete mode must fail both. Do not let profile configurability become a route around portable prohibitions.
+
+Inspect time and side effects
+
+Staleness checks need explicit time semantics and deterministic test inputs. Status generation should evaluate a coherent set of inputs rather than rereading changing files at different stages.
+
+Every command should declare what it reads, writes, serves, or launches. In particular, validation must not quietly update proof, ledger, baseline, or generated artifacts in order to pass.
+
+4. What in the landed work is weaker than it looks?
+   T6’s escaping claim needs another test
+
+JSON encoding alone does not establish safety inside an HTML <script> element.
+
+The HTML parser recognizes script-related sequences independently of JavaScript string quoting. The HTML standard specifically identifies </script, <script, and <!-- as problematic sequences in script literals.
+HTML Living Standard
+
+Therefore, if the helper only applies JSON.stringify to a raw value and inserts it into an inline script, “context-correct escaping” remains unproved. Escaping < as a JavaScript-compatible Unicode escape is one solution; a construction that avoids this parsing boundary is another.
+
+Add hostile values containing those sequences. Inspect the resulting DOM and execute the intended script in a browser test, verifying that no additional element/script appears and the value survives correctly. Quotes, backslashes, and angle brackets in a separate HTML-text field do not exercise that boundary.
+
+This is an inspection requirement, not a claim that the unprovided implementation definitely has the defect.
+
+T6’s alternate-host test also needs functional permission coverage
+
+A correctly substituted URL can still be unusable if the manifest permits only the original endpoint. Figma’s networkAccess configuration restricts plugin requests to declared allowed domains/patterns, including development-server configuration.
+Figma Developer Docs
+
+Test the generated endpoint together with manifest permissions and serve behavior. Preserve byte identity for the original configuration; do not use unchanged manifest bytes as the success criterion for every different network configuration.
+
+T1 is strong regression evidence, but not an independent correctness oracle
+
+Capturing the full mapping and verbatim diagnostics before migration was the right move. Preventing silent overwrite removes the worst self-comparison trap.
+
+Still, the baseline demonstrates preservation of prior behavior, not that prior behavior was semantically correct. Keep a small set of directly asserted semantic examples alongside the historical reference.
+
+The overwrite guard also needs durable tests for missing-reference verification, mixed drift across the three files, and no partial writes. A manual demonstration that --force works is not a substitute.
+
+T2 proves narrower coverage than “the subtree is gated”
+
+The measured classification is substantially better than the original premise. The six-case test makes test discovery real.
+
+It does not establish complete correctness of the validator, nor does it establish that the package’s eventual type-check includes it. Prove the actual moved file is covered; do not infer coverage from directory names or a green aggregate check.
+
+Keep the unrelated 35-file/27-error backlog separate. That separation is sensible, not an excuse to miss the one moving executable.
+
+T3/T4 prove retirement progress, not complete live-surface absence
+
+The fixture reconciliation and discovery of the second export gate are good evidence.
+
+Preserve those checks as regressions. Ensure the retired mode is rejected by live configuration/schema/CLI paths, and that removed exports or instructions cannot remain operational through another entrypoint.
+
+Do not require every historical occurrence of the retired string to disappear: frozen baselines and explicit rejection tests may need it. Distinguish inert historical evidence from live support.
+
+T5 settles identity selection, not the entire delivery proof
+
+Keep the release-asset design. But “the asset is the version” establishes selection identity only when later downloads cannot escape the binding.
+
+GitHub immutability protects published assets and their associated tag; it does not make an unreviewed future release trusted, and release metadata such as the “latest” designation remains changeable. Your reviewed pin must remain authoritative.
+GitHub Docs
+
+The modified-asset-plus-modified-checksum test is the right negative test. Ensure it targets the whole bootstrap-to-payload chain, not just one layer.
+
+T7 is transitional compatibility evidence
+
+The fresh Git-dependency installation proves a useful current fact under the pinned package manager. It does not prove the new acquisition mechanism, and it need not support unrelated newer package-manager behavior before removal.
+
+Keep the existing pin stable through cutover. Do not spend this migration repairing a dependency path T17 eliminates.
+
+The grep incident also deserves a lasting correction: enumerate/exclude paths before inspecting file contents. Repeating a corrected one-shot grep is weaker than making the boundary audit use that method consistently.
+
+Author-generated evidence is acceptable; circular evidence is not
+
+The author running the tests is not inherently a problem. The important questions are whether expected and actual results have independent origins, whether the exact artifact is identified, and whether another person can replay the check.
+
+A stored pre-change baseline, a hand-asserted fixture, and a required CI job that rejects a deliberately introduced contradiction are meaningful evidence. A verifier that regenerates its expectations, compares only mutually agreeing records, or exercises a different artifact from the one distributed is not.
+
+Use separate completion claims: implemented, regression-tested, installed-artifact-tested, and consumer enforcement demonstrated. T5 can be contract-complete without delivery being proven; T7 can be rename-complete without acquisition being proven.
+
+5. Order of execution
+
+The revised critical path should be:
+
+T8 plus early T16a → T10/T11 → T12/T13 → T14 with disposable cutover rehearsal → T15 approval and publication → T16b anonymous acquisition/provisioning → T17 atomic activation/removal → T18 enforcement evidence.
+
+The first change should be to T8 and the task acceptance criteria—not another round of blind file movement.
+
+The tradeoff is a larger contract and packaging phase now, in exchange for avoiding an immutable release with missing commands or a T17 cutover that discovers another stranded consumer. Retaining proof plus checked ledger projection adds a relationship gate, but avoids both throwing away source evidence and forcing an unnecessary record redesign.
+
+Proceed with the single-CLI migration. Amend the remaining tasks so every retained caller, shared fact, installed resource, and enforcement path has an explicit owner and test. That is the adjustment the implementation evidence now requires.
+
+(Conversation: chatgpt.com/c/6a9dbbe8-…; 604s to generate.)
+
+## Locally verified before acceptance — round 4
+
+Four checkable claims. Two clear, two land.
+
+**"T6's escaping claim needs another test" — the escaper is correct; the test gap is real.**
+They flagged this as an inspection requirement rather than a defect, and the inspection clears
+the implementation:
+
+```
+jsString('a</script>b')  =>  "a</script>b"
+```
+
+`plugin/build.mjs` escapes `<` and `>` as `<`/`>` after `JSON.stringify`, so the HTML
+parser never sees `</script`. Their premise — "if the helper only applies `JSON.stringify`" —
+does not hold. Their conclusion still does: **no test pins this.** The T6 hostile config put
+angle brackets in HTML-text fields, which does not exercise the script boundary.
+
+Two further facts worth recording, because they change what the test should assert. The value
+reaching `jsString` is `new URL(config.artifactUrl).origin`, and `new URL()` **rejects** a
+hostname containing `<` or `>` (`ERR_INVALID_URL`, verified on two hostile inputs). So today the
+escaper is defence in depth for a value that cannot carry the sequence. A test should pin the
+escaper directly rather than route through a URL that will refuse the input.
+
+**The `networkAccess` point lands, and differently than framed.** The manifest template is:
+
+```json
+"networkAccess": {
+  "allowedDomains": ["none"],
+  "devAllowedDomains": ["__RAIL_ARTIFACT_ORIGIN__"]
+}
+```
+
+Figma's manifest documentation: `["none"]` means "the plugin cannot access any external network
+resources", and `devAllowedDomains` lists domains permitted **during development** only. So the
+substituted origin only takes effect in development mode, and the plugin has no production
+network access at all. That is exactly right for Collider's manual local workflow and it is why
+the T1 manifest baseline is byte-identical — but it means **T6's third-configuration test proved
+substitution, not usability**. A consumer with a hosted artifact URL gets a correctly
+substituted plugin that cannot fetch it. Undocumented constraint; T13 owns the fix.
+
+**Annotated tag vs peeled commit** — already found independently at T7 and recorded there:
+pnpm's lockfile field labelled `commit:` holds `b00a82d8…`, which `git cat-file -t` reports as
+a **tag**, not a commit. Their T15 point that the two identities must be recorded separately is
+the same fact applied to release approval, and is adopted.
+
+**Immutable releases forbid post-publication asset changes** — accepted as an operational
+constraint on T15 (stage a draft with every asset attached, then publish), not merely a security
+property. Not independently re-verified beyond the enablement check already recorded.
