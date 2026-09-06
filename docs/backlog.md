@@ -165,3 +165,115 @@ validates the scope, refuses to publish without `CHROMATIC_PROJECT_TOKEN`, and e
 `status.json` fails both outside the run that generated it.** That is why the committed
 artifact records the deferral rather than a review: CI regenerates the file before
 validating it, so the committed copy only has to be honest, not fresh.
+
+---
+
+## BL-3 — `@atomize-hq/figma-token-rail` is not installable outside this machine
+
+**Raised:** 2026-09-05, when the Figma token rail was extracted to its own repo (`d867f19`).
+**Surface:** [`package.json:77`](../package.json), `pnpm-lock.yaml`,
+`.github/workflows/ci.yml` (all 8 jobs), and the four consumers listed below.
+
+### State of play
+
+The rail now lives at `atomize-hq/figma-token-rail` and Collider consumes it as a git
+dependency:
+
+```
+"@atomize-hq/figma-token-rail": "git+ssh://git@github.com/atomize-hq/figma-token-rail.git#v0.3.0"
+```
+
+Consumers: `scripts/build-figma-plugin.mjs`, `scripts/lib/figma-variables-sync-enterprise.mjs`,
+`src/lib/tokens/figma-token-rail.test.ts`, `src/lib/tokens/token-build-contracts.test.ts`.
+
+Three properties of that line matter, and only the first is obvious:
+
+1. **The repo is private.** Installing requires authorization.
+2. **The URL is SSH.** GitHub has no anonymous SSH user — `git@github.com` always
+   authenticates against a key on some account, whatever the repo's visibility. The
+   lockfile records `resolution.repo: git@github.com:atomize-hq/figma-token-rail.git`,
+   the SCP form, so the fetch really is SSH and not HTTPS-with-a-token.
+3. **`dist/` is not committed** in the rail (it is gitignored there), so
+   `"prepare": "pnpm build"` compiles from source on every consumer at install time.
+
+### This breaks CI now, and it blocks BL-2
+
+Every job in `.github/workflows/ci.yml` runs `pnpm install --frozen-lockfile` after a
+plain `actions/checkout@v4`. There is no `ssh-agent` step, no deploy key, no
+`url.*.insteadOf` rewrite, and no `.npmrc` — in this repo or the user profile. Checkout's
+own credential only covers Collider and is an HTTPS extraheader, which an SSH specifier
+never consults.
+
+So all 8 jobs fail at install. It has not shown up yet only because **CI triggers on
+`pull_request` or `push` to `main`, and `feat/message-stage2-pilot` has had neither** —
+the same fact BL-2 is built on. BL-2's first step is to open that PR. It will fail during
+dependency install, long before `chromatic-review` runs.
+
+**BL-3 must land first.** Local development is unaffected: a developer with a GitHub SSH
+key installs fine, which is precisely why this is invisible from a working machine.
+
+### The decision
+
+**Publish the rail to npm.** Public repo alone is not sufficient and not the target state.
+
+Making the repo public removes _authorization_ but not _authentication_ — on the current
+SSH URL, a public repo still fails for anyone without a key, CI included. Public therefore
+requires a specifier change as well:
+
+```json
+"@atomize-hq/figma-token-rail": "github:atomize-hq/figma-token-rail#v0.3.0"
+```
+
+That shorthand resolves to anonymous HTTPS. Even then, `prepare` still builds from source
+on every consumer: install needs a TypeScript toolchain, takes longer than unpacking a
+tarball, and compiles against whatever TS version resolves there rather than the one the
+rail's CI tested. A published tarball ships `dist/` prebuilt and removes all of it.
+
+For a package whose entire purpose is reuse across repos — it was extracted from
+`.agents/skills` specifically so other repos could adopt the skill pack — npm is the
+difference between portable in principle and portable.
+
+**Watch for this when flipping visibility:** if the repo goes public and the specifier
+stays SSH, every local install keeps working and nothing appears to change. The breakage
+is only visible to CI and to other people.
+
+### Scope of the work
+
+1. Create the `@atomize-hq` npm org. Scoped packages default to restricted, so the first
+   publish needs `npm publish --access public`.
+2. Publish `v0.3.0` (or a fresh patch) from the rail repo. Its `pnpm check` already gates
+   this — `format:check`, `typecheck`, `test`, `build`, `smoke`, and `pack-check`, the last
+   of which packs a tarball, installs it into a throwaway project, imports the API and
+   builds the plugin from `node_modules`.
+3. Change Collider's specifier to a semver range (`"^0.3.0"`), regenerate `pnpm-lock.yaml`,
+   and confirm the four consumers above still resolve.
+4. Run `just preflight`, then open the BL-2 PR and confirm install succeeds in CI.
+5. Add a release step to the rail's `.github/workflows/ci.yml` so a tag publishes, rather
+   than leaving publication as a manual act that can drift from the tag.
+
+### Interim option, if CI is needed before npm
+
+A deploy key on `atomize-hq/figma-token-rail` plus `webfactory/ssh-agent` in each job
+unblocks CI without changing the repo's visibility. It is strictly worse as an end state —
+eight jobs each carrying a secret to fetch one 236K package — but it is the cheap path if
+BL-2 becomes urgent first.
+
+### Publishing is safe to do — already checked
+
+The 24 tracked files were scanned on 2026-09-05 for repo-specific identifiers and secret
+material. **Clean.** No Figma file key, no tokens, no Collider paths; the only
+Collider-adjacent string is the `@atomize-hq` package scope. Token handling is
+parameterized — `resolveAccessToken(env)` takes an env object rather than reading
+`process.env` — so there is no credential path baked into the source. Nothing in the
+history needs scrubbing before the repo goes public.
+
+### Why it was not done at extraction time
+
+The git dependency was the deliberate choice for the extraction commit: it kept the change
+reversible while the package was still churning, and it churned — four releases in one day,
+three of them fixing packaging bugs that were invisible from inside the package (`src/`
+missing from `files`, `esbuild` a dependency rather than a peer, and TypeScript not
+rewriting extensionless imports, which left the built ESM unloadable under Node while the
+test suite was green). Publishing to npm during that is how a broken version becomes
+permanent. The guards added in response — `moduleResolution: NodeNext`, `pnpm smoke`,
+`pnpm pack-check`, all three in the rail's CI — are what make publishing safe now.
