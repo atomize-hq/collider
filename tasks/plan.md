@@ -2,7 +2,8 @@
 
 **Spec:** [`SPEC.md`](../SPEC.md) · **Backlog:** BL-3, BL-4 in [`docs/backlog.md`](../docs/backlog.md)
 **Review:** [`docs/consultations/2026-09-06-tooling-migration-review.md`](../docs/consultations/2026-09-06-tooling-migration-review.md) — verdict ADJUST; this revision applies it.
-**Repos touched:** `atomize-hq/collider` and `atomize-hq/figma-token-rail` (renamed in Phase 2)
+**Repos touched:** `atomize-hq/collider` and `atomize-hq/figma-token-rail` (renamed to
+`atomize-hq/ds-skills` in Phase 2)
 
 ## Overview
 
@@ -45,7 +46,7 @@ Two further structural corrections from round 1, both about ordering rather than
 
 ## Architecture decisions
 
-- **The pack absorbs the rail.** `@atomize-hq/design-system-skills` is the one installable;
+- **The pack absorbs the rail.** `@atomize-hq/ds-skills` is the one installable;
   `figma-token-rail` becomes an internal module. The existing repo is renamed rather than
   archived — it already carries CI, Prettier, tsconfig, vitest and `pack-check`.
 - **Data crosses the boundary, code never does** — with one stated exception: the CLI writes

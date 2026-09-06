@@ -263,8 +263,11 @@ The principle: **provisioning and execution are separate operations.**
       project selection; uninstall removes only the selected install and leaves a project
       selecting it with an actionable failure, not a fallback
 - [x] `pipefail` guidance for the documented one-liner — a failed `curl` into bash exits 0
-- [x] **GitHub immutable releases enabled**, locking the tag to its commit and preventing asset
-      modification
+- [x] **GitHub immutable releases enabled** — done 2026-09-06 on `atomize-hq/figma-token-rail`,
+      verified `{"enabled": true, "enforced_by_owner": false}`. Not a `gh repo edit` flag and not
+      a field on the repository object; it has its own
+      `GET`/`PUT`/`DELETE /repos/{owner}/{repo}/immutable-releases` endpoints. Enabled **now**
+      rather than at T15 because only releases created after enabling are immutable
 - [x] Offline local behaviour: the pre-push path acquires nothing, and a missing or mismatched
       install fails with an actionable setup message
 - [x] Caching is an optimization only — a cache miss installs **the same release**
@@ -295,9 +298,8 @@ entirely — the asset _is_ the version, so there is nothing to disagree with.
 Anonymous token-free `releases/download` was confirmed at 200 on the same repository, so the
 public-repo delivery path is measured rather than assumed.
 
-**Needs the owner, not the implementation:** GitHub **immutable releases** must be enabled on the
-repository. It is a repository setting, so no installer can enforce it, and without it a tag is
-not immutable content selection.
+**Owner action, now done:** GitHub immutable releases enabled on the repository 2026-09-06.
+`gh` reaches it through dedicated endpoints rather than `gh repo edit` or the repository object.
 
 **Dependencies:** None
 **Files likely touched:** `SPEC.md`, a throwaway workflow
@@ -385,7 +387,10 @@ after a rename, but hosted action references do not receive that redirect.
 
 **Acceptance criteria:**
 
-- [ ] Repo renamed; package renamed to `@atomize-hq/design-system-skills`
+- [ ] Repo renamed to **`atomize-hq/ds-skills`**; package renamed to `@atomize-hq/ds-skills`.
+      Both names were confirmed free in the org before the decision. The repo name is the
+      public identity now that §10 delivers by release asset rather than registry, so it is
+      the one that has to read well in an install URL — not the package name
 - [ ] Metadata, links and release configuration updated
 - [ ] Affected references inspected rather than assumed — action references especially
 
@@ -655,8 +660,10 @@ not establish that the **final** package is clean after ~160 files moved in.
 - [ ] The exact artifact that passed T14 is the one released; its tag and digest are recorded
 - [ ] `SHA256SUMS` is published alongside every asset, with per-platform assets where the
       bundled builder requires them
-- [ ] The installer scripts are committed at the release tag, so the pinned
-      `raw.githubusercontent.com/<org>/<repo>/<tag>/…` URL resolves
+- [ ] The installer scripts are published as **release assets**, per §10.1 — not merely
+      committed at the tag. A `raw.githubusercontent.com/<org>/<repo>/<tag>/…` bootstrap cannot
+      know its own version, which is the defect §10.1 exists to remove; the measurement is in
+      T5. `SHA256SUMS` covers the bootstrap too, and its digest goes into the reviewed record
 - [ ] Rollback is defined as **explicit version selection** — never `latest`, never restoring
       the retired mode. On a first release there is no compatible earlier version, so rollback is
       not yet a demonstrated recovery procedure; say so rather than implying one exists
@@ -665,7 +672,12 @@ not establish that the **final** package is clean after ~160 files moved in.
 **Verification:**
 
 - [ ] The published version matches the tested digest
-- [ ] A `curl | bash` from the pinned tag succeeds on a clean machine
+- [ ] On a clean machine: download the bootstrap **asset** for the pinned release, verify it
+      against the reviewed record, execute it, and confirm the installed version is the pinned
+      one — not merely that the first request returned 200. The `curl … | bash` one-liner is
+      exercised separately, as the documented human path, with `set -o pipefail`
+- [ ] The release is immutable, confirmed on the published release object rather than assumed
+      from the repository setting
 
 **Dependencies:** the Phase 2 checkpoint, and the exact artifact that passed T14 · **ask first**
 **Files likely touched:** pack `package.json`, release config

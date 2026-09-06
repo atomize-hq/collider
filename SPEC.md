@@ -95,10 +95,15 @@ relaxed the promotion trigger** from `rest-variables-oauth` to `plugin-import-ma
 
 ## 3. Project structure
 
-### 3.1 The pack repo (renamed from `atomize-hq/figma-token-rail`)
+### 3.1 The pack repo — `atomize-hq/ds-skills`, renamed from `atomize-hq/figma-token-rail`
+
+One name for one thing: the repository, the install URL and the command all read `ds-skills`.
+The npm-era reason for a longer, self-describing package name went away with §10 — nothing
+publishes to a registry, so the package name is now internal and the **repository** name is
+the public identity. Verified free in the org before choosing it.
 
 ```
-@atomize-hq/design-system-skills
+@atomize-hq/ds-skills
 ├── bin/ds-skills                 # the CLI entry point
 ├── src/
 │   ├── cli/                      # command surface (§4.2)
@@ -510,7 +515,7 @@ a pin the script can read.
 release asset, not a repository file.**
 
 ```bash
-curl -fsSL https://github.com/atomize-hq/<repo>/releases/download/v0.4.0/install.sh -o install.sh
+curl -fsSL https://github.com/atomize-hq/ds-skills/releases/download/v0.4.0/install.sh -o install.sh
 # CI: verify install.sh against the reviewed record, then execute. Never pipe.
 bash install.sh
 ```
@@ -551,9 +556,18 @@ The negative test is therefore a **modified asset with a matching modified `SHA2
 rejected against the reviewed record. A merely corrupted archive proves only that the weaker
 check works.
 
-**GitHub immutable releases must be enabled on the repository** — a repository setting, so the
-owner enables it; the tag/commit binding is not something the installer can enforce. It locks the
-tag to its commit and prevents asset modification after publication.
+**GitHub immutable releases: enabled 2026-09-06**, verified `{"enabled": true,
+"enforced_by_owner": false}`. It locks the tag to its commit and prevents asset modification after
+publication — the tag/commit binding is not something an installer can enforce for itself.
+
+Three operational details that decide when this had to happen:
+
+- It is **not** on the repository object and **not** a `gh repo edit` flag. It has its own
+  endpoints: `GET`/`PUT`/`DELETE /repos/{owner}/{repo}/immutable-releases`.
+- **Only releases created after enabling are immutable.** Existing ones stay mutable unless
+  republished, which is why this was enabled now rather than at T15 — enabling it after cutting
+  v0.4.0 would have left §10.3's trust chain resting on a tag that could still move.
+- The setting survives the T7 rename, so the order of those two does not matter.
 
 ### 10.4 The reviewed record
 
@@ -563,7 +577,7 @@ digest:
 
 ```json
 {
-  "repository": "atomize-hq/<repo>",
+  "repository": "atomize-hq/ds-skills",
   "release": "v0.4.0",
   "sourceCommit": "<40-char sha>",
   "bootstrap": { "asset": "install.sh", "sha256": "…" },
