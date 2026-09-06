@@ -120,7 +120,7 @@ scheduled them.
 - [x] T3: Retire `rest-variables-oauth` from Collider as one atomic change — 2 of 11 fixtures moved, both in one field, diagnostics unchanged
 - [x] T4: Remove `syncVariablesViaRest` from the pack — `a134533`; `pack-check` asserted it too
 - [ ] T5: Decide the delivery contract
-- [ ] T6: Fix the plugin UI's hardcoded values and placeholder substitution
+- [x] T6: Fix the plugin UI's hardcoded values and placeholder substitution — `1f529ed`; S4 byte-identical
 
 **Checkpoint: Foundation**
 

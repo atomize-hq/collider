@@ -1,6 +1,7 @@
 {
   "collectionName": "Collider Tokens",
   "artifactUrl": "http://localhost:4173/design-tokens/dist/figma/tokens.json",
+  "tokenSourcePath": "design-tokens/src/tokens/",
   "extensionsNamespace": "com.atomizehq.collider",
   "fallbackThemeId": "dark",
   "plugin": {

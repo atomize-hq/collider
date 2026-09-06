@@ -286,39 +286,64 @@ The principle: **provisioning and execution are separate operations.**
 ### T6: Fix the plugin UI's hardcoded values and placeholder substitution
 
 **Description:** `plugin/ui.html` carries `localhost:4173` at lines 120 and 159 and
-`design-tokens/src/tokens/` at line 141, while `plugin/build.mjs:70` substitutes
-`__RAIL_ARTIFACT_ORIGIN__` — a placeholder that appears nowhere in the HTML, so the call is a
-silent no-op.
+`design-tokens/src/tokens/` at line 141 — a Collider filesystem path, in a package whose stated
+contract is that nothing in it knows the name of the repo using it.
+
+**Correcting this task's own premise:** it claimed `build.mjs:70`'s `__RAIL_ARTIFACT_ORIGIN__`
+substitution was a silent no-op. It is not. That chain runs against
+`manifest.template.json`, which _does_ contain the placeholder at line 10, and it produced the
+`devAllowedDomains` entry in the T1 baseline. The defect is narrower and more ordinary: a
+working substitution sat next to three hardcoded values, and nothing connected them.
 
 **Acceptance criteria:**
 
-- [ ] Placeholders exist in `ui.html` for the artifact origin and the token-source path, and
+- [x] Placeholders exist in `ui.html` for the artifact origin and the token-source path, and
       both are substituted at build time
-- [ ] No `localhost:4173` or Collider path remains in the pack's sources
-- [ ] Missing placeholder, and unresolved placeholder, each fail loudly
-- [ ] Quotes and backslashes in configured values are escaped safely
+- [x] No `localhost:4173` or Collider path remains in the pack's sources
+- [x] Missing placeholder, and unresolved placeholder, each fail loudly — one `substitute()`
+      helper replaces both ad-hoc `replaceAll` chains and refuses either kind of drift. A
+      placeholder the template no longer carries means a configured value has silently stopped
+      reaching the plugin; that used to be undetectable, which is how a hardcoded hostname
+      survived beside a working substitution.
+- [x] Quotes and backslashes in configured values are escaped safely, **per context**: HTML
+      text is HTML-escaped, and the drift-report URL lands inside a `<script>`, so it is
+      JSON-encoded with `<`/`>` as `\u003c`/`\u003e`. HTML-escaping that one would have
+      corrupted the value; JSON-encoding the text ones would have printed quotes.
 
 **Verification:**
 
-- [ ] `grep -n "localhost:4173\|design-tokens/src" plugin/ui.html` returns nothing
-- [ ] Build with Collider's config: output contains `localhost:4173`
-- [ ] Build a **second, distinctly configured** plugin and confirm the first configuration is
-      not still embedded anywhere in the output
-- [ ] Manifest still matches the T1 baseline (**S4**)
+- [x] `grep -n "localhost:4173\|design-tokens/src" plugin/ui.html` returns nothing
+- [x] Build with Collider's config: output contains `localhost:4173`
+- [x] Build a **second, distinctly configured** plugin and confirm the first configuration is
+      not still embedded anywhere in the output. The example config shares Collider's origin,
+      so it proves nothing about the origin — a **third** config was built with a different
+      scheme, host, port and token path, plus hostile values (`Acme <Token> "Sync"`, a path
+      containing quotes and a backslash). Nothing crosses between the three, and every value
+      escapes correctly in `<title>`, `<h1>`, `<code>` and the script.
+- [x] Manifest still matches the T1 baseline (**S4**) — built from Collider's config with the
+      **new** builder: byte-identical, 373 bytes, sha256 `df45a8de…` on both sides
 
 **Dependencies:** T1 (baseline must exist first)
 **Files likely touched:** `plugin/ui.html`, `plugin/build.mjs`, config schema
-**Scope:** M
+**Scope:** M — **done**, `1f529ed` in `atomize-hq/figma-token-rail`, plus `tokenSourcePath`
+added to Collider's `figma/token-sync.config.json` (an ignored extra key until the dependency
+is bumped at T17, so Collider stays green either way).
+
+**Handed to T14:** `substitute()`'s two invariants are proven by hand, not by a test —
+`plugin/build.mjs` is a script with no exported surface, and copying `plugin/` to a temp
+directory breaks its `../src/config.ts` resolution. T14 rewrites the builder into the CLI,
+which is when it acquires a testable shape; lock the invariants down there rather than leaving
+a proof that decays.
 
 ---
 
 > ### ✅ Checkpoint: Foundation
 >
-> - [ ] `just preflight` green; `pnpm check` green
-> - [ ] **S5** and **S7** hold — S7 by enforcement, not file count
-> - [ ] T1 baselines stored and digested
-> - [ ] Delivery contract written down
-> - [ ] **Review with human before T7** — it renames a repo
+> - [x] `just preflight` green; `pnpm check` green
+> - [x] **S5** and **S7** hold — S7 by enforcement, not file count
+> - [x] T1 baselines stored and digested
+> - [x] Delivery contract written down
+> - [x] **Review with human before T7** — it renames a repo
 
 ---
 
