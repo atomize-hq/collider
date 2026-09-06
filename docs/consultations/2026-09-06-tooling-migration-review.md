@@ -726,3 +726,347 @@ Skills and CLI actually match for agents Consumer discovery resolves the activat
 Published-package portability is real The same reviewed artifact works without product dependencies or an ambient builder, against real Collider data and the differently configured second consumer.
 
 Bottom line: keep the current approach. The architectural correction is sound, and several previous fixes genuinely landed. Approval is still blocked by the six execution/evidence gaps above—not by the settled package decision, the retirement decision, or the overall four-phase strategy.
+
+---
+
+# Round 3 — final review, 2026-09-06
+
+**Conversation:** https://chatgpt.com/c/6a9d79d0-a734-83ea-b216-9717dcec61c7
+**Reviewing:** the triad at `7faae57`, after the delivery mechanism changed to a GitHub Releases installer
+**Verdict:** ADJUST — **but start T1 now.** Approval to begin, with named hold points.
+
+## Hold points
+
+| Boundary                 | Required before crossing                                                                                      |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| Start T1                 | Nothing.                                                                                                      |
+| Start T3                 | The T1 dependency, and the capture actually complete.                                                         |
+| First public push (T11)  | Disclosure review of migrated material — the repo is public now, so exposure happens on push, not at release. |
+| Close T5                 | Bootstrap version contract, trust chain, runtime boundary, lifecycle.                                         |
+| Phase 2 checkpoint / T15 | Production installers implemented and tested against frozen candidate assets.                                 |
+| Accept T17               | Corrected S2 procedure, the required job's artifact path, no ambient fallback.                                |
+
+## Locally verified before acceptance
+
+1. **T3 said `Dependencies: None`** while T1 captures the fixtures T3 edits — a prose/structure contradiction I introduced in round 2's own fix. Confirmed by reading the clause.
+2. **The S2 criterion row still prescribed the obsolete method.** §7.2 said "an isolated worktree is not the fix"; the operative table row still said to perturb in an isolated worktree. My round-2 patch silently failed to match after prettier reformatted the table.
+3. **The bootstrap does not learn its version from its URL.** Verified in the reference implementation: `VERSION_PIN` is parsed from `--version=` (`install.sh:147-167`), and with no argument it resolves `releases/latest`, falling back to `main`. Under `curl … | bash` there is no argv and no `BASH_SOURCE`, so the documented one-liner installs **latest**, not the tag in its own URL. Those coincide only while that tag is latest. This invalidated a claim I had written into the spec.
+
+## Prompt sent
+
+```text
+We are already working on this project task.
+
+Task/spec: Same task as your two previous reviews — move every executable Figma-design-token-rail code path out of a product repo (Tauri v2 + Next.js desktop app) into a single installable CLI, so the product repo contributes only JSON data and owns no rail logic. You returned ADJUST twice. This is the third and intended final round, for approval or a further iteration.
+
+This is a NEW conversation with no memory of the previous ones. The three revised documents are attached in full below; judge them as they now stand.
+
+THE BIGGEST CHANGE SINCE YOUR LAST REVIEW: the delivery mechanism is completely different, which invalidates the distribution section you previously reasoned about. It is no longer an npm package. It is now a GitHub Releases installer script, following a pattern the organization already runs in production for another tool:
+
+  Linux/macOS:  curl -fsSL https://raw.githubusercontent.com/<org>/<repo>/<tag>/scripts/install.sh | bash
+  Windows:      iwr https://raw.githubusercontent.com/<org>/<repo>/<tag>/scripts/windows/install.ps1 -UseBasicParsing | iex
+
+The reference implementation is a thin bootstrap that resolves its version pin from the tag in its own URL, fetches the real installer at that same ref, then downloads release assets from the releases/download/<tag>/ path and verifies them against a published SHA256SUMS asset. There is a matched PowerShell twin for Windows.
+
+Why this replaced npm, and what it costs:
+- It already exists and is operated by the same people, so it is a reference implementation to copy rather than a mechanism to invent.
+- Provisioning and execution are separated by construction: the installer runs at environment setup, the installed artifact runs at check time and resolves nothing.
+- The version pin lives in the URL and cannot silently float.
+- It dissolves a problem the previous plan needed a whole task for. The CLI builds a plugin using a bundler that was an optional peer dependency; npm does not auto-install optional peers, so a successful install did not establish that the build command could run. A release asset can ship the CLI with that bundler already bundled, and the bundler's platform-specific binaries become per-platform checksummed assets rather than a dependency tree npm may leave incomplete.
+- The cost, which is real and is recorded as a high risk rather than buried: the repository must be public, because both the raw-content host and the releases download path return 404 for a private repository without a token. That is MORE source exposure than the npm route, which would have kept the source private and published only the package.
+
+Two deliberate divergences from the reference implementation, both recorded so nobody later "fixes" them back into alignment: (a) the reference warns and skips when SHA256SUMS is missing — ours must fail, because this tool gates CI; (b) the reference falls back to the default branch when it cannot resolve a release tag — ours must hard-fail, so a resolution failure or cache miss installs the pinned release or nothing.
+
+Repository-derived facts verified today by direct inspection rather than inferred:
+- The repository has been made public. Tag-pinned anonymous fetches from the raw-content host return 200 at two different existing tags, with no credentials. That is the exact URL shape the installer uses, so the delivery path is proven rather than assumed.
+- No CI job in the product repo runs the aggregate pre-push command. That command is the pre-push hook; CI runs its constituent parts as eight separate jobs. The test being deleted by this migration runs inside one of those jobs. The previous plan said "wire the new verification into the pre-push command", which would have removed a CI gate while all eight jobs stayed green. This is now handled by a section that maps the eight jobs, a task that names the required job, and a final task that proves a deliberate regression turns that job red.
+- The governance step is preflight step 1 of 5 and registers the token build, so a perturbed artifact is regenerated before any verification step observes it. An isolated worktree does NOT avoid this, because that worktree's own preflight regenerates the artifact too. The negative test is now two complementary tests: artifact rejection in a data-only fixture location the build does not overwrite, and gate propagation through a persistent expectation mismatch, since the build regenerates artifacts and not expectations.
+
+Corrections applied since your second review, so you can check whether each landed in the task structure rather than only in prose:
+1. The dependency clauses previously omitted two implementation tasks entirely — the explicit chain to the final task never scheduled them, while the checkpoints required their work. Task 8 now depends on task 7 AND the inventory task; task 14 depends on all four implementation tasks; task 15 depends on the phase checkpoint.
+2. The consumer expectations file previously held five summary fields while a task demanded comparison of a full normalized mapping — unsatisfiable. The file now carries or references the baseline captured before anything moves, and keeps the summary constraints too.
+3. Task 7 previously accepted that the product repo's dependency "may break as long as it is understood", contradicting the phase checkpoint requiring that repo green. It must now preserve the reference through the rename or stop and revise.
+4. Task 16 previously required full CI green while the old private dependency is still in the lockfile until task 17. It is now narrowed to provisioning probes; clean product install belongs to tasks 17 and 18.
+5. Task 17 gained explicit skill-asset cutover. The inventory covers executable paths, so stale Markdown instructions and agent discovery paths could otherwise survive an otherwise complete migration.
+6. The inventory task now reconciles against a pre-retirement capture of eleven governance fixtures' outcomes and diagnostic reasons, so a regression introduced by the retirement task cannot become the new reference merely because the inventory was taken afterwards.
+
+Project sources: none configured. The three documents below are the complete evidence set. Read SPEC.md, then tasks/plan.md, then tasks/todo.md.
+
+Evidence, blockers, constraints, and validation:
+
+THREE DECISIONS ARE SETTLED BY THE PROJECT OWNER AND ARE NOT UP FOR DEBATE: (1) the skill pack absorbs the rail package into one installable CLI; (2) the "rest-variables-oauth" publish mode is removed entirely; (3) delivery is the GitHub Releases installer script described above, and the repository is now public. Assume all three.
+
+What I want from this review, in priority order:
+
+(a) A direct approve-or-iterate verdict. Is this plan now safe to begin executing? If not, name specifically what still blocks the FIRST task, versus what can be corrected during execution. I intend to start implementation immediately after this review, so distinguish "must fix before starting" from "must fix before phase 3".
+
+(b) The delivery mechanism is new and neither previous review saw it. Scrutinize it hard: does the installer approach actually satisfy the separation of provisioning from execution; does pinning by tag in a URL give adequate reproducibility given that a tag is mutable; is checksum verification against a SHA256SUMS asset published by the same release sufficient integrity or merely self-consistent; what does a curl-pipe-to-shell install imply for CI trust and for a developer machine; and what does the plan still not say about uninstall, upgrade, and multiple concurrent versions.
+
+(c) Did the six corrections above land in the task structure, or is any acknowledged in prose while dependencies and checkpoints still contradict it?
+
+(d) Anything still missing that would let this work report success while the product repo still owns rail logic, or while the gate has silently stopped biting.
+
+Do not reduce the task or replace it with an easier alternative. Preserve the requested scope and project conventions.
+
+Is the current approach the best way forward? Give a direct keep, adjust, or pivot recommendation; tradeoffs; what to keep/change first; inspections; validation; and pitfalls.
+```
+
+Three documents inlined (95,284 characters). Redaction checked.
+
+## Response
+
+Verdict: ADJUST—but start T1 now
+
+Keep the architecture and the GitHub Releases installer. Do not pivot. The remaining problems do not justify reopening absorption of the rail, retirement of rest-variables-oauth, or the delivery decision.
+
+Nothing in the supplied evidence blocks T1. Begin the baseline capture now. I would not, however, approve executing the entire task list unchanged through publication and cutover. Several operative acceptance clauses still contradict the corrected prose, and the installer’s implementation, identity, and trust guarantees need explicit acceptance criteria.
+
+The distinction is important: this is approval to begin, with specific later hold points—not a requirement to complete another full review round before doing any work.
+
+I take the public-repository status, anonymous tag-fetch results, and CI observations as established facts supplied by you. This review does not independently certify an installer whose source is outside the evidence packet.
+
+What blocks which step
+Execution boundary Required correction or evidence
+Starting T1 Nothing. Capture against the existing producers, fixture inputs, and validators before they change.
+Starting T3 Add the explicit T1 → T3 dependency. T3 still says Dependencies: None.
+First public push of migrated material—especially T11 Review that material for source disclosure before pushing it, rather than relying on T15’s release-tarball review.
+Closing T5 / approving the Phase 2 contract Specify how the bootstrap receives the selected version, what authenticates downloaded executable code, runtime prerequisites, and installation/version lifecycle behavior.
+Passing the Phase 2 checkpoint / starting T15 Have the production Bash and PowerShell installers implemented and tested against the exact release-candidate assets. Do not leave installer implementation until publication.
+Accepting T17 Replace the obsolete S2 procedure, establish the required CI job’s actual artifact-production path, and demonstrate the provisioned CLI/skill selection works without ambient fallbacks.
+
+1. Did the six corrections actually land?
+
+Mostly yes. They are not merely acknowledged in prose.
+
+Correction Assessment
+
+1. Implementation dependencies Landed. T8 explicitly requires T7 and T9; T14 requires T10–T13; T15 requires the complete Phase 2 checkpoint. The previously omitted implementation work is on the dependency chain.
+2. Full mapping expectations Landed. SPEC §3.2 can represent the full mapping and retains the summary constraints; T13 requires full-mapping verification.
+3. Rename must preserve Collider’s dependency Landed. T7 now requires preservation or an explicit stop and transition revision. It no longer treats an introduced break as acceptable.
+4. T16 cannot require clean product CI before T17 Landed. T16 explicitly limits its verification to provisioning probes. Clean product installation belongs to T17/T18.
+5. Skill-asset cutover Landed. T11 freezes the compatibility snapshot, T16 stages the selected assets, and T17 activates them, updates discovery/editing rules, and checks skew.
+6. Pre-retirement governance reference Substantively landed, but ordering remains inconsistent. T1 captures the eleven fixtures’ current outcomes and reasons; T9 reconciles the post-retirement results. However, T3’s explicit dependency is still None, despite the plan saying T1 must precede it.
+
+For correction 6, change the dependency rather than relying on an executor to reconcile contradictory instructions. T3 should also use the captured results when accepting retirement; T9 can then preserve and complete that reconciliation rather than being the first place a retirement regression is discovered.
+
+The S2 correction is still not fully implemented in the task text
+
+This is separate from the six-item table and remains an actual acceptance defect.
+
+SPEC §7.2 is correct. SPEC S2 and TODO T17 are not. T17 still says to perturb the artifact in an isolated worktree and then run preflight—the exact procedure §7.2 explains will be defeated by regeneration. The Phase 3 checkpoint and risk-table shorthand also retain the old formulation.
+
+Make the operative acceptance criteria require the two distinct proofs already described in §7.2:
+
+Artifact rejection: the installed release rejects a semantic mutation in an artifact stored where generation cannot overwrite it.
+
+Gate propagation: unmodified preflight, and the named required CI job, reject a persistent expectation mismatch while running the actual installed verifier.
+
+For each, identify the actual artifact and expectations read at verification time and the rail-specific diagnostic. An unrelated failure must not satisfy the criterion.
+
+The historical “first draft” table can remain historical, but the current success criterion, task verification, and checkpoint must all point to the corrected procedure.
+
+2. The installer approach is viable—but several guarantees need strengthening
+   Separation of provisioning and execution: yes, provided it is enforced
+
+The proposed ordering is sound: provision before activation; execute the installed release afterward; fail when the selected installation is unavailable; never acquire inside pre-push.
+
+But this separation is not guaranteed by the fact that delivery uses an installer script. It is guaranteed by the installed command and its launcher having no acquisition, automatic repair, update, or dependency-resolution fallback during gate execution.
+
+T16’s missing-install and unrelated-global-binary tests are therefore valuable. Strengthen them so that the unrelated binary is not executed even to ask for its version. A version string from an arbitrary executable on PATH is not a basis for trusting that executable.
+
+Use an explicitly selected installation path or a package-owned offline launcher. Keep generic invocation plumbing in Collider; do not implement release-selection policy independently in eight workflows or recreate rail semantics inside the setup action.
+
+Live observed-state acquisition by figma drift can remain a separately declared, non-gate behavior. It must not enter the offline verification path.
+
+The bootstrap does not automatically know its download URL
+
+The statement that the bootstrap “resolves the version pin from the tag in its own URL” needs a concrete mechanism, not an assumption about piping.
+
+In ordinary curl … | bash, Bash receives the response body on standard input. It is not automatically given curl’s URL as a script argument or source filename. Likewise, Invoke-Expression executes the supplied string; the expression being evaluated is not inherently a version-aware installer invocation.
+GNU
++2
+Guix Manual
++2
+
+I also checked the ordinary Bash behavior locally: a harmless script fetched through a local curl-to-Bash pipeline saw argv0=bash, no BASH_SOURCE filename, and zero arguments. That was a shell-mechanics test, not a test of your reference installer.
+
+I am not asserting that the reference implementation is broken. I am saying the evidence packet does not establish how this critical handoff works.
+
+T5 should require either an explicit selected-version argument/environment contract, or a release-specific bootstrap that contains its release identity before the candidate is tested. Another mechanism is acceptable if demonstrated, but it must not depend on shell history, the consuming repository’s Git state, or a floating lookup.
+
+The early proof should exercise two distinct selected versions from outside any repository in noninteractive shells. It must establish what version reaches the real installer and asset URL—not merely that the first raw-content request returns 200.
+
+Tag pinning alone is not immutable content selection
+
+A concrete tag avoids a latest or version-range selection, but the plan overstates this as “cannot silently float” unless tag and asset mutation are prevented or detected.
+
+There is a direct improvement available within your chosen delivery mechanism: GitHub immutable releases. GitHub documents that these lock the associated tag to its commit and prevent release-asset modification. This protection must be enabled for the release; it should not be inferred from the presence of a version-looking tag.
+GitHub Docs
+
+My recommendation is:
+
+Use immutable releases, and retain Collider’s independently reviewed integrity record.
+
+The record should bind the selected repository/release, source commit, platform asset identity, and expected asset integrity—or a reviewed digest of a manifest that binds those assets. A single unexplained “expected digest” is insufficient once there are multiple platform archives and multiple executable installer stages.
+
+Use the T14-tested bytes as the source of those expectations. Do not populate the record by blindly trusting whatever SHA256SUMS happens to accompany a later download.
+
+That establishes repeatable selection of the tested artifact. It does not, by itself, establish that rebuilding from source on another machine produces identical bytes; that is a separate reproducible-build claim.
+
+Same-release SHA256SUMS is useful, but not an independent trust anchor
+
+A checksum list accompanying the archive can detect corruption or inconsistency between the two. It cannot distinguish the approved archive from a replacement when an attacker can replace both the archive and its checksum list. Reviewed, separately retained verification metadata is what makes that substitution detectable. This distinction is also why dependency-verification systems separate downloaded artifacts from trusted verification metadata.
+Gradle Docs
+
+Your reviewed JSON is already the right place for that independent expectation. The missing detail is exactly how every accepted download is bound to it.
+
+Add a negative test in which a controlled test server or fixture supplies a modified asset and a correspondingly modified SHA256SUMS. Installation must still reject it against the reviewed expectation. Testing only “corrupt the archive without changing its checksum” proves less.
+
+Attestations can add evidence about the build’s origin and instructions, but they are not a substitute for the reviewed digest or behavioral tests. GitHub explicitly distinguishes provenance attestations from a guarantee that the artifact is secure. I would not make a new signing infrastructure a prerequisite to T1.
+GitHub Docs
+
+The bootstrap is executable code before the asset checksum is checked
+
+Checking the final archive does not authenticate an installer that has already executed.
+
+The trust chain includes the initial bootstrap, the second-stage installer, the selected archive, and any additional executable component they fetch. A compromised bootstrap can ignore the reviewed digest or perform unrelated actions before reporting a successful checksum comparison.
+
+For CI, use the same installer through a download → reviewed-integrity verification → execution sequence, rather than treating unverified streaming execution as equivalent. A reviewed, commit-pinned setup action can also supply the trusted bootstrap logic; GitHub recommends full-length commit pins for actions rather than mutable tags. This is hardening the chosen Releases installer, not changing distribution mechanisms.
+GitHub Docs
+
+The convenience one-liner can remain available for developers, but its trust claim must be honest: it executes publisher-supplied code with the invoking user’s privileges. -UseBasicParsing does not neutralize the explicit | iex that follows; Microsoft recommends avoiding Invoke-Expression where safer invocation is available.
+Microsoft Learn
++1
+
+For developer installations, my default would be user-owned prefixes, no automatic elevation, and no unrequested persistent shell-profile or machine-policy changes. For CI, use minimal permissions and avoid exposing unrelated deployment credentials during provisioning. An isolated installation prefix is not a sandbox for the installer. GitHub’s workflow-security guidance likewise emphasizes limiting token permissions and treating executed workflow dependencies as trusted code.
+GitHub Docs
+
+The displayed Unix pipeline also has a failure-propagation trap
+
+Without pipefail in the calling shell, a failed curl followed by Bash receiving empty input can leave the pipeline successful: the default pipeline status is the last command’s status. I confirmed the equivalent empty-producer case locally. Putting set -e inside the downloaded script cannot repair a case where no script arrives.
+GNU
+
+Test initial-download failure, not just missing SHA256SUMS after the installer has started. A verified download-to-file flow also avoids executing an incomplete transfer. For PowerShell, test terminating download failures and propagation of child-process failures explicitly rather than assuming Bash-like behavior.
+
+3. The delivery change has not yet been fully translated into implementation work
+
+This is the largest structural gap introduced by the new mechanism.
+
+T5 is described as a decision task. T14 primarily owns the builder and pack-check. T15 requires installer scripts to exist at the release tag, but it does not establish a pre-publication implementation-and-test task for the production installers.
+
+Installer existence at T15 is too late to be the first explicit acceptance point for installer implementation.
+
+Expand T14, or add an explicit prerequisite within Phase 2, to own the production Bash/PowerShell installers, archive layout, platform selection, integrity enforcement, lifecycle behavior, and installer tests. Re-size that work. It is no longer merely an optional-peer packaging adjustment.
+
+Resolve the candidate/release sequencing explicitly
+
+T14 says it “installs the release,” while T15 creates that release. This is readily resolvable, but the meaning needs to be explicit:
+
+T14 installs the frozen release candidate through the production installer using a controlled candidate-asset source. T15 publishes those exact tested assets without rebuilding. T16 proves the actual anonymous GitHub delivery path.
+
+That preserves your good distinction between mechanism proof and publication proof. It also preserves the existing pack-check gate rather than creating a parallel, weaker acceptance path.
+
+Freeze the installer scripts and release identity before that decisive test too. T15 must not modify scripts or package metadata and then call the resulting rebuild “the artifact that passed T14.”
+
+With immutable releases, assemble the complete asset set before publication; GitHub specifically recommends draft preparation because assets cannot be added or replaced after an immutable release is published.
+GitHub Docs
+
+Remove npm-specific assumptions from release acceptance
+
+Using package.json, pnpm, or an npm-style internal package name for development is not a problem. Nor is “tarball” an npm-specific concept.
+
+The problem is making node_modules/.bin the decisive installed-product test in T8, or assuming the files field alone proves what the release archive contains in T11. Those can remain development checks, but release acceptance must exercise the actual archive layout and installed prefix.
+
+Also clarify S6: source lint/type/unit gates run in the pack’s development checkout; pack-check exercises the independently installed release. An installed runtime distribution should not need to contain the development dependency tree merely so someone can run pnpm check inside it.
+
+Declare the runtime boundary
+
+The plan says both “Node ESM” and “installed binary,” but does not decide whether Node is included.
+
+A self-contained builder does not necessarily mean a self-contained runtime. Decide whether the release includes a runtime or requires a separately provisioned, supported Node version. Either is compatible with the architecture, provided the prerequisite is explicit and never resolved from Collider during execution.
+
+Similarly, esbuild’s native executable must actually be included and selected correctly when using the bundled-builder option. Its official documentation confirms that its native installation is platform-specific; copying one platform’s installation is not a cross-platform distribution strategy.
+esbuild
+
+T5 should define the supported OS/architecture/runtime combinations. T14 should test those combinations and reject unsupported ones clearly. You do not need to support every possible architecture, but “Linux/macOS/Windows” alone is not a complete asset-selection contract.
+
+4. Installation, upgrade, uninstall, and concurrent versions need a small explicit contract
+
+The version-specific local prefix is a good foundation. Complete it before shipping the installer.
+
+Operation Required behavior
+Install / reinstall Stage and verify a complete installation before making it selectable. Reinstalling the same approved identity is idempotent. An interrupted or failed install must not leave a directory that is subsequently accepted as complete.
+Upgrade Provision the newly reviewed release first. Activate CLI and skill assets as one coherent selection, or fail closed on skew. Do not silently rewrite the project’s selected version or overwrite another version in place.
+Concurrent versions Two repositories or worktrees can select different releases simultaneously. A global “current” pointer must not override project selection. The presence of another installed version must not satisfy a missing selected version.
+Uninstall Remove only the selected installation and installer-owned links/integration. Preserve consumer config, expectations, ledgers, and unrelated files. State what happens to a project that still selects the removed release: an actionable failure, not fallback.
+
+Add tests for interrupted installation, concurrent installation attempts, corrupted cache contents, and stale skill materialization. Cache acceptance should validate the actual selected content, not merely a plausible cache key or --version response.
+
+CLI/skills equality should be tied to release contents, not just matching editable version labels. This matters especially if .agents remains a tracked materialization.
+
+T15’s first-release rollback caveat is correct and should stay. There is no demonstrated earlier compatible release yet. Failed provisioning must leave activation unchanged; a defective first activated release needs an explicit recovery or corrected release, not an automatic return to the retired mode.
+
+5. The public repository moves the disclosure checkpoint earlier
+
+The documents still place disclosure review primarily at T15’s final tarball. That is too late for material copied into a repository that is already public. Public repository contents are accessible independently of whether a release archive includes them.
+GitHub Docs
+
+Review migrated files—and any history actually being imported—before their first public push, especially at T11. Keep T15’s archive review as a second checkpoint covering the final distribution.
+
+This does not reopen the public-repository decision. It changes when the consequences of that decision must be checked.
+
+Update T5 and the plan’s open questions to record public visibility as settled. Remove the stale request to approve making it public and the npm-specific publication explanation in SPEC §8. Keep the separate, still-applicable approvals for the repository rename and release publication.
+
+6. Remaining ways ownership or gate enforcement could be falsely declared complete
+   T9 must determine the final callable surface—not just fill in five preselected commands
+
+T9’s requirement to record each caller’s consumed output is excellent. Preserve it.
+
+There is nevertheless a mismatch to close at T8: SPEC §4.2 enumerates five commands, while T12 explicitly includes publish-proof and potentially surviving read/write/promotion responsibilities that those signatures do not obviously express.
+
+Do not resolve that by making the consumer reconstruct missing semantics. Before approving T8, every surviving caller needs a complete command/input/output contract. This can extend the CLI surface or establish that an existing command covers the responsibility, but it must be explicit.
+
+For generator adapters, distinguish ordinary process invocation and JSON transport from rail policy. A generator that parses CLI output and then independently decides eligibility, promotion, or exception meaning still owns rail logic.
+
+The required CI job must verify the current change’s artifact
+
+Naming a required job fixes the previous omission, but naming it does not establish how that job obtains the artifact.
+
+If the replacement runs in the just test-all job, do not assume another job’s govern:tokens step has prepared its filesystem. T16/T17 must establish the selected job’s artifact producer, ordering, path, and association with the commit being checked.
+
+A straightforward choice is verification after token generation in the appropriate existing required job. Another arrangement is acceptable if it proves that it consumes the current change’s artifact rather than a stale committed or cached result.
+
+Also inspect actual required-check configuration, conditional execution, and error propagation. GitHub documents that a conditionally skipped job can report success, so a job called “required” in the plan is not enough evidence that the verifier ran.
+GitHub Docs
+
+T18 should retain a green/red/green proof with the installed verifier’s diagnostic. A persistent source-token mutation that changes an interior mapping value while leaving the five summary constraints unchanged is particularly useful for demonstrating the real generation-to-verification path.
+
+Keep the eight cold-acquisition proofs. That does not require eight redundant executions of the rail suite.
+
+Full mapping and summary constraints must both be mandatory
+
+The expectations correction is sound. Its implementation must not quietly treat the summary as optional decoration or auto-fill missing expectations from actual output.
+
+In particular, prove rejection of a default-theme mismatch independently of mapping equality. Preserve T13’s separate treatment of structural $themeOverrides constraints where normalization would hide them.
+
+The expected baseline remains reviewed consumer data, never preflight-generated output. Any future baseline-update procedure should remain explicit and package-owned rather than preserving T1’s capture script as permanent consumer rail code.
+
+“Generated” needs a mechanical boundary
+
+The generated-plugin exception is legitimate, but a filename or comment saying “generated” does not enforce package ownership.
+
+For retained generated plugin output, require that the complete generated set is reproducible from the selected release plus approved configuration, or is regenerated cleanly before use. Compare code.js and ui.html with that release’s expected generation, not just the manifest.
+
+This does not extend S4’s historical byte-equivalence requirement to the intentionally changed UI. It prevents hand-maintained plugin logic from hiding behind the generated-output exception.
+
+Likewise, T17 should materialize passive skill content without leaving executable rail helpers under .agents or exposing them through a discovery symlink as a new consumer entry point. The final audit should follow the actual agent discovery paths, not just inspect the archive.
+
+Final recommendation
+
+Keep the approach. Make a bounded execution-plan adjustment, not another architectural redesign.
+
+The repaired inventory, full baseline, governance-fixture reconciliation, provisioning-before-activation sequence, and explicit skill cutover are substantial improvements. The installer route fits the organization’s established operating pattern, but it transfers responsibility from package-manager behavior into your own installer, asset selection, and lifecycle implementation.
+
+The remaining mandatory changes are concrete: repair the T3 dependency; replace the operative S2 procedure; close the bootstrap identity and trust contract in T5; review migrated source before public pushes; and make the production installers and exact candidate installation part of Phase 2 acceptance.
+
+Start T1 now. Do not start T3 before that capture is complete, do not pass the Phase 2 checkpoint with an untested production installer, and do not accept T17 without the corrected local and required-CI failure proofs.

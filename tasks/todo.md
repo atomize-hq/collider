@@ -99,7 +99,7 @@ to success.
 - [ ] **S5**: `grep -rn "rest-variables-oauth"` over tracked sources and generated output returns
       nothing, excluding `archive/`, `SPEC.md`, `tasks/` and `docs/consultations/`
 
-**Dependencies:** None
+**Dependencies:** **T1** — the fixture capture must complete before this task edits those fixtures or their validators
 **Files likely touched:** 2 deleted, 2 validators, 2 fixtures, 3 docs, 1 schema, 1 profile,
 `package.json`, `justfile`
 **Scope:** L — atomic by necessity, not by choice
@@ -154,6 +154,27 @@ The principle: **provisioning and execution are separate operations.**
 - [ ] Install location and prefix: job-local in CI, persistent and version-specific locally
 - [ ] Executable discovery, including the Unix/Windows path difference — the bash and
       PowerShell installers are a matched pair, not an afterthought
+- [ ] **How the bootstrap learns its version.** `curl … | bash` supplies no argv and no
+      `BASH_SOURCE`; the reference implementation parses `--version=` and otherwise resolves
+      `latest`. Choose an explicit argument contract or a release-specific bootstrap carrying its
+      own identity. **Prove it with two different selected versions, from outside any repository,
+      in a non-interactive shell**, establishing what version reaches the asset URL — not merely
+      that the first request returns 200
+- [ ] **The reviewed record binds more than one digest**: repository, release, source commit,
+      per-platform asset identity and expected integrity. Populated from the T14-tested bytes,
+      never from whatever `SHA256SUMS` accompanies a later download
+- [ ] **Supported OS / architecture / runtime combinations named.** "Linux/macOS/Windows" is not
+      an asset-selection contract, and a bundled builder ships platform-specific binaries
+- [ ] **Whether the release includes a Node runtime** or requires a separately provisioned
+      supported version. Either is fine; it must be explicit and never resolved from Collider
+- [ ] **Lifecycle contract**: install/reinstall idempotent, never leaving a partial directory
+      that later reads as complete; upgrade provisions before activating and fails closed on
+      CLI/skill skew; concurrent versions coexist and no global "current" pointer overrides
+      project selection; uninstall removes only the selected install and leaves a project
+      selecting it with an actionable failure, not a fallback
+- [ ] `pipefail` guidance for the documented one-liner — a failed `curl` into bash exits 0
+- [ ] **GitHub immutable releases enabled**, locking the tag to its commit and preventing asset
+      modification
 - [ ] Offline local behaviour: the pre-push path acquires nothing, and a missing or mismatched
       install fails with an actionable setup message
 - [ ] Caching is an optimization only — a cache miss installs **the same release**
@@ -333,6 +354,10 @@ materialization here: canonical editing location, tracked or generated, stale-co
 - [ ] The two rail-referencing skills (`sync-quality-governor`, `stage-1`) describe CLI
       invocations rather than repo paths
 - [ ] `validate-artifact.mjs` moves behind `ds-skills validate` unchanged
+- [ ] **Disclosure review before the first public push.** The repo is public now, so material is
+      exposed the moment it lands — not at release. Review the migrated files, and any history
+      actually imported, before pushing. T15's archive review is the second checkpoint, not the
+      first
 - [ ] The retained `.agents/skills/` subtree is declared the **frozen compatibility snapshot**
       until T17 — still active for agents, not a second independently maintained source
 - [ ] There are never two independently editable copies
@@ -411,7 +436,7 @@ actually hold.
 
 ---
 
-### T14: Make the plugin builder self-contained and expand `pack-check`
+### T14: Production installers, self-contained builder, expanded `pack-check`
 
 **Description:** `pack-check.sh` runs `pnpm add "$tarball" esbuild` — it installs the optional
 peer itself, so it proves the plugin builds when a consumer already has esbuild and never that a
@@ -424,6 +449,16 @@ plain install can. npm does not auto-install optional peers.
 - [ ] The builder is never resolved from Collider
 - [ ] Platform-specific binaries are handled for the platforms actually supported
 - [ ] `pack-check` no longer installs the builder itself
+- [ ] **The production bash and PowerShell installers are implemented and tested here**, not left
+      to exist by T15. Archive layout, platform selection, integrity enforcement against the
+      reviewed record, and the lifecycle behaviours T5 specified
+- [ ] Installation is exercised **through the production installer against a frozen
+      release-candidate asset set**, from a controlled source. T15 then publishes those exact
+      tested bytes without rebuilding
+- [ ] Release acceptance exercises the **real archive layout and installed prefix** — not
+      `node_modules/.bin`, and not the `files` field, which are development checks only
+- [ ] Negative integrity test: a modified asset **with a matching modified `SHA256SUMS`** is
+      rejected against the reviewed record. Corrupting only the archive proves less
 
 **Verification:**
 
@@ -537,6 +572,12 @@ discovering missing command semantics inside the cutover.
       at T16**. No CI job runs preflight — it is the pre-push hook — and
       `figma-token-rail.test.ts` runs today inside `just test-all`, which is a CI job. Wiring
       only preflight would delete a CI gate while every job stayed green
+- [ ] **The required job's artifact path is established**: which step produces the artifact it
+      verifies, in what order, and that it belongs to the commit under test — not another job's
+      filesystem, a stale committed copy, or a cache. A conditionally skipped job reports
+      success, so "required" in the plan is not evidence the verifier ran
+- [ ] The provisioned CLI and skill assets are selected without ambient fallback: an unrelated
+      binary on `PATH` is **not executed at all**, not even to read its version
 - [ ] `just figma-plugin-build` calls the CLI; `scripts/build-figma-plugin.mjs` deleted
 - [ ] Every `package-owned` / `command-only` entry from T9 switched
 - [ ] `src/lib/tokens/figma-token-rail.test.ts` deleted; the self-referential drift case not
