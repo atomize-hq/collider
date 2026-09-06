@@ -141,7 +141,7 @@ scheduled them.
 
 ### Phase 2: A complete, self-contained package
 
-- [ ] T7: Rename the repo and settle package identity
+- [x] T7: Rename the repo and settle package identity — `atomize-hq/ds-skills`, `190dba4`; Collider's dependency verified through the redirect
 - [ ] T8: Build the CLI contract and scaffold
 - [ ] T9: Produce the executable-path disposition inventory
 - [ ] T10: Move the rail modules under `src/figma/`

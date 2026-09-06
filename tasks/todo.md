@@ -387,24 +387,44 @@ after a rename, but hosted action references do not receive that redirect.
 
 **Acceptance criteria:**
 
-- [ ] Repo renamed to **`atomize-hq/ds-skills`**; package renamed to `@atomize-hq/ds-skills`.
+- [x] Repo renamed to **`atomize-hq/ds-skills`**; package renamed to `@atomize-hq/ds-skills`.
       Both names were confirmed free in the org before the decision. The repo name is the
       public identity now that §10 delivers by release asset rather than registry, so it is
       the one that has to read well in an install URL — not the package name
-- [ ] Metadata, links and release configuration updated
-- [ ] Affected references inspected rather than assumed — action references especially
+- [x] Metadata, links and release configuration updated — `repository`, `homepage` and `bugs`
+      added; the package had none, and a released artifact should. The default config filename
+      (`ds-skills.config.json`) and the example config file were renamed too, because the old
+      name appears in a user-facing error message
+- [x] Affected references inspected rather than assumed — action references especially. CI has
+      none that could miss a redirect: only `actions/*` and `pnpm/action-setup`
 
 **Verification:**
 
-- [ ] The pack's own CI passes post-rename
-- [ ] **Collider's existing dependency still resolves.** Phase 2 requires Collider green, so a
-      new local failure introduced by the rename is not acceptable. Inspect the lockfile
-      reference and preserve it through the rename; if that cannot be done, stop and revise the
-      transition explicitly. The pre-existing credential failure authorizes nothing here
+- [x] The pack's own CI passes post-rename
+- [x] **Collider's existing dependency still resolves** — measured three ways, not asserted:
+      `git ls-remote` on the exact `git+ssh` URL in `package.json` returns `b00a82d8…` for
+      `v0.3.0`, the object the lockfile pins; the `https` form pnpm records does the same; and a
+      throwaway `pnpm add` of that old URL installs the package with a built `dist/`, so the
+      redirect covers fetch and not merely ref listing. Nothing breaks at the tag because
+      `v0.3.0` predates the rename commit — the package name there is still the old one, which
+      is exactly what the lockfile expects. Collider's `just preflight` is green.
+
+**Two things the verification turned up:**
+
+- The lockfile's `commit: b00a82d8…` **is not a commit**. It is the annotated **tag object**;
+  the commit is `189db11`. pnpm labels it `commit:` regardless. Harmless, and mildly good: a
+  recreated tag would produce a different sha and be rejected rather than silently accepted.
+- The git dependency's installability is **pnpm-version-dependent**. At Collider's pinned
+  `10.11.1` (and CI's `PNPM_VERSION: '10.11.1'`) the `prepare` build runs and `dist/` is
+  produced. A newer pnpm blocks lifecycle scripts for git dependencies unless the package is in
+  `onlyBuiltDependencies`, and Collider has no `pnpm-workspace.yaml`, no `.npmrc` and no `pnpm`
+  field — so the install **fails**, loudly rather than silently. `dist/` is gitignored in the
+  pack, so there is no fallback. T17 removes the dependency and the problem with it; until then,
+  bumping pnpm breaks the install.
 
 **Dependencies:** Foundation checkpoint · **ask first**
 **Files likely touched:** `package.json`, README, CI config
-**Scope:** S
+**Scope:** S — **done**, `190dba4` in `atomize-hq/ds-skills`
 
 ---
 
