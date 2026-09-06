@@ -34,7 +34,7 @@ Not by memory. Three passes, each recorded so the result is reproducible:
 | ---------------------------------------------- | ----: | ------------------------------------------------------------------------------------------------- | --------------- |
 | `scripts/validate-sync-ledger.mjs`             |     5 | `pnpm validate:sync-ledger` → `governanceSteps[5]` → `pnpm govern:tokens` → CI job **governance** | `command-only`  |
 | `scripts/validate-figma-parity.mjs`            |     5 | `pnpm validate:figma-parity` → `governanceSteps[6]` → same chain                                  | `command-only`  |
-| `scripts/validate-publish-proof.mjs`           |    31 | **none** — see §3                                                                                 | `deleted`       |
+| `scripts/validate-publish-proof.mjs`           |    31 | **none** — see §3                                                                                 | `command-only`  |
 | `scripts/build-figma-plugin.mjs`               |    33 | `pnpm figma:plugin:build`, `just figma-plugin-build`                                              | `package-owned` |
 | `scripts/serve-figma-tokens.mjs`               |   142 | `pnpm figma:tokens:serve`, `just figma-token-server`                                              | `package-owned` |
 | `scripts/capture-rail-baselines.mjs`           |   210 | `pnpm baseline:rail`. No gate runs it                                                             | `package-owned` |
@@ -140,6 +140,43 @@ about fixtures. Three ways forward, and this needs a decision before T12:
 accident, not a policy — the 229-line validator and its 5 fixtures were built for a gate that
 was never connected.
 
+### Decided 2026-09-06 (round-4 review): (1), and it is bigger than wiring
+
+Wiring the validator fixes **reachability** and leaves the actual defect untouched. The two
+records restate the same five publication facts and **nothing compares them**:
+
+| Fact                  | Proof                    | Ledger                                                     |
+| --------------------- | ------------------------ | ---------------------------------------------------------- |
+| artifact path         | `artifact.path`          | `artifact.path`                                            |
+| artifact revision     | `artifact.gitSha`        | `artifact.revision` / `verification.lastVerifiedRevision`  |
+| publish mode          | `mode`                   | `publish.mode`                                             |
+| Figma destination     | `destination.figmaFile`  | `publish.figmaFile` — **any non-empty string is accepted** |
+| materialization state | `materialization.status` | `verification.materializationStatus`                       |
+
+A sixth pair, `proof.carrier.used` <-> `ledger.publish.tokensStudioCarrier`, is checked against
+`mode` **inside** each record and never **across** them.
+
+Two records can each be individually valid and still contradict each other; two records can also
+agree perfectly while both carry an unsupported claim. The design has to separate those.
+
+**Both records are kept, with different responsibilities.** The proof is an attestation about one
+publication. The ledger is governance state, including whether that attestation supports what it
+currently claims. So option (3) — delete the proof — is rejected: its lack of an operational
+caller is evidence of missing enforcement, not evidence the source record is disposable. Option
+(2) is rejected because an incidental assertion inside a fixture-oriented unit test is not a gate.
+
+**The rule adopted:** the ledger's duplicated facts become a **checked projection of an explicitly
+identified proof**, bound unambiguously, rather than independently authored authority. And history
+is not currentness — a valid attestation about revision A does not become false when tokens move
+to revision B; it stops supporting a ledger claim about B, which is **never** repaired by
+rewriting the attestation.
+
+`SPEC.md` §5.5 carries the full specification, including what the gate can and cannot prove.
+**T8** fixes the per-fact relationships and the binding; **T12** implements them. The disposition
+of `scripts/validate-publish-proof.mjs` above changes from `deleted` to `command-only` as a
+consequence — Collider keeps the invocation, in `governanceSteps`, exactly as it does for the
+ledger and parity validators.
+
 ## 4. Boundary — mentions Figma, is not the rail
 
 Recorded so a later grep for "figma" does not re-open settled ground:
@@ -193,18 +230,24 @@ established here from the caller, not improvised at T17.
 | `src/lib/tokens/figma-token-rail.test.ts`                  | `ds-skills figma verify --config … --expect figma/token-rail.expectations.json`                   | exit status + a **rail-specific diagnostic**, which S2 depends on                   |
 | `pnpm baseline:rail`                                       | `ds-skills figma baseline --config … --out …`                                                     | exit status; refuses to overwrite drifted baselines                                 |
 | `node .agents/…/validate-artifact.mjs <schema> <instance>` | `ds-skills validate <schema> <instance> [--profile …]`                                            | exit status + stderr; already the tested contract                                   |
-| `pnpm validate:publish-proof` (**no caller**)              | `ds-skills proof validate --proof src/figma/publish-proof.json`                                   | exit status — **if** §3(1) is adopted                                               |
+| `pnpm validate:publish-proof` (**no caller**)              | `ds-skills proof validate --proof src/figma/publish-proof.json --profile …`                       | exit status + stderr. §3(1) **adopted** — wired into `governanceSteps`              |
 
 ## 7. What this inventory changes about the plan
 
 - **T8 must define a `--json` output mode.** Discovered here, not in T8's criteria. Without it
-  `summarizeCt8b()` cannot be rewritten and CI job 8 quietly loses its CT-8B rail.
-- **A `ds-skills ledger parity` command is required.** `SPEC.md` §4.2 lists `ledger validate` but
+  `summarizeCt8b()` cannot be rewritten and CI job 8 quietly loses its CT-8B rail. **Applied, and
+  widened**: round 4 made `--json` a versioned interface with a result schema, stable diagnostic
+  codes and an explicit "could not evaluate" state — `SPEC.md` §4.3 — because a caller that reads
+  a missing result as an empty rail keeps CI green while the gate is dead.
+- **A `ds-skills ledger parity` command is required.** `SPEC.md` §4.2 listed `ledger validate` but
   no parity command, and `validate:figma-parity` is a separate governance step with its own
-  policy module.
-- **`ds-skills figma serve` and `figma baseline` are not in §4.2 either.** Both are needed if
-  Collider is to own no rail executables.
-- **§3 needs a decision before T12.**
+  policy module. **Applied** — §4.2 now carries all nine commands, and T8 requires parity to stay
+  independently invocable rather than folded into `ledger validate`.
+- **`ds-skills figma serve` and `figma baseline` were not in §4.2 either.** Both are needed if
+  Collider is to own no rail executables. **Applied**, and T13 owns them.
+- **§3 is decided** — see the decision record above. It is not merely "wire the validator": the
+  proof–ledger relationship becomes a checked projection, specified at T8 and implemented at T12,
+  and it adds a required binding field to the ledger schema.
 
 ## 8. Verification
 

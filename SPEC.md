@@ -1,6 +1,7 @@
 # SPEC — Design-system tooling as an installable CLI
 
-**Status:** proposed, not started
+**Status:** in execution — Phase 1 complete (T1–T6), Phase 2 in progress (T7, T9 done).
+Restructured 2026-09-06 after the round-4 review, the first with implementation evidence.
 **Raised from:** BL-3 and BL-4 in [`docs/backlog.md`](docs/backlog.md), plus two defects found
 on 2026-09-05 while verifying the token-rail extraction (`d867f19`).
 
@@ -236,15 +237,28 @@ the verify command, not a nice-to-have — if the gate weakens, this work has ma
 
 ### 4.2 Pack — CLI surface
 
-```
-ds-skills figma plugin build   --config <path>
-ds-skills figma verify         --config <path> --expect <path>
-ds-skills figma drift          --config <path>
-ds-skills ledger validate      --ledger <path> --profile <name>
-ds-skills validate             <schema> <instance> [--profile <path>]
-```
+Nine commands. Four of them — `ledger parity`, `proof validate`, `figma serve`,
+`figma baseline` — were discovered at T9 and are not optional extras: without them Collider
+cannot reach zero rail executables, and a release cut without them is **immutable and
+incomplete**.
+
+| Command                                                      | Reads / writes                      | What the caller consumes      |
+| ------------------------------------------------------------ | ----------------------------------- | ----------------------------- |
+| `ds-skills figma plugin build --config <path>`               | reads config, **writes** plugin out | exit status                   |
+| `ds-skills figma verify --config <path> --expect <path>`     | read-only                           | exit status + rail diagnostic |
+| `ds-skills figma drift --config <path>`                      | read-only                           | exit status                   |
+| `ds-skills figma serve --config <path>`                      | read-only, **long-running**         | dev command, never a gate     |
+| `ds-skills figma baseline --config <path> --out <path>`      | **explicitly mutating**             | exit status                   |
+| `ds-skills ledger validate --ledger <path> --profile <name>` | read-only                           | exit status, **or `--json`**  |
+| `ds-skills ledger parity --ledger <path> --profile <name>`   | read-only                           | exit status                   |
+| `ds-skills proof validate --proof <path> --profile <name>`   | read-only                           | exit status                   |
+| `ds-skills validate <schema> <instance> [--profile <path>]`  | read-only                           | exit status                   |
 
 The last already exists as `scripts/validate-artifact.mjs` and moves behind the CLI unchanged.
+
+`ledger parity` stays **independently invocable** rather than becoming a side effect of
+`ledger validate`: `pnpm validate:figma-parity` is its own governance step with its own policy
+module, and collapsing it would quietly retire a governance step under cover of a refactor.
 
 **Every command reads data and exits non-zero on failure.** No command imports from the
 consuming repo, and no consuming repo imports from the pack. That is the entire architectural
@@ -254,9 +268,33 @@ One qualification, because the literal wording is wrong otherwise: **generated o
 cross.** The CLI writes `code.js`, `ui.html` and `manifest.json` into Collider. Those are
 package-owned generated artifacts, never consumer-maintained source. Equally, invoking a
 command from `just` is orchestration — it is not licence to reimplement validation or policy
-logic in shell.
+logic in shell, in a `justfile` recipe, or in an inline CI `run:` body.
 
-### 4.3 Input and side-effect semantics — must be specified, not assumed
+### 4.3 `--json` is a versioned interface, not a formatting flag
+
+`summarizeCt8b()` consumes structured results, so `--json` is a contract another program is
+written against. It carries the obligations of one:
+
+- **A declared result schema with its own version field**, independent of `ledgerVersion` and of
+  the release version. A consumer that sees an unsupported result version must fail, not
+  best-effort parse.
+- **Stable diagnostic codes.** The `[CT-8B_…]` / `[CT-7B_…]` identifiers are the interface;
+  their prose is not. Renaming a code is a breaking change.
+- **Deterministic ordering** wherever a list is emitted, so a diff is a real difference.
+- **stdout carries the result and nothing else.** No progress text, no human commentary, no
+  banner. Diagnostics and logs go to stderr.
+
+**Distinguish "evaluated, and it does not conform" from "could not evaluate."** This is the
+failure mode that keeps CI green while the gate is dead. A completed evaluation reporting
+nonconformance must still emit a valid, parseable result carrying its diagnostics. A missing
+executable, malformed output, an unsupported result version, a crash or a timeout must **never**
+be projected as an empty rail, "not applicable", or a pass.
+
+Exit codes follow project convention, but each meaning is explicit and documented. A subprocess
+helper that throws on a non-zero exit must not discard the structured failure report the caller
+needs — the report is the point of the call.
+
+### 4.4 Input and side-effect semantics — must be specified, not assumed
 
 Each command needs these pinned down before it is implemented, because the current signatures
 do not answer them:
@@ -264,14 +302,69 @@ do not answer them:
 - **Where does `figma drift` get observed state?** If it needs a live Figma session or the
   local proof server, then it is not a gate command. Offline `just preflight` must never
   depend on a dev server or network access to Figma.
-- **Does each command read, write, or both?** `figma verify` reads. `plugin build` writes.
-  `ledger validate` must say whether it can mutate the ledger; the retired rail's failure-path
-  write is exactly the behaviour not to recreate by accident.
-- **Path resolution.** Config-relative or working-directory-relative. Test from outside the
-  repository root.
+- **Does each command read, write, or both?** The table in §4.2 is the answer, and it is
+  binding: **checks are read-only**. Validation must not quietly rewrite a proof, a ledger, a
+  baseline or a generated artifact in order to pass. `figma baseline` is the one explicitly
+  mutating command, and its capture mode is distinct from its verify mode.
+- **`figma serve` needs its own contract**: bind address, readiness signal, behaviour on an
+  occupied port, shutdown, and which resources it exposes. It serves the artifact the config
+  names — it must not become a generic static server for a consumer checkout because that is
+  the easiest port. The URL the built plugin embeds and the endpoint `serve` exposes must agree
+  by construction, not by coincidence.
+- **A substituted URL is not a usable URL.** The generated manifest declares
+  `networkAccess.allowedDomains: ["none"]`, which permits **no** external requests, and
+  `devAllowedDomains` applies during plugin development only. So a consumer pointing
+  `artifactUrl` at a hosted origin gets a correctly substituted plugin that cannot fetch it.
+  Right for Collider's localhost workflow; an undocumented wall for anyone else. Generated
+  endpoint, manifest permissions and `serve` behaviour are one contract and are tested together
+  — byte identity of the original manifest is the success criterion for the **original**
+  configuration only, never for a different network configuration.
+- **Path resolution.** Config-relative or working-directory-relative, stated per option. Test
+  from outside the repository root, from a nested directory with an explicit root, and from an
+  install path containing spaces.
+- **Repository-root discovery, and what happens without one.** `--help` and `--version` must
+  work outside any consumer repository.
 - **Profile resolution.** `--profile <name>` and `--profile <path>` are different contracts.
   Unknown profile must fail loudly rather than falling back to a default.
 - **Profiles stay data.** No executable callbacks, no embedded scripting escape hatch.
+- **Time is an input.** Staleness evaluation takes an explicit clock so tests are deterministic,
+  and a single invocation evaluates one coherent snapshot rather than re-reading files that may
+  change between phases.
+- **Installed-resource lookup.** Schemas, templates and skill assets resolve from the install
+  prefix, never from a sibling checkout, the consumer's `node_modules`, or ambient tooling. A
+  declared runtime prerequisite is acceptable; an accidental one is a defect.
+
+### 4.5 Configuration ownership — portable invariants versus consumer expectations
+
+Two kinds of value are currently tangled together in the validators, and the distinction decides
+what may be configured:
+
+- **Portable invariants** are properties of the contract itself: `ledgerVersion` must be the
+  supported version, `tokensStudioCarrier` must agree with `mode`, a retired publish mode is
+  rejected. A profile must **never** be able to re-enable a retired mode or override an
+  invariant. Configurability must not become a route around a portable prohibition.
+- **Consumer expectations** are properties of one repository: destination name, Figma file key,
+  artifact path, promotion levels, exception codes. These move into declared JSON with an owner,
+  a requiredness rule and validation behaviour.
+
+The generalization rule, stated so it cannot be satisfied the lazy way: **an expected value comes
+from the profile or configuration, never from the record being checked against it.** Comparison
+stays literal equality against a declared expectation. Portability is _not_ achieved by relaxing
+`requireLiteral` into "any string is acceptable" — that deletes the check and calls it a feature.
+
+The four constants known to need this treatment, all enforced today by `requireLiteral` against a
+Collider-specific literal:
+
+| Constant                   | Enforces                      | Today                                    |
+| -------------------------- | ----------------------------- | ---------------------------------------- |
+| `publishProofPilotName`    | `proof.destination.name`      | `'Collider'`                             |
+| `publishProofPilotFile`    | `proof.destination.figmaFile` | `'figma://file/<Collider file key>'`     |
+| `publishProofArtifactPath` | `proof.artifact.path`         | `'design-tokens/dist/figma/tokens.json'` |
+| `syncLedgerArtifactPath`   | `ledger.artifact.path`        | same literal, separately declared        |
+
+That last row is the tell: the same fact is pinned twice, from two modules, with no check that
+the two agree. §5.5 is about that class of defect generally. Both validators must also be audited
+for the same pattern in **defaults and error-message text**, not only in the checks.
 
 ## 5. Ownership closure
 
@@ -301,7 +394,19 @@ generator rather than claiming the whole generator** — unrelated product logic
 
 Freeze their expected post-retirement outcomes **and diagnostic reasons** before rewriting
 anything. Pass/fail alone is not enough: the contradictory-carrier fixture must not appear to
-pass because it now fails earlier for an unrelated reason.
+pass because it now fails earlier for an unrelated reason. That reconciliation is done: T1
+captured the pre-retirement outcomes, T9 froze the post-retirement table, and two fixtures moved
+in one field each with no diagnostic changed.
+
+**A second reconciliation is coming, and it must stay separately reviewable.** §5.5 adds a proof
+binding to the ledger schema, which changes fixture inputs again. Keep the two causes apart in
+the record: a change caused by the retirement (T3, already frozen) and a change caused by
+relationship enforcement (T12) are different claims, and neither may absorb the other. A
+regression must not become explicable as "part of the move", and a newly required check must not
+be smuggled in by rebaselining. Every outcome that changes names its cause, or it is a defect.
+
+The five publish-proof fixtures carry the same obligation, and they gain cases the current set
+has no reason to contain: each record individually valid while their shared claims disagree.
 
 ### 5.3 Skill materialization — unresolved, and blocking
 
@@ -317,15 +422,107 @@ for one command contract while executing another.
 ### 5.4 Which CI job enforces this
 
 `figma-token-rail.test.ts` currently runs in CI through `just test-all`. Deleting it removes a
-CI gate, and **no CI job runs `just preflight`** — that is the pre-push hook only. The eight jobs
-run `pnpm govern:tokens`, `pnpm govern:storybook-proof`, `just check` + `just loc`,
-`just test-all`, `pnpm build`, `pnpm storybook:build`, and the Chromatic pair.
+CI gate, and **no CI job runs `just preflight`** — that is the pre-push hook only.
 
-Before the cutover, map each job to its gate command and **name the required job that executes
-the replacement rail verification against real Collider data**. This does not mean eight jobs
-redundantly run the rail suite. It means acquisition evidence and enforcement evidence are
-different things, and the removed protection has an identified replacement that can be proven
-to fail.
+The eight jobs in `.github/workflows/ci.yml`, with the check context each emits (GitHub uses the
+job's `name:`, which is not always its id) and the gate command it actually runs. Triggers are
+`pull_request` on any branch and `push` to `main`:
+
+| #   | job id                         | check context                | `needs`                         | gate command                               |
+| --- | ------------------------------ | ---------------------------- | ------------------------------- | ------------------------------------------ |
+| 1   | `governance`                   | Governance                   | —                               | `pnpm govern:tokens`                       |
+| 2   | `storybook-proof`              | Storybook Proof              | `governance`                    | `pnpm govern:storybook-proof`              |
+| 3   | `quality`                      | Quality                      | `governance`, `storybook-proof` | `just check` + `just loc`                  |
+| 4   | `test-all`                     | Test All                     | `quality`                       | `just test-all`                            |
+| 5   | `build-next`                   | Build Next.js                | `quality`                       | `pnpm build`                               |
+| 6   | `build-storybook`              | Build Storybook              | `quality`                       | `pnpm storybook:build`                     |
+| 7   | `chromatic-review`             | chromatic-review             | `build-storybook`               | Chromatic publish — **conditional**        |
+| 8   | `reusable-component-promotion` | Reusable Component Promotion | `chromatic-review`              | `pnpm govern:reusable-component-promotion` |
+
+Three of them enforce the rail surface today: **1** (the ledger and parity validators, through
+`governanceSteps`), **4** (`figma-token-rail.test.ts`), and **8** (the CT-8B status rail, through
+`summarizeCt8b()`). Any replacement has to keep all three biting.
+
+**A measured hazard, not a hypothetical one.** Job 7 carries
+`if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false`,
+and job 8 `needs: chromatic-review`. On a fork pull request job 7 skips, so **job 8 skips with
+it** — and a skipped job reports success, including when it is marked required. The CT-8B status
+rail therefore does not run on fork PRs today. Two consequences:
+
+- The replacement rail verification must sit **upstream of that fork guard** — jobs 1–6 — or the
+  gate inherits the skip. Jobs 1 and 4 are the natural homes, and they are where the protection
+  lives today.
+- "It is a required check" is not evidence its commands ran. Enforcement evidence has to name the
+  workflow file, job id, emitted check context, trigger conditions, required-check or ruleset
+  binding, **and** the conditions under which the job does not execute.
+
+Before the cutover, name the required job that executes the replacement rail verification against
+real Collider data. This does not mean eight jobs redundantly run the rail suite. It means
+acquisition evidence and enforcement evidence are different things, and the removed protection
+has an identified replacement that can be proven to fail.
+
+### 5.5 The proof and the ledger — two records, one checked relationship
+
+`src/figma/publish-proof.json` (CT-7B) and `src/figma/sync-ledger.json` (CT-8B) restate the same
+publication facts, and **nothing compares them**. T9 found the proof validator has no caller at
+all; the deeper defect is that even wiring it would leave both records independently authored.
+
+**Keep both records.** They have different responsibilities:
+
+- **The proof is an attestation** about one publication: what someone says they imported, into
+  which destination, at which artifact revision.
+- **The ledger is governance state**, including whether that attestation supports the state the
+  ledger currently claims.
+
+Collapsing them would remove one duplication opportunity without establishing that publication
+happened, and would erase the distinction between source evidence and governance assessment.
+Removing redundant ledger fields may become right once their consumers have migrated; it is not
+a prerequisite for this extraction.
+
+**The rule: the ledger's duplicated facts become a checked projection of an explicitly identified
+proof, not independent authority.** The five duplicated facts, measured:
+
+| Fact                  | Proof                    | Ledger                                                    | Today                                                         |
+| --------------------- | ------------------------ | --------------------------------------------------------- | ------------------------------------------------------------- |
+| artifact path         | `artifact.path`          | `artifact.path`                                           | both `requireLiteral`, two separately declared constants      |
+| artifact revision     | `artifact.gitSha`        | `artifact.revision` / `verification.lastVerifiedRevision` | ledger self-checks; no cross-record check                     |
+| publish mode          | `mode`                   | `publish.mode`                                            | same enum, two declarations                                   |
+| Figma destination     | `destination.figmaFile`  | `publish.figmaFile`                                       | proof pins a literal; **ledger accepts any non-empty string** |
+| materialization state | `materialization.status` | `verification.materializationStatus`                      | different value sets; no cross-record check                   |
+
+A sixth pair — `proof.carrier.used` and `ledger.publish.tokensStudioCarrier` — is checked against
+`mode` **within** each record and never **across** them. T8 rules it in or out explicitly; it is
+not left to be noticed at implementation time.
+
+**Binding.** The ledger names the proof it projects, unambiguously — a source reference plus an
+exact binding (digest, or an equivalent that cannot match a different record). "Find the proof
+file and compare whatever is there" is not a binding. This adds a required field, which is a
+schema change with a version consequence and a **second** fixture reconciliation; §5.2 says how
+that stays honest.
+
+**History is not currentness.** A valid attestation about revision A does not become false when
+tokens advance to revision B. It ceases to _support a ledger claim that B is materialized_. The
+gate must therefore check two separate things:
+
+1. The shared claims **agree for the exact referenced publication**.
+2. That publication is **sufficient for the ledger's present claim**, under the existing
+   staleness and promotion rules.
+
+Never repair a disagreement by rewriting the attestation to match the ledger, and never copy
+either record onto the other. A stale proof is a real signal.
+
+**Absence has a defined meaning.** A repository that makes no materialization claim may
+legitimately carry no proof. A ledger claiming successful or current materialization must not
+pass by omitting one. A present but malformed or contradictory proof is a failure, never an
+ignorable one.
+
+**What the gate proves, and what it does not.** It can establish that an attestation is
+well-formed, refers to the expected destination and artifact, and consistently supports the
+ledger's claims. It cannot establish that the claimed human import happened, or that the remote
+Figma file still holds those values. The CLI and the status output must say _validated
+attestation and consistency_ — not observed remote synchronization. That limit is not a reason to
+delete the proof or to restore the retired REST rail; it is the reason the retired rail's absence
+costs nothing here.
 
 ## 6. Code style
 
@@ -430,7 +627,34 @@ layout under another directory name proves nothing about portability.
 - JSON expectations are still editable. Moving a constant out of TypeScript improves the
   ownership boundary, not its resistance to being changed to make CI pass.
 
-### 7.5 Known trap
+### 7.5 What counts as evidence
+
+The author running the tests is not the problem. **Circular evidence** is. Three questions
+separate them, and every completion claim in this work has to answer all three:
+
+- Do the expected and the actual result have **independent origins**? A stored pre-change
+  baseline, a hand-asserted fixture and a required CI job rejecting a deliberately introduced
+  contradiction all qualify. A verifier that regenerates its own expectations does not.
+- Is the **exact artifact** identified? Exercising a different build from the one distributed
+  proves something about neither.
+- Can **someone else replay it**? A one-off command in a transcript is not a gate.
+
+Comparing two records that merely agree with each other is not verification either — that is the
+defect §5.5 exists to fix, restated as a testing rule.
+
+**Completion is four separate claims, and a task may hold some without the others:**
+
+| Claim                                 | Means                                                                |
+| ------------------------------------- | -------------------------------------------------------------------- |
+| **implemented**                       | The behaviour exists and its contract is written down                |
+| **regression-tested**                 | A durable test pins it, and the test fails when the behaviour breaks |
+| **installed-artifact-tested**         | Proven through the distributed artifact, not the source tree         |
+| **consumer-enforcement-demonstrated** | A real required CI path runs it and can be shown to go red           |
+
+T5 is contract-complete without delivery being proven. T7 is rename-complete without acquisition
+being proven. Marking either "done" without the qualifier is the overclaim this table prevents.
+
+### 7.6 Known trap
 
 A stale `node_modules/.cache/storybook` produced 18 `SyntaxError` failures that were
 misdiagnosed as a dependency conflict, and a release shipped with a false causal claim in its
@@ -480,7 +704,10 @@ environment that runs it must already be able to get it.
    `.agents` into the gates; retire the mode as one atomic change; fix the plugin UI
    configuration; decide how the CLI is delivered.
 2. **A complete, self-contained package.** Rename, move, implement every promised command,
-   transfer tests, prepare skill assets without breaking their consumers yet.
+   transfer tests, prepare skill assets without breaking their consumers yet — and settle the
+   execution contract (supported platforms, runtime prerequisites, install location, and the
+   real enforcement checks) **in this phase**, because those choices decide what the release must
+   contain and an immutable release cannot be amended afterwards.
 3. **Distribution and consumer cutover.** Publish, prove anonymous cold acquisition, provision
    every environment, then switch callers and delete superseded code and the dependency.
 4. **Clean-environment evidence and closure.** Full CI acceptance, all criteria, residual audit,
@@ -568,6 +795,22 @@ Three operational details that decide when this had to happen:
   republished, which is why this was enabled now rather than at T15 — enabling it after cutting
   v0.4.0 would have left §10.3's trust chain resting on a tag that could still move.
 - The setting survives the T7 rename, so the order of those two does not matter.
+- **It also forbids adding, replacing or deleting an asset after publication.** That is an
+  assembly constraint, not only a security property: the release is staged as a **draft with
+  every asset already attached**, and only then published. A release discovered to be missing an
+  asset cannot be repaired — it needs a new release and a new reviewed record in Collider.
+
+**The chain has to close end to end, or step 1 is theatre.** A verified bootstrap that then
+trusts a replaceable archive plus a replaceable checksum list has moved the trust, not
+established it. Either the reviewed record binds the payload digests, or the verified bootstrap
+contains and enforces them. A baked tag and asset name is _selection_ identity; it is not payload
+integrity, and the two must not be confused. The full chain:
+
+> reviewed consumer record → verified bootstrap bytes → verified payload bytes → installed
+> executable and resources
+
+Every link is tested, including the negative cases at each layer, with the reviewed record held
+unchanged throughout. Rejection must happen **before** untrusted execution, not after.
 
 ### 10.4 The reviewed record
 

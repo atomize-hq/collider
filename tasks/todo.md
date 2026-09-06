@@ -2,7 +2,17 @@
 
 **Spec:** [`SPEC.md`](../SPEC.md) · **Plan:** [`plan.md`](plan.md)
 Success criteria **S1**–**S8** are in `SPEC.md`. Task IDs match the plan's dependency graph.
-Revised after the 2026-09-06 approach review; see plan.md "What changed from the first draft".
+Revised after the 2026-09-06 approach reviews; see plan.md "What changed from the first draft".
+
+**Round 4 (2026-09-06, first review with implementation evidence) — verdict ADJUST.** Keep the
+architecture; restructure the remaining task contracts before proceeding past T8. T1–T7 and T9
+are unchanged and stay done. T8 becomes the boundary contract, T16 splits into **T16a** (Phase 2,
+alongside T8) and **T16b** (Phase 3), and T10–T18 each acquire obligations. The revised critical
+path is **T8 + T16a → T10/T11 → T12/T13 → T14 → T15 → T16b → T17 → T18**.
+
+Completion is four separate claims — implemented, regression-tested, installed-artifact-tested,
+consumer-enforcement-demonstrated (`SPEC.md` §7.5). A `[x]` here without the qualifier in the
+task's own notes means the first one only.
 
 ---
 
@@ -428,38 +438,136 @@ after a rename, but hosted action references do not receive that redirect.
 
 ---
 
-### T8: Build the CLI contract and scaffold
+### T8: Fix the complete boundary contract
 
-**Description:** Parsing, help, version reporting, dispatch and failure behaviour. **Dispatching
-five commands must not mean five successful placeholders** — an unimplemented command exits
-non-zero with an explicit unavailable-command message. Functional acceptance belongs to T12–T13.
+**Description:** Restructured after the round-4 review. This was "parsing, help, version, dispatch
+and failure behaviour" — a scaffold task. It is now the **highest-leverage task in the plan**,
+because everything downstream is immutable once T15 publishes: a release cut without a command,
+without a stable machine interface, or without the proof–ledger relationship specified cannot be
+amended, only replaced.
+
+The framing that changed: the remaining work is organised around **complete caller behaviour,
+record relationships and installed-artifact execution** — not around moving modules and
+implementing command names. Three of T9's discoveries are the evidence. A consumer that imports
+no rail module still duplicated rail semantics; a validator with no caller still carried a
+five-fact duplication nothing compared; two portable validators still hardcoded one consumer.
+
+**No implementation task starts until this lands.** Not because the criteria are heavy, but
+because T10–T14 each need to know what they own.
 
 **Acceptance criteria:**
 
-- [ ] `bin/ds-skills` dispatches the five commands in `SPEC.md` §4.2 — **plus the three T9
-      found missing**, or Collider cannot reach zero rail executables: `ledger parity`
-      (`validate:figma-parity` is its own governance step with its own policy module),
-      `figma serve`, and `figma baseline`. Add them to §4.2 rather than discovering them at T13
-- [ ] **A `--json` output mode**, required by `summarizeCt8b()` in
-      `reusable-component-status.mjs` — a caller T9 found that no task had named, feeding CI
-      job 8. An exit status cannot satisfy it. At minimum `ledger validate --json` emits
-      `{ ok, errors[], state, promotable, ledgerPath, evidence{} }`; every field already exists
-      on `evaluateSyncLedgerConformance`'s return value, so this is serialization, not design
-- [ ] `--help` and `--version` work; `--version` reports the release identity from T5
-- [ ] Unimplemented commands exit non-zero with an explicit message
-- [ ] Input and side-effect semantics from §4.3 are fixed: path resolution, profile resolution,
-      unknown-profile failure, read-vs-write per command
+_The command surface_
+
+- [ ] `bin/ds-skills` dispatches all **nine** commands in `SPEC.md` §4.2 — the four T9 found
+      missing (`ledger parity`, `proof validate`, `figma serve`, `figma baseline`) are in §4.2
+      now rather than discovered at T13
+- [ ] `ledger parity` is **independently invocable**, not a side effect of `ledger validate`.
+      `pnpm validate:figma-parity` is its own governance step with its own policy module;
+      folding it in would retire a governance step under cover of a refactor
+- [ ] `--help` and `--version` work **outside any consumer repository**; `--version` reports the
+      release identity from T5
+- [ ] An unimplemented command exits non-zero with an explicit unavailable-command message.
+      Dispatching nine commands must not mean nine successful placeholders
+
+_The caller-contract matrix — T9's inventory becomes a contract_
+
+- [ ] Every retained caller in the T9 inventory gets a row recording: replacement command, the
+      inputs it passes, **the output it actually consumes**, its failure behaviour, side effects,
+      the implementation task that owns it (T12 or T13, no overlap), and the regression test that
+      will pin it
+- [ ] **Every disposition has a destination, and every executable destination has an owning
+      task.** A `package-owned` entry with no implementing task is an unfinished migration that
+      reports success
+- [ ] **Failure consumers are inspected, per caller**: what it does with a non-zero exit, empty
+      stdout, invalid JSON, a timeout, and unavailable inputs. A correctly failing CLI still
+      leaves CI green if a wrapper swallows the error or reads missing output as an empty result
+
+_`--json` as a versioned interface (§4.3)_
+
+- [ ] A declared **result schema with its own version field**, independent of `ledgerVersion` and
+      of the release version. An unsupported result version fails; it is never best-effort parsed
+- [ ] Diagnostic codes (`[CT-8B_…]`, `[CT-7B_…]`) are **the interface**; renaming one is a
+      breaking change. Prose is not
+- [ ] Deterministic ordering wherever a list is emitted; **stdout carries the result and nothing
+      else** — no progress text, no banner. Logs to stderr
+- [ ] **"Evaluated, and nonconformant" is distinguishable from "could not evaluate."** A
+      completed evaluation reporting nonconformance still emits a valid, parseable result with
+      its diagnostics. A missing executable, malformed output, unsupported result version, crash
+      or timeout must never project as an empty rail, "not applicable", or a pass
+- [ ] Exit-code meanings are explicit and documented. A subprocess helper that throws on non-zero
+      exit **must not discard the structured failure report** — that report is the point of the call
+
+_The status projection_
+
+- [ ] `ledger validate --json` returns **everything `summarizeCt8b()` currently derives**,
+      including the two fields it reads straight off the ledger (`promotion.parityMode`,
+      `promotion.highestEarnedLevel`). Returning raw ledger JSON and letting Collider reconstruct
+      conformance keeps the prohibited logic behind a different interface
+- [ ] Collider may invoke, parse and render. It retains **no rail evaluation and no rail-specific
+      fallback policy** — including "if the field is missing, assume deferred"-shaped defaults
+
+_The proof–ledger relationship (`SPEC.md` §5.5)_
+
+- [ ] For **each of the five duplicated facts**: its meaning, its source of truth, and the
+      required relationship between the records. T12 implements this specification; it does not
+      invent it
+- [ ] The sixth pair — `proof.carrier.used` ↔ `ledger.publish.tokensStudioCarrier`, checked
+      against `mode` within each record and never across them — is **explicitly ruled in or out**
+- [ ] The ledger carries an **unambiguous binding** to the proof it projects: a source reference
+      plus an exact binding (digest or equivalent) that cannot match a different record. "Find
+      the proof file and compare what is there" is not a binding
+- [ ] The **version consequence is stated**: this adds a required field, so the ledger schema
+      version moves and the fixtures change a second time. §5.2's rule applies — every changed
+      outcome names its cause, retirement or relationship, and neither absorbs the other
+- [ ] **Absence is defined**: a repo making no materialization claim may lack a proof; a ledger
+      claiming current materialization must not pass by omitting one; a malformed or
+      contradictory proof is never ignorable
+- [ ] The gate's two questions are separate — do the shared claims agree **for the referenced
+      publication**, and is that publication **sufficient for the ledger's present claim**. A
+      valid attestation about revision A that no longer supports a claim about revision B is a
+      real signal, **never repaired by rewriting the attestation**
+- [ ] What the gate proves is stated in the output: **validated attestation and consistency**, not
+      observed remote synchronization
+
+_Configuration ownership (`SPEC.md` §4.5)_
+
+- [ ] Portable invariants and consumer expectations are separated. Destination name, Figma file
+      key, artifact path, promotion levels and exception codes get declared JSON owners,
+      requiredness rules and validation behaviour
+- [ ] **Expected values come from the profile, never from the record being checked against them**
+- [ ] Comparison stays literal equality against a declared expectation. Portability is **not**
+      achieved by relaxing `requireLiteral` into "any string is acceptable"
+- [ ] A profile **cannot** re-enable the retired publish mode or override a portable invariant
+
+_Environment and filesystem (`SPEC.md` §4.4)_
+
+- [ ] Configuration precedence, repository-root discovery, relative-path bases, installed-resource
+      lookup, declared runtime prerequisites, missing-file behaviour, unknown schema versions, and
+      the explicit time input for staleness are all fixed
+- [ ] **Checks are read-only**; validation never rewrites a proof, ledger, baseline or generated
+      artifact to pass. `figma baseline` is the one explicitly mutating command, with capture and
+      verify as distinct modes
+- [ ] `figma serve` has a readiness, bind and shutdown contract, and the URL the built plugin
+      embeds agrees with the endpoint it exposes **by construction**
+- [ ] Every command declares what it reads, writes, serves or launches
 
 **Verification:**
 
-- [ ] `pack-check` invokes `ds-skills` from `node_modules/.bin`
-- [ ] Every command run from **outside** the repository root behaves per the fixed semantics
+- [ ] `pack-check` invokes `ds-skills` from the installed prefix
+- [ ] Every command run from **outside** the repository root, from a nested directory with an
+      explicit root, and from a path containing spaces, behaves per the fixed semantics
 - [ ] Unknown profile fails loudly rather than defaulting
+- [ ] A machine-consumed command's stdout parses as its declared schema on both success and
+      expected-failure paths
 
-**Dependencies:** T7 **and T9** — a generic parser scaffold can start earlier, but the command
-contract cannot be approved before the inventory says which responsibilities survive
-**Files likely touched:** `bin/`, `src/cli/`
-**Scope:** M
+> **Hold point** — no retained T9 caller lacks an input, output and failure contract, or lacks an
+> implementation owner.
+
+**Dependencies:** T7 **and T9** — a generic parser scaffold may start earlier, but the contract
+cannot be approved before the inventory says which responsibilities survive
+**Files likely touched:** `bin/`, `src/cli/`, `SPEC.md` §4–§5, the T9 inventory
+**Scope:** L — was M. Specification, not implementation, but it is the gate for six tasks
 
 ---
 
@@ -518,6 +626,15 @@ Collider still owns rail logic — `scripts/lib/sync-ledger.mjs` and
 4. **Three CI jobs enforce this surface**, not one: governance, test-all, and
    reusable-component-promotion. Any replacement has to keep all three biting.
 
+**§3 is decided (round 4): option (1), wire it — and enforce the relationship.** Wiring the
+validator alone would fix reachability while leaving the real defect intact: the two records
+restate five publication facts and nothing compares them. Both records are kept, with different
+responsibilities — the proof attests to one publication, the ledger holds governance state
+including whether that attestation supports what it currently claims. The ledger's duplicated
+facts become a **checked projection of an explicitly identified proof**. `SPEC.md` §5.5 carries
+the specification; T8 fixes the per-fact relationships, T12 implements them. The disposition of
+`scripts/validate-publish-proof.mjs` moves from `deleted` to `command-only` as a consequence.
+
 **Dependencies:** T3 (retirement must land first, or the inventory covers dead paths)
 **Files likely touched:** a new inventory document
 **Scope:** M — analysis, no code. **Done**: 216 lines, one of five dispositions
@@ -525,23 +642,92 @@ applied to every path.
 
 ---
 
-### T10: Move the rail modules under `src/figma/`
+### T16a: Select the execution contract and name the real enforcement checks
 
-**Description:** Pure move. No behaviour change.
+**Description:** Split out of T16 by the round-4 review and **moved to run alongside T8**.
+Numbered for continuity with T16b, which stays in Phase 3. The reason it moves: platforms,
+runtime prerequisites and install location decide what the release must contain, and an immutable
+release cannot be amended. Discovering a missing platform asset after T15 means a new release and
+a new reviewed record.
 
 **Acceptance criteria:**
 
-- [ ] Modules under `src/figma/`; every relative import carries a `.js` specifier
-- [ ] `moduleResolution: NodeNext` passes typecheck
+- [ ] The environments that actually invoke the rail are **enumerated** — developer machines, CI
+      runners, agent/skill execution, and the pre-push hook — not assumed to be "CI and local"
+- [ ] Supported platforms and architectures selected against `SPEC.md` §10.5, with the runtime
+      prerequisite declared as a hard minimum
+- [ ] Install location and **non-interactive executable resolution** fixed: invocation binds to
+      the installed, verified executable at the version-specific path, never to whichever
+      `ds-skills` appears first on a developer's `PATH`
+- [ ] **The real enforcement checks are named** — workflow file, job id, emitted check context,
+      applicable trigger conditions, and required-check or ruleset binding. `SPEC.md` §5.4 now
+      carries the measured eight-job table; this task records which job enforces the replacement
+      rail verification and why
+- [ ] **The skip analysis is done, not assumed.** Job 7 `chromatic-review` is conditional on
+      non-fork, and job 8 `reusable-component-promotion` `needs:` it — so on a fork PR the CT-8B
+      status rail does not run today, and a skipped job reports success even when required. The
+      replacement gate sits **upstream of that guard** (jobs 1–6) or the analysis records why the
+      inherited skip is acceptable
+- [ ] All **three** rail-using jobs are accounted for: 1 `governance`, 4 `test-all`,
+      8 `reusable-component-promotion`
+- [ ] The eight-job structure is preserved unless there is a separate reason to change it. This
+      migration is not a CI redesign
+
+**Verification:**
+
+- [ ] Each named check is confirmed against the live repository configuration, not against the
+      workflow file alone — a required-check binding lives outside the YAML
+- [ ] For each named job, the conditions under which it **does not execute** are written down
+
+> **Hold point** — the enforcement path is identified by name and by trigger condition, and the
+> platform/runtime/location selections are settled before anything is built for release.
+
+**Dependencies:** none blocking; runs concurrently with T8
+**Files likely touched:** `SPEC.md` §5.4/§10.5/§10.6, a decision record
+**Scope:** S — analysis and selection, no code
+
+---
+
+### T10: Move the rail modules under `src/figma/`
+
+**Description:** A move, but **not the move the first draft named**. Round 4: it must carry the
+status-rail computation and the standalone parity policy module too, or the boundary closes
+around a subset. "No behaviour change" survives as a rule for the relocated code; it is not a
+description of the task's scope.
+
+**Acceptance criteria:**
+
+- [ ] Modules under `src/figma/`; every relative import carries a `.js` specifier;
+      `moduleResolution: NodeNext` passes typecheck
+- [ ] **`figma-parity.mjs` (112 lines) moves** — the standalone CT-15B promotion policy on top of
+      the ledger evaluator, which the first draft's "ledger and conformance modules" did not name
+- [ ] **The status-rail computation moves** — the 36 lines of `summarizeCt8b()` that evaluate,
+      not the 611 lines of Storybook/Chromatic reporting around it. The carve-out boundary is
+      T9 §2 and it is exact
+- [ ] **One evaluator, four surfaces.** Human output, `--json`, the standalone commands and the
+      status projection share the same decisions. A second evaluator written "just for JSON" is
+      the defect this criterion exists to prevent
+- [ ] **Relocation and intentional change stay separately reviewable.** Relocation means
+      behaviour equivalent to the reconciled post-T3 reference. Intentional change means
+      proof–ledger enforcement, portability corrections and newly specified boundary behaviour.
+      Without the distinction a regression is explained away as "part of the move", and a
+      necessary new check is hidden by rebaselining
+- [ ] Tests move **with** their code, and where a moved assertion now executes is recorded. A
+      lower Collider test count is not a regression if the tests are running in the package —
+      but that has to be shown, not asserted
 
 **Verification:**
 
 - [ ] `pnpm check` passes including `smoke` (the built ESM loads under Node)
 - [ ] Full normalized mapping matches the T1 baseline (**S3**)
+- [ ] The package evaluates the relevant fixture inputs **without importing product code** and
+      without depending on Collider's checkout layout
+
+> **Hold point** — the package can evaluate the fixture inputs standing alone.
 
 **Dependencies:** T8 (transitively T9)
-**Files likely touched:** 3–4 moved, `src/index.ts`
-**Scope:** S
+**Files likely touched:** 5–6 moved, `src/index.ts`
+**Scope:** M — was S, before the parity module and the status computation were counted
 
 ---
 
@@ -560,10 +746,26 @@ materialization here: canonical editing location, tracked or generated, stale-co
 - [ ] `validate-artifact.mjs` moves behind `ds-skills validate` unchanged, **and its test
       moves with it** — `validate-artifact.test.mjs` is Collider's only coverage of that
       script, and it tests the process contract, so it ports without rewriting
-- [ ] **Disclosure review before the first public push.** The repo is public now, so material is
-      exposed the moment it lands — not at release. Review the migrated files, and any history
-      actually imported, before pushing. T15's archive review is the second checkpoint, not the
-      first
+- [ ] **Prove the moved executable is actually inside the package's gates.** "The package check
+      is green" is not evidence unless that file is in the program — which is exactly how it
+      escaped Collider's gates for as long as it did: `**` does not match a leading-dot
+      directory, so nothing ever looked. Show the file in the checked set; do not infer coverage
+      from a directory name or a green aggregate. Deliberately not building temporary
+      product-side type-check machinery stays the right call (T2), and this is where the
+      coverage actually lands
+- [ ] **Provenance drives exclusions.** Justified upstream/vendored exclusions are retained by
+      path and reason; newly moved **owned** code must not be swept into a vendored-payload
+      exclusion because it landed nearby
+- [ ] **Operational instructions are reviewed, not just imports.** Skills, Markdown, YAML,
+      templates and examples can carry obsolete commands, install URLs, product paths or inline
+      rail logic while the import graph is spotless
+- [ ] **Disclosure review before the first public push**, covering **all consumer-derived
+      material that becomes public** — profiles, fixtures, baselines, token values, file
+      identifiers, generated output, source maps, **and the history and refs being pushed** — not
+      merely the final archive. Consumer-specific values belong in declared JSON, not in portable
+      validators; anything intentionally published as an example is reviewed as such
+- [ ] How installed skill assets are **discovered** after the Collider copy disappears is proven,
+      not designed on paper
 - [ ] The retained `.agents/skills/` subtree is declared the **frozen compatibility snapshot**
       until T17 — still active for agents, not a second independently maintained source
 - [ ] There are never two independently editable copies
@@ -576,6 +778,9 @@ materialization here: canonical editing location, tracked or generated, stale-co
 - [ ] The old v1 templates are still correctly rejected
 - [ ] Collider is unchanged by this task and still green
 
+> **Hold point** — disclosure review happens before newly moved consumer-derived content is
+> pushed publicly, not merely before T15 publishes a release.
+
 **Dependencies:** T8 (transitively T9), and T5's materialization decision
 **Files likely touched:** ~160 moved into the pack, `package.json` `files`
 **Scope:** L — large by count; discovery paths, relative references and symlinks make it more
@@ -583,59 +788,135 @@ than mechanical
 
 ---
 
-### T12: Implement the ledger and publish-proof commands
+### T12: Own validation, the proof–ledger relationship, status output and parity
 
-**Description:** Scope comes from T9's inventory, not from the deleted sync script. Determine
-which read/write/promotion responsibilities survive REST retirement; give each an explicit
-command or package-owned path. Do not recreate obsolete sync behaviour because an old directory
-description mentioned it, and do not silently drop surviving governance behaviour.
+**Description:** Scope comes from T9's inventory and T8's contract, not from the deleted sync
+script. Round 4 gave this task explicit ownership of four things, and the third is new: ledger
+and proof validation, **their cross-record relationship**, the machine-readable rail-status
+result, and the independently invocable parity command.
 
 **Acceptance criteria:**
+
+_Ownership_
 
 - [ ] Every `package-owned` entry from T9 that this task owns is implemented; each inventory
       entry names **one** implementing task, T12 or T13, with no overlap
-- [ ] Promotion levels and exception codes come from the profile, not from code
-- [ ] Errors carry a phase (`ledger`, `artifact`, …)
+- [ ] `ledger parity` stays independently invocable — its existing governance-step identity is
+      preserved, not absorbed as a side effect of another command
+- [ ] Errors carry a phase (`ledger`, `proof`, `artifact`, …)
 - [ ] Collider's callers have a command to switch to at T17
-- [ ] **T9 §3 decided before this task starts**: `pnpm validate:publish-proof` has no caller —
-      not the justfile, not `governanceSteps`, not any of the 8 CI jobs — so Collider's CT-7B
-      proof record is gated only by one line inside a unit test. CT-7B and CT-8B are peer
-      contracts and only one is gated. Recommendation: wire `ds-skills proof validate` into the
-      governance chain. Whatever is chosen, choose it — do not port an ungated validator and
-      leave it ungated by inheritance
-- [ ] The 5 publish-proof fixtures move with their validator, alongside the 11 ledger fixtures
+
+_The proof–ledger relationship — implementing T8's specification_
+
+- [ ] **§3 of the T9 inventory is decided: option (1), wire it.** `ds-skills proof validate` joins
+      the governance chain, and the relationship check joins `ledger validate`. Porting an
+      ungated validator and leaving it ungated by inheritance is not an option
+- [ ] The five duplicated facts are checked **for the exact referenced publication**, per the
+      binding T8 specified. Neither record is ever copied onto the other to make them agree
+- [ ] Sufficiency is checked **separately** from agreement: a valid attestation about an earlier
+      revision that no longer supports the ledger's present claim fails as _unsupported claim_,
+      with its own diagnostic — not as _invalid proof_
+- [ ] Absence behaves as specified: no claim may lack a proof; a current-materialization claim
+      may not; a malformed proof is never ignored
+- [ ] The schema version moves and the fixtures change a second time — and **every changed
+      outcome names its cause**, retirement or relationship (`SPEC.md` §5.2). A second
+      reconciliation table is produced; the T9 table is not edited in place
+
+_Portability_
+
+- [ ] All four hardcoded consumer constants generalised (`SPEC.md` §4.5): `publishProofPilotName`,
+      `publishProofPilotFile`, `publishProofArtifactPath`, `syncLedgerArtifactPath`
+- [ ] **Both validators audited for the same pattern**, including defaults and error-message
+      text — not only the checks
+- [ ] Expected values come from the profile, never from the record under test. Literal equality
+      is preserved; "any string is acceptable" is not a portability fix
+- [ ] A profile cannot re-enable the retired mode or override a portable invariant, and this is
+      tested — the retirement touched a schema, two validators, fixtures and error messages, so
+      the allowed values exist in several representations that must agree
+
+_Fixtures and tests_
+
+- [ ] The 11 ledger fixtures and 5 proof fixtures move with their validators
+- [ ] **New cases: each record individually valid while their shared claims disagree**, using
+      schema-valid mutations in each direction wherever representable
+- [ ] Also covered: missing required proof, wrong source binding, wrong destination, wrong
+      revision, and valid historical proof that no longer supports the current claim
+- [ ] The second consumer is **genuinely different** — different destination identity, artifact
+      path and policy data — and is tested for both legitimate acceptance and mismatched-record
+      rejection. Copying Collider's layout under another name proves nothing
 
 **Verification:**
 
-- [ ] All 11 fixtures produce their **frozen** outcomes and diagnostic reasons — the frozen
-      table is §5 of the T9 inventory, reconciled against T1's pre-retirement capture. A fixture
-      must not pass by failing earlier for an unrelated reason
+- [ ] All 11 fixtures produce their frozen outcomes and diagnostic reasons, reconciled twice and
+      separately: against T1's pre-retirement capture, and against the relationship change. A
+      fixture must not pass by failing earlier for an unrelated reason
 - [ ] `pnpm check` passes
 
-**Dependencies:** T8, T9, T11 (profile/schema contract)
-**Files likely touched:** `src/ledger/`, profile schema, tests
-**Scope:** M — reconcile against T9 before committing to this size
+> **Hold point** — the status caller obtains its complete rail result **without loading or
+> interpreting either record itself**.
+
+**Dependencies:** T8, T9, T10, T11 (profile/schema contract)
+**Files likely touched:** `src/ledger/`, `src/proof/`, profile schema, fixtures, tests
+**Scope:** L — was M. The relationship, the second reconciliation and the constant
+generalization are each larger than the original "implement the commands" framing
 
 ---
 
-### T13: Implement the figma commands and transfer the rail tests
+### T13: Own the figma commands, serve, baseline, and the rail tests
 
-**Description:** `figma verify`, `figma drift`, `figma plugin build`. Package-side only —
-Collider activation is T17. Move `$themeOverrides` coverage here so the Phase 2 checkpoint can
-actually hold.
+**Description:** `figma verify`, `figma drift`, `figma plugin build` — plus `figma serve` and
+`figma baseline`, assigned here by round 4 so both have one command owner. Baseline orchestration
+may call T12's evaluators; owning the command is still this task. Package-side only; Collider
+activation is T17.
 
 **Acceptance criteria:**
 
-- [ ] All three commands implemented per the §4.3 semantics
+_The commands_
+
+- [ ] All five commands implemented per the §4.4 semantics
 - [ ] `figma drift`'s source of observed state is explicit; if it needs a live session it is
       **not** a gate command
-- [ ] The pack's suite covers flattener, comparator, theme resolution and `$themeOverrides`
 - [ ] `figma verify` compares the full normalized mapping against reviewed baseline data, never
       against the current artifact, and reads a **local** artifact path — not the config's
       serving origin
+- [ ] The pack's suite covers flattener, comparator, theme resolution and `$themeOverrides`
 - [ ] Any real-artifact constraint the old `$themeOverrides` assertion protected (per T9) is
       explicitly enforced here. A package fixture does not inherit it, and normalization can
       conceal structural properties
+
+_The builder, and T6's checks made durable_
+
+- [ ] The original consumer's **exact manifest baseline and complete normalized mapping** are
+      preserved
+- [ ] For **alternate** configurations, the test asserts the intended changed output — byte
+      identity to the original digest is the criterion for the original configuration only
+- [ ] **T6's substitution checks become durable tests**, including the two round-4 raised: - the `jsString` escaper is pinned **directly**, on hostile values containing `</script`,
+      `<script` and `<!--`. Routing through a URL does not exercise it: `new URL()` rejects
+      `<` in a hostname with `ERR_INVALID_URL`, so the escaper is defence in depth for a value
+      that cannot currently carry the sequence — which is exactly why nothing pins it today - the generated endpoint is tested **together with manifest permissions**. `networkAccess`
+      is `allowedDomains: ["none"]` and `devAllowedDomains` applies in development only, so
+      T6's third-configuration test proved substitution, **not usability**. A consumer pointing
+      at a hosted origin gets a correct manifest that cannot fetch it
+
+_Serve_
+
+- [ ] Tests for actual readiness, an occupied port, shutdown, and access **only to the intended
+      resources**. It must not become a generic server for a consumer checkout because that is
+      the easy migration
+- [ ] Bind behaviour specified, and the plugin's embedded URL agrees with the served endpoint
+
+_Baseline_
+
+- [ ] **Verification and capture are separate behaviours.** Verification never rewrites expected
+      data and **fails when the required reference is missing**
+- [ ] The non-overwrite guard is preserved and tested: mixed drift across the three artifacts
+      leaves **all three unchanged**, not just the one that differed first. No partial writes
+- [ ] Automated gates never pass `--force`. A manual demonstration that `--force` works is not a
+      substitute for these tests
+- [ ] **The T1 reference stays frozen**, with an explicit reconciliation record. It does not
+      become an automatically refreshed "current baseline"
+- [ ] A small set of **directly asserted semantic examples** sits alongside the historical
+      reference — T1 proves preservation of prior behaviour, not that prior behaviour was correct
 
 **Verification:**
 
@@ -644,43 +925,69 @@ actually hold.
 - [ ] Negative cases: missing input, malformed JSON, mismatched expectations each produce a
       rail-specific diagnostic and a non-zero exit
 
+> **Hold point** — all builder, serve and baseline behaviour is reachable through installed CLI
+> commands, with no product-owned implementation left behind.
+
 **Dependencies:** T8, T9, T10
-**Files likely touched:** `src/cli/`, `src/verify/`, tests
-**Scope:** M
+**Files likely touched:** `src/cli/`, `src/verify/`, `plugin/`, tests
+**Scope:** L — was M, before serve, baseline and the durable T6 tests were counted
 
 ---
 
-### T14: Production installers, self-contained builder, expanded `pack-check`
+### T14: Test the release product, not a package tarball
 
 **Description:** `pack-check.sh` runs `pnpm add "$tarball" esbuild` — it installs the optional
 peer itself, so it proves the plugin builds when a consumer already has esbuild and never that a
-plain install can. npm does not auto-install optional peers.
+plain install can. That gate stays valuable, and round 4 is blunt that it **does not establish the
+new delivery contract**: a `.tgz` in a temp directory is not the artifact anyone installs.
 
 **Acceptance criteria:**
+
+_The builder_
 
 - [ ] Either invariant plugin code is prebuilt at release with only config-dependent assembly at
       command time, or the builder dependency is part of the package's own install
 - [ ] The builder is never resolved from Collider
-- [ ] Platform-specific binaries are handled for the platforms actually supported
+- [ ] Platform-specific binaries are handled for the platforms T16a selected
 - [ ] `pack-check` no longer installs the builder itself
+
+_The real artifact_
+
+- [ ] Testing targets the **actual staged release archive and production installer**, including
+      resources and runtime dependencies — not `node_modules/.bin`, and not the `files` field,
+      which are development checks only
+- [ ] The installed CLI builds the plugin and runs its commands **without reaching into** the
+      package source tree, Collider's `node_modules`, or undeclared developer tooling. A declared
+      runtime prerequisite is fine; an accidental one is a defect
 - [ ] **The production bash and PowerShell installers are implemented and tested here**, not left
       to exist by T15. Archive layout, platform selection, integrity enforcement against the
-      reviewed record, and the lifecycle behaviours T5 specified
-- [ ] Installation is exercised **through the production installer against a frozen
-      release-candidate asset set**, from a controlled source. T15 then publishes those exact
-      tested bytes without rebuilding
-- [ ] Release acceptance exercises the **real archive layout and installed prefix** — not
-      `node_modules/.bin`, and not the `files` field, which are development checks only
-- [ ] Negative integrity test: a modified asset **with a matching modified `SHA256SUMS`** is
-      rejected against the reviewed record. Corrupting only the archive proves less
-- [ ] **T5's mechanism proof**, inherited because it had nothing to run against: a throwaway
-      workflow needing no published artifact, covering isolated install, package independence,
-      executable discovery and platform behaviour across the OS/arch matrix named in §10.5.
-      It runs on the frozen candidate assets this task already produces
-- [ ] The bootstrap **hard-fails when its baked release identity is empty** — a bootstrap that
-      does not know what it is must not fall back to resolving one (§10.1)
-- [ ] There is **no `--version` flag**: the asset is the version. A flag would reintroduce the
-      disagreement §10.1 exists to remove
+      reviewed record, and the §10.6 lifecycle behaviours
+- [ ] The bootstrap **hard-fails when its baked release identity is empty** (§10.1)
+- [ ] There is **no `--version` flag**: the asset is the version
+- [ ] **T5's mechanism proof**, inherited because it had nothing to run against, executed on these
+      frozen candidate assets across the §10.5 OS/arch matrix
+
+_Closing the chain_
+
+- [ ] The whole chain is tested, not one layer of it:
+      **reviewed record → verified bootstrap bytes → verified payload bytes → installed
+      executable and resources**. A verified bootstrap that then trusts a replaceable archive plus
+      a replaceable checksum list has moved the trust, not established it
+- [ ] Either the reviewed record binds the payload digests, or the verified bootstrap contains and
+      enforces them. **A baked tag and asset name is selection identity, not payload integrity**
+- [ ] Negative tests at **each** layer, with the reviewed record held unchanged: modified
+      bootstrap, and modified payload **with matching modified checksum metadata**. Rejection
+      occurs **before** untrusted execution
+- [ ] Failure modes covered: installation failure that does not damage an existing installation,
+      paths containing spaces, supported-platform selection, and error propagation in **both**
+      shell and PowerShell
+
+_Rehearsal_
+
+- [ ] **A pre-release consumer-cutover rehearsal in a disposable checkout**: exercise the proposed
+      T17 caller changes against the staged candidate **before** publishing it. Product activation
+      remains T17's; this is here so the cutover does not discover a missing command semantic
+      after the release is immutable
 
 **Verification:**
 
@@ -691,18 +998,24 @@ plain install can. npm does not auto-install optional peers.
       plugin identity and profile vocabulary
 - [ ] The pack has a lint gate and the LOC guard
 
+> **Hold point** — the exact candidate assets have passed installed-artifact and prospective
+> consumer-integration tests. Local installer-fixture tests do **not** replace T16b's real
+> anonymous acquisition.
+
 **Dependencies:** T10, **T11, T12**, T13 — every command and asset must exist before the
 packaging gate can claim to exercise them
-**Files likely touched:** `plugin/build.mjs`, `scripts/pack-check.sh`, `package.json`, CI
-**Scope:** M
+**Files likely touched:** `plugin/build.mjs`, `scripts/pack-check.sh`, installers, `package.json`, CI
+**Scope:** L — was M, before the chain closure and the rehearsal were counted
 
 ---
 
 > ### ✅ Checkpoint: The package is complete
 >
-> - [ ] Every §4.2 command implemented with §4.3 semantics specified
+> - [ ] Every §4.2 command implemented with §4.4 semantics specified
 > - [ ] `pack-check` decisive scenario green, plus the second consumer
+> - [ ] The proof–ledger relationship is enforced, with disagreement tests in both directions
 > - [ ] Pack suite covers `$themeOverrides`; lint gate and LOC guard in place
+> - [ ] T16a's platform, runtime, location and enforcement selections are recorded
 > - [ ] **Collider untouched by this phase and still green**
 
 ---
@@ -717,27 +1030,38 @@ not establish that the **final** package is clean after ~160 files moved in.
 **Acceptance criteria:**
 
 - [ ] The final tarball is reviewed for disclosure and redistribution suitability
-- [ ] The exact artifact that passed T14 is the one released; its tag and digest are recorded
-- [ ] `SHA256SUMS` is published alongside every asset, with per-platform assets where the
-      bundled builder requires them
-- [ ] The installer scripts are published as **release assets**, per §10.1 — not merely
-      committed at the tag. A `raw.githubusercontent.com/<org>/<repo>/<tag>/…` bootstrap cannot
-      know its own version, which is the defect §10.1 exists to remove; the measurement is in
-      T5. `SHA256SUMS` covers the bootstrap too, and its digest goes into the reviewed record
-- [ ] Rollback is defined as **explicit version selection** — never `latest`, never restoring
-      the retired mode. On a first release there is no compatible earlier version, so rollback is
-      not yet a demonstrated recovery procedure; say so rather than implying one exists
+- [ ] **The approval packet identifies**: source commit, release tag, the candidate asset
+      inventory, bootstrap and payload digests, and the T14 test evidence for those exact bytes.
+      Testing candidate A and rebuilding candidate B during publication re-opens every claim
+- [ ] The exact artifact that passed T14 is the one released; nothing is rebuilt
+- [ ] **Annotated-tag identity is recorded separately from the peeled commit.** Git distinguishes
+      dereferencing a tag object from resolving the commit it names, and a field labelled
+      `commit` is not evidence of object type — measured at T7, where pnpm's lockfile
+      `commit: b00a82d8…` is the **tag object**, not the commit `189db11`
+- [ ] `SHA256SUMS` is published alongside every asset, with per-platform assets where the bundled
+      builder requires them. It covers the bootstrap too, and the bootstrap digest goes into the
+      reviewed record
+- [ ] The installer scripts are published as **release assets**, per §10.1 — not merely committed
+      at the tag. A `raw.githubusercontent.com/<org>/<repo>/<tag>/…` bootstrap cannot know its own
+      version, which is the defect §10.1 removes; the measurement is in T5
+- [ ] **Assembly order: stage a draft with every asset attached, then publish.** Immutable
+      releases forbid adding, replacing or deleting an asset after publication, so a release
+      published incomplete cannot be repaired — it needs a new release **and** a new reviewed
+      record in Collider. This is an assembly constraint, not only a security one
+- [ ] Rollback is defined as **explicit version selection** — never `latest`, never restoring the
+      retired mode. On a first release there is no compatible earlier version, so rollback is not
+      yet a demonstrated recovery procedure; say so rather than implying one exists
 - [ ] User approval obtained before publishing
 
 **Verification:**
 
 - [ ] The published version matches the tested digest
+- [ ] **The published release object's immutable status is verified.** The repository-setting
+      check at T5 was preparation, not proof about a future release
 - [ ] On a clean machine: download the bootstrap **asset** for the pinned release, verify it
       against the reviewed record, execute it, and confirm the installed version is the pinned
       one — not merely that the first request returned 200. The `curl … | bash` one-liner is
       exercised separately, as the documented human path, with `set -o pipefail`
-- [ ] The release is immutable, confirmed on the published release object rather than assumed
-      from the repository setting
 
 **Dependencies:** the Phase 2 checkpoint, and the exact artifact that passed T14 · **ask first**
 **Files likely touched:** pack `package.json`, release config
@@ -745,22 +1069,29 @@ not establish that the **final** package is clean after ~160 files moved in.
 
 ---
 
-### T16: Prove anonymous cold acquisition and provision every environment
+### T16b: Prove anonymous cold acquisition and provision every environment
 
-**Description:** This is the release proof T5's mechanism proof could not give: a dummy package
-or a workflow-supplied tarball proves installation mechanics, not that the approved artifact is
-anonymously retrievable.
+**Description:** The release proof T5's mechanism proof could not give: a dummy package or a
+workflow-supplied tarball proves installation mechanics, not that the approved artifact is
+anonymously retrievable. The contract selection it used to carry is **T16a**, done in Phase 2.
 
 **Acceptance criteria:**
 
-- [ ] Cold acquisition with **no credentials configured** succeeds from a clean checkout, via
-      the pinned installer URL, with `SHA256SUMS` verified — and a corrupted asset **fails**
-- [ ] All 8 CI jobs provision the CLI via a shared setup step rather than eight copies
+- [ ] Cold acquisition **of the exact release** succeeds with **no usable authentication**, fresh
+      relevant caches, and **no existing rail installation** — from a clean checkout, via the
+      pinned installer URL, with integrity verified against the reviewed record. A corrupted
+      asset **fails**
+- [ ] **Each required environment from T16a is provisioned.** Installing in one CI job does not
+      establish availability in the others — all 8 jobs provision via a shared setup step rather
+      than eight copies
 - [ ] **The reviewed toolchain record is created here** — the JSON naming package, exact release
-      and integrity that T5 specified — along with the provisioning/execution behaviour that
+      and integrity that §10.4 specified — along with the provisioning/execution behaviour that
       reads it
-- [ ] Each of the 8 jobs is mapped to its actual gate command, and the required job that will
-      execute the replacement rail verification is **named** (see `SPEC.md` §5.4)
+- [ ] **Invocation binds to the installed, verified executable**, never to whichever `ds-skills`
+      appears first on a developer's `PATH`
+- [ ] The enforcement path T16a named is **exercised**, and the conditional-execution analysis is
+      confirmed against a real run: a skipped job reports success, so a required check is not
+      evidence its commands ran
 - [ ] The approved release's skill assets are staged **without being activated**
 - [ ] Local provisioning documented; pre-push acquires nothing
 - [ ] Cache keys distinguish release, toolchain version and platform; a miss installs the same
@@ -776,8 +1107,11 @@ anonymously retrievable.
       never falling back: wrong selected release, missing install, an unrelated global binary on
       `PATH`, integrity mismatch during acquisition or cache acceptance
 
-**Dependencies:** T15
-**Files likely touched:** `.github/workflows/ci.yml`, setup action, docs
+> **Hold point** — the exact release is anonymously obtainable, every rail caller environment can
+> execute it, and the required enforcement path is identified **and** exercised.
+
+**Dependencies:** T15 (and T16a's selections)
+**Files likely touched:** `.github/workflows/ci.yml`, setup action, `ds-skills.release.json`, docs
 **Scope:** M
 
 ---
@@ -785,54 +1119,82 @@ anonymously retrievable.
 ### T17: Activate Collider's callers and delete what they supersede
 
 **Description:** One atomic commit. Invocation changes, deletions, skill activation and the
-lockfile change land together, because the intermediate states are not independently green.
+lockfile change land together, because the intermediate states are not independently green — and
+because a split-authority state, where some callers use the CLI and some use the local copy, is
+the exact failure this migration exists to end.
 
-**Rehearse before accepting.** After T9 this task needs a concrete file/caller/asset checklist
-and re-sizing — the validators, generator integration, policy-test retirement and skill
-materialization can expand it well beyond the file estimate below. Rehearse the patch in an
-isolated consumer worktree after provisioning: clean dependency install, offline execution, real
-agent skill discovery, and negative gate propagation. The danger is not the L label; it is
-discovering missing command semantics inside the cutover.
+**Rehearse before accepting.** T14's disposable-checkout rehearsal is the first pass; this is the
+real one. The danger is not the L label, it is discovering a missing command semantic inside the
+cutover, after the release is immutable.
 
 **Acceptance criteria:**
 
+_Activation — all of it, at once_
+
+- [ ] **Every** retained caller from T9 is switched, including the two the first draft missed:
+      `summarizeCt8b()` in `reusable-component-status.mjs`, and the newly wired proof
+      relationship check
+- [ ] `summarizeCt8b()` keeps its **mapping to a status rail** and loses all rail policy: it
+      spawns the CLI and parses the §4.3 result. The other 611 lines of that generator are
+      untouched, and the **unaffected portions of its report are compared before and after** to
+      prove it
 - [ ] `figma/token-rail.expectations.json` created
-- [ ] `ds-skills figma verify` wired into `just preflight` **and into the required CI job named
-      at T16**. No CI job runs preflight — it is the pre-push hook — and
-      `figma-token-rail.test.ts` runs today inside `just test-all`, which is a CI job. Wiring
-      only preflight would delete a CI gate while every job stayed green
+- [ ] `ds-skills figma verify` wired into `just preflight` **and into the required CI job named at
+      T16a**. No CI job runs preflight — it is the pre-push hook — and `figma-token-rail.test.ts`
+      runs today inside `just test-all`, which **is** a CI job. Wiring only preflight would delete
+      a CI gate while every job stayed green
 - [ ] **The required job's artifact path is established**: which step produces the artifact it
       verifies, in what order, and that it belongs to the commit under test — not another job's
-      filesystem, a stale committed copy, or a cache. A conditionally skipped job reports
-      success, so "required" in the plan is not evidence the verifier ran
+      filesystem, a stale committed copy, or a cache
 - [ ] The provisioned CLI and skill assets are selected without ambient fallback: an unrelated
-      binary on `PATH` is **not executed at all**, not even to read its version
+      binary on `PATH` is **not executed at all**, not even to read its version. **No fallback to
+      the former implementation when the CLI is missing** — a missing tool is a failure, not a
+      downgrade
 - [ ] `just figma-plugin-build` calls the CLI; `scripts/build-figma-plugin.mjs` deleted
-- [ ] Every `package-owned` / `command-only` entry from T9 switched
+
+_Removal — nothing survives by living somewhere unusual_
+
+- [ ] Direct ledger-field reads, evaluator imports, the local parity implementation, the serve
+      implementation, the baseline implementation, the moved skill executables and superseded
+      wrappers are all removed
 - [ ] `src/lib/tokens/figma-token-rail.test.ts` deleted; the self-referential drift case not
       carried over anywhere
-- [ ] `@atomize-hq/figma-token-rail` gone from `package.json`; lockfile regenerated
+- [ ] `@atomize-hq/figma-token-rail` gone from `package.json`; lockfile regenerated and its edges
+      removed. The pnpm-version-dependent git-dependency install (T7) ends here — it does not
+      justify broadening this migration into supporting arbitrary package-manager versions
+- [ ] **Inline workflow and task-runner bodies are audited as well as files.** Moving an algorithm
+      into a `justfile` recipe or a CI `run:` block does not satisfy the ownership boundary
+- [ ] The generated-plugin exception stays narrow: generated output crosses; product-owned builder
+      source and handwritten or generated governance implementations do not
 - [ ] **Skill cutover**, which T9's executable inventory does not cover: activate the approved
       release's assets, remove or replace superseded consumer copies, update the canonical
-      editing rule, retarget `.claude/skills` discovery, and detect a stale asset or a
-      skill/CLI release mismatch
+      editing rule, retarget `.claude/skills` discovery, and detect a stale asset or a skill/CLI
+      release mismatch
 - [ ] Agent-visible skills — not just the copies inside the tarball — belong to the selected
       release and carry no references to removed scripts
 
 **Verification:**
 
-- [ ] **S2** — perturb the artifact **in an isolated worktree** (preflight step 1 runs
-      `build:tokens` and would regenerate it in place), confirm preflight fails **for the
-      intended invariant**, restore, confirm green
+- [ ] **S2** — by the two complementary tests in `SPEC.md` §7.2, **not** an isolated worktree:
+      an isolated worktree's own preflight regenerates the artifact, which isolates the blast
+      radius rather than the overwrite. (1) artifact rejection against a corrupted artifact in a
+      location `build:tokens` does not overwrite; (2) gate propagation under unmodified preflight
+      with a **persistent** expectation mismatch. The evidence must identify the actual input read
+      at verification time
 - [ ] **S4** — manifest byte-identical to the T1 baseline, independently generated
-- [ ] **S1** — grep both package names across `src/`, `scripts/`, `.agents/`, `justfile`,
-      `package.json`, `.github/`; T9 inventory fully resolved
+- [ ] **S1** — enumerate paths **before** inspecting contents (`git ls-files -z | xargs -0 grep`),
+      across `src/`, `scripts/`, `.agents/`, `justfile`, `package.json`, `.github/`, for both
+      package names. A content filter that also matches path text hides real hits — that is how
+      `pack-check.sh:18` survived a `grep -v node_modules` at T7. T9 inventory fully resolved
 - [ ] `rm -rf node_modules && pnpm install --frozen-lockfile && just preflight` passes
 - [ ] Clear `node_modules/.cache/storybook` before blaming any failure on this change
 
-**Dependencies:** T16
+> **Hold point** — one consumer change switches all required callers and removes the superseded
+> implementations, with no intermediate split-authority state.
+
+**Dependencies:** T16b
 **Files likely touched:** 2 deleted, 1 new JSON, `justfile`, `package.json`, `pnpm-lock.yaml`,
-plus T9's switched callers
+`reusable-component-status.mjs`, plus T9's switched callers
 **Scope:** L — atomic by necessity
 
 ---
@@ -846,27 +1208,47 @@ plus T9's switched callers
 
 ## Phase 4 — Clean-environment evidence and closure
 
-### T18: Full CI acceptance, residual audit, backlog closure
+### T18: Demonstrate enforcement through the real installed path
+
+**Description:** More than a final green run. A clean run proves acquisition; it does not prove
+the gate can still fail.
 
 **Acceptance criteria:**
 
 - [ ] All 8 jobs cold-acquire the CLI and run their gate
-- [ ] No residual rail implementation anywhere in Collider, including generator adapters and
-      the T1 capture script
-- [ ] The retired-string scan extracts the tarball first, and classifies permitted command or
-      data references rather than treating every package-name match as a defect
+- [ ] **The evidence record names**: exact Collider and package revisions, the installed release
+      identity and digests, environment and runtime versions, **the invoked executable path**,
+      baseline identities, and the actual CI run and check results
+- [ ] No residual rail implementation anywhere in Collider, including generator adapters and the
+      T1 capture script
+- [ ] The retired-string scan extracts the tarball first, and classifies permitted command or data
+      references rather than treating every package-name match as a defect. **Frozen baselines and
+      explicit rejection tests must keep naming the retired mode** — inert historical evidence is
+      not live support, and requiring every occurrence to vanish would delete the proof that it is
+      rejected
 - [ ] Where executable coverage left `.agents`, the package-side S7 enforcement test is named and
       proven — deliberate faults in the moved code fail their gates
+- [ ] **T9's recorded inventory passes are re-run against the final tree**, by the enumerate-then-
+      inspect method
 - [ ] BL-3 and BL-4 marked closed in `docs/backlog.md`
 - [ ] `SPEC.md` updated wherever a decision changed during implementation
 
 **Verification:**
 
-- [ ] A PR run goes green end to end, **and** a deliberate semantic token regression turns the
-      named required job red (**S8**). A clean run alone proves acquisition, not enforcement
+- [ ] A PR run goes green end to end, **and** a deliberate regression turns the named required job
+      red (**S8**). The regression targets the seam this migration created: a **schema-valid
+      proof–ledger disagreement that leaves each record individually valid**. Malformed JSON that
+      only trips a linter would not establish this
+- [ ] **Every independent enforcement path across T14–T18 has a durable test**: parity failure,
+      structured-status failure handling, missing or wrong CLI, baseline drift without rewriting,
+      and acquisition tampering. Not every mutation needs its own live PR — but every boundary
+      needs a test, and T18 demonstrates the **real** required CI path
 - [ ] **S6** — `pnpm check` against a clean independently installed release, not a sibling
       checkout, link, or ambient binary
 - [ ] All eight criteria hold
+
+> **Hold point** — passing **and** deliberately failing behaviour are both demonstrated through
+> the real installed CLI and the real enforcement configuration.
 
 **Dependencies:** T17
 **Files likely touched:** `.github/workflows/ci.yml`, `docs/backlog.md`, `SPEC.md`
