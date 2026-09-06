@@ -407,3 +407,72 @@ The extraction drew the boundary at "what only this repo can own" and put the CT
 mechanism on Collider's side of it. That was the wrong cut: the ledger is data, and its
 governance is a schema. The 793-to-237 reduction was real, but 237 was not the floor — about
 30 lines of JSON is.
+
+---
+
+## BL-5 — Collider's own Node tooling is not typechecked
+
+**Found:** 2026-09-06, while wiring T2 of the tooling migration.
+
+`tsconfig.json` has `include: ['**/*.ts', '**/*.tsx', …]`. Two consequences, both silent:
+
+- `.mjs` is not in the include list at all, so **no** `.mjs` file in the repo participates in
+  `pnpm typecheck` — that is 35 files under `scripts/`, plus `design-tokens/build/`.
+- A `**` glob does not match a leading-dot directory, which is why `.agents/` was invisible to
+  `tsc` even though the include looks repo-wide. `tsc --listFilesOnly` prints **0** files under
+  `.agents/`.
+
+ESLint does cover these files; `tsc` does not. So a type error in the token build or in a
+governance validator is caught only if it also happens to be a lint error, which most are not.
+
+### Measured, not estimated
+
+A probe config with `allowJs`, `checkJs`, non-strict, over
+`scripts/**/*.mjs` + `design-tokens/build/**/*.mjs` + `.agents/skills/scripts/**/*.mjs`:
+
+```
+18  scripts/lib/token-validation.mjs
+ 2  scripts/lib/token-governance.mjs
+ 2  scripts/lib/token-artifacts.mjs
+ 2  scripts/build-foundations-page.mjs
+ 1  scripts/lib/storybook-component-spec.mjs
+ 1  scripts/lib/figma-variables-sync-enterprise.mjs
+ 1  scripts/fetch-upstream-baseline.mjs
+──
+27 errors, 7 files
+```
+
+Under `strict: true` it is 59 in `.agents` alone, all implicit-`any`. Strict is the wrong
+setting for untyped JS; `checkJs` without `noImplicitAny` is the one that finds defects rather
+than demanding annotations.
+
+### What the 27 actually are
+
+The 18 in `token-validation.mjs` are one root cause: a helper whose parameter shape was
+inferred from its first call site, so it "requires" `line`/`column` that most callers omit. One
+JSDoc annotation on that helper clears all 18.
+
+Of the other 9, three are worth a look rather than a suppression:
+
+- `figma-variables-sync-enterprise.mjs:83` — `verification` is not a known property of the
+  object being built. This is the same area as the `successMarkers` defect that makes a
+  successful sync exit 3. The file is deleted by the migration's T3, so this one resolves
+  itself.
+- `build-foundations-page.mjs:166,185` — a union of string-or-object is passed where a string
+  is required, then `.padEnd` is called on it. Latent unless the object branch is unreachable.
+- `fetch-upstream-baseline.mjs:166` — `.items` read off a value typed `unknown`, i.e. an
+  unchecked shape assumption about a fetched payload.
+
+### Scope of the work
+
+Add a second compiler project — Node tooling is not the Next app and should not share its
+`lib`, `jsx` or `moduleResolution`. Wire it into `just check-ts` beside `pnpm typecheck`, then
+fix the 27.
+
+### Why it is not part of the tooling migration
+
+The `.agents` half of this gap is dissolved by the migration itself: that code moves into the
+CLI package and is typechecked by the package's own `pnpm check`, so building Collider-side
+machinery for it would be gating a subtree that is leaving. The `scripts/` half is Collider's
+own and stays — but it is unrelated to the rail, and fixing token-governance internals inside a
+migration diff makes both harder to review.

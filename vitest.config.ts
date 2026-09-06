@@ -34,7 +34,13 @@ export default defineConfig({
         test: {
           name: 'unit',
           environment: 'node',
-          include: ['src/**/*.test.{ts,tsx}', 'storybook/**/*.test.{ts,tsx}'],
+          include: [
+            'src/**/*.test.{ts,tsx}',
+            'storybook/**/*.test.{ts,tsx}',
+            // The skill pack's own code. A leading-dot directory is not matched
+            // by a `**` glob, so it has to be named.
+            '.agents/**/*.test.mjs',
+          ],
           exclude: ['node_modules', 'src-tauri'],
         },
       },

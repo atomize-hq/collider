@@ -108,8 +108,11 @@ function resolve(schema, ctx) {
   let node = schema;
   if (typeof node.$ref === 'string') {
     const target = derefPointer(node.$ref, ctx.root, ctx.path);
-    const { $ref, ...rest } = node;
-    node = { ...target, ...rest };
+    // Sibling keys override the resolved target; $ref itself is consumed here
+    // and must not survive into the merged node.
+    const siblings = { ...node };
+    delete siblings.$ref;
+    node = { ...target, ...siblings };
   }
   const profileName = node['x-repo-profile'];
   if (profileName && Object.prototype.hasOwnProperty.call(ctx.profile, profileName)) {

@@ -54,31 +54,60 @@ moves. Must precede T6, which changes the builder that produces the manifest.
 
 ---
 
-### T2: Wire `.agents` into ESLint, vitest and tsc, and prove enforcement
+### T2: Wire `.agents` into ESLint, vitest and prettier, and prove enforcement
 
-**Description:** 162 tracked files under `.agents/` are invisible to every gate. Discovery is
-not enforcement — `tsc --listFilesOnly` prints participating files and stops, and JS error
-checking additionally depends on `checkJs`.
+**Description:** 162 tracked files under `.agents/` were said to be invisible to every gate.
+Measured, that headline is wrong in both directions, and the corrections change the task:
+
+- **prettier already covered it.** Only `.agents/skills/ai-elements/` is in `.prettierignore`.
+  Proven by mis-formatting `validate-artifact.mjs`: `prettier --check .` went red.
+- **The gateable surface is one file.** Of the 162: 80 `.tsx` are the vendored ai-elements
+  registry payload, kept byte-for-byte so a re-sync is a clean diff and already excluded with
+  that reason recorded; 81 are `.md`/`.json`/`.yaml`. The remainder is
+  `.agents/skills/scripts/validate-artifact.mjs` — 332 lines, untested, and the only executable
+  in the subtree.
+- **tsc's blindness is structural, not an exclusion.** A `**` glob does not match a
+  leading-dot directory, so `.agents/` never entered the program. `tsc --listFilesOnly`
+  reports 0 files there. `.mjs` is not in the include list either, so no `.mjs` anywhere in the
+  repo is typechecked.
+
+**The tsc leg does not belong in Collider.** `validate-artifact.mjs` moves into the CLI package
+at T11 (`ds-skills validate`), and in the package it does not live under `.agents/` at all — so
+a Collider-side Node-tooling tsconfig built to cover it would gate a subtree that is leaving.
+That is exactly the "dummy files to satisfy a stale invariant" S7 rules out. Type coverage for
+this code lands with the code, in the package's own `pnpm check`. The separate and real gap —
+Collider's own 35 `scripts/**/*.mjs` are unchecked, 27 measured errors — is **BL-5**, not this.
 
 **Acceptance criteria:**
 
-- [ ] `eslint.config.mjs` no longer blanket-ignores `.agents/**`; any remaining exclusion is
-      narrow and carries a reason
-- [ ] vitest resolves test files under `.agents/`
-- [ ] tsc participates in those files under an appropriate config — Node tooling and the Next
-      app may need separate compiler configurations; keep them separate
-- [ ] A representative lint error, type error and failing test under `.agents/` **each fail
-      their gate** (introduce temporarily, confirm the failure, revert)
-- [ ] Every surfaced violation fixed, or excluded with a recorded reason
+- [x] `eslint.config.mjs` no longer blanket-ignores `.agents/**`; the remaining exclusion is
+      narrow (`ai-elements/references/`, `ai-elements/scripts/`) and carries the vendoring
+      reason. ESLint went from 0 to 1 `.agents` file, 288 files total.
+- [x] The one violation it surfaced is fixed: `const { $ref, ...rest }` tripped
+      `no-unused-vars`, because `@typescript-eslint`'s rule defaults `ignoreRestSiblings` to
+      **false**, unlike the base ESLint rule. Rewritten as an explicit discard.
+- [x] vitest resolves test files under `.agents/` — `.agents/**/*.test.mjs` added to the unit
+      project, named explicitly because a `**` glob skips dot-directories
+- [x] A real test exists, so the glob is not permanently inert:
+      `validate-artifact.test.mjs`, 6 cases against the **process** contract, since every
+      caller invokes it as `node …` and consumes exit status and stderr. It covers `$ref` with
+      sibling override (the line this task edited), the portable-schema/profile split against
+      the repo's real ledger, and the property a hand-rolled validator most needs — an
+      unimplemented keyword is _rejected_, never silently ignored.
+- [x] tsc participates — **resolved as out of scope for Collider**, per above. Recorded, not
+      skipped.
+- [x] A representative lint error and a failing test under `.agents/` **each fail their gate**
 
 **Verification:**
 
-- [ ] `just check` and `just preflight` pass
-- [ ] The three deliberate failures each failed, and preflight went green after reverting (**S7**)
+- [x] `just check` and `just preflight` pass
+- [x] **S7 proofs**, each introduced, observed red, and reverted to green: - lint: `new Array(1, 2, 3)` → `@typescript-eslint/no-array-constructor` at **error**;
+      `eslint .` exit 1 (a warning would not have — this config tolerates 21 of them) - test: flipped assertion → `pnpm test` exit 1, naming the `.agents` file - prettier: mis-formatted file → `prettier --check .` exit 1 - type: not provable here, and correctly so — see above
 
 **Dependencies:** None
 **Files likely touched:** `eslint.config.mjs`, `vitest.config.ts`, `tsconfig*.json`, plus fixes
-**Scope:** M — unknown tail on the violation count
+**Scope:** M — **done**, and smaller than budgeted: 1 warning fixed, 1 test suite added,
+2 config lines. The "unknown tail" was 27 errors that turned out to belong to BL-5.
 
 ---
 
@@ -374,7 +403,9 @@ materialization here: canonical editing location, tracked or generated, stale-co
 - [ ] `skills/`, `schemas/`, `profiles/`, `templates/` present in the pack and in `files`
 - [ ] The two rail-referencing skills (`sync-quality-governor`, `stage-1`) describe CLI
       invocations rather than repo paths
-- [ ] `validate-artifact.mjs` moves behind `ds-skills validate` unchanged
+- [ ] `validate-artifact.mjs` moves behind `ds-skills validate` unchanged, **and its test
+      moves with it** — `validate-artifact.test.mjs` is Collider's only coverage of that
+      script, and it tests the process contract, so it ports without rewriting
 - [ ] **Disclosure review before the first public push.** The repo is public now, so material is
       exposed the moment it lands — not at release. Review the migrated files, and any history
       actually imported, before pushing. T15's archive review is the second checkpoint, not the
