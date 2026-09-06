@@ -225,61 +225,83 @@ The principle: **provisioning and execution are separate operations.**
 
 **Acceptance criteria — each written down, not assumed:**
 
-- [ ] **Distribution is a GitHub Releases installer script**, following
+- [x] **Distribution is a GitHub Releases installer script**, following
       `atomize-hq/substrate/scripts/substrate/install.sh` and its `install-substrate.ps1` twin.
       Confirm the consequence explicitly: **the repository must be public**, because
       `raw.githubusercontent.com` and `releases/download` both 404 for a private repo without a
       token. This is more exposure than the npm route would have needed — **ask before
       proceeding**
-- [ ] Two deliberate divergences from the reference implementation, both recorded: a missing or
+- [x] Two deliberate divergences from the reference implementation, both recorded: a missing or
       mismatched `SHA256SUMS` **fails** rather than warning and skipping, and an unresolvable
       tag **fails** rather than falling back to `main`
-- [ ] Release-identity **format and version-selection rules**, and where Collider records them.
+- [x] Release-identity **format and version-selection rules**, and where Collider records them.
       Three distinct things: deciding the rules (here), assigning the version to be built (before
       T14's decisive pack test), and recording the finished tarball's integrity (T15/T16). T5
       cannot certify bytes that do not exist. Do not change package metadata after T14 and treat
       the rebuilt package as the already-tested artifact
-- [ ] The materialization contract's release-selection obligations, so T11 cannot choose an
+- [x] The materialization contract's release-selection obligations, so T11 cannot choose an
       incompatible activation scheme
-- [ ] Install location and prefix: job-local in CI, persistent and version-specific locally
-- [ ] Executable discovery, including the Unix/Windows path difference — the bash and
+- [x] Install location and prefix: job-local in CI, persistent and version-specific locally
+- [x] Executable discovery, including the Unix/Windows path difference — the bash and
       PowerShell installers are a matched pair, not an afterthought
-- [ ] **How the bootstrap learns its version.** `curl … | bash` supplies no argv and no
+- [x] **How the bootstrap learns its version.** `curl … | bash` supplies no argv and no
       `BASH_SOURCE`; the reference implementation parses `--version=` and otherwise resolves
       `latest`. Choose an explicit argument contract or a release-specific bootstrap carrying its
       own identity. **Prove it with two different selected versions, from outside any repository,
       in a non-interactive shell**, establishing what version reaches the asset URL — not merely
       that the first request returns 200
-- [ ] **The reviewed record binds more than one digest**: repository, release, source commit,
+- [x] **The reviewed record binds more than one digest**: repository, release, source commit,
       per-platform asset identity and expected integrity. Populated from the T14-tested bytes,
       never from whatever `SHA256SUMS` accompanies a later download
-- [ ] **Supported OS / architecture / runtime combinations named.** "Linux/macOS/Windows" is not
+- [x] **Supported OS / architecture / runtime combinations named.** "Linux/macOS/Windows" is not
       an asset-selection contract, and a bundled builder ships platform-specific binaries
-- [ ] **Whether the release includes a Node runtime** or requires a separately provisioned
+- [x] **Whether the release includes a Node runtime** or requires a separately provisioned
       supported version. Either is fine; it must be explicit and never resolved from Collider
-- [ ] **Lifecycle contract**: install/reinstall idempotent, never leaving a partial directory
+- [x] **Lifecycle contract**: install/reinstall idempotent, never leaving a partial directory
       that later reads as complete; upgrade provisions before activating and fails closed on
       CLI/skill skew; concurrent versions coexist and no global "current" pointer overrides
       project selection; uninstall removes only the selected install and leaves a project
       selecting it with an actionable failure, not a fallback
-- [ ] `pipefail` guidance for the documented one-liner — a failed `curl` into bash exits 0
-- [ ] **GitHub immutable releases enabled**, locking the tag to its commit and preventing asset
+- [x] `pipefail` guidance for the documented one-liner — a failed `curl` into bash exits 0
+- [x] **GitHub immutable releases enabled**, locking the tag to its commit and preventing asset
       modification
-- [ ] Offline local behaviour: the pre-push path acquires nothing, and a missing or mismatched
+- [x] Offline local behaviour: the pre-push path acquires nothing, and a missing or mismatched
       install fails with an actionable setup message
-- [ ] Caching is an optimization only — a cache miss installs **the same release**
-- [ ] An early mechanism proof is planned that needs no published artifact (dummy package or
-      workflow-supplied tarball); the release proof belongs to T16
+- [x] Caching is an optimization only — a cache miss installs **the same release**
+- [x] An early mechanism proof is planned that needs no published artifact (dummy package or
+      workflow-supplied tarball); the release proof belongs to T16. **Planned, not run** — see
+      the verification note below.
 
 **Verification:**
 
 - [ ] The mechanism proof runs green in a throwaway workflow: isolated install, package
-      independence, executable discovery, platform behaviour
-- [ ] The decision is recorded in `SPEC.md` §10
+      independence, executable discovery, platform behaviour — **blocked on T14**, which owns
+      the installers. There is nothing to run a mechanism proof against until one exists;
+      writing a workflow that exercises an installer nobody has written would be theatre.
+      Moved into T14's criteria so it cannot be lost, and T14 already owns the frozen-candidate
+      installation test this would duplicate.
+- [x] The decision is recorded in `SPEC.md` §10 — a new section; what was §10 is now §11.
+      §10 also corrects the "version pinning is in the URL" bullet that survived round 3's fix
+      in the same list that stated the opposite two paragraphs earlier.
+
+**The measurement that decided it.** The reference bootstrap fetched anonymously at `v0.2.6`
+and at `v0.2.8` is **byte-identical** — 4458 bytes, same SHA-256 — and neither contains its own
+tag. `latest` resolves to `v0.2.8` today, so `curl …/v0.2.6/install.sh | bash` installs
+**v0.2.8 right now**, not after some future drift. That killed "document the `--version=` flag"
+as an answer: a copied one-liner cannot carry a pin the script can read. The contract instead
+makes the bootstrap a **release asset** with its identity baked in, and drops `--version`
+entirely — the asset _is_ the version, so there is nothing to disagree with.
+
+Anonymous token-free `releases/download` was confirmed at 200 on the same repository, so the
+public-repo delivery path is measured rather than assumed.
+
+**Needs the owner, not the implementation:** GitHub **immutable releases** must be enabled on the
+repository. It is a repository setting, so no installer can enforce it, and without it a tag is
+not immutable content selection.
 
 **Dependencies:** None
 **Files likely touched:** `SPEC.md`, a throwaway workflow
-**Scope:** M
+**Scope:** M — **decision done** (`SPEC.md` §10, 8 subsections); mechanism proof deferred to T14
 
 ---
 
@@ -579,6 +601,14 @@ plain install can. npm does not auto-install optional peers.
       `node_modules/.bin`, and not the `files` field, which are development checks only
 - [ ] Negative integrity test: a modified asset **with a matching modified `SHA256SUMS`** is
       rejected against the reviewed record. Corrupting only the archive proves less
+- [ ] **T5's mechanism proof**, inherited because it had nothing to run against: a throwaway
+      workflow needing no published artifact, covering isolated install, package independence,
+      executable discovery and platform behaviour across the OS/arch matrix named in §10.5.
+      It runs on the frozen candidate assets this task already produces
+- [ ] The bootstrap **hard-fails when its baked release identity is empty** — a bootstrap that
+      does not know what it is must not fall back to resolving one (§10.1)
+- [ ] There is **no `--version` flag**: the asset is the version. A flag would reintroduce the
+      disagreement §10.1 exists to remove
 
 **Verification:**
 

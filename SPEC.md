@@ -484,91 +484,174 @@ environment that runs it must already be able to get it.
 Task-level detail, dependencies and checkpoints are in [`tasks/plan.md`](tasks/plan.md) and
 [`tasks/todo.md`](tasks/todo.md).
 
-## 10. Open risks
+## 10. Delivery contract
 
-**Delivery is a GitHub Releases installer script, not an npm package.** This follows the
-pattern already proven in this org at
-`atomize-hq/substrate/scripts/substrate/install.sh`, with a PowerShell twin at
-`scripts/windows/install-substrate.ps1`. The shape:
+Settled at T5. The governing principle: **provisioning and execution are separate operations.**
+Provisioning installs one exact reviewed release and may reach the network. Execution runs that
+binary and resolves nothing — no registry, no `latest`, no PATH lookup.
 
-```bash
-# Linux / macOS
-curl -fsSL https://raw.githubusercontent.com/atomize-hq/<repo>/v0.4.0/scripts/install.sh | bash
-```
+### 10.1 The mechanism, and the one thing the reference gets wrong
 
-```powershell
-# Windows
-iwr https://raw.githubusercontent.com/atomize-hq/<repo>/v0.4.0/scripts/windows/install.ps1 -UseBasicParsing | iex
-```
+Distribution is a GitHub Releases installer script, following
+`atomize-hq/substrate/scripts/substrate/install.sh` and its PowerShell twin. The repository is
+public as of 2026-09-06; anonymous, token-free access to both `raw.githubusercontent.com` at a
+tag and `releases/download` was verified, so the delivery path is proven rather than assumed.
 
-A thin bootstrap fetches the real installer, which downloads release assets from
-`https://github.com/atomize-hq/<repo>/releases/download/<tag>/` and verifies them against a
-`SHA256SUMS` asset.
+**The reference's bootstrap does not learn its version from the tag in its own URL, and this is
+now measured rather than argued.** Fetching `scripts/substrate/install.sh` anonymously at
+`v0.2.6` and at `v0.2.8` returns **byte-identical files** — same 4458 bytes, same SHA-256 —
+and neither contains its own tag anywhere. Version selection happens entirely at runtime:
+`--version=` if supplied, otherwise `releases/latest`, which resolves to `v0.2.8` today. So
+`curl …/v0.2.6/install.sh | bash` installs **v0.2.8 right now** — not "after latest moves".
+Under `curl … | bash` there is no argv and no `BASH_SOURCE`, so a copied one-liner cannot carry
+a pin the script can read.
 
-**Correcting an earlier claim in this spec: the bootstrap does not learn its version from the
-tag in its own URL.** Under `curl … | bash`, bash receives the body on stdin — there is no
-`BASH_SOURCE` and no argv. Verified in the reference implementation: `VERSION_PIN` is parsed
-from `--version=` arguments (`install.sh:147-167`), and with none supplied it resolves
-`releases/latest`, falling back to `main`. The tag in the URL selects _which bootstrap you
-fetch_, not what it installs. Those coincide only while that tag is latest.
-
-So the pinned one-liner must pass the version explicitly:
+**Our contract removes the ambiguity instead of documenting around it: the bootstrap is a
+release asset, not a repository file.**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/atomize-hq/<repo>/v0.4.0/scripts/install.sh \
-  | bash -s -- --version=0.4.0
+curl -fsSL https://github.com/atomize-hq/<repo>/releases/download/v0.4.0/install.sh -o install.sh
+# CI: verify install.sh against the reviewed record, then execute. Never pipe.
+bash install.sh
 ```
 
-Better still, **publish a release-specific bootstrap that carries its own release identity**, so
-the pin cannot be dropped by a copied command line. T5 must settle this and prove it with two
-different selected versions, from outside any repository, in a non-interactive shell —
-establishing what version reaches the _asset_ URL, not merely that the first request returns 200.
+The asset is generated at release time with its release identity baked in, so URL and content
+agree by construction, and immutable releases make the asset unswappable. There is **no
+`--version` flag**: the asset _is_ the version, so there is nothing to disagree with. Installing
+a different version means using that version's URL. The bootstrap hard-fails if its baked
+identity is empty — a bootstrap that does not know what it is must not guess.
 
-Three further trust properties the pipeline does not give for free:
+The `curl … | bash` one-liner stays documented for humans, with `set -o pipefail`, because a
+failed `curl` feeding empty stdin to bash exits 0 and `set -e` inside a script that never
+arrived cannot help. **CI never pipes**: it downloads, verifies, then executes.
 
-- **`curl … | bash` has a failure-propagation trap.** Without `pipefail` in the calling shell, a
-  failed `curl` feeding an empty stdin to bash exits 0. `set -e` inside a script that never
-  arrived cannot help.
-- **The bootstrap executes before any checksum is verified.** The trust chain is bootstrap →
-  installer → archive; verifying the archive does not authenticate the code that already ran. In
-  CI, use download → verify against the reviewed record → execute, not streaming execution.
-- **A `SHA256SUMS` published beside the archive is self-consistency, not an independent anchor.**
-  Anyone who can replace the archive can replace its checksum list. Collider's reviewed record is
-  the independent expectation, and the negative test must be _modified asset plus matching
-  modified SHA256SUMS_ — rejected against the reviewed record — not merely a corrupted archive.
+### 10.2 Two deliberate divergences from the reference
 
-**Enable GitHub immutable releases**, which lock the tag to its commit and prevent asset
-modification. A version-shaped tag is not by itself immutable content selection.
+Recorded so nobody later "fixes" them back into alignment:
 
-This is a better fit than npm for four reasons:
+- The reference **warns and skips** when `SHA256SUMS` is missing (`install-substrate.sh:2330,
+2337`). Ours **fails**. A tool that gates CI cannot treat missing integrity as a warning.
+- The reference **falls back to `main`** when it cannot resolve a release tag. Ours **hard-fails**.
+  A resolution failure or a cache miss installs the pinned release or nothing, never a floating
+  ref.
 
-1. **It already exists here.** Same operators, same muscle memory, a working reference
-   implementation to copy rather than a mechanism to invent.
-2. **Provisioning and execution are separated by construction.** The installer runs at
-   environment setup; the installed binary runs at check time and resolves nothing.
-3. **Version pinning is in the URL** and cannot silently float.
-4. **It dissolves the T14 optional-peer problem.** A release asset can ship the CLI with its
-   builder already bundled, so a consumer installs an artifact rather than a dependency tree
-   that npm may or may not complete. See §7.3.
+### 10.3 Trust chain
 
-**The cost, and it is now paid: the repository must be public.** Done on 2026-09-06, with
-anonymous tag-pinned access verified at two existing tags. Both
-`raw.githubusercontent.com` and `releases/download` return 404 for a private repo without a
-token, and a token is the thing this design exists to avoid. This is _more_ exposure than the
-npm route, which would have kept the source private and published only the package. That is a
-real trade and it is the user's call, not an implementation detail.
+The bootstrap executes before anything it downloads is verified, and a `SHA256SUMS` published
+beside the archive is self-consistency: whoever can replace the archive can replace its
+checksum list. So the independent anchor is **Collider's reviewed record**, and the chain is:
 
-Two things to tighten rather than copy from the reference implementation:
+1. Collider's reviewed record pins the bootstrap's own digest. CI verifies it **before** executing.
+2. The bootstrap verifies each downloaded asset against the reviewed record's per-platform digest —
+   not against whatever `SHA256SUMS` accompanies the download.
+3. `SHA256SUMS` remains published, and a mismatch against it fails, but it is a consistency check
+   layered on top, never the anchor.
 
-- **`install-substrate.sh` warns and skips when `SHA256SUMS` is missing** (its lines 2330 and
-  2337). For a tool that gates CI, a missing or mismatched checksum must **fail**, not warn.
-- **Its bootstrap falls back to `main` when it cannot resolve a release tag.** Ours must hard-fail
-  instead. A cache miss or a resolution failure installs _the same pinned release_ or nothing —
-  never a floating ref.
+The negative test is therefore a **modified asset with a matching modified `SHA256SUMS`**,
+rejected against the reviewed record. A merely corrupted archive proves only that the weaker
+check works.
 
-Collider records the selected tag and expected digest as reviewed JSON: a toolchain dependency,
-not an application one. Execution never acquires; a missing or mismatched install fails with an
-actionable setup message.
+**GitHub immutable releases must be enabled on the repository** — a repository setting, so the
+owner enables it; the tag/commit binding is not something the installer can enforce. It locks the
+tag to its commit and prevents asset modification after publication.
+
+### 10.4 The reviewed record
+
+`ds-skills.release.json` at Collider's repo root — beside `package.json`, `justfile` and
+`components.json`, because it is a toolchain pin, not application data. It binds more than one
+digest:
+
+```json
+{
+  "repository": "atomize-hq/<repo>",
+  "release": "v0.4.0",
+  "sourceCommit": "<40-char sha>",
+  "bootstrap": { "asset": "install.sh", "sha256": "…" },
+  "assets": {
+    "macos_arm64": { "asset": "ds-skills-v0.4.0-macos_arm64.tar.gz", "sha256": "…" },
+    "…": {}
+  }
+}
+```
+
+Every digest is populated from the **T14-tested bytes**. Three distinct steps that must not
+collapse into one: T5 decides these rules, the version to be built is assigned before T14's
+decisive pack test, and the finished tarball's integrity is recorded at T15/T16. T5 cannot
+certify bytes that do not exist. Package metadata does not change after T14, and a rebuilt
+package is not the already-tested artifact.
+
+### 10.5 Platforms, architectures and runtime
+
+Named explicitly, because "Linux/macOS/Windows" is not an asset-selection contract:
+
+| OS      | Architectures       | Asset                                      |
+| ------- | ------------------- | ------------------------------------------ |
+| macOS   | `arm64`, `x86_64`   | `ds-skills-v<version>-macos_<arch>.tar.gz` |
+| Linux   | `x86_64`, `aarch64` | `ds-skills-v<version>-linux_<arch>.tar.gz` |
+| Windows | `x86_64`            | `ds-skills-v<version>-windows_x86_64.zip`  |
+
+Assets are per-platform **because the bundled plugin builder carries a native binary**, not
+because the CLI is. An unlisted OS/arch pair fails with the list, rather than downloading
+something that will not run.
+
+**The release does not ship a Node runtime.** `ds-skills` requires a supported Node provided by
+the environment, declared as a hard minimum and checked at install with an actionable message.
+Rationale: the CLI is a small Node program, every environment that runs Collider's gates already
+provisions Node, and bundling a runtime would add ~25MB per platform to solve a problem nobody
+has. This is explicit precisely so it is never resolved from whatever Collider happens to pin.
+
+### 10.6 Install location, discovery and lifecycle
+
+|                 | Location                                     | Persistence                  |
+| --------------- | -------------------------------------------- | ---------------------------- |
+| CI              | job-local prefix under the runner's temp dir | none — every job installs    |
+| Local (Unix)    | `~/.local/share/ds-skills/<version>/`        | persistent, version-specific |
+| Local (Windows) | `%LOCALAPPDATA%\ds-skills\<version>\`        | persistent, version-specific |
+
+Executable at `<prefix>/bin/ds-skills` on Unix and `<prefix>\bin\ds-skills.cmd` on Windows. The
+bash and PowerShell installers are a **matched pair**, not an afterthought: same prefix scheme,
+same verification, same failure modes.
+
+**Collider resolves the binary from the reviewed record's version at the version-specific path,
+never from PATH.** An ambient `ds-skills` on someone's machine must not be able to satisfy the
+gate — that is the difference between a pinned toolchain and a hope.
+
+Lifecycle:
+
+- **Install / reinstall** is idempotent: unpack to a temp directory, then atomically rename into
+  place. The rename _is_ the completion marker, so a partial directory can never read as complete.
+- **Upgrade** provisions the new version before anything activates it, and **fails closed on
+  CLI/skill skew** — the CLI and its materialized skills share one release identity and refuse to
+  run mismatched.
+- **Concurrent versions coexist** by construction, since the prefix carries the version. There is
+  **no global `current` pointer**, so nothing can override a project's selection.
+- **Uninstall** removes only the selected install. A project still pinned to it then fails with
+  the exact install command, never a fallback to another version.
+
+### 10.7 Offline, caching, and the early proof
+
+The local pre-push path **acquires nothing**. A missing or mismatched install fails with an
+actionable setup message naming the exact command. Caching is an optimization only: the cache key
+is the release identity, and a miss installs the same release.
+
+An early mechanism proof is planned that needs **no published artifact** — a workflow-supplied
+tarball exercising isolated install, executable discovery, platform behaviour, and each failure
+mode. The proof against a real release belongs to T16.
+
+### 10.8 Rejected alternatives
+
+Public npm was the previous plan and remains viable, but it adds a registry, a scope and a
+publish flow this org does not otherwise use, and it leaves the optional-peer problem in §7.3
+unsolved. **GitHub Packages is not viable** — it requires authentication even to install a public
+package. Pinned `dlx` couples acquisition to execution, which is the one thing this contract
+separates.
+
+## 11. Open risks
+
+**Delivery risk lives in §10, not here.** The contract is settled; what remains a _risk_ is
+that it is unproven end to end until T16 performs a cold acquisition from a real release, and
+that the repository being public exposes migrated material on push rather than at release —
+which is why T11 carries a disclosure review.
 
 **Rejected alternatives, and why.** Public npm was the previous plan and remains viable, but it
 adds a registry, a scope and a publish flow this org does not otherwise use. **GitHub Packages
@@ -592,9 +675,10 @@ rail repo as it was then. Re-review the **final tarball** after all assets move.
 clean credential-free CI install. Local preflight passing during Phase 1 is not clean-CI
 evidence, and this plan does not promise per-commit clean CI until Phase 3 provisions the tool.
 
-**`.agents` gate wiring may surface real violations** in 162 files never linted or typechecked.
-Budget for it.
+**~~`.agents` gate wiring may surface real violations~~ — closed at T2.** The 162 files were 80
+vendored payload, 81 Markdown/JSON/YAML and one script. It surfaced a single warning. The
+remaining, larger gap is Collider's own untypechecked `scripts/**/*.mjs`: **BL-5**, 27 measured
+errors, deliberately out of this migration.
 
-**`parity-policy.md` promises a future this cancels.** Line 29 holds the Enterprise rail open
-"until Enterprise API becomes available without seat restrictions." Rewrite it as _retired_,
-plainly.
+**~~`parity-policy.md` promises a future this cancels~~ — closed at T3.** Line 29 now states the
+rail is retired, and says why, rather than dropping the sentence that made the promise.

@@ -119,7 +119,7 @@ scheduled them.
 - [x] T2: Wire `.agents` into ESLint, vitest and prettier, and prove enforcement — tsc leg resolved as package-side; Collider's own `.mjs` gap recorded as BL-5
 - [x] T3: Retire `rest-variables-oauth` from Collider as one atomic change — 2 of 11 fixtures moved, both in one field, diagnostics unchanged
 - [x] T4: Remove `syncVariablesViaRest` from the pack — `a134533`; `pack-check` asserted it too
-- [ ] T5: Decide the delivery contract
+- [x] T5: Decide the delivery contract — `SPEC.md` §10; mechanism proof moved to T14
 - [x] T6: Fix the plugin UI's hardcoded values and placeholder substitution — `1f529ed`; S4 byte-identical
 
 **Checkpoint: Foundation**
