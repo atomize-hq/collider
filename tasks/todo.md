@@ -194,17 +194,26 @@ exists, so it must be repointed or the gate fails on a correct build.
 
 **Acceptance criteria:**
 
-- [ ] `src/rails/rest-variables.ts` and `rest-variables.test.ts` deleted
-- [ ] The export is gone from `src/index.ts`
-- [ ] `smoke` checks a surviving export
+- [x] `src/rails/rest-variables.ts` and `rest-variables.test.ts` deleted
+- [x] The export is gone from `src/index.ts`
+- [x] `smoke` checks a surviving export — **and so does `pack-check.sh:24`**, which the
+      criteria missed. It asserted the same deleted export and went red on a correct build.
+      Found by running the gate rather than by reading the task. Both now check
+      `flattenTokenDocument` and `buildExpectedVariables`: the same surface, verified once
+      against `dist/` and once against a tarball installed into a throwaway consumer.
 
 **Verification:**
 
-- [ ] `pnpm check` passes end to end
+- [x] `pnpm check` passes end to end — format, typecheck, tests, build, smoke, pack-check
+- [x] Test count 44 → 25, i.e. 19 removed (13 `it()` declarations, expanded by `it.each`).
+      Measured by running the suite at `HEAD~1` in a throwaway worktree, not inferred.
 
 **Dependencies:** None (different repo from T3)
-**Files likely touched:** 2 deleted, `src/index.ts`, `package.json`
-**Scope:** S
+**Files likely touched:** 2 deleted, `src/index.ts`, `package.json`, plus `scripts/pack-check.sh`
+and `README.md` — the README presented the two rails as a choice, so it is rewritten to say
+there is one, keeping the comparison table marked _removed_: the reasoning is exactly why
+nobody should reintroduce it as-is.
+**Scope:** S — **done**, `a134533` in `atomize-hq/figma-token-rail`
 
 ---
 
