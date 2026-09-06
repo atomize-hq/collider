@@ -123,9 +123,6 @@ importers:
       '@figma/code-connect':
         specifier: ^1.4.2
         version: 1.4.2
-      '@figma/plugin-typings':
-        specifier: ^1.112.0
-        version: 1.123.0
       '@playwright/test':
         specifier: 1.58.2
         version: 1.58.2
@@ -762,9 +759,6 @@ packages:
     resolution: {integrity: sha512-5DobQUw5xd96d52v4vwrb/YvOQkXY6puVHBZlOP+1ATB4t+FUwH8UHWEBcYYdhVpZGnDWe2EtkP8I3hVVrHJKg==}
     engines: {node: '>=18'}
     hasBin: true
-
-  '@figma/plugin-typings@1.123.0':
-    resolution: {integrity: sha512-NLv2aQ8R9dP5psDplWpq+pJxRUGsJ1YEYYbBV2oTd03kS+aau7N9XWLjw52s1uVgi8jQ33N001EX3f7vSCztjQ==}
 
   '@figspec/components@2.1.0':
     resolution: {integrity: sha512-PFKBX2oFz+vhThKTNsu7Mh4ZT3X7YCiM694UkAMT36j/p0tdmXs9Je0Sf88stTEcMgwYvNv9TZtvniYmgaE+bw==}
@@ -6604,8 +6598,6 @@ snapshots:
       - canvas
       - supports-color
       - utf-8-validate
-
-  '@figma/plugin-typings@1.123.0': {}
 
   '@figspec/components@2.1.0': {}
 
