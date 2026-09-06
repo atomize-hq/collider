@@ -135,9 +135,15 @@ The principle: **provisioning and execution are separate operations.**
 
 **Acceptance criteria — each written down, not assumed:**
 
-- [ ] Registry and access model. **GitHub Packages requires authentication even to install a
-      public package**, so it does not satisfy the credential-free requirement; public npm does.
-      Publishing the package does **not** require making the source repository public
+- [ ] **Distribution is a GitHub Releases installer script**, following
+      `atomize-hq/substrate/scripts/substrate/install.sh` and its `install-substrate.ps1` twin.
+      Confirm the consequence explicitly: **the repository must be public**, because
+      `raw.githubusercontent.com` and `releases/download` both 404 for a private repo without a
+      token. This is more exposure than the npm route would have needed — **ask before
+      proceeding**
+- [ ] Two deliberate divergences from the reference implementation, both recorded: a missing or
+      mismatched `SHA256SUMS` **fails** rather than warning and skipping, and an unresolvable
+      tag **fails** rather than falling back to `main`
 - [ ] Release-identity **format and version-selection rules**, and where Collider records them.
       Three distinct things: deciding the rules (here), assigning the version to be built (before
       T14's decisive pack test), and recording the finished tarball's integrity (T15/T16). T5
@@ -146,7 +152,8 @@ The principle: **provisioning and execution are separate operations.**
 - [ ] The materialization contract's release-selection obligations, so T11 cannot choose an
       incompatible activation scheme
 - [ ] Install location and prefix: job-local in CI, persistent and version-specific locally
-- [ ] Executable discovery, including the Unix/Windows path difference
+- [ ] Executable discovery, including the Unix/Windows path difference — the bash and
+      PowerShell installers are a matched pair, not an afterthought
 - [ ] Offline local behaviour: the pre-push path acquires nothing, and a missing or mismatched
       install fails with an actionable setup message
 - [ ] Caching is an optimization only — a cache miss installs **the same release**
@@ -445,7 +452,7 @@ packaging gate can claim to exercise them
 
 ## Phase 3 — Distribution and consumer cutover
 
-### T15: Publish the tested artifact — **ask first**
+### T15: Cut the release — **ask first**
 
 **Description:** The earlier clean scan covered the rail repo as it was on 2026-09-05. It does
 not establish that the **final** package is clean after ~160 files moved in.
@@ -453,7 +460,11 @@ not establish that the **final** package is clean after ~160 files moved in.
 **Acceptance criteria:**
 
 - [ ] The final tarball is reviewed for disclosure and redistribution suitability
-- [ ] The exact artifact that passed T14 is the one published; its identity is recorded
+- [ ] The exact artifact that passed T14 is the one released; its tag and digest are recorded
+- [ ] `SHA256SUMS` is published alongside every asset, with per-platform assets where the
+      bundled builder requires them
+- [ ] The installer scripts are committed at the release tag, so the pinned
+      `raw.githubusercontent.com/<org>/<repo>/<tag>/…` URL resolves
 - [ ] Rollback is defined as **explicit version selection** — never `latest`, never restoring
       the retired mode. On a first release there is no compatible earlier version, so rollback is
       not yet a demonstrated recovery procedure; say so rather than implying one exists
@@ -462,7 +473,7 @@ not establish that the **final** package is clean after ~160 files moved in.
 **Verification:**
 
 - [ ] The published version matches the tested digest
-- [ ] Scoped publication has the intended access setting
+- [ ] A `curl | bash` from the pinned tag succeeds on a clean machine
 
 **Dependencies:** the Phase 2 checkpoint, and the exact artifact that passed T14 · **ask first**
 **Files likely touched:** pack `package.json`, release config
@@ -478,7 +489,8 @@ anonymously retrievable.
 
 **Acceptance criteria:**
 
-- [ ] Cold acquisition with **no credentials configured** succeeds from a clean checkout
+- [ ] Cold acquisition with **no credentials configured** succeeds from a clean checkout, via
+      the pinned installer URL, with `SHA256SUMS` verified — and a corrupted asset **fails**
 - [ ] All 8 CI jobs provision the CLI via a shared setup step rather than eight copies
 - [ ] **The reviewed toolchain record is created here** — the JSON naming package, exact release
       and integrity that T5 specified — along with the provisioning/execution behaviour that

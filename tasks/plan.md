@@ -54,9 +54,14 @@ Two further structural corrections from round 1, both about ordering rather than
 - **Provisioning and execution are separate operations.** Provisioning installs an exact
   reviewed release into an isolated prefix and may reach the registry. Execution runs that
   binary and never resolves a newer one. The local pre-push path acquires nothing.
+- **Delivery is a GitHub Releases installer script**, following the pattern already proven at
+  `atomize-hq/substrate` — a tag-pinned `curl | bash` bootstrap plus a PowerShell twin, fetching
+  checksummed release assets. Not npm. It separates provisioning from execution by construction,
+  and it dissolves the optional-peer problem by shipping a bundled artifact. **It requires the
+  repository to be public**, which is more exposure than the npm route needed.
 - **No `package.json` entry does not mean no recorded version.** Collider keeps reviewed JSON
-  naming the package, the exact release, and its integrity — a toolchain dependency rather than
-  an application one.
+  naming the release tag and expected digest — a toolchain dependency rather than an application
+  one.
 - **Schemas stay portable, profiles carry vocabulary.** Porting means writing a profile.
 - **`plugin-import-manual` becomes the only publish mode.** Verified safe: no test asserts the
   mode string, and CT-15B already moved the promotion trigger off it in `b72315a`.
@@ -90,7 +95,7 @@ T6 plugin UI configuration ─────────┤
                                ▼
           T14 self-contained builder + pack-check   (needs T10, T11, T12, T13)
                                ▼
-                    Phase 2 checkpoint ──▶ T15 publish  (ask first)
+                    Phase 2 checkpoint ──▶ T15 cut release  (ask first)
                                ▼
                     T16 prove acquisition + provision + name the required CI job
                                ▼
@@ -151,7 +156,7 @@ scheduled them.
 
 ### Phase 3: Distribution and consumer cutover
 
-- [ ] T15: Publish the tested artifact — **ask first**
+- [ ] T15: Cut the release — **ask first**
 - [ ] T16: Prove anonymous cold acquisition and provision every environment
 - [ ] T17: Activate Collider's callers and delete what they supersede
 
@@ -181,6 +186,7 @@ describe.
 | Risk                                                                                                                                                                                                       | Impact                            | Mitigation                                                                                                                                                                  |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **A CLI required before it can be provisioned.** The moment preflight needs `ds-skills`, every environment must be able to get it.                                                                         | **High**                          | Phase 3 publishes and provisions _before_ T17 activates any caller. T5 settles the contract in Phase 1.                                                                     |
+| **The installer route requires a public repository.** `raw.githubusercontent.com` and `releases/download` both 404 for a private repo without a token. More source exposure than the npm route needed.     | **High**                          | Decided at T5 with an explicit ask. Re-review the release assets at T15, not just the 2026-09-05 scan of the repo as it then was.                                           |
 | **Residual product-owned validators.** `sync-ledger.mjs` and `publish-proof.mjs` are edited by the retirement but never given a final home; the work can report success with rail logic still in Collider. | **High**                          | T9 is blocking. Every rail-carrying path gets exactly one disposition.                                                                                                      |
 | **Loss of real-data gate protection.** Moving `$themeOverrides` into a package fixture, or accepting a weak S2/S3, silently drops what the gate actually caught.                                           | **High**                          | S2 in an isolated worktree with a rail-specific diagnostic; S3 against the full normalized mapping; keep consumer-artifact constraints in the CLI's real-data verification. |
 | **Accidental governance change during genericization.** T12 rewrites policy evaluation; the 11 fixtures are the only thing pinning current behaviour.                                                      | **High**                          | Freeze expected outcomes **and diagnostic reasons** before rewriting. A fixture must not pass by failing earlier for an unrelated reason.                                   |
@@ -213,9 +219,10 @@ accessible transitional artifact for the existing dependency, which is not in sc
 
 ## Open questions
 
-- **Which registry, and public or restricted?** Public npm and GitHub Packages have different
-  anonymous-access properties. Publishing the package does **not** require making the source
-  repository public — keep those approvals separate.
+- **Making the tooling repository public.** The Releases-installer route requires it —
+  `raw.githubusercontent.com` and `releases/download` both 404 for a private repo without a
+  token. This is the one decision the delivery choice forces, and it is more exposure than the
+  npm route would have needed. Ask before acting on it.
 - **Does `.agents/skills/` become generated output or stay tracked?** Blocks T11. If generated,
   the "edit only in `.agents`" rule and the `.claude/skills` symlinks both need revisiting.
 - **Where does `figma drift` get observed state?** If it needs a live Figma session, it cannot

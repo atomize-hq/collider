@@ -373,10 +373,13 @@ explicitly, so it proves the plugin builds _when a consumer already has esbuild_
 plain install can. npm does not auto-install optional peer dependencies, so a successful
 `ds-skills` install does not establish that `figma plugin build` runs.
 
-Either prebuild the invariant plugin code at release time and do only config-dependent assembly
-at command time, or make the builder dependency part of the package's own self-contained
-install. **Do not resolve it from Collider.** esbuild also ships platform-specific binaries, so
-test the platforms actually supported.
+**The Releases installer is the clean answer** (§10): bundle the builder into the published
+asset so a consumer installs a finished artifact rather than a dependency tree npm may leave
+incomplete. Failing that, prebuild the invariant plugin code at release time and do only
+config-dependent assembly at command time. **Never resolve the builder from Collider.**
+
+esbuild ships platform-specific binaries, which the release-asset route handles explicitly —
+per-platform assets, each checksummed — where an npm optional peer does not.
 
 Expand `pack-check` rather than adding a parallel gate. Its decisive scenario:
 
@@ -461,26 +464,59 @@ Task-level detail, dependencies and checkpoints are in [`tasks/plan.md`](tasks/p
 
 ## 10. Open risks
 
-**Delivery contract, and it is decided in Phase 1 rather than mid-migration.** With no
-`package.json` entry the CLI needs a provisioning path. The design principle: **separate
-provisioning from execution.** Provisioning may reach the registry and installs an exact
-reviewed release into an isolated, version-specific prefix. Execution runs that installed
-binary and never resolves a newer one. A missing or mismatched install fails with an actionable
-setup message. The local pre-push path acquires nothing.
+**Delivery is a GitHub Releases installer script, not an npm package.** This follows the
+pattern already proven in this org at
+`atomize-hq/substrate/scripts/substrate/install.sh`, with a PowerShell twin at
+`scripts/windows/install-substrate.ps1`. The shape:
 
-Candidates, and what each still has to prove:
+```bash
+# Linux / macOS
+curl -fsSL https://raw.githubusercontent.com/atomize-hq/<repo>/v0.4.0/scripts/install.sh | bash
+```
 
-| Mechanism                             | Assessment                                                                                                                                                                    |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Exact release into an isolated prefix | Preferred default. Leaves the product dependency graph untouched without depending on one machine-wide install.                                                               |
-| Ordinary global install               | Acceptable on a disposable CI runner when exactly pinned; poor locally when repos need different releases.                                                                    |
-| Pinned `dlx`                          | Viable in CI. Rejected locally — not for version drift (pnpm 10 caches), but because it couples acquisition to execution.                                                     |
-| Skills installer                      | Not yet concrete. Must prove executable install, asset materialization, exact version selection and offline execution — not just copying Markdown.                            |
-| Published tarball pinned by digest    | A distinct acquisition path worth recognizing. Installing a local tarball proves packaging; anonymous retrieval of a published artifact proves distribution. Different tests. |
+```powershell
+# Windows
+iwr https://raw.githubusercontent.com/atomize-hq/<repo>/v0.4.0/scripts/windows/install.ps1 -UseBasicParsing | iex
+```
 
-Caching is an optimization, never the version-selection mechanism. A cache miss must install
-**the same release**, not pick a newer one. `actions/setup-node` caches package-manager data,
-not an externally installed CLI.
+A thin bootstrap resolves the version pin from the tag in its own URL, fetches the real
+installer at that same ref, then downloads release assets from
+`https://github.com/atomize-hq/<repo>/releases/download/<tag>/` and verifies them against a
+`SHA256SUMS` asset.
+
+This is a better fit than npm for four reasons:
+
+1. **It already exists here.** Same operators, same muscle memory, a working reference
+   implementation to copy rather than a mechanism to invent.
+2. **Provisioning and execution are separated by construction.** The installer runs at
+   environment setup; the installed binary runs at check time and resolves nothing.
+3. **Version pinning is in the URL** and cannot silently float.
+4. **It dissolves the T14 optional-peer problem.** A release asset can ship the CLI with its
+   builder already bundled, so a consumer installs an artifact rather than a dependency tree
+   that npm may or may not complete. See §7.3.
+
+**The cost, stated plainly: the repository must be public.** Both
+`raw.githubusercontent.com` and `releases/download` return 404 for a private repo without a
+token, and a token is the thing this design exists to avoid. This is _more_ exposure than the
+npm route, which would have kept the source private and published only the package. That is a
+real trade and it is the user's call, not an implementation detail.
+
+Two things to tighten rather than copy from the reference implementation:
+
+- **`install-substrate.sh` warns and skips when `SHA256SUMS` is missing** (its lines 2330 and
+  2337). For a tool that gates CI, a missing or mismatched checksum must **fail**, not warn.
+- **Its bootstrap falls back to `main` when it cannot resolve a release tag.** Ours must hard-fail
+  instead. A cache miss or a resolution failure installs _the same pinned release_ or nothing —
+  never a floating ref.
+
+Collider records the selected tag and expected digest as reviewed JSON: a toolchain dependency,
+not an application one. Execution never acquires; a missing or mismatched install fails with an
+actionable setup message.
+
+**Rejected alternatives, and why.** Public npm was the previous plan and remains viable, but it
+adds a registry, a scope and a publish flow this org does not otherwise use. **GitHub Packages
+is not viable** — it requires authentication even to install a public package. Pinned `dlx`
+couples acquisition to execution.
 
 **No consumer activation before provisioning exists.** The first dangerous boundary is the task
 that makes `preflight` require the CLI — not the task that drops the dependency.
