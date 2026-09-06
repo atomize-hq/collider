@@ -216,6 +216,10 @@ key installs fine, which is precisely why this is invisible from a working machi
 
 **Publish the rail to npm.** Public repo alone is not sufficient and not the target state.
 
+**Read BL-4 before acting on this.** It moves the boundary between the rail and the repo,
+and may make the pack — not the rail — the thing that gets published. The CI break below is
+real either way and blocks BL-2 on its own; the publishing decision is the part BL-4 owns.
+
 Making the repo public removes _authorization_ but not _authentication_ — on the current
 SSH URL, a public repo still fails for anyone without a key, CI included. Public therefore
 requires a specifier change as well:
@@ -277,3 +281,113 @@ rewriting extensionless imports, which left the built ESM unloadable under Node 
 test suite was green). Publishing to npm during that is how a broken version becomes
 permanent. The guards added in response — `moduleResolution: NodeNext`, `pnpm smoke`,
 `pnpm pack-check`, all three in the rail's CI — are what make publishing safe now.
+
+---
+
+## BL-4 — The consuming repo should own data, not rail logic
+
+**Raised:** 2026-09-05, from reviewing what the token-rail extraction actually left behind.
+**Surface:** `scripts/build-figma-plugin.mjs`, `scripts/figma-variables-sync-enterprise.mjs`,
+`scripts/lib/figma-variables-sync-enterprise.mjs`, `src/lib/tokens/figma-token-rail.test.ts`,
+`src/lib/tokens/token-build-contracts.test.ts`, and the `.agents/skills` pack.
+
+### The decision
+
+**The CLI owns behavior. The repo owns data.** The standard shape — eslint is installed and
+`.eslintrc` is yours; terraform is installed and the `.tf` files are yours. A repo adopting
+this tooling should contribute config, a ledger, an inventory and expectations, and no
+executable rail code at all.
+
+**The skill pack is what gets installed**, with `@atomize-hq/figma-token-rail` as an internal
+module rather than a second thing to wire up. Adoption in a new repo becomes one install plus
+a handful of JSON files, instead of installing a package, copying a skill directory, and
+hand-wiring the two together.
+
+### What that moves
+
+Collider owns **357 lines of executable rail code** today, against 30 lines of actual data:
+
+| Executable, should move                           | LOC |
+| ------------------------------------------------- | --- |
+| `scripts/lib/figma-variables-sync-enterprise.mjs` | 237 |
+| `src/lib/tokens/figma-token-rail.test.ts`         | 78  |
+| `scripts/build-figma-plugin.mjs`                  | 33  |
+| `scripts/figma-variables-sync-enterprise.mjs`     | 9   |
+
+| Data, should stay                   | LOC |
+| ----------------------------------- | --- |
+| `src/figma/sync-ledger.json`        | 20  |
+| `figma/token-sync.config.json`      | 10  |
+| a new expectations file (see below) | ~7  |
+
+The 237-line sync script is the one that looks repo-specific and is not. Its inputs are a
+20-line JSON ledger; its policy — promotion levels, exception codes, the outcome-to-level
+mapping — is a schema and a lookup table. Both are data. The code that reads a ledger, runs a
+rail, and writes an outcome is generic. `.agents/skills/schemas/` plus
+`profiles/collider.json` is already this exact split applied to the story/spec artifacts;
+this extends it to the rail.
+
+`src/lib/tokens/figma-token-rail.test.ts` asserts `176`, `accent/primary`,
+`type/weight/semibold`, `dark`, and `['dark','light']`. That is an expectations file in the
+shape of a test. Moving the values into JSON also improves the failure mode: a changed leaf
+count becomes a reviewable diff rather than someone editing a test to go green.
+
+**One of its four cases should be deleted, not moved.** The third builds the expected variable
+set, echoes it back as the observed set, and asserts no drift — it tests the package against
+itself, which the rail's own 19 fixture tests already cover.
+
+`token-build-contracts.test.ts:116` uses `flattenTokenDocument` for a single assertion, that
+`$themeOverrides` does not change the leaf count. That is a property of the rail, not of
+Collider's tokens, and belongs in the package's suite regardless of the rest of this item.
+
+### Relationship to BL-3
+
+**This subsumes BL-3's publishing half.** If the pack is the installable and the rail is
+internal to it, "make the rail installable" and "stop the repo owning rail logic" are one
+piece of work, not two. Do not do BL-3's npm publish as a standalone step without deciding
+this first — it would publish a boundary this item moves.
+
+**BL-3's CI break is not subsumed and still blocks BL-2.** Two things survive this item
+unchanged:
+
+1. `pnpm install --frozen-lockfile` fails in all 8 jobs while the dependency is a private
+   git+ssh URL, whatever the package is called or contains.
+2. **The dev-time dependency does not go away.** `just preflight` has to keep failing on a
+   token regression, so the verifier must be installed. `pnpm dlx` on every preflight means a
+   network round-trip and silent version drift, which is worse. The repo ends up owning no
+   rail code while still declaring the dependency — that is the intended end state, not a
+   compromise.
+
+### Prerequisite: the repo's gates do not see `.agents`
+
+162 tracked files, zero coverage:
+
+- `eslint.config.mjs:11` — `globalIgnores(['.agents/**'])`
+- `vitest.config.ts` — includes only `src/**` and `storybook/**`
+- `tsconfig.json` — `include: ['**/*.ts', …]`, and a `**/*` glob skips dot-directories
+
+Wire these before anything executable lands in the pack. Nothing there can currently fail
+`just preflight`, and a CLI that CI depends on must be lintable, typecheckable and testable
+like the rest of the repo.
+
+### Scope of the work
+
+1. Wire `.agents` into eslint, vitest and tsc (above). Independent of everything else here
+   and worth doing on its own.
+2. Decide the pack's package shape — `bin/` entries, what ships as data, whether
+   `figma-token-rail` becomes an internal module or stays a dependency of the pack. This one
+   needs a plan doc, not a backlog entry.
+3. Give the rail a verify entry point that reads config + expectations + artifact, so
+   `figma-token-rail.test.ts` can become JSON.
+4. Move the ledger mechanism behind a CLI parameterized by the ledger and a profile.
+5. Delete the self-referential drift case; move the `$themeOverrides` assertion into the
+   package's suite.
+6. Replace `scripts/build-figma-plugin.mjs` with a CLI invocation reading
+   `figma/token-sync.config.json`.
+
+### Why it was not done at extraction time
+
+The extraction drew the boundary at "what only this repo can own" and put the CT-8B ledger
+mechanism on Collider's side of it. That was the wrong cut: the ledger is data, and its
+governance is a schema. The 793-to-237 reduction was real, but 237 was not the floor — about
+30 lines of JSON is.
