@@ -476,3 +476,41 @@ CLI package and is typechecked by the package's own `pnpm check`, so building Co
 machinery for it would be gating a subtree that is leaving. The `scripts/` half is Collider's
 own and stays — but it is unrelated to the rail, and fixing token-governance internals inside a
 migration diff makes both harder to review.
+
+---
+
+## BL-6 — `just preflight` intermittently fails in the Storybook browser projects
+
+**Observed:** 2026-09-06, twice in one session, on doc-only commits that touched no component.
+
+Both failures were in the Playwright-backed Storybook projects, and both passed clean on an
+immediate re-run with no change:
+
+| run | project           | files reported                                                                  |
+| --- | ----------------- | ------------------------------------------------------------------------------- |
+| 1   | `storybook`       | `button-group.stories.tsx`, `card.stories.tsx`                                  |
+| 2   | `storybook-light` | `generated-token-docs.stories.tsx`, `badge.stories.tsx`, `artifact.stories.tsx` |
+
+Different files each time, so it is not story-specific. The failures are reported at **file**
+level rather than as assertion failures, which points at browser/worker startup rather than test
+logic. The timings support that: a 23s wall run reports `setup 96.84s, import 99.93s, tests
+135.66s` across workers, so the projects are heavily parallel and contending.
+
+Neither occurrence could be reproduced afterwards, so **no error text was captured** — the
+re-run was green before the output could be inspected. Next occurrence: capture the failing
+run's full output before re-running anything.
+
+### Why it matters more than a normal flake
+
+CLAUDE.md's standard is "a pre-push hook runs `just preflight`, which mirrors CI — if it passes
+locally, CI passes." A gate that fails ~1 run in 5 for reasons unrelated to the diff trains
+people to re-run until green, which is the same reflex as `--no-verify`. It also makes a real
+regression indistinguishable from noise on first sight.
+
+### Where to start
+
+- Capture a failing run in full: `pnpm test:storybook 2>&1 | tee /tmp/sb.log`.
+- Check whether the two browser projects run concurrently and how many workers each gets;
+  `storybook` and `storybook-light` are the same 84 files rendered twice.
+- Consider bounding worker concurrency for the browser projects specifically, rather than for
+  the whole suite — the unit project is fast and unaffected.

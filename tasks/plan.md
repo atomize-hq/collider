@@ -143,7 +143,7 @@ scheduled them.
 
 - [x] T7: Rename the repo and settle package identity — `atomize-hq/ds-skills`, `190dba4`; Collider's dependency verified through the redirect
 - [ ] T8: Build the CLI contract and scaffold
-- [ ] T9: Produce the executable-path disposition inventory
+- [x] T9: Produce the executable-path disposition inventory — `docs/ds-skills-disposition-inventory.md`; found an unnamed consumer, an ungated validator and 3 missing commands
 - [ ] T10: Move the rail modules under `src/figma/`
 - [ ] T11: Move skills, schemas, profiles and templates in — preparation only
 - [ ] T12: Implement the ledger and publish-proof commands

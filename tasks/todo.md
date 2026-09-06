@@ -436,7 +436,15 @@ non-zero with an explicit unavailable-command message. Functional acceptance bel
 
 **Acceptance criteria:**
 
-- [ ] `bin/ds-skills` dispatches the five commands in `SPEC.md` §4.2
+- [ ] `bin/ds-skills` dispatches the five commands in `SPEC.md` §4.2 — **plus the three T9
+      found missing**, or Collider cannot reach zero rail executables: `ledger parity`
+      (`validate:figma-parity` is its own governance step with its own policy module),
+      `figma serve`, and `figma baseline`. Add them to §4.2 rather than discovering them at T13
+- [ ] **A `--json` output mode**, required by `summarizeCt8b()` in
+      `reusable-component-status.mjs` — a caller T9 found that no task had named, feeding CI
+      job 8. An exit status cannot satisfy it. At minimum `ledger validate --json` emits
+      `{ ok, errors[], state, promotable, ledgerPath, evidence{} }`; every field already exists
+      on `evaluateSyncLedgerConformance`'s return value, so this is serialization, not design
 - [ ] `--help` and `--version` work; `--version` reports the release identity from T5
 - [ ] Unimplemented commands exit non-zero with an explicit message
 - [ ] Input and side-effect semantics from §4.3 are fixed: path resolution, profile resolution,
@@ -463,33 +471,57 @@ Collider still owns rail logic — `scripts/lib/sync-ledger.mjs` and
 
 **Acceptance criteria:**
 
-- [ ] Every entry point, helper, test driver and generator carrying rail semantics is listed
+- [x] Every entry point, helper, test driver and generator carrying rail semantics is listed
       with its **present callers**
-- [ ] Each gets exactly one disposition: `package-owned`, `data`, `command-only`, or `deleted`
-- [ ] Covers at minimum `pnpm validate:sync-ledger`, publish-proof validation, the policy tests,
+- [x] Each gets exactly one disposition: `package-owned`, `data`, `command-only`, or `deleted`
+- [x] Covers at minimum `pnpm validate:sync-ledger`, publish-proof validation, the policy tests,
       and any governance generator calling those validators
-- [ ] Where a generator only _calls_ a rail validator, the rail-specific policy is extracted —
+- [x] Where a generator only _calls_ a rail validator, the rail-specific policy is extracted —
       the whole generator is not claimed
-- [ ] The 11 ledger fixtures' **approved** post-retirement outcomes and diagnostic reasons are
+- [x] The 11 ledger fixtures' **approved** post-retirement outcomes and diagnostic reasons are
       frozen, reconciled against T1's pre-retirement capture. Every difference is a deliberate
       retirement change or a regression — decide which, do not adopt it silently
-- [ ] T3's deleted paths appear in the inventory with a resolved `deleted` disposition; they must
+- [x] T3's deleted paths appear in the inventory with a resolved `deleted` disposition; they must
       not vanish from the accounting because the inventory was taken afterwards
-- [ ] `scripts/capture-rail-baselines.mjs`, added by T1, gets a disposition like any other
+- [x] `scripts/capture-rail-baselines.mjs`, added by T1, gets a disposition like any other
       executable path. It is a migration instrument no gate runs, but it is executable and it
       imports the rail — S1 cannot be accepted while it sits unexamined
-- [ ] For each surviving caller, the **replacement command and the output that caller actually
+- [x] For each surviving caller, the **replacement command and the output that caller actually
       consumes** is recorded. An exit status suffices for some; a generator consuming structured
       results needs more. Establish this from the caller, not during T17
 
 **Verification:**
 
-- [ ] Every path in the inventory traces to a caller or is marked unreferenced
-- [ ] The inventory is reviewed before T12 starts
+- [x] Every path in the inventory traces to a caller or is marked unreferenced
+- [x] The inventory is reviewed before T12 starts
+
+**Written to** [`docs/ds-skills-disposition-inventory.md`](../docs/ds-skills-disposition-inventory.md).
+
+**Four things it changed about the plan, all discovered rather than assumed:**
+
+1. **`scripts/lib/reusable-component-status.mjs` was in nobody's task.** The import graph found
+   it. Its `summarizeCt8b()` — 36 of 647 lines — consumes `loadAndValidateSyncLedger`,
+   `evaluateSyncLedgerConformance` and two ledger fields directly, and it feeds CI job 8. An
+   exit status cannot satisfy it, so **T8 must define a `--json` output mode**. The shape is a
+   serialization decision, not a new design: `evaluateSyncLedgerConformance` already returns
+   `state`, `promotable` and an `evidence` map with exactly the needed keys. The other 611
+   lines are Storybook/Chromatic and are **not** claimed.
+2. **`pnpm validate:publish-proof` has no caller at all** — not the justfile, not
+   `governanceSteps`, not any of the 8 CI jobs. So Collider's CT-7B proof record is gated only
+   by one line inside a unit test. CT-7B and CT-8B are peer contracts and one of them is gated;
+   that is an accident, not a policy. §3 puts three options and a recommendation, and it needs
+   deciding before T12.
+3. **Three commands the CLI contract does not have.** §4.2 lists `ledger validate` but no
+   parity command, while `validate:figma-parity` is a separate governance step with its own
+   policy module; `figma serve` and `figma baseline` are also missing. Collider cannot own zero
+   rail executables without all three.
+4. **Three CI jobs enforce this surface**, not one: governance, test-all, and
+   reusable-component-promotion. Any replacement has to keep all three biting.
 
 **Dependencies:** T3 (retirement must land first, or the inventory covers dead paths)
 **Files likely touched:** a new inventory document
-**Scope:** M — analysis, no code
+**Scope:** M — analysis, no code. **Done**: 216 lines, one of five dispositions
+applied to every path.
 
 ---
 
@@ -565,11 +597,19 @@ description mentioned it, and do not silently drop surviving governance behaviou
 - [ ] Promotion levels and exception codes come from the profile, not from code
 - [ ] Errors carry a phase (`ledger`, `artifact`, …)
 - [ ] Collider's callers have a command to switch to at T17
+- [ ] **T9 §3 decided before this task starts**: `pnpm validate:publish-proof` has no caller —
+      not the justfile, not `governanceSteps`, not any of the 8 CI jobs — so Collider's CT-7B
+      proof record is gated only by one line inside a unit test. CT-7B and CT-8B are peer
+      contracts and only one is gated. Recommendation: wire `ds-skills proof validate` into the
+      governance chain. Whatever is chosen, choose it — do not port an ungated validator and
+      leave it ungated by inheritance
+- [ ] The 5 publish-proof fixtures move with their validator, alongside the 11 ledger fixtures
 
 **Verification:**
 
-- [ ] All 11 fixtures produce their **frozen** outcomes and diagnostic reasons — a fixture must
-      not pass by failing earlier for an unrelated reason
+- [ ] All 11 fixtures produce their **frozen** outcomes and diagnostic reasons — the frozen
+      table is §5 of the T9 inventory, reconciled against T1's pre-retirement capture. A fixture
+      must not pass by failing earlier for an unrelated reason
 - [ ] `pnpm check` passes
 
 **Dependencies:** T8, T9, T11 (profile/schema contract)
