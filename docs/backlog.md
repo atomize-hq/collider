@@ -174,6 +174,13 @@ validating it, so the committed copy only has to be honest, not fresh.
 **Surface:** [`package.json:77`](../package.json), `pnpm-lock.yaml`,
 `.github/workflows/ci.yml` (all 8 jobs), and the four consumers listed below.
 
+> **Status 2026-09-06 — in execution, not open.** Subsumed by
+> [`SPEC.md`](../SPEC.md); T17 removes the dependency entirely, which resolves this rather
+> than repairing it. Two facts below are now out of date: the repo is **public** and has been
+> **renamed to `atomize-hq/ds-skills`** (the old URL redirects, verified). What has not
+> changed is the cause — `git+ssh` authenticates against a key regardless of visibility, so CI
+> still cannot install it.
+
 ### State of play
 
 The rail now lives at `atomize-hq/figma-token-rail` and Collider consumes it as a git
@@ -287,6 +294,12 @@ permanent. The guards added in response — `moduleResolution: NodeNext`, `pnpm 
 ## BL-4 — The consuming repo should own data, not rail logic
 
 **Raised:** 2026-09-05, from reviewing what the token-rail extraction actually left behind.
+
+> **Status 2026-09-06 — in execution, not open.** This is the backlog item the whole
+> `ds-skills` migration implements. The authoritative accounting is now
+> [`docs/ds-skills-disposition-inventory.md`](ds-skills-disposition-inventory.md), which
+> covers more surface than the list below — it found a consumer this entry never named.
+
 **Surface:** `scripts/build-figma-plugin.mjs`, `scripts/figma-variables-sync-enterprise.mjs`,
 `scripts/lib/figma-variables-sync-enterprise.mjs`, `src/lib/tokens/figma-token-rail.test.ts`,
 `src/lib/tokens/token-build-contracts.test.ts`, and the `.agents/skills` pack.
