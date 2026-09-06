@@ -368,12 +368,9 @@ This tooling is not part of what builds or runs a Tauri desktop app, and it shou
 in the manifest that describes what does. Leaving it there is also what makes all 8 CI jobs
 pay an install cost for something only the token pipeline uses.
 
-**What replaces it is the open question,** and it is the one thing `package.json` was giving
-away for free: a pinned, reproducible, CI-cached version. Whatever carries the pack has to
-provide an equivalent. Note that `skills-lock.json` (tracked, 2026-03-17) already sketches
-exactly this — `ai-elements` vendored from `vercel/ai-elements` with a `computedHash` — and
-**nothing in the repo reads it**. Finishing that mechanism, or deliberately replacing it, is
-part of the plan doc in step 2, not a detail to settle in passing.
+Versioning is not a gap this repo has to fill. The pack is installed as a skill, by skill
+tooling, which owns pinning the same way `pnpm` owns it for `package.json` — the repo does
+not design a second mechanism for it.
 
 ### Prerequisite: the repo's gates do not see `.agents`
 
@@ -401,6 +398,8 @@ like the rest of the repo.
    package's suite.
 6. Replace `scripts/build-figma-plugin.mjs` with a CLI invocation reading
    `figma/token-sync.config.json`.
+7. Drop `@atomize-hq/figma-token-rail` from `package.json` and regenerate the lockfile. Only
+   safe once 3–6 have removed the last import; until then it is load-bearing.
 
 ### Why it was not done at extraction time
 

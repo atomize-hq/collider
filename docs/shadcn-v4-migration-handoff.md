@@ -176,8 +176,9 @@ Two rules now exist because of it, both in `scripts/fetch-upstream-baseline.mjs`
 - **`aria-invalid` gap** — 4 files, vintage-independent, untouched.
 - **CT-11B decoupling** and the `pilot*` → component/recipe rename — analysed in an earlier
   session, never executed.
-- **Skill-pack findings** — `.agents/` is gitignored so the whole pack is unversioned, and
-  `skills-lock.json` is tracked but read by nothing.
+- **Skill-pack findings** — resolved 2026-09-05. `.agents/` is tracked now (162 files), and
+  the orphaned `skills-lock.json` is deleted. What remains is that no repo gate covers the
+  pack — see BL-4's prerequisite in `docs/backlog.md`.
 
 ---
 
