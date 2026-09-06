@@ -252,8 +252,10 @@ established here from the caller, not improvised at T17.
 ## 8. Verification
 
 - Every path above traces to a caller, or is explicitly marked unreferenced (§3).
-- Three CI jobs enforce this surface: **governance** (`pnpm govern:tokens`), **test-all**
+- Three CI jobs touch this surface: **governance** (`pnpm govern:tokens`), **test-all**
   (`just test-all`), and **reusable-component-promotion**
-  (`pnpm govern:reusable-component-promotion`). Any replacement must keep all three biting;
-  wiring only into `just preflight` would leave every job green while the gate stopped working.
+  (`pnpm govern:reusable-component-promotion`). Wiring only into `just preflight` would leave every
+  job green while the gate stopped working. **Corrected at T8:** only the first two _enforce_ —
+  job 8 reports, and cannot block in CI at all. See
+  [`ds-skills-boundary-contract.md`](ds-skills-boundary-contract.md) §2.3.
 - Reviewed before T12 starts.

@@ -439,27 +439,58 @@ job's `name:`, which is not always its id) and the gate command it actually runs
 | 7   | `chromatic-review`             | chromatic-review             | `build-storybook`               | Chromatic publish — **conditional**        |
 | 8   | `reusable-component-promotion` | Reusable Component Promotion | `chromatic-review`              | `pnpm govern:reusable-component-promotion` |
 
-Three of them enforce the rail surface today: **1** (the ledger and parity validators, through
+Three of them touch the rail surface — **1** (the ledger and parity validators, through
 `governanceSteps`), **4** (`figma-token-rail.test.ts`), and **8** (the CT-8B status rail, through
-`summarizeCt8b()`). Any replacement has to keep all three biting.
+`summarizeCt8b()`) — but **only two of them enforce it.** Job 8 reports. Measured in
+[`docs/ds-skills-boundary-contract.md`](docs/ds-skills-boundary-contract.md) §2.3: CT-8B reaches
+`blockingReasons` only when `consumer === 'release'`, and CI passes `consumer: ci`; and blocking
+mode itself is unreachable because CI passes `changeClass: unknown`, which makes the change class
+`heuristic` rather than `explicit`. The replacement must keep **two gates biting and one report
+accurate** — a smaller claim than "keep all three biting", and the accurate one.
 
-**A measured hazard, not a hypothetical one.** Job 7 carries
-`if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false`,
-and job 8 `needs: chromatic-review`. On a fork pull request job 7 skips, so **job 8 skips with
-it** — and a skipped job reports success, including when it is marked required. The CT-8B status
-rail therefore does not run on fork PRs today. Two consequences:
+**Measured against the live repository on 2026-09-06, and it is worse than the workflow reads.**
 
-- The replacement rail verification must sit **upstream of that fork guard** — jobs 1–6 — or the
-  gate inherits the skip. Jobs 1 and 4 are the natural homes, and they are where the protection
-  lives today.
-- "It is a required check" is not evidence its commands ran. Enforcement evidence has to name the
-  workflow file, job id, emitted check context, trigger conditions, required-check or ruleset
-  binding, **and** the conditions under which the job does not execute.
+_There is no required check._ `main` is **not protected** (`/branches/main/protection` → 404
+"Branch not protected") and the repository has **zero rulesets** (`/rulesets` → `[]`). Every job
+above is advisory: a red job blocks nothing today. "The required job" in earlier drafts of this
+plan named something that does not exist, and T16a cannot name one until it does.
 
-Before the cutover, name the required job that executes the replacement rail verification against
-real Collider data. This does not mean eight jobs redundantly run the rail suite. It means
-acquisition evidence and enforcement evidence are different things, and the removed protection
-has an identified replacement that can be proven to fail.
+_Job 7's fork guard is unreachable._ The repository is private with `allow_forking: false`, so
+`github.event.pull_request.head.repo.fork` is always false and the `if:` never skips job 7 for
+that reason. The guard is a latent hazard, not a live one — it activates the day forking is
+enabled.
+
+_Job 8 skips anyway, by a different mechanism._ `needs: chromatic-review` means job 8 is skipped
+whenever job 7 does not succeed — and **job 7 currently fails**, on the unaccepted visual
+baselines tracked as BL-2. The most recent `main` run (`31917271403`) is unambiguous:
+
+```
+success  Governance          success  Build Next.js
+success  Storybook Proof     success  Build Storybook
+success  Quality             failure  chromatic-review
+success  Test All            skipped  Reusable Component Promotion
+```
+
+So **the CT-8B status rail is not being enforced in CI at all**, and has not been since Chromatic
+started failing. `summarizeCt8b()` — the caller T9 found, and the reason `--json` exists — runs
+inside a job that does not run. A `skipped` conclusion is not a `failure`, so nothing surfaces it.
+
+Three consequences, none optional:
+
+- The replacement rail verification goes in a job **upstream of Chromatic** — realistically job 1
+  `governance` or job 4 `test-all`, which is where the protection lives today anyway. Placing it
+  downstream would inherit a gate that is already inert.
+- **"It is a required check" is not evidence its commands ran**, and here not even evidence the
+  job ran. Enforcement evidence must name the workflow file, job id, emitted check context,
+  trigger conditions, required-check or ruleset binding, **and** the conditions under which the
+  job does not execute — including an upstream `needs:` failure.
+- **S8 needs a required-check binding to exist.** Demonstrating a red job is not demonstrating a
+  blocked merge. Creating branch protection or a ruleset is a repository-settings change and is
+  therefore **ask-first**; T16a raises it rather than performing it.
+
+The emitted check contexts are confirmed against the live check-runs API and are the `name:`
+values, not the job ids: `Governance`, `Storybook Proof`, `Quality`, `Test All`, `Build Next.js`,
+`Build Storybook`, `chromatic-review`, `Reusable Component Promotion`.
 
 ### 5.5 The proof and the ledger — two records, one checked relationship
 

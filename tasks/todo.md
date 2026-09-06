@@ -459,115 +459,142 @@ because T10–T14 each need to know what they own.
 
 _The command surface_
 
-- [ ] `bin/ds-skills` dispatches all **nine** commands in `SPEC.md` §4.2 — the four T9 found
+- [x] `bin/ds-skills` dispatches all **nine** commands in `SPEC.md` §4.2 — the four T9 found
       missing (`ledger parity`, `proof validate`, `figma serve`, `figma baseline`) are in §4.2
       now rather than discovered at T13
-- [ ] `ledger parity` is **independently invocable**, not a side effect of `ledger validate`.
+- [x] `ledger parity` is **independently invocable**, not a side effect of `ledger validate`.
       `pnpm validate:figma-parity` is its own governance step with its own policy module;
       folding it in would retire a governance step under cover of a refactor
-- [ ] `--help` and `--version` work **outside any consumer repository**; `--version` reports the
+- [x] `--help` and `--version` work **outside any consumer repository**; `--version` reports the
       release identity from T5
-- [ ] An unimplemented command exits non-zero with an explicit unavailable-command message.
+- [x] An unimplemented command exits non-zero with an explicit unavailable-command message.
       Dispatching nine commands must not mean nine successful placeholders
 
 _The caller-contract matrix — T9's inventory becomes a contract_
 
-- [ ] Every retained caller in the T9 inventory gets a row recording: replacement command, the
+- [x] Every retained caller in the T9 inventory gets a row recording: replacement command, the
       inputs it passes, **the output it actually consumes**, its failure behaviour, side effects,
       the implementation task that owns it (T12 or T13, no overlap), and the regression test that
       will pin it
-- [ ] **Every disposition has a destination, and every executable destination has an owning
+- [x] **Every disposition has a destination, and every executable destination has an owning
       task.** A `package-owned` entry with no implementing task is an unfinished migration that
       reports success
-- [ ] **Failure consumers are inspected, per caller**: what it does with a non-zero exit, empty
+- [x] **Failure consumers are inspected, per caller**: what it does with a non-zero exit, empty
       stdout, invalid JSON, a timeout, and unavailable inputs. A correctly failing CLI still
       leaves CI green if a wrapper swallows the error or reads missing output as an empty result
 
 _`--json` as a versioned interface (§4.3)_
 
-- [ ] A declared **result schema with its own version field**, independent of `ledgerVersion` and
+- [x] A declared **result schema with its own version field**, independent of `ledgerVersion` and
       of the release version. An unsupported result version fails; it is never best-effort parsed
-- [ ] Diagnostic codes (`[CT-8B_…]`, `[CT-7B_…]`) are **the interface**; renaming one is a
+- [x] Diagnostic codes (`[CT-8B_…]`, `[CT-7B_…]`) are **the interface**; renaming one is a
       breaking change. Prose is not
-- [ ] Deterministic ordering wherever a list is emitted; **stdout carries the result and nothing
+- [x] Deterministic ordering wherever a list is emitted; **stdout carries the result and nothing
       else** — no progress text, no banner. Logs to stderr
-- [ ] **"Evaluated, and nonconformant" is distinguishable from "could not evaluate."** A
+- [x] **"Evaluated, and nonconformant" is distinguishable from "could not evaluate."** A
       completed evaluation reporting nonconformance still emits a valid, parseable result with
       its diagnostics. A missing executable, malformed output, unsupported result version, crash
       or timeout must never project as an empty rail, "not applicable", or a pass
-- [ ] Exit-code meanings are explicit and documented. A subprocess helper that throws on non-zero
+- [x] Exit-code meanings are explicit and documented. A subprocess helper that throws on non-zero
       exit **must not discard the structured failure report** — that report is the point of the call
 
 _The status projection_
 
-- [ ] `ledger validate --json` returns **everything `summarizeCt8b()` currently derives**,
+- [x] `ledger validate --json` returns **everything `summarizeCt8b()` currently derives**,
       including the two fields it reads straight off the ledger (`promotion.parityMode`,
       `promotion.highestEarnedLevel`). Returning raw ledger JSON and letting Collider reconstruct
       conformance keeps the prohibited logic behind a different interface
-- [ ] Collider may invoke, parse and render. It retains **no rail evaluation and no rail-specific
+- [x] Collider may invoke, parse and render. It retains **no rail evaluation and no rail-specific
       fallback policy** — including "if the field is missing, assume deferred"-shaped defaults
 
 _The proof–ledger relationship (`SPEC.md` §5.5)_
 
-- [ ] For **each of the five duplicated facts**: its meaning, its source of truth, and the
+- [x] For **each of the five duplicated facts**: its meaning, its source of truth, and the
       required relationship between the records. T12 implements this specification; it does not
       invent it
-- [ ] The sixth pair — `proof.carrier.used` ↔ `ledger.publish.tokensStudioCarrier`, checked
+- [x] The sixth pair — `proof.carrier.used` ↔ `ledger.publish.tokensStudioCarrier`, checked
       against `mode` within each record and never across them — is **explicitly ruled in or out**
-- [ ] The ledger carries an **unambiguous binding** to the proof it projects: a source reference
+- [x] The ledger carries an **unambiguous binding** to the proof it projects: a source reference
       plus an exact binding (digest or equivalent) that cannot match a different record. "Find
       the proof file and compare what is there" is not a binding
-- [ ] The **version consequence is stated**: this adds a required field, so the ledger schema
+- [x] The **version consequence is stated**: this adds a required field, so the ledger schema
       version moves and the fixtures change a second time. §5.2's rule applies — every changed
       outcome names its cause, retirement or relationship, and neither absorbs the other
-- [ ] **Absence is defined**: a repo making no materialization claim may lack a proof; a ledger
+- [x] **Absence is defined**: a repo making no materialization claim may lack a proof; a ledger
       claiming current materialization must not pass by omitting one; a malformed or
       contradictory proof is never ignorable
-- [ ] The gate's two questions are separate — do the shared claims agree **for the referenced
+- [x] The gate's two questions are separate — do the shared claims agree **for the referenced
       publication**, and is that publication **sufficient for the ledger's present claim**. A
       valid attestation about revision A that no longer supports a claim about revision B is a
       real signal, **never repaired by rewriting the attestation**
-- [ ] What the gate proves is stated in the output: **validated attestation and consistency**, not
+- [x] What the gate proves is stated in the output: **validated attestation and consistency**, not
       observed remote synchronization
 
 _Configuration ownership (`SPEC.md` §4.5)_
 
-- [ ] Portable invariants and consumer expectations are separated. Destination name, Figma file
+- [x] Portable invariants and consumer expectations are separated. Destination name, Figma file
       key, artifact path, promotion levels and exception codes get declared JSON owners,
       requiredness rules and validation behaviour
-- [ ] **Expected values come from the profile, never from the record being checked against them**
-- [ ] Comparison stays literal equality against a declared expectation. Portability is **not**
+- [x] **Expected values come from the profile, never from the record being checked against them**
+- [x] Comparison stays literal equality against a declared expectation. Portability is **not**
       achieved by relaxing `requireLiteral` into "any string is acceptable"
-- [ ] A profile **cannot** re-enable the retired publish mode or override a portable invariant
+- [x] A profile **cannot** re-enable the retired publish mode or override a portable invariant
 
 _Environment and filesystem (`SPEC.md` §4.4)_
 
-- [ ] Configuration precedence, repository-root discovery, relative-path bases, installed-resource
+- [x] Configuration precedence, repository-root discovery, relative-path bases, installed-resource
       lookup, declared runtime prerequisites, missing-file behaviour, unknown schema versions, and
       the explicit time input for staleness are all fixed
-- [ ] **Checks are read-only**; validation never rewrites a proof, ledger, baseline or generated
+- [x] **Checks are read-only**; validation never rewrites a proof, ledger, baseline or generated
       artifact to pass. `figma baseline` is the one explicitly mutating command, with capture and
       verify as distinct modes
-- [ ] `figma serve` has a readiness, bind and shutdown contract, and the URL the built plugin
+- [x] `figma serve` has a readiness, bind and shutdown contract, and the URL the built plugin
       embeds agrees with the endpoint it exposes **by construction**
-- [ ] Every command declares what it reads, writes, serves or launches
+- [x] Every command declares what it reads, writes, serves or launches
 
 **Verification:**
 
-- [ ] `pack-check` invokes `ds-skills` from the installed prefix
-- [ ] Every command run from **outside** the repository root, from a nested directory with an
+- [x] `pack-check` invokes `ds-skills` from the installed prefix
+- [x] Every command run from **outside** the repository root, from a nested directory with an
       explicit root, and from a path containing spaces, behaves per the fixed semantics
-- [ ] Unknown profile fails loudly rather than defaulting
-- [ ] A machine-consumed command's stdout parses as its declared schema on both success and
+- [x] Unknown profile fails loudly rather than defaulting
+- [x] A machine-consumed command's stdout parses as its declared schema on both success and
       expected-failure paths
 
+**Written to** [`docs/ds-skills-boundary-contract.md`](../docs/ds-skills-boundary-contract.md);
+the scaffold is `25f196f` in `atomize-hq/ds-skills`.
+
+**What the failure-consumer inspection found, and it corrects two earlier claims:**
+
+1. **Eight of the nine callers are sound.** `runTokenGovernance` returns the first non-zero exit
+   immediately and `govern-tokens.mjs` propagates it, so a failing validator fails job 1 and the
+   pre-push hook. They need one thing from the CLI: a stderr diagnostic and a non-zero exit.
+2. **`summarizeCt8b()` collapses every failure into one shape**, and already does — before any CLI
+   exists. `readJsonWithValidation` catches anything thrown; `buildErroredRail` maps all of it to
+   `freshness: 'missing'` and to **`not-applicable`** when the rail is not claim-relevant, which is
+   three of the five change classes. Rewritten to spawn the CLI, a missing binary would land in
+   that same `catch`. T17 must give it three distinct cases, and an unavailable evaluator must
+   never be `not-applicable`.
+3. **That rail enforces nothing in CI, by four independent mechanisms** — no required check exists;
+   job 8 is skipped on a failed `needs:`; CI's `changeClass: unknown` makes blocking mode
+   unreachable; and CT-8B reaches `blockingReasons` only when `consumer === 'release'`, while CI
+   passes `ci`. So **"three CI jobs enforce this surface" was wrong**: two enforce (1 and 4), one
+   reports. Corrected in `SPEC.md` §5.4 and in the T9 inventory. `--json` is still required — for
+   report correctness, not to preserve a gate.
+4. **Fact 6 is ruled in.** `proof.carrier.used` ↔ `ledger.publish.tokensStudioCarrier`: each record
+   checks its carrier against its own mode and never against the other's, and since the relationship
+   forces the modes equal, an unequal carrier pair is a contradiction both records accept today.
+5. **The binding costs a schema version.** `ledger.publication.{proof,sha256}` is a required field,
+   so `ledgerVersion` moves 2 → 3 and all 11 fixtures change — the second reconciliation §5.2
+   governs. A path alone would be a location, not an identity.
+
 > **Hold point** — no retained T9 caller lacks an input, output and failure contract, or lacks an
-> implementation owner.
+> implementation owner. **Held**: nine callers, nine commands, no orphans in either direction.
 
 **Dependencies:** T7 **and T9** — a generic parser scaffold may start earlier, but the contract
 cannot be approved before the inventory says which responsibilities survive
 **Files likely touched:** `bin/`, `src/cli/`, `SPEC.md` §4–§5, the T9 inventory
-**Scope:** L — was M. Specification, not implementation, but it is the gate for six tasks
+**Scope:** L — **done**. Specification plus a scaffold; the gate for six tasks
 
 ---
 
@@ -652,39 +679,64 @@ a new reviewed record.
 
 **Acceptance criteria:**
 
-- [ ] The environments that actually invoke the rail are **enumerated** — developer machines, CI
-      runners, agent/skill execution, and the pre-push hook — not assumed to be "CI and local"
-- [ ] Supported platforms and architectures selected against `SPEC.md` §10.5, with the runtime
-      prerequisite declared as a hard minimum
-- [ ] Install location and **non-interactive executable resolution** fixed: invocation binds to
-      the installed, verified executable at the version-specific path, never to whichever
-      `ds-skills` appears first on a developer's `PATH`
-- [ ] **The real enforcement checks are named** — workflow file, job id, emitted check context,
-      applicable trigger conditions, and required-check or ruleset binding. `SPEC.md` §5.4 now
-      carries the measured eight-job table; this task records which job enforces the replacement
-      rail verification and why
-- [ ] **The skip analysis is done, not assumed.** Job 7 `chromatic-review` is conditional on
-      non-fork, and job 8 `reusable-component-promotion` `needs:` it — so on a fork PR the CT-8B
-      status rail does not run today, and a skipped job reports success even when required. The
-      replacement gate sits **upstream of that guard** (jobs 1–6) or the analysis records why the
-      inherited skip is acceptable
-- [ ] All **three** rail-using jobs are accounted for: 1 `governance`, 4 `test-all`,
+- [x] The environments that actually invoke the rail are **enumerated** — **four**, not the "CI
+      and local" the plan assumed. E2 (pre-push hook, must acquire nothing) and E4 (agent/skill
+      execution, whose command string lives in Markdown T11 rewrites) were both folded into
+      "local" and have different requirements
+- [x] Supported platforms and architectures selected against `SPEC.md` §10.5, with the runtime
+      prerequisite declared as a hard minimum — **`node >= 22`**. Neither repo declares an
+      `engines` field today, and E1 runs Node 25.9.0 against CI's 22
+- [x] Install location and **non-interactive executable resolution** fixed: resolution is from the
+      reviewed record's version at the version-specific path. An ambient `ds-skills` is not
+      executed at all, not even to read its version
+- [x] **The real enforcement checks are named** — workflow file, job ids, emitted check contexts
+      (the `name:` values, confirmed against `/commits/main/check-runs` rather than inferred),
+      triggers, and the `needs:` chain
+- [x] **The skip analysis is done, not assumed** — and it found a different mechanism than
+      predicted. See below
+- [x] All **three** rail-using jobs accounted for: 1 `governance`, 4 `test-all`,
       8 `reusable-component-promotion`
-- [ ] The eight-job structure is preserved unless there is a separate reason to change it. This
-      migration is not a CI redesign
+- [x] The eight-job structure is preserved. Job 8's dependency on Chromatic is a real defect, but
+      it is **BL-2's** defect; fixing it here would put a Chromatic change in a tooling diff
 
 **Verification:**
 
-- [ ] Each named check is confirmed against the live repository configuration, not against the
-      workflow file alone — a required-check binding lives outside the YAML
-- [ ] For each named job, the conditions under which it **does not execute** are written down
+- [x] Each named check confirmed against the **live repository configuration**, not the workflow
+      file alone — which is exactly how the headline finding surfaced
+- [x] For each named job, the conditions under which it **does not execute** are written down
 
-> **Hold point** — the enforcement path is identified by name and by trigger condition, and the
-> platform/runtime/location selections are settled before anything is built for release.
+**Written to** [`docs/ds-skills-execution-contract.md`](../docs/ds-skills-execution-contract.md).
+
+**What it found, and it outranks the naming:**
+
+1. **There is no required check.** `/branches/main/protection` → 404 "Branch not protected";
+   `/rulesets` → `[]`. Every job is advisory; a red job blocks nothing. Earlier drafts said "the
+   required job" as though one existed. **It does not**, and this task cannot name one until it is
+   created — which is a repository-settings change, so §6 of the record raises it rather than
+   performing it.
+2. **Job 8 is not running, and has not been.** The fork guard I expected to be the hazard is
+   **unreachable** — the repo is private with `allow_forking: false`, so the fork condition is
+   never true. The live mechanism is duller: job 8 `needs: chromatic-review`, job 7 **fails** on
+   BL-2's unaccepted baselines, and a failed `needs:` skips the dependent job. Latest `main` run
+   `31917271403`: jobs 1–6 green, 7 failure, 8 **skipped**. So the CT-8B status rail — the caller
+   T9 discovered, and the entire reason T8 defines `--json` — has not been enforced in CI for as
+   long as Chromatic has been red. A `skipped` conclusion is not a `failure`, so nothing surfaced
+   it.
+3. **The replacement gate therefore goes upstream of Chromatic**: job 1 `governance` for the
+   ledger, parity and proof validators (already in `governanceSteps`), job 4 `test-all` for
+   `ds-skills figma verify` (where `figma-token-rail.test.ts` runs today, so the S2 protection does
+   not move between jobs during the cutover).
+4. **The pack is missing more than commands**: no `bin` field and no executable, no `engines`,
+   `esbuild` still an optional peer, one CI job on one platform, and `files` lists none of the four
+   directories T11 moves in.
+
+> **Hold point** — the enforcement path is identified by name and trigger condition, and the
+> platform/runtime/location selections are settled. **Partially blocked**: there is no
+> required-check binding to identify, and creating one is the user's call (§6 of the record).
 
 **Dependencies:** none blocking; runs concurrently with T8
-**Files likely touched:** `SPEC.md` §5.4/§10.5/§10.6, a decision record
-**Scope:** S — analysis and selection, no code
+**Files likely touched:** `SPEC.md` §5.4, a decision record
+**Scope:** S — **done**, except the branch-protection decision it surfaced
 
 ---
 

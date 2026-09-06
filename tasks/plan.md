@@ -174,8 +174,8 @@ immutable release cannot be amended after the fact.
 
 - [x] T7: Rename the repo and settle package identity — `atomize-hq/ds-skills`, `190dba4`; Collider's dependency verified through the redirect
 - [x] T9: Produce the executable-path disposition inventory — `docs/ds-skills-disposition-inventory.md`; found an unnamed consumer, an ungated validator and 3 missing commands
-- [ ] T8: Fix the complete boundary contract — commands, caller-contract matrix, `--json` as an interface, the proof–ledger relationship, configuration ownership
-- [ ] T16a: Select the execution contract and name the real enforcement checks — concurrent with T8
+- [x] T8: Fix the complete boundary contract — `docs/ds-skills-boundary-contract.md` + scaffold `25f196f`; the failure inspection found the status rail enforces **nothing** in CI, by four independent mechanisms
+- [x] T16a: Select the execution contract and name the real enforcement checks — `docs/ds-skills-execution-contract.md`; found there is **no required check at all**, and that job 8 has been skipping on a failed `needs:` chain
 - [ ] T10: Move the rail modules under `src/figma/` — including the parity module and the status-rail computation
 - [ ] T11: Move skills, schemas, profiles and templates in — preparation only, with the full disclosure review
 - [ ] T12: Own validation, the proof–ledger relationship, status output and parity
