@@ -1,146 +1,202 @@
 # Implementation Plan: Design-system tooling as an installable CLI
 
 **Spec:** [`SPEC.md`](../SPEC.md) · **Backlog:** BL-3, BL-4 in [`docs/backlog.md`](../docs/backlog.md)
+**Review:** [`docs/consultations/2026-09-06-tooling-migration-review.md`](../docs/consultations/2026-09-06-tooling-migration-review.md) — verdict ADJUST; this revision applies it.
 **Repos touched:** `atomize-hq/collider` and `atomize-hq/figma-token-rail` (renamed in Phase 2)
 
 ## Overview
 
 Move every executable Figma-rail path out of Collider and into a single installable CLI, so the
-repo contributes JSON and nothing else. Along the way, delete the `rest-variables-oauth` publish
-mode entirely and fix three portability defects found while verifying the 2026-09-05 extraction.
-Collider ends with **no design-tooling entry in `package.json`**, because nothing imports the
-rail any more — it invokes a command.
+repo contributes JSON and nothing else. Delete the `rest-variables-oauth` publish mode entirely,
+and fix the portability defects found while verifying the 2026-09-05 extraction. Collider ends
+with **no design-tooling entry in `package.json`**, because nothing imports the rail any more —
+it invokes a command.
+
+## What changed from the first draft
+
+Three defects were confirmed against the repository, and each forced a structural change:
+
+| Confirmed defect                                                                                                                                                                                                                            | Correction                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Removing the publish-mode enum breaks `valid-required.sync-ledger.json`, which is asserted to yield `[]` and is the base for six further assertions. The old T2 could not pass its own verification before the old T3 repaired the fixture. | **One atomic retirement task** (T3), not three sequential ones.                       |
+| `pnpm govern:tokens` is preflight step 1 of 5 and registers `build:tokens`, so a perturbed artifact is regenerated before any verify step sees it.                                                                                          | S2 is verified in an **isolated worktree**, and must fail for the intended invariant. |
+| `pack-check.sh` runs `pnpm add "$tarball" esbuild` — it installs the optional peer, so it never proves a plain install can build the plugin.                                                                                                | **T14** makes the builder self-contained and expands `pack-check`.                    |
+
+Two further structural corrections, both about ordering rather than content:
+
+- **Publication and provisioning move ahead of consumer activation.** The first dangerous
+  boundary is the task that makes `preflight` require `ds-skills`, not the task that drops the
+  dependency. The old plan required the CLI at T11 and published it at T14.
+- **An ownership-closure inventory (T9) is now blocking work, not an assumption.** Without it,
+  every task can complete while Collider still owns rail logic through
+  `scripts/lib/sync-ledger.mjs` and `scripts/lib/publish-proof.mjs`.
 
 ## Architecture decisions
 
 - **The pack absorbs the rail.** `@atomize-hq/design-system-skills` is the one installable;
-  `figma-token-rail` becomes an internal module. The existing rail repo is renamed rather than
-  archived, because it already carries CI, Prettier, tsconfig, vitest and `pack-check`.
-- **Data crosses the boundary, never code.** No pack command imports from a consuming repo, and
-  no consuming repo imports from the pack. Every command reads JSON and exits non-zero on
-  failure. This is the single constraint every review of this work should check first.
-- **Schemas stay portable, profiles carry vocabulary.** Already true for the story/spec
-  artifacts; this extends it to the ledger. Porting to a new repo means writing a profile, never
-  editing a schema.
+  `figma-token-rail` becomes an internal module. The existing repo is renamed rather than
+  archived — it already carries CI, Prettier, tsconfig, vitest and `pack-check`.
+- **Data crosses the boundary, code never does** — with one stated exception: the CLI writes
+  generated plugin output into Collider. Those are package-owned artifacts, never
+  consumer-maintained source.
+- **Provisioning and execution are separate operations.** Provisioning installs an exact
+  reviewed release into an isolated prefix and may reach the registry. Execution runs that
+  binary and never resolves a newer one. The local pre-push path acquires nothing.
+- **No `package.json` entry does not mean no recorded version.** Collider keeps reviewed JSON
+  naming the package, the exact release, and its integrity — a toolchain dependency rather than
+  an application one.
+- **Schemas stay portable, profiles carry vocabulary.** Porting means writing a profile.
 - **`plugin-import-manual` becomes the only publish mode.** Verified safe: no test asserts the
-  mode string, and CT-15B already moved the promotion trigger off `rest-variables-oauth` in
-  `b72315a`.
-- **Removal beats repair for the enterprise rail.** The `successMarkers` crash is fixed by
-  deleting the file that holds it, not by populating fields the ledger has never carried.
+  mode string, and CT-15B already moved the promotion trigger off it in `b72315a`.
+- **Removal beats repair for the enterprise rail.** The `successMarkers` crash goes with the
+  file that holds it.
 
 ## Dependency graph
 
 ```
-T1 .agents gates ──────────────────────────────────┐
-                                                    │ (independent)
-T2 remove REST rail (Collider) ──┬── T3 fixtures ──┤
-                                  └── T4 docs      │
-T5 remove REST rail (pack) ───────────────────────┤
-T6 fix hardcoded plugin UI ───────────────────────┤
-                                                    ▼
-                              T7 rename repo + CLI scaffold
-                                        │
-                    ┌───────────────────┼───────────────────┐
-                    ▼                   ▼                   ▼
-              T8 move rail        T9 move pack data   T10 ledger CLI
-                    │                   │                   │
-                    └───────────────────┴─────────┬─────────┘
-                                                   ▼
-                                        T11 figma verify + expectations
-                                                   │
-                                        T12 plugin build via CLI
-                                                   │
-                                        T13 drop package.json entry
-                                                   │
-                                        T14 publish + CI install
+T1 baselines ──────────────────────────────────────────┐  (must be first: T6 changes the builder)
+T2 .agents gates ──────────────────────────────────────┤  (independent)
+T3 atomic retirement, Collider ────────────────────────┤
+T4 remove REST rail, pack ─────────────────────────────┤
+T5 delivery contract (decision, no code) ──────────────┤
+T6 plugin UI configuration ────────────────────────────┤
+                                                        ▼
+                          ┌────────── T7 repo + package identity
+                          │                   │
+                          │           T8 CLI contract + scaffold
+                          │                   │
+   T9 disposition inventory (Collider) ───────┤
+                          │                   │
+        ┌─────────────────┼───────────────────┼──────────────┐
+        ▼                 ▼                   ▼              ▼
+  T10 move rail    T11 move pack data   T12 ledger cmds   T13 figma cmds
+        └─────────────────┴───────────────────┴──────────────┘
+                                   ▼
+                     T14 self-contained builder + pack-check
+                                   ▼
+                          T15 publish  (ask first)
+                                   ▼
+                     T16 prove acquisition + provision
+                                   ▼
+                     T17 consumer cutover (atomic commit)
+                                   ▼
+                          T18 clean-environment evidence
 ```
 
-T1 is independent of everything and lands first to fail fast. T2–T6 are pure deletion and can
-be done in any order. T7 is the hinge — nothing after it can start until the CLI exists.
+T1 must precede T6, which changes the builder that produces the manifest baseline. T5 is a
+decision task with no code and can run alongside Phase 1. T9 gates every implementation task.
 
 ## Phases
 
-### Phase 1: Foundation — gates and removal
+### Phase 1: Baselines, gate coverage, retirement, delivery contract
 
-- [ ] T1: Wire `.agents` into ESLint, vitest and tsc
-- [ ] T2: Remove the enterprise REST rail from Collider
-- [ ] T3: Repoint the two ledger fixtures off `rest-variables-oauth`
-- [ ] T4: Update the four governance docs that name the retired mode
-- [ ] T5: Remove `syncVariablesViaRest` from the pack
-- [ ] T6: Fix the hardcoded Collider values in the plugin UI
+- [ ] T1: Capture the manifest and rail-output baselines
+- [ ] T2: Wire `.agents` into ESLint, vitest and tsc, and prove enforcement
+- [ ] T3: Retire `rest-variables-oauth` from Collider as one atomic change
+- [ ] T4: Remove `syncVariablesViaRest` from the pack
+- [ ] T5: Decide the delivery contract
+- [ ] T6: Fix the plugin UI's hardcoded values and placeholder substitution
 
 **Checkpoint: Foundation**
 
-- [ ] `just preflight` green in Collider
-- [ ] `pnpm check` green in the pack, including `pack-check`
-- [ ] `grep -rn "rest-variables-oauth" --exclude-dir=archive .` returns nothing (**S5**)
-- [ ] ESLint, vitest and tsc each report a non-zero file count under `.agents/` (**S7**)
-- [ ] Review with human before Phase 2 — T7 renames a repo
+- [ ] `just preflight` green; `pnpm check` green including `pack-check`
+- [ ] **S5** holds over sources, generated output and the packed tarball
+- [ ] **S7** holds by enforcement, not discovery
+- [ ] Baselines from T1 stored and digested
+- [ ] The delivery contract is written down, including offline local behaviour
+- [ ] **Review with human before Phase 2** — T7 renames a repo
 
-### Phase 2: The pack becomes the tool
+### Phase 2: A complete, self-contained package
 
-- [ ] T7: Rename the repo and scaffold the `ds-skills` CLI
-- [ ] T8: Move the rail modules under `src/figma/`
-- [ ] T9: Move skills, schemas, profiles and templates in as shipped data
-- [ ] T10: Move the CT-8B ledger mechanism behind `ds-skills ledger validate`
+- [ ] T7: Rename the repo and settle package identity
+- [ ] T8: Build the CLI contract and scaffold
+- [ ] T9: Produce the executable-path disposition inventory
+- [ ] T10: Move the rail modules under `src/figma/`
+- [ ] T11: Move skills, schemas, profiles and templates in — preparation only
+- [ ] T12: Implement the ledger and publish-proof commands
+- [ ] T13: Implement the figma commands and transfer the rail tests
+- [ ] T14: Make the plugin builder self-contained and expand `pack-check`
 
-**Checkpoint: The pack is self-sufficient**
+**Checkpoint: The package is complete**
 
-- [ ] `pack-check` installs the tarball and runs `ds-skills` from `node_modules/.bin`
-- [ ] Every command reads data only — no import crosses the repo boundary in either direction
-- [ ] The pack's own suite covers the flattener, comparator, theme resolution and
-      `$themeOverrides`
+- [ ] Every command in `SPEC.md` §4.2 is implemented, with input and side-effect semantics
+      specified per §4.3
+- [ ] `pack-check` passes its decisive scenario: a clean, data-only consumer with no product
+      dependencies, no credentials and **no ambient builder**
+- [ ] A second, differently configured consumer passes — different namespace, paths, origin,
+      plugin identity and profile vocabulary
+- [ ] The pack's suite covers flattener, comparator, theme resolution and `$themeOverrides`
+- [ ] The pack has a lint gate and the LOC guard
+- [ ] Collider is untouched by this phase and still green
 
-### Phase 3: Collider stops owning rail code
+### Phase 3: Distribution and consumer cutover
 
-- [ ] T11: Add `figma verify` and the expectations file; delete `figma-token-rail.test.ts`
-- [ ] T12: Replace `build-figma-plugin.mjs` with a CLI invocation
-- [ ] T13: Drop `@atomize-hq/figma-token-rail` from `package.json`
+- [ ] T15: Publish the tested artifact — **ask first**
+- [ ] T16: Prove anonymous cold acquisition and provision every environment
+- [ ] T17: Activate Collider's callers and delete what they supersede
 
 **Checkpoint: The boundary holds**
 
-- [ ] `grep -rn "figma-token-rail" package.json src/ scripts/` returns nothing (**S1**)
-- [ ] A perturbed token artifact fails `just preflight` (**S2**) — verify by perturbing, not
-      by reasoning
-- [ ] Rail output unchanged: 176 leaves, both themes, same first and last (**S3**)
-- [ ] `manifest.json` byte-identical to the pre-work copy (**S4**)
+- [ ] **S1** — the T9 inventory is fully resolved; grep covers both package names across `src/`,
+      `scripts/`, `.agents/`, `justfile`, `package.json`, `.github/`
+- [ ] **S2** — verified in an isolated worktree, failing for the intended invariant
+- [ ] **S3** — full normalized mapping matches the T1 baseline
+- [ ] **S4** — manifest byte-identical to the T1 baseline, compared independently
 
-### Phase 4: Publish and close
+### Phase 4: Clean-environment evidence and closure
 
-- [ ] T14: Publish the pack and add its install step to CI
+- [ ] T18: Full CI acceptance, residual audit, backlog closure
 
 **Checkpoint: Complete**
 
-- [ ] A PR run goes green through dependency install without repo credentials (**S8**)
-- [ ] All eight success criteria in `SPEC.md` hold
-- [ ] BL-3 closed; BL-4 closed; BL-2 unblocked and ready to open as its own PR
+- [ ] **S6** and **S8** hold — 8 jobs cold-acquire the CLI and run their gate
+- [ ] All eight criteria hold
+- [ ] BL-3 and BL-4 closed; BL-2 unblocked, to be opened as its own PR
 
 ## Risks and mitigations
 
-| Risk                                                                                                                                                                                        | Impact                              | Mitigation                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **How `ds-skills` reaches CI is unsettled.** With no `package.json` entry it needs a global install, the skills installer, or a pinned `dlx` — each caches and pins differently in Actions. | **High** — T13 removes the fallback | Settle at T7, before T13. Prove the chosen mechanism in a throwaway workflow first.                                                        |
-| **The pack must install in CI without credentials**, or T14 recreates BL-3's break under a new name.                                                                                        | **High**                            | Publish publicly. A deploy key across eight jobs is the worse alternative and should be a last resort.                                     |
-| **T1 surfaces real violations** in 162 files never linted or typechecked.                                                                                                                   | **Medium** — could stall Phase 1    | Budget for it. Fix or explicitly exclude, but record why for anything excluded.                                                            |
-| **Renaming the repo breaks the existing git dependency** for anyone mid-work.                                                                                                               | **Medium**                          | GitHub redirects renamed repos, but the lockfile records the old URL. Land T13 in the same window, and warn before renaming.               |
-| **`parity-policy.md:29` promises a future this cancels.**                                                                                                                                   | **Low, but a written commitment**   | T4 rewrites the line as _retired_, not deferred. Do not quietly drop the sentence.                                                         |
-| **A stale `node_modules/.cache/storybook` fakes syntax errors** and has already caused one misdiagnosis and a false claim in a release commit.                                              | **Low, high embarrassment**         | Clear the cache and re-run before blaming any dependency change for test failures.                                                         |
-| **Deleting the REST rail discards 19 passing tests** and working code.                                                                                                                      | **Low**                             | Deliberate. It is recoverable from git history if the Enterprise API ever becomes viable, and would be a new feature rather than a revert. |
+Ordered by impact on whether this work achieves its objective, not by how easy they are to
+describe.
+
+| Risk                                                                                                                                                                                                       | Impact                            | Mitigation                                                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **A CLI required before it can be provisioned.** The moment preflight needs `ds-skills`, every environment must be able to get it.                                                                         | **High**                          | Phase 3 publishes and provisions _before_ T17 activates any caller. T5 settles the contract in Phase 1.                                                                     |
+| **Residual product-owned validators.** `sync-ledger.mjs` and `publish-proof.mjs` are edited by the retirement but never given a final home; the work can report success with rail logic still in Collider. | **High**                          | T9 is blocking. Every rail-carrying path gets exactly one disposition.                                                                                                      |
+| **Loss of real-data gate protection.** Moving `$themeOverrides` into a package fixture, or accepting a weak S2/S3, silently drops what the gate actually caught.                                           | **High**                          | S2 in an isolated worktree with a rail-specific diagnostic; S3 against the full normalized mapping; keep consumer-artifact constraints in the CLI's real-data verification. |
+| **Accidental governance change during genericization.** T12 rewrites policy evaluation; the 11 fixtures are the only thing pinning current behaviour.                                                      | **High**                          | Freeze expected outcomes **and diagnostic reasons** before rewriting. A fixture must not pass by failing earlier for an unrelated reason.                                   |
+| **A plugin builder that only works with ambient dependencies.** npm does not auto-install optional peers, and `pack-check` currently installs esbuild itself.                                              | **High**                          | T14. Prebuild invariant plugin code at release, or make the builder self-contained. Never resolve it from Collider. Test the supported platforms.                           |
+| **Skills/CLI version skew and stale materialized assets.** An agent can read instructions for one command contract while executing another.                                                                | **Medium**                        | T11 settles materialization; CLI and skills share one release identity.                                                                                                     |
+| **Publication exposes what the move brought with it.** The 2026-09-05 scan covered the rail repo as it then was.                                                                                           | **Medium**                        | Re-review the final tarball at T15, after all assets have moved.                                                                                                            |
+| **Unresolved path and profile semantics.** Config-relative vs cwd-relative, `--profile` name vs path, unknown-profile fallback.                                                                            | **Medium**                        | Specified in `SPEC.md` §4.3 and tested from outside the repo root.                                                                                                          |
+| **`.agents` gate wiring surfaces real violations** in 162 unlinted files.                                                                                                                                  | **Medium**                        | T2 budgets for it. Record a reason for anything excluded.                                                                                                                   |
+| **Repository rename invalidates the recorded dependency URL.** GitHub redirects Git operations, but hosted action references do not get that redirect.                                                     | **Low**                           | Inspect actual references rather than assuming a break. Ask before renaming.                                                                                                |
+| **`parity-policy.md` promises a future this cancels.**                                                                                                                                                     | **Low, but a written commitment** | T3 rewrites it as _retired_, plainly.                                                                                                                                       |
+
+Kept in the execution runbook rather than the risk table, because they compete for attention
+with the rows above: the stale `node_modules/.cache/storybook` incident, formatter noise between
+the two repos' Prettier configs, and the intentional deletion of obsolete tests.
 
 ## Parallelization
 
-- **Safe to parallelize:** T2/T3/T4 (Collider removal) against T5/T6 (pack) — different repos,
-  no shared files. T1 against everything.
-- **Must be sequential:** T7 → T8/T9/T10 → T11/T12 → T13 → T14. The CLI must exist before
-  anything can call it, and the last import must go before the dependency does.
-- **Needs coordination:** T10 and T11 both define CLI surface. Fix the command signatures in T7
-  so the two can proceed without renegotiating them.
+- **Safe to parallelize:** T1/T2/T5 against each other; T3 (Collider) against T4/T6 (pack).
+- **Must be sequential:** T1 → T6 (T6 changes the builder that produces the baseline).
+  T7 → T8 → the implementation tasks. T14 → T15 → T16 → T17 → T18.
+- **Needs coordination:** T12 and T13 both consume the T8 command contract and the T9 inventory.
+  Fix both before either starts.
+
+## Honest note on "every task ends green"
+
+The private `git+ssh` dependency already prevents a clean credential-free CI install today. Local
+preflight passing during Phase 1 is **not** clean-CI evidence. This plan does not promise
+per-commit clean CI before Phase 3 provisions the tool; achieving that earlier would require an
+accessible transitional artifact for the existing dependency, which is not in scope.
 
 ## Open questions
 
-- **Which install mechanism for `ds-skills`?** The load-bearing unknown. Needs an answer at T7.
-- **Does `.agents/skills/` in a consuming repo become generated output or stay tracked?** Agents
-  read skills from disk, so the pack must be materialized somewhere. If it becomes generated,
-  the `.claude/skills` symlinks and the "edit only in `.agents`" rule both need revisiting.
-- **Does the pack keep `@atomize-hq` scope on npm, and public or restricted?** Public is implied
-  by the CI requirement, but it is the user's call.
+- **Which registry, and public or restricted?** Public npm and GitHub Packages have different
+  anonymous-access properties. Publishing the package does **not** require making the source
+  repository public — keep those approvals separate.
+- **Does `.agents/skills/` become generated output or stay tracked?** Blocks T11. If generated,
+  the "edit only in `.agents`" rule and the `.claude/skills` symlinks both need revisiting.
+- **Where does `figma drift` get observed state?** If it needs a live Figma session, it cannot
+  be a gate command.
