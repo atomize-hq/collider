@@ -15,24 +15,42 @@ moves. Must precede T6, which changes the builder that produces the manifest.
 
 **Acceptance criteria:**
 
-- [ ] Exact bytes and digest of `figma/plugins/collider-token-sync/manifest.json`, produced by
-      the **current** builder, stored outside the build output
-- [ ] The **full normalized rail mapping** captured: ordered variable names, resolved types,
-      collection and namespace, per-theme values — not the five summary fields
-- [ ] Any nondeterministic field is explicitly identified and excluded from comparison — and
-      the exclusion must not weaken S4's literal manifest-byte comparison
-- [ ] The 11 ledger fixtures' **current** outcomes and diagnostic reasons captured, before T3
+- [x] Exact bytes and digest of `figma/plugins/collider-token-sync/manifest.json`, produced by
+      the **current** builder, stored outside the build output —
+      `figma/plugin-manifest.baseline.json`. The build output is gitignored
+      (`.gitignore:79`), so the baseline had to be a separate committed file regardless.
+- [x] The **full normalized rail mapping** captured: ordered variable names, resolved types,
+      collection and namespace, per-theme values — not the five summary fields —
+      `figma/token-rail.baseline.json`, 176 variables, summary retained alongside
+- [x] Any nondeterministic field is explicitly identified and excluded from comparison — and
+      the exclusion must not weaken S4's literal manifest-byte comparison. **Nothing is
+      excluded**, in any of the three: each file carries an `excludedFields: []` with the
+      reason it is empty. The manifest interpolates no generated field, so S4 stays literal.
+- [x] The 11 ledger fixtures' **current** outcomes and diagnostic reasons captured, before T3
       edits their inputs or validators. Otherwise a T3 regression becomes the new reference
-      merely because T9 recorded it afterwards
+      merely because T9 recorded it afterwards — `scripts/fixtures/sync-ledger/outcomes.baseline.json`
 
 **Verification:**
 
-- [ ] Re-run capture twice; the two artifacts are identical
-- [ ] The stored baseline is committed or otherwise recoverable, not left in a temp directory
+- [x] Re-run capture twice; the two artifacts are identical — verified by digest across two
+      runs, and again after prettier reformatted the capture script
+- [x] The stored baseline is committed or otherwise recoverable, not left in a temp directory
+
+**What T1 found, that later tasks depend on:**
+
+- **Two** fixtures carry `rest-variables-oauth`, not one: `valid-required` (valid,
+  `verified-current`, promotable) and `invalid-contradictory-mode` (invalid). T3's "both
+  fixtures" is right, and its verification note is now concrete —
+  `invalid-contradictory-mode` currently fails on
+  `[CT-8B_FORBIDDEN_PARITY_DEFERRED_REASON]`, **not** on the mode. After repointing it must
+  still fail on that same code. A `[CT-8B_INVALID_...]` mode error there is the regression.
+- Its name is misleading: the contradiction it exercises is parity metadata, not publish mode.
+  Renaming is not T1's business, but T3 should not read the name as a spec.
+- `pnpm baseline:rail` is the capture command, wired next to `baseline:upstream`.
 
 **Dependencies:** None — must be first
 **Files likely touched:** a baseline artifact, a small capture script
-**Scope:** S
+**Scope:** S — **done** (`pnpm baseline:rail`, 3 baselines, preflight green)
 
 ---
 
@@ -306,6 +324,9 @@ Collider still owns rail logic — `scripts/lib/sync-ledger.mjs` and
       retirement change or a regression — decide which, do not adopt it silently
 - [ ] T3's deleted paths appear in the inventory with a resolved `deleted` disposition; they must
       not vanish from the accounting because the inventory was taken afterwards
+- [ ] `scripts/capture-rail-baselines.mjs`, added by T1, gets a disposition like any other
+      executable path. It is a migration instrument no gate runs, but it is executable and it
+      imports the rail — S1 cannot be accepted while it sits unexamined
 - [ ] For each surviving caller, the **replacement command and the output that caller actually
       consumes** is recorded. An exit status suffices for some; a generator consuming structured
       results needs more. Establish this from the caller, not during T17

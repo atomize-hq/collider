@@ -1,0 +1,207 @@
+{
+  "$comment": "Pre-retirement reference for the CT-8B ledger fixtures. Diagnostic strings are recorded verbatim: a fixture that goes red for a different reason is a regression, not a pass.",
+  "source": "scripts/fixtures/sync-ledger",
+  "fixtureCount": 11,
+  "excludedFields": [],
+  "excludedFieldsRationale": "Validator output is a pure function of the fixture on disk. No path, timestamp or ordering is host-dependent, so nothing is excluded.",
+  "fixtures": {
+    "blocked.sync-ledger.json": {
+      "publishMode": "plugin-import-manual",
+      "valid": true,
+      "errors": [],
+      "evaluation": {
+        "state": "blocked-exception",
+        "promotable": false,
+        "blockers": [
+          {
+            "code": "figma-proof-failed",
+            "field": "verification.materializationStatus",
+            "message": "The latest plugin-based materialization attempt failed for the current artifact revision."
+          }
+        ],
+        "evidence": {
+          "artifact.path": "design-tokens/dist/figma/tokens.json",
+          "artifact.revision": "5555555555555555555555555555555555555555",
+          "publish.mode": "plugin-import-manual",
+          "publish.tokensStudioCarrier": false,
+          "verification.materializationStatus": "failed",
+          "verification.lastVerifiedRevision": "5555555555555555555555555555555555555555",
+          "promotion.parityMode": "deferred",
+          "promotion.highestEarnedLevel": "C-consumption-valid",
+          "exceptions.openBlockingCount": 1
+        }
+      }
+    },
+    "declared.sync-ledger.json": {
+      "publishMode": "plugin-import-manual",
+      "valid": true,
+      "errors": [],
+      "evaluation": {
+        "state": "declared",
+        "promotable": false,
+        "blockers": [],
+        "evidence": {
+          "artifact.path": "design-tokens/dist/figma/tokens.json",
+          "artifact.revision": "8888888888888888888888888888888888888888",
+          "publish.mode": "plugin-import-manual",
+          "publish.tokensStudioCarrier": false,
+          "verification.materializationStatus": "not-run",
+          "verification.lastVerifiedRevision": null,
+          "promotion.parityMode": "deferred",
+          "promotion.highestEarnedLevel": "C-consumption-valid",
+          "exceptions.openBlockingCount": 0
+        }
+      }
+    },
+    "incomplete.sync-ledger.json": {
+      "publishMode": "plugin-import-manual",
+      "valid": true,
+      "errors": [],
+      "evaluation": {
+        "state": "incomplete",
+        "promotable": false,
+        "blockers": [
+          {
+            "code": "verification-materialization-failed",
+            "field": "verification.materializationStatus",
+            "message": "verification.materializationStatus is failed, so the current artifact revision is not verified."
+          }
+        ],
+        "evidence": {
+          "artifact.path": "design-tokens/dist/figma/tokens.json",
+          "artifact.revision": "abababababababababababababababababababab",
+          "publish.mode": "plugin-import-manual",
+          "publish.tokensStudioCarrier": false,
+          "verification.materializationStatus": "failed",
+          "verification.lastVerifiedRevision": "abababababababababababababababababababab",
+          "promotion.parityMode": "deferred",
+          "promotion.highestEarnedLevel": "C-consumption-valid",
+          "exceptions.openBlockingCount": 0
+        }
+      }
+    },
+    "invalid-contradictory-mode.sync-ledger.json": {
+      "publishMode": "rest-variables-oauth",
+      "valid": false,
+      "errors": [
+        "[CT-8B_FORBIDDEN_PARITY_DEFERRED_REASON] promotion.parityDeferredReason must be omitted when promotion.parityMode is required"
+      ],
+      "evaluation": null
+    },
+    "invalid-deferred-complete.sync-ledger.json": {
+      "publishMode": "plugin-import-manual",
+      "valid": false,
+      "errors": [
+        "[CT-8B_EARNED_LEVEL_REQUIRES_REQUIRED_PARITY] promotion.highestEarnedLevel cannot be E-promotion-complete when promotion.parityMode is deferred"
+      ],
+      "evaluation": null
+    },
+    "invalid-missing-required-field.sync-ledger.json": {
+      "publishMode": "plugin-import-manual",
+      "valid": false,
+      "errors": [
+        "[CT-8B_MISSING_REQUIRED_KEY] artifact.revision is required",
+        "[CT-8B_INVALID_SHA] artifact.revision must be a 40-character lowercase git SHA"
+      ],
+      "evaluation": null
+    },
+    "invalid-tokens-studio-carrier.sync-ledger.json": {
+      "publishMode": "plugin-import-manual",
+      "valid": false,
+      "errors": [
+        "[CT-8B_INVALID_TOKENS_STUDIO_CARRIER_COMBINATION] publish.tokensStudioCarrier must be true only when publish.mode is tokens-studio-carried"
+      ],
+      "evaluation": null
+    },
+    "stale.sync-ledger.json": {
+      "publishMode": "plugin-import-manual",
+      "valid": true,
+      "errors": [],
+      "evaluation": {
+        "state": "verified-stale",
+        "promotable": false,
+        "blockers": [
+          {
+            "code": "verification-stale-revision",
+            "field": "verification.lastVerifiedRevision",
+            "message": "verification.lastVerifiedRevision does not match artifact.revision for the active ledger."
+          }
+        ],
+        "evidence": {
+          "artifact.path": "design-tokens/dist/figma/tokens.json",
+          "artifact.revision": "9898989898989898989898989898989898989898",
+          "publish.mode": "plugin-import-manual",
+          "publish.tokensStudioCarrier": false,
+          "verification.materializationStatus": "passed",
+          "verification.lastVerifiedRevision": "1212121212121212121212121212121212121212",
+          "promotion.parityMode": "deferred",
+          "promotion.highestEarnedLevel": "C-consumption-valid",
+          "exceptions.openBlockingCount": 0
+        }
+      }
+    },
+    "valid-carried.sync-ledger.json": {
+      "publishMode": "tokens-studio-carried",
+      "valid": true,
+      "errors": [],
+      "evaluation": {
+        "state": "verified-current",
+        "promotable": true,
+        "blockers": [],
+        "evidence": {
+          "artifact.path": "design-tokens/dist/figma/tokens.json",
+          "artifact.revision": "bcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbc",
+          "publish.mode": "tokens-studio-carried",
+          "publish.tokensStudioCarrier": true,
+          "verification.materializationStatus": "passed",
+          "verification.lastVerifiedRevision": "bcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbc",
+          "promotion.parityMode": "deferred",
+          "promotion.highestEarnedLevel": "D-publish-valid",
+          "exceptions.openBlockingCount": 0
+        }
+      }
+    },
+    "valid-required.sync-ledger.json": {
+      "publishMode": "rest-variables-oauth",
+      "valid": true,
+      "errors": [],
+      "evaluation": {
+        "state": "verified-current",
+        "promotable": true,
+        "blockers": [],
+        "evidence": {
+          "artifact.path": "design-tokens/dist/figma/tokens.json",
+          "artifact.revision": "3333333333333333333333333333333333333333",
+          "publish.mode": "rest-variables-oauth",
+          "publish.tokensStudioCarrier": false,
+          "verification.materializationStatus": "passed",
+          "verification.lastVerifiedRevision": "3333333333333333333333333333333333333333",
+          "promotion.parityMode": "required",
+          "promotion.highestEarnedLevel": "E-promotion-complete",
+          "exceptions.openBlockingCount": 0
+        }
+      }
+    },
+    "valid.sync-ledger.json": {
+      "publishMode": "plugin-import-manual",
+      "valid": true,
+      "errors": [],
+      "evaluation": {
+        "state": "verified-current",
+        "promotable": true,
+        "blockers": [],
+        "evidence": {
+          "artifact.path": "design-tokens/dist/figma/tokens.json",
+          "artifact.revision": "1111111111111111111111111111111111111111",
+          "publish.mode": "plugin-import-manual",
+          "publish.tokensStudioCarrier": false,
+          "verification.materializationStatus": "passed",
+          "verification.lastVerifiedRevision": "1111111111111111111111111111111111111111",
+          "promotion.parityMode": "deferred",
+          "promotion.highestEarnedLevel": "D-publish-valid",
+          "exceptions.openBlockingCount": 0
+        }
+      }
+    }
+  }
+}

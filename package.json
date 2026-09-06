@@ -22,6 +22,7 @@
     "validate:upstream-policy": "node scripts/validate-upstream-policy.mjs",
     "validate:consumer-contract": "node scripts/validate-consumer-contract.mjs",
     "baseline:upstream": "node scripts/fetch-upstream-baseline.mjs",
+    "baseline:rail": "node scripts/capture-rail-baselines.mjs",
     "generate:storybook-proof-coverage": "node scripts/generate-storybook-proof-coverage.mjs",
     "generate:component-mapping": "node scripts/generate-component-mapping.mjs",
     "generate:reusable-component-status": "node scripts/generate-reusable-component-status.mjs",

@@ -1,0 +1,11 @@
+{
+  "$comment": "Pre-migration reference for SPEC.md S4. Produced by the current builder; never regenerate this from the new one.",
+  "source": "figma/plugins/collider-token-sync/manifest.json",
+  "producedBy": "pnpm figma:plugin:build",
+  "railDependency": "git+ssh://git@github.com/atomize-hq/figma-token-rail.git#v0.3.0",
+  "excludedFields": [],
+  "excludedFieldsRationale": "The manifest is a static template with three config substitutions. No timestamp, digest, path or version is interpolated into it, so no field is excluded and the comparison is literal.",
+  "byteLength": 373,
+  "sha256": "df45a8de6d9f4e054b8a62b19fe3ea976afcbef348d5b2eec9e37e91abb928bc",
+  "bytes": "{\n  \"name\": \"Collider Token Sync\",\n  \"id\": \"collider-token-sync-dev\",\n  \"api\": \"1.0.0\",\n  \"main\": \"code.js\",\n  \"ui\": \"ui.html\",\n  \"networkAccess\": {\n    \"allowedDomains\": [\"none\"],\n    \"reasoning\": \"Fetch the repo-generated token artifact from the local proof server during development.\",\n    \"devAllowedDomains\": [\"http://localhost:4173\"]\n  },\n  \"editorType\": [\"figma\"]\n}\n"
+}
