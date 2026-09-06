@@ -22,7 +22,19 @@ Three defects were confirmed against the repository, and each forced a structura
 | `pnpm govern:tokens` is preflight step 1 of 5 and registers `build:tokens`, so a perturbed artifact is regenerated before any verify step sees it.                                                                                          | S2 is verified in an **isolated worktree**, and must fail for the intended invariant. |
 | `pack-check.sh` runs `pnpm add "$tarball" esbuild` — it installs the optional peer, so it never proves a plain install can build the plugin.                                                                                                | **T14** makes the builder self-contained and expands `pack-check`.                    |
 
-Two further structural corrections, both about ordering rather than content:
+### Round 2 (2026-09-06, second review)
+
+| Confirmed defect                                                                                                                                                                                                                                                                | Correction                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **The isolated worktree does not dodge regeneration** — that worktree's own preflight runs `build:tokens` too. The round-1 S2 fix moved the blast radius, not the overwrite.                                                                                                    | Two complementary tests: artifact rejection in a data-only fixture the build does not touch, and gate propagation via a **persistent expectation mismatch**. |
+| **No CI job runs `just preflight`.** It is the pre-push hook; CI runs the parts as separate jobs, and `figma-token-rail.test.ts` runs inside `just test-all`, which **is** a CI job. Wiring the replacement into preflight alone deletes a CI gate while every job stays green. | `SPEC.md` §5.4 maps the 8 jobs; T16 names the required job; T18 proves a deliberate regression turns it red.                                                 |
+| **The dependency clauses omitted T11 and T12.** T14 depended on T10 and T13 only, so the explicit chain to T18 never scheduled the pack-data or ledger-command work the checkpoints require.                                                                                    | T8 depends on T7 **and T9**; T14 depends on all four implementation tasks; T15 on the checkpoint.                                                            |
+| **The expectations file could not express what T13 demanded.** Five summary fields cannot encode interior values, so "compare the full normalized mapping" was unsatisfiable.                                                                                                   | The file carries or references the T1 full baseline, and keeps the summary constraints.                                                                      |
+| T7 accepted that Collider's dependency "may break as long as it is understood", contradicting the Phase 2 checkpoint requiring Collider green.                                                                                                                                  | T7 must preserve the reference through the rename, or stop and revise.                                                                                       |
+| T16 required full CI green while the private dependency is still in the lockfile until T17.                                                                                                                                                                                     | T16 narrowed to provisioning probes; clean product install belongs to T17/T18.                                                                               |
+| T17 switched executable callers but nothing activated the skills — stale Markdown and agent discovery paths survive an otherwise complete migration.                                                                                                                            | Skill cutover is explicit T17 work, staged at T16, decided at T5.                                                                                            |
+
+Two further structural corrections from round 1, both about ordering rather than content:
 
 - **Publication and provisioning move ahead of consumer activation.** The first dangerous
   boundary is the task that makes `preflight` require `ds-skills`, not the task that drops the
@@ -54,37 +66,45 @@ Two further structural corrections, both about ordering rather than content:
 ## Dependency graph
 
 ```
-T1 baselines ──────────────────────────────────────────┐  (must be first: T6 changes the builder)
-T2 .agents gates ──────────────────────────────────────┤  (independent)
-T3 atomic retirement, Collider ────────────────────────┤
-T4 remove REST rail, pack ─────────────────────────────┤
-T5 delivery contract (decision, no code) ──────────────┤
-T6 plugin UI configuration ────────────────────────────┤
-                                                        ▼
-                          ┌────────── T7 repo + package identity
-                          │                   │
-                          │           T8 CLI contract + scaffold
-                          │                   │
-   T9 disposition inventory (Collider) ───────┤
-                          │                   │
-        ┌─────────────────┼───────────────────┼──────────────┐
-        ▼                 ▼                   ▼              ▼
-  T10 move rail    T11 move pack data   T12 ledger cmds   T13 figma cmds
-        └─────────────────┴───────────────────┴──────────────┘
-                                   ▼
-                     T14 self-contained builder + pack-check
-                                   ▼
-                          T15 publish  (ask first)
-                                   ▼
-                     T16 prove acquisition + provision
-                                   ▼
-                     T17 consumer cutover (atomic commit)
-                                   ▼
-                          T18 clean-environment evidence
+T1 baselines + fixture capture ─────┐  (first: T6 changes the builder, T3 changes the fixtures)
+T2 .agents gates ───────────────────┤  (independent)
+T3 atomic retirement, Collider ─────┤
+T4 remove REST rail, pack ──────────┤
+T5 delivery contract (decision) ────┤
+T6 plugin UI configuration ─────────┤
+                                     ▼
+              T7 repo + package identity        T3 ──▶ T9 disposition inventory
+                          └──────────────┬───────────────┘
+                                         ▼
+                          T8 CLI contract + scaffold      (needs T7 AND T9)
+                                         │
+                    ┌────────────────────┼────────────────────┐
+                    ▼                    ▼                    ▼
+              T10 move rail        T11 move pack data (needs T5's materialization call)
+                    │                    │
+                    │                    ▼
+                    │              T12 ledger cmds
+                    ▼                    │
+              T13 figma cmds ────────────┤
+                    └──────────┬─────────┘
+                               ▼
+          T14 self-contained builder + pack-check   (needs T10, T11, T12, T13)
+                               ▼
+                    Phase 2 checkpoint ──▶ T15 publish  (ask first)
+                               ▼
+                    T16 prove acquisition + provision + name the required CI job
+                               ▼
+                    T17 consumer cutover: callers, skills, dependency (atomic)
+                               ▼
+                    T18 clean-environment evidence + deliberate-failure proof
 ```
 
-T1 must precede T6, which changes the builder that produces the manifest baseline. T5 is a
-decision task with no code and can run alongside Phase 1. T9 gates every implementation task.
+T1 must precede both T6 (which changes the builder producing the manifest baseline) and T3
+(which changes the fixtures whose current behaviour must be captured first). **T8's command
+contract cannot be approved before T9** says which responsibilities survive — a generic parser
+scaffold may start earlier. T14 depends on all four implementation tasks, not two; the first
+draft's dependency clauses omitted T11 and T12 entirely, so the explicit chain to T18 never
+scheduled them.
 
 ## Phases
 

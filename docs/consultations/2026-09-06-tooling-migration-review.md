@@ -378,3 +378,351 @@ Then repeat against the real Collider data and an independently configured secon
 Keep the direct built-Node smoke check, explicit .js imports, real-artifact verification, byte-level manifest comparison, existing project formatting conventions, and the prohibition on running the retired REST rail. Keep BL-1 and BL-2 outside this change.
 
 Final verdict: ADJUST, not PIVOT. This remains the right direction. The first change should be to make delivery and ownership closure explicit; the first ordering correction should move publication/provisioning ahead of consumer activation. The project is ready for corrected foundation work, but the current T7–T14 plan is not yet safe to execute as written.
+
+---
+
+# Round 2 — follow-up review, 2026-09-06
+
+**Conversation:** https://chatgpt.com/c/6a9d664f-f498-83ea-b62b-80aef775b588
+**Reviewing:** the triad as revised at `91c019d`
+**Verdict:** ADJUST — architecture kept, six execution/evidence gaps
+
+## Locally verified before acceptance
+
+1. **The dependency clauses did omit T11 and T12.** Read literally: T8→T7, T10→T8, T11→T8, T14→{T10,T13}. The explicit chain to T18 never scheduled T11 or T12, while the Phase 2 checkpoint and T14's acceptance both required their work.
+2. **No CI job runs `just preflight`** — confirmed by grep over `.github/workflows/ci.yml`. It is the pre-push hook; CI runs `pnpm govern:tokens`, `pnpm govern:storybook-proof`, `just check`+`just loc`, `just test-all`, `pnpm build`, `pnpm storybook:build` and the Chromatic pair as separate jobs. `figma-token-rail.test.ts` runs inside `just test-all`, which **is** a CI job — so wiring the replacement into preflight alone would have removed a CI gate while every job stayed green. The review inferred this as a possible gap without the workflow; it was real.
+3. **The isolated-worktree S2 fix does not work.** That worktree's own preflight runs `build:tokens` and regenerates the artifact. Round 1 moved the blast radius, not the overwrite.
+
+## Prompt sent
+
+```text
+We are already working on this project task.
+
+Task/spec: Same task you reviewed in your previous response — move every executable Figma-design-token-rail code path out of a product repo (Tauri v2 + Next.js desktop app) into a single installable CLI, so the product repo contributes only JSON data and owns no rail logic. You returned ADJUST with detailed corrections. I have applied them. This is a follow-up review of the revised spec/plan/todo, for approval or a further round.
+
+This is a NEW conversation with no memory of the previous one, so the three revised documents are attached in full below. Judge them as they now stand.
+
+Current approach: Unchanged in direction. The design-system agent-skill pack becomes one installable npm package exposing a "ds-skills" CLI; a previously-extracted "figma-token-rail" package is absorbed into it as an internal module via repository rename; data crosses the consumer boundary and code does not, with one stated exception for generated plugin output; the product repo carries no package.json entry for the tooling; and the "rest-variables-oauth" publish mode is deleted entirely.
+
+What changed in this revision, so you can check whether each correction actually landed rather than being merely acknowledged:
+
+1. Phase order. Publication and provisioning now precede consumer activation. Previously the plan made preflight require the CLI at task 11 and published the CLI at task 14. Now: implement and package (Phase 2) -> publish, prove anonymous cold acquisition, provision every environment (Phase 3, tasks 15-16) -> activate callers and delete superseded code in one atomic commit (task 17) -> clean-environment evidence (Phase 4).
+
+2. Atomic retirement. The three-way split of the publish-mode removal is now one task (T3). I verified your claim locally before accepting it: the fixture in question is asserted to yield an empty error array at one test line and is the base object for six further assertions, so removing the enum first breaks seven assertions.
+
+3. Ownership closure. A disposition inventory is now blocking work (T9), covering every entry point, helper, test driver and generator carrying rail semantics, each assigned exactly one of: package-owned, data, command-only, deleted. It explicitly names the two surviving validators you identified and requires extracting rail-specific policy from a generator rather than claiming the whole generator.
+
+4. T7 split three ways: repository/package identity (T7), CLI contract and scaffold (T8), and delivery proof (split between T5's mechanism proof and T16's release proof). Unimplemented commands must exit non-zero with an explicit message rather than being successful placeholders.
+
+5. Delivery contract moved to Phase 1 as a decision task (T5), on the principle that provisioning and execution are separate operations: provisioning installs an exact reviewed release into an isolated version-specific prefix and may reach the registry; execution runs that binary and never resolves a newer one; the local pre-push path acquires nothing; caching is an optimization and a cache miss installs the same release. The product repo records package name, exact release and integrity as reviewed JSON — a toolchain dependency rather than an application one.
+
+6. Success criteria rewritten where they overstated what they proved. S2 now uses an isolated worktree and must fail for the intended invariant — I verified your trap claim: the governance step is preflight step 1 of 5 and registers the token build, so a perturbed artifact is regenerated before any verify step observes it. S3 now compares a full normalized mapping against a baseline captured before anything moves (new task T1) rather than five summary fields. S4 captures manifest bytes and digest before the builder-changing task. S7 now requires a lint error, a type error and a failing test to each actually fail their gate.
+
+7. New work added: the plugin builder must become self-contained (T14). I verified your optional-peer finding: the packaging gate installs the builder dependency itself alongside the tarball, so it proves the plugin builds when a consumer already has that dependency and never that a plain install can. Skill materialization is settled before anything moves, with one release identity shared by the CLI and the materialized skills.
+
+8. Recorded honestly rather than papered over: the existing private git+ssh dependency already prevents a clean credential-free CI install, so the plan does not promise per-commit clean CI before Phase 3 provisions the tool.
+
+Project sources: none configured. The three revised documents below are the complete evidence set. Read SPEC.md, then tasks/plan.md, then tasks/todo.md.
+
+Evidence, blockers, constraints, and validation:
+
+TWO DECISIONS ARE SETTLED BY THE PROJECT OWNER AND ARE NOT UP FOR DEBATE: (1) the skill pack absorbs the rail package into one installable CLI; (2) the "rest-variables-oauth" publish mode is removed entirely. Assume both.
+
+What I want from this review, in priority order:
+
+(a) A direct approve-or-iterate verdict. Is this plan now safe to execute as written? If not, name specifically what still blocks execution rather than what could be improved.
+
+(b) Did each of the eight corrections above actually land in the documents, or is any of them acknowledged in prose while the task structure still contradicts it? Check the task dependencies and checkpoints against the claims, not the summary.
+
+(c) Are there NEW defects introduced by this revision? Reordering phases and splitting tasks can create fresh gaps — particularly around: whether Phase 2 can genuinely complete with the product repo untouched; whether T9's dependency on T3 is right; whether the atomic T17 is too large to be safe; and whether T5 can really be decided without information that only exists after T7 or T11.
+
+(d) Anything still missing that would let this work report success while the product repo still owns rail logic, or while the gate has silently stopped biting.
+
+Do not reduce the task or replace it with an easier alternative. Preserve the requested scope and project conventions.
+
+Is the current approach the best way forward? Give a direct keep, adjust, or pivot recommendation; tradeoffs; what to keep/change first; inspections; validation; and pitfalls.
+```
+
+The three revised documents were inlined after this prompt (77,910 characters). Redaction checked before sending.
+
+## Response
+
+Verdict: ADJUST — keep the architecture, iterate on the execution plan
+
+The direction is right, but I would not approve the plan for execution unchanged. The remaining problems are specific: the negative-test procedure still does not survive regeneration, the verification command lacks a consistent expected-data contract, the dependency graph does not enforce the stated prerequisites, skill preparation has no explicit consumer activation step, and the delivery/CI checkpoints still conflate different proofs.
+
+None of these warrants a pivot, a third repository, retaining the product dependency, or preserving the retired mode. Keep the package absorption, complete retirement, data/command boundary, publication-before-activation sequence, and atomic consumer cutover.
+
+This is a review of the three supplied documents. References below identify their sections and tasks; I am not claiming to have inspected the repositories or rerun their tests.
+
+1. Did the eight corrections land?
+   Correction Assessment What the task structure actually establishes
+1. Publication and provisioning before activation Landed in direction; one checkpoint still contradicts it. T15 → T16 → T17 is the correct order. However, T16 requires successful cold and warm CI runs while the private dependency remains until T17. Provisioning the new CLI does not remove that blocker.
+1. Atomic retirement Landed for the Collider change. T3 now includes the executable deletions, enum/message changes, fixture changes, schema/profile changes, and documentation changes together. The original enum/fixture split is fixed. T4 being separate in the other repository is not inherently a problem.
+1. Blocking ownership inventory Partially landed. T9 has the right substantive coverage, including validators, callers, generators, and diagnostic reasons. But T8, T10, and T11 do not depend on it, despite the spec and plan saying it gates implementation.
+1. Separate identity, scaffold, and delivery proof Landed. T7, T8, T5, and T16 now distinguish these responsibilities. Non-successful placeholders are explicitly required. The remaining problem is freezing T8’s command contract before T9 has established all surviving responsibilities.
+1. Early delivery contract Partially landed. The provisioning/execution distinction is sound. The task structure does not clearly assign creation and enforcement of the reviewed toolchain JSON, and T5 must distinguish deciding release-identity rules from knowing the final artifact digest.
+1. Stronger success criteria Mixed. T1/S4 establish a genuine pre-change manifest reference. T2 requires actual gate failures. S3 has a genuine baseline, but conflicts with the five-field expectations file. S2 still prescribes an artifact perturbation that the build can erase, even in a worktree.
+1. Self-contained builder and skill materialization Builder: landed. Skills: incomplete. T14 contains the decisive no-ambient-builder scenario. T11 prepares assets and discusses materialization, but no task explicitly activates the release-matched skill assets in Collider and retires the old discovery/editing arrangement.
+1. Honest treatment of existing credential failure Landed as disclosure, not fully in the checkpoints. The documents correctly acknowledge the existing private dependency. But the limitation ends at consumer dependency removal, not merely when Phase 3 provisions the CLI. T16 still asks for evidence that cannot yet be obtained through the ordinary full CI path.
+1. Execution blockers
+   B1. The revised S2 procedure still does not defeat the regeneration trap
+
+Evidence: SPEC.md S2 and §7.2; tasks/todo.md T17 verification.
+
+An isolated worktree protects the developer’s working copy. It does not change the order of operations inside preflight.
+
+Under the procedure currently written:
+
+The artifact is corrupted in the isolated worktree.
+
+Preflight runs govern:tokens.
+
+The registered build regenerates that worktree’s artifact.
+
+Verification receives the regenerated artifact, not the corrupted one.
+
+Requiring the intended diagnostic prevents accepting an unrelated failure, which is good. But it does not make the prescribed mutation reach the verifier. As written, the test can simply fail to produce the required evidence.
+
+Required correction: specify how the fault survives until the real verifier reads it.
+
+A concrete, bounded approach is to require two complementary tests:
+
+Artifact rejection: run the installed release against a deliberately corrupted artifact in a data-only fixture location that the build does not overwrite.
+
+End-to-end gate propagation: run unmodified preflight in the isolated worktree with a persistent mismatch, such as an altered expectation that the build does not regenerate. Confirm that the real installed verifier runs, reports that mismatch, and causes preflight to fail.
+
+An artifact mutation injected after generation and before verification is another valid implementation, provided it does not replace or stub the verifier.
+
+The evidence should identify the actual input read at verification time. Missing-tool, missing-input, and malformed-JSON failures remain separate negative cases; none substitutes for demonstrating a semantic token regression.
+
+This correction has not yet landed merely by adding “isolated worktree.”
+
+B2. figma verify has incompatible requirements for its comparison reference
+
+Evidence: SPEC.md §3.2, §4.2, §7.1, and §7.4; tasks/todo.md T13 and T17.
+
+The proposed expectations file contains only:
+
+leafCount, firstLeaf, lastLeaf, defaultThemeId, and themeIds.
+
+T13 nevertheless requires:
+
+figma verify compares the full normalized mapping, not five fields.
+
+Those five fields cannot supply expected interior variable names, types, collection/namespace bindings, or per-theme values. For example, changing an interior variable’s light-theme value can preserve all five summary fields.
+
+T1 provides an independent full-mapping baseline, but the documents do not establish how that reference becomes an input to the installed verification command. There is therefore an unresolved choice between the task requirement and the specified consumer data.
+
+Required correction: retain T13’s stronger requirement and make the consumer JSON contract capable of expressing it. The expectations file can contain, or explicitly reference, the full expected mapping captured at T1. Keep the original metadata constraints too; “full mapping” must not accidentally discard the default-theme constraint.
+
+The expected data must not be regenerated from the current artifact during ordinary preflight. Otherwise the old self-referential test returns in a different form.
+
+Two related details belong in the same contract closure:
+
+Offline actual input. The described config includes an artifact URL, but the documents do not clearly bind figma verify to a local artifact. Specify that binding separately from the plugin’s serving origin. Path-resolution rules alone do not establish which artifact is read.
+
+Real-artifact constraints. Moving $themeOverrides coverage to a package fixture does not automatically preserve the original integration assertion. T9 should identify precisely what that assertion protects, and T13 should explicitly enforce any surviving real-artifact constraint. A normalized mapping can conceal structural properties that normalization discards.
+
+These are not requests for more consumer code. They are the data and command semantics needed to make the promised consumer boundary work.
+
+B3. The inventory does not control contract closure, and the task dependencies disagree with the checkpoints
+
+Evidence: SPEC.md §5.1–5.2; tasks/plan.md dependency graph and Phase 2 checkpoint; tasks/todo.md T8–T15.
+
+There are two related problems.
+
+The CLI contract is settled before its required responsibilities are known
+
+T8 fixes five commands and their semantics. T9 subsequently establishes the surviving executable responsibilities. T12 then determines which ledger, publish-proof, read/write, and promotion responsibilities survive and need commands.
+
+That is backwards for final contract closure.
+
+The five commands might be sufficient—for example, a surviving responsibility might fit an existing validation command. But T9 must demonstrate that before T8’s contract is treated as settled. The current command table does not itself explain how publish-proof and any surviving mutation responsibilities are reached.
+
+For each surviving caller, the inventory should identify its replacement command and any output that caller actually consumes. An exit status is sufficient for some callers; a generator that consumes structured results may need more. That distinction should be established from the caller, not improvised during T17.
+
+The explicit dependency clauses omit required work
+
+Reading the dependency clauses literally:
+
+T8 depends on T7, not T9.
+
+T10 and T11 depend on T8, not T9.
+
+T14 depends on T10 and T13, not T11 or T12.
+
+T15 depends only on T14.
+
+Consequently, the explicit dependency chain to T18 does not include T11 or T12 at all.
+
+The Phase 2 checkpoint and T14’s “every command” acceptance do require their work. Thus, this is a contradiction between the scheduling model and the acceptance model—not permission to skip those commands.
+
+Required correction: make the join and inventory precedence explicit:
+
+Task Required dependency correction
+T8 contract closure Depend on T7 and T9. A generic parser scaffold can be prepared earlier, but the complete command contract cannot be approved earlier.
+T10/T11 Be downstream of the approved inventory, transitively through the corrected T8 or explicitly.
+T12/T13 Give each inventory entry a specific implementing task; T12 should not indiscriminately own every package-owned entry, including work assigned to T13.
+T14 Depend on completion of the command and asset work, including T11 and T12.
+T15 Depend on the complete-package checkpoint, including the exact artifact that passed its checks.
+
+The fan-out diagram should also reflect the existing T11 → T12 and T10 → T13 dependencies rather than presenting all four implementation tasks as independent.
+
+Is T9’s dependency on T3 right?
+
+Yes, for a post-retirement survivor inventory. No, as the only point where behavior is first frozen.
+
+I would retain T3 → T9 rather than moving all retirement analysis behind a larger redesign. But capture the eleven fixtures’ existing outcomes and diagnostic reasons before T3 edits their inputs or validators, identify the deliberate retirement-related changes, and have T9 freeze the approved post-retirement results.
+
+Otherwise a T3 regression can become the new reference merely because T9 recorded it afterward. This also resolves the conflict with §5.2’s “before rewriting anything.”
+
+Finally, preserve the T3 deletion list as inventory evidence. Deleted paths should have resolved deleted dispositions, not disappear from the accounting because the inventory was taken later.
+
+B4. Skill preparation has no explicit consumer activation and retirement step
+
+Evidence: SPEC.md §5.3; tasks/todo.md T11 and T17; Phase 2’s “Collider untouched” checkpoint.
+
+T11 deliberately leaves Collider unchanged. That is appropriate for preparation. But T17 does not explicitly take over the remaining obligations:
+
+materialize or activate skills from the approved release;
+
+replace or remove superseded consumer copies;
+
+update the canonical editing rule;
+
+preserve or retarget .claude/skills discovery;
+
+detect stale materialized assets or a skill/CLI release mismatch.
+
+T17’s instruction to switch inventory callers is not a sufficient substitute. T9 inventories executable rail paths; stale Markdown instructions and agent discovery paths can remain broken even after every executable path has been moved.
+
+Required correction: separate the lifecycle into explicit stages.
+
+The materialization decision belongs with the early delivery decision. T11 prepares and tests packaged assets. T16 may stage the approved release’s assets without making them active. T17 owns the actual consumer skill cutover, alongside the executable callers.
+
+T17 must then prove that the agent-visible skills—not merely the copies inside the tarball—belong to the selected CLI release and contain no stale references to removed scripts.
+
+Can Phase 2 genuinely leave Collider untouched?
+
+Yes, if “move” means package-side snapshot/copy preparation until T17. It must not mean removing consumer files during T11 or T13.
+
+The retained consumer subtree needs an explicit temporary ownership rule: it remains the active compatibility snapshot, not a second independently maintained source. Package-side work can proceed against that frozen snapshot while consumer activation stays deferred.
+
+There is one additional contradiction to remove: T7 accepts that Collider’s dependency may break as long as the breakage is understood and accepted. That does not satisfy the Phase 2 requirement that Collider remain green.
+
+Inspect the existing lockfile/reference and preserve its functioning through the rename. If that cannot be done, stop and revise the transition explicitly. The acknowledged pre-existing credential failure is not authorization for a new local failure introduced by T7.
+
+B5. The delivery contract needs an implementation owner, and T16 asks for full CI success too early
+
+Evidence: SPEC.md §10; tasks/plan.md architecture decisions and honesty note; tasks/todo.md T5, T8, and T15–T17.
+
+The delivery principle is good. Three details still need closing.
+
+T5 can decide the contract early, but cannot certify nonexistent artifact bytes
+
+T5 does not need to wait for T7. The target package name is already stated, and installation locations, discovery, offline behavior, registry requirements, and identity representation can all be decided before the rename.
+
+However, distinguish:
+
+deciding the identity format and version-selection rules;
+
+assigning the version that will be built;
+
+recording the integrity of the completed tarball.
+
+The final digest comes after the final artifact exists. Set the package version before the decisive build/pack test, then record the resulting digest for T15/T16. Do not change package metadata after T14 and silently treat the rebuilt package as the already-tested artifact.
+
+T5 should also settle the materialization contract’s release-selection obligations, rather than leaving T11 free to choose an incompatible activation scheme.
+
+“Reviewed JSON exists” needs an assigned implementation step
+
+T5 asks where Collider records package/version/integrity. T16 provisions and checks --version. T17 explicitly creates only the token expectations JSON.
+
+Add explicit acceptance to T16 for creating the actual reviewed toolchain record and implementing the provisioning/execution behavior that uses it.
+
+The relevant negative tests are bounded: wrong selected release, missing selected install, an unrelated global binary available on PATH, and an integrity mismatch during acquisition or cache acceptance. Execution must fail or use the intended installed release—not acquire another release or silently fall back.
+
+A correct --version response in the successful case does not establish those behaviors.
+
+The registry decision is also constrained by the credential-free requirement. GitHub’s npm registry currently requires authentication even for installing public packages, so it is not an interchangeable anonymous-acquisition option. Public npm packages are available for anyone to download; public npm fits the stated requirement, subject to the publication approval already required.
+GitHub Docs
++1
+
+T16 cannot require ordinary full CI to be green before T17 removes the old dependency
+
+The private git+ssh dependency remains in package.json and the lockfile until T17. Installing ds-skills into a separate prefix does not remove it.
+
+Therefore T16’s “cold and warm CI runs both succeed” needs to mean successful provisioning probes, not successful full product workflows.
+
+A workable boundary is:
+
+T16: publish-backed anonymous acquisition, integrity verification, isolated installation, executable discovery, supported-platform checks, shared setup wiring, and local readiness.
+
+T17/T18: clean product dependency installation and complete job/gate success after removing the private dependency.
+
+This preserves the corrected phase order. It does not require an accessible transitional version of the old package, credentials, or early consumer activation.
+
+B6. Required CI enforcement is not yet demonstrated after deleting the product test
+
+Evidence: SPEC.md S6–S8 and §4.1; tasks/todo.md T16–T18.
+
+T17 wires figma verify into just preflight. T16 checks the CLI version in each environment. T18 requires each CI job to run its gate.
+
+What remains unstated is which required CI gate runs the replacement semantic verification.
+
+For example, if the existing required test job runs pnpm test rather than just preflight, deleting figma-token-rail.test.ts removes its old protection. All eight jobs could still acquire the CLI, report its version, run their existing commands, and pass.
+
+I am not asserting that the actual workflow has this shape; the workflow is not supplied. I am identifying an acceptance gap that permits it.
+
+Required correction: T16/T17 should map the eight jobs to their actual gate commands and identify the required job that executes the replacement rail verification against real Collider data. T18 should require a deliberate semantic failure to make that required check fail—not just a clean PR run.
+
+This does not mean all eight jobs must redundantly run the entire rail suite. It means acquisition evidence and semantic enforcement evidence must be distinct, and the removed protection must have an identified required replacement.
+
+Likewise, when executable coverage moves out of .agents, assign the final package-side S7 enforcement test explicitly. Having lint/type/test commands configured is not the same as proving that deliberate faults in the moved code fail them.
+
+3. Is atomic T17 too large?
+
+Not inherently. Keep the atomic consumer cutover.
+
+The useful atomic boundary is the accepted consumer state: selected release, active skills, caller changes, legacy implementation retirement, dependency removal, and lockfile update agree with one another.
+
+But one atomic final commit does not require one undifferentiated preparation task.
+
+After T9, T17 needs a concrete file/caller/asset checklist and revised sizing. Its current “2 deleted, 1 new JSON” estimate is not a meaningful estimate of the complete cutover; the validators, generator integration, policy-test retirement, and skill materialization can materially expand it.
+
+Prepare the patch and rehearse it in an isolated consumer worktree after provisioning, before accepting the commit. The rehearsal should include clean dependency installation, offline execution, actual agent skill discovery, and negative gate propagation.
+
+The danger is not the L label. The danger is discovering missing command semantics or materialization behavior inside the cutover task. B3 and B4 move those decisions out of that moment.
+
+Also inspect the proposed rollback target. “Explicit version selection” is a good rule, but on the first release it is not a demonstrated recovery procedure unless a compatible, retired-mode-free release actually exists. Do not imply that selecting the old REST-bearing package is an available rollback.
+
+4. Smaller reconciliations—not additional architectural blockers
+
+Builder strategy. T14 correctly fixes the optional-peer proof problem: npm documents that optional peers are not automatically installed.
+npm Docs
+Prefer prebuilding invariant plugin code if the builder inspection confirms that configuration-dependent assembly can remain separate. That aligns with the stated “no runtime dependencies” target. If T14 instead adds a runtime builder dependency, update that target explicitly and reconcile it with the reviewed installation identity.
+
+Retirement inventory locations. SPEC.md §3.3 lists pack-side schema/profile enums, while T3 edits the Collider copies and T4 lists only the REST modules/export/smoke changes. Resolve whether those pack paths already exist or are future T11 destinations. If they exist now, T4 must explicitly cover them; if not, label their provenance correctly. The Foundation checkpoint must scan actual current package contents.
+
+Installed-release testing. Clarify S6 without adding a parallel gate. Run source lint/type/unit checks in the pack checkout, and make the expanded pack-check exercise the independently installed, selected published artifact. A check that quietly rebuilds and tests a new local tarball is not the final published-release proof.
+
+Baseline and residual audit details. T1’s nondeterministic-field exclusion must not weaken S4’s literal manifest-byte comparison. Include the new capture script and any subsequently introduced support code in the final ownership audit. Extract tarball contents before the retired-string scan, and classify permitted command/data references rather than treating every package-name match as a defect.
+
+5. What to change first, and what should count as approval evidence
+
+First close T9 → T8, the full-mapping/local-input verification contract, and the early skill/delivery decision. Those determine whether the implementation tasks have enough information to execute.
+
+Then repair the task graph, give T17 explicit skill activation responsibilities, and narrow T16 to provisioning evidence. Finally update S2 and T18 so they test the real failure paths.
+
+The decisive evidence should be:
+
+Property Evidence required
+No product-owned rail logic remains Every original and newly introduced rail-carrying path has a disposition, destination, caller replacement, and closure evidence. Final audit includes generator adapters and temporary capture/support scripts.
+Verification has an independent reference A changed interior value or type is detected while the five summary fields remain unchanged; the expected side comes from reviewed baseline data, not the current artifact.
+The real gates still fail correctly The installed verifier rejects the intended fault, unmodified preflight propagates it, and an identified required CI check becomes red.
+Delivery is deterministic and offline at execution Cold acquisition verifies the approved artifact; warm and cold paths select the same release; missing/wrong installs fail without execution-time acquisition or global fallback.
+Skills and CLI actually match for agents Consumer discovery resolves the activated release’s assets; stale copies and mismatches are detected; old editable sources and deleted-script instructions are gone.
+Published-package portability is real The same reviewed artifact works without product dependencies or an ambient builder, against real Collider data and the differently configured second consumer.
+
+Bottom line: keep the current approach. The architectural correction is sound, and several previous fixes genuinely landed. Approval is still blocked by the six execution/evidence gaps above—not by the settled package decision, the retirement decision, or the overall four-phase strategy.
