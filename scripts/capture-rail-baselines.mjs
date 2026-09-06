@@ -31,12 +31,19 @@ const artifactPath = 'design-tokens/dist/figma/tokens.json';
 const configPath = 'figma/token-sync.config.json';
 const fixtureDir = 'scripts/fixtures/sync-ledger';
 
+const force = process.argv.slice(2).includes('--force');
+const drifted = [];
+
 const railSpec = readJson('package.json').dependencies['@atomize-hq/figma-token-rail'];
 const config = readJson(configPath);
 
 await writeBaseline('figma/plugin-manifest.baseline.json', captureManifest());
 await writeBaseline('figma/token-rail.baseline.json', captureMapping());
 await writeBaseline(`${fixtureDir}/outcomes.baseline.json`, captureLedgerOutcomes());
+
+if (drifted.length > 0) {
+  fail(`${drifted.length} baseline(s) left untouched; nothing was overwritten`);
+}
 
 /**
  * The manifest is a template with three substitutions and carries no generated
@@ -157,6 +164,15 @@ function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(path.join(repoRoot, relativePath), 'utf8'));
 }
 
+/**
+ * A baseline is only evidence while it predates the change it is measuring, so
+ * this refuses to overwrite one that has drifted. Re-running on an unchanged
+ * tree is a no-op; re-running after a deliberate change stops and says what
+ * moved, and `--force` is the only way past it. Without this, the first person
+ * to run the capture after T3 repoints the two `rest-variables-oauth` fixtures
+ * would silently replace the pre-retirement reference with a post-retirement
+ * one, and T9 would reconcile a file against itself.
+ */
 async function writeBaseline(relativePath, payload) {
   const absPath = path.join(repoRoot, relativePath);
   const options = await prettier.resolveConfig(absPath);
@@ -164,8 +180,28 @@ async function writeBaseline(relativePath, payload) {
     ...options,
     filepath: absPath,
   });
+
+  if (fs.existsSync(absPath)) {
+    const existing = fs.readFileSync(absPath, 'utf8');
+    if (existing === formatted) {
+      process.stdout.write(`= ${relativePath} (unchanged)\n`);
+      return;
+    }
+    if (!force) {
+      drifted.push(relativePath);
+      process.stderr.write(
+        `✗ ${relativePath} would change.\n` +
+          '  This baseline predates the migration and is the reference the migration is\n' +
+          '  measured against. If the change is intended, say so: pnpm baseline:rail --force\n'
+      );
+      return;
+    }
+    process.stdout.write(`↻ ${relativePath} (forced)\n`);
+  } else {
+    process.stdout.write(`✓ ${relativePath}\n`);
+  }
+
   fs.writeFileSync(absPath, formatted);
-  process.stdout.write(`✓ ${relativePath}\n`);
 }
 
 function fail(message) {
