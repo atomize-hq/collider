@@ -111,7 +111,7 @@ the public identity. Verified free in the org before choosing it.
 │   ├── figma/                    # the absorbed rail: token-mapping, drift, plugin builder
 │   ├── ledger/                   # CT-8B read/write/promote, parameterized by profile
 │   └── verify/                   # artifact-vs-expectations checker
-├── skills/                       # rail-relevant skills as data — which ones is open, see below
+├── skills/                       # 3 tooling skills as data (not the 2 ai-elements ones)
 ├── schemas/                      # 5 portable JSON Schemas
 ├── profiles/                     # example.json only — a consumer's profile stays with the consumer
 ├── templates/
@@ -138,12 +138,14 @@ Two corrections from the T11 disclosure review, both of which this section had w
 **`skills/` is not "the 8 skills" — that line was written without examining what they were.**
 `ai-elements/` is a mirror of a third-party component library's **documentation** — 49 doc pages
 plus the 80 usage examples they reference — with no relationship to the token rail. The vendored
-component sources are `src/components/ai-elements/` and were never in scope. The open question is
-therefore **cohesion, not licensing**: which skills belong in a design-system tooling package.
-Recommended: `sync-quality-governor`, `stage-1-foundation-primitives-system`, and
-`storybook-rigorous-spec-system` (which owns four of the five schemas that already moved). Four of
-the eight also name the consumer and need the same portability pass the schemas got. See
-[`docs/ds-skills-disclosure-review.md`](docs/ds-skills-disclosure-review.md) §6.
+component sources are `src/components/ai-elements/` and were never in scope. The question was
+therefore **cohesion, not licensing**, and it is settled: **three skills ship** —
+`sync-quality-governor`, `stage-1-foundation-primitives-system`, and
+`storybook-rigorous-spec-system` (which owns four of the five schemas that already moved).
+`ai-elements` and `ai-elements-plate-builder` stay with the consumer, **and no shipped skill may
+reference them** — enforced by `pack-check`, along with the rule that nothing shipped as data may
+name a consumer. See [`docs/ds-skills-disclosure-review.md`](docs/ds-skills-disclosure-review.md)
+§6.
 
 ### 3.2 Collider after
 

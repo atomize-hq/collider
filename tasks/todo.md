@@ -796,11 +796,13 @@ materialization here: canonical editing location, tracked or generated, stale-co
 **Acceptance criteria:**
 
 - [x] `schemas/`, `profiles/`, `templates/` present in the pack and in `files`
-- [ ] **`skills/` — open on scope**, see the disclosure review §6. Which of the eight belong in a
-      design-system tooling package; recommended `sync-quality-governor`, `stage-1` and
-      `storybook-rigorous-spec-system` (which owns four of the five schemas that moved)
+- [x] **`skills/` — settled and moved.** Three of the eight: `sync-quality-governor`,
+      `stage-1-foundation-primitives-system`, `storybook-rigorous-spec-system`.
+      `ai-elements` and `ai-elements-plate-builder` **stay with the consumer**, and no shipped
+      skill may reference them — gated, and the gate was proven to fail
 - [ ] The two rail-referencing skills (`sync-quality-governor`, `stage-1`) describe CLI
-      invocations rather than repo paths — blocked with `skills/`
+      invocations rather than repo paths — they no longer name a consumer, but they still
+      describe `pnpm`/`node` invocations. Re-check at T17, when the commands actually change
 - [x] `validate-artifact.mjs` moves behind `ds-skills validate` unchanged, **and its test
       moves with it** — now `src/validate/artifact.mjs` + `artifact.test.mjs`, 6 cases, repointed
       at the pack's own fixture and example profile
@@ -815,13 +817,12 @@ materialization here: canonical editing location, tracked or generated, stale-co
 - [x] **Disclosure review before the first public push** —
       [`docs/ds-skills-disclosure-review.md`](../docs/ds-skills-disclosure-review.md), covering
       secrets, profiles, fixtures, schemas, generated output, and history/refs
-- [ ] How installed skill assets are **discovered** after the Collider copy disappears — blocked
-      with `skills/`
-- [ ] The retained `.agents/skills/` subtree declared the **frozen compatibility snapshot** —
-      blocked with `skills/`
-- [ ] There are never two independently editable copies — holds today (nothing duplicated), but
-      unprovable until `skills/` moves
-- [ ] CLI and materialized skills report the same release identity — blocked with `skills/`
+- [ ] How installed skill assets are **discovered** after the Collider copy disappears
+- [x] The retained `.agents/skills/` subtree is the **frozen compatibility snapshot** until T17 —
+      Collider is untouched, so the three moved skills exist in both places but only one is edited
+- [x] There are never two independently editable copies — the pack's copies are the ones now
+      edited; Collider's are frozen until T17 switches discovery to the installed assets
+- [ ] CLI and materialized skills report the same release identity
 
 **Verification:**
 
@@ -852,7 +853,15 @@ materialization here: canonical editing location, tracked or generated, stale-co
    `scripts/validate-*.mjs` paths T17 deletes, so after cutover they instruct a user to run a
    script that does not exist. `defaultSyncLedgerPath` and `defaultPublishProofPath` are consumer
    layout. All five are the "defaults and error messages" class round 4 named.
-4. **`skills/` is a scope question, and "the 8 skills" was never examined.** `ai-elements/` is a
+4. **`skills/` was a scope question, and "the 8 skills" had never been examined.** Settled: three
+   move, `ai-elements` and `ai-elements-plate-builder` stay with the consumer, and no shipped skill
+   may reference them. Severing that meant removing a whole "AI Elements / Plate foundation rules"
+   section from `stage-1` and rewriting three checklist items, a directory listing and a paragraph
+   so the practice survives without the vendor names. It also surfaced a second bug: skills sat
+   _beside_ `schemas/` under `.agents/skills/`, so `` `../schemas` `` resolved there and silently
+   does not here.
+
+   The original finding, corrected: `ai-elements/` is a
    mirror of a third-party library's **documentation** — 49 doc pages plus the 80 usage examples
    they reference, every one importing from `@/components/ai-elements/*` rather than implementing
    anything. **The vendored component sources are `src/components/ai-elements/`** — 91 files,
@@ -864,8 +873,9 @@ materialization here: canonical editing location, tracked or generated, stale-co
 
 **Dependencies:** T8 (transitively T9), and T5's materialization decision
 **Files likely touched:** `schemas/`, `templates/`, `profiles/`, `src/validate/`, `package.json`
-**Scope:** L — **partially done.** The portable assets and the validator have moved and are
-gated; `skills/` awaits a licensing decision
+**Scope:** L — **substantially done.** Portable assets, the validator and three skills have moved
+and are gated. Open: materialization, discovery and shared release identity — none of which is a
+disclosure question
 
 ---
 

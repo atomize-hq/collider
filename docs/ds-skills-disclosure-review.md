@@ -182,20 +182,60 @@ as unreleased-product commentary in a public package.
 None of this is sensitive. It is the same portability defect as §3, and it needs the same
 treatment: describe the extension point, let the consumer supply the answer.
 
-### 6.3 What this blocks
+### 6.3 Settled — three skills move, two stay with the consumer
+
+**Decided 2026-09-06.** `ai-elements` and `ai-elements-plate-builder` remain in Collider and are
+**not** part of `ds-skills`. Moved instead: `sync-quality-governor`,
+`stage-1-foundation-primitives-system`, and `storybook-rigorous-spec-system`.
+
+**And no skill shipped from the package may reference the two that stayed.** That took more than
+deleting a line — `stage-1` carried an entire "AI Elements / Plate foundation rules" section, three
+checklist items, a directory listing naming the wrappers, and prose about primitives arriving "as
+dependencies of the ai-elements loops". The section is gone and the rest describes the practice
+without the vendor names, so the guidance survives the severing.
+
+Two further defects came out with it:
+
+- **Consumer status inside a portable skill.** `storybook-rigorous-spec-system`'s decision matrix
+  ended in "Where Collider actually sits" — the exact thing that stops a skill being portable the
+  moment a second repo installs it. The recommendation rows stay; the section now describes what a
+  repo should record, and says to record it where its own status lives.
+- **Relative asset paths that were right in the old layout.** Skills sat _beside_ `schemas/` and
+  `templates/` under `.agents/skills/`, so `` `../schemas` `` resolved. In the package they are one
+  level deeper and it resolves to `skills/schemas`, which exists in neither repo. Repointed, and
+  each path checked to resolve rather than assumed to.
+
+Four `pack-check` assertions now hold the line, each **proven to fail** before being trusted:
+nothing shipped as data may name a consumer (schemas, skills, templates, profiles); no installed
+skill may reference ai-elements or plate; neither of those two skill directories may exist in the
+package; and no skill may use a consumer-relative asset path.
+
+> A note on method: the first `plate` scan matched `tem`**`plate`**`s` and reported four false
+> positives. That is the third time in this migration a filter has misreported its own result —
+> after `grep -v node_modules` matching line content at T7, and a `jq` object filter silently
+> dropping rows while verifying the ruleset. The gate uses a word boundary.
+
+### 6.4 What remains
 
 Moved and cleared: `schemas/`, `templates/`, `profiles/` (as an example), and the `validate`
 executable with its tests. Not moved: `skills/`.
 
-What remains is a **scope decision, not a licence review**: which of the eight skills belong in a
-design-system tooling package. §6.1b recommends three — `sync-quality-governor`, `stage-1`, and
-`storybook-rigorous-spec-system`, the last because it owns four of the five schemas that already
-moved. The two `ai-elements` skills are out on cohesion, which is also why no licence question
-needs answering.
+Moved and cleared: `schemas/`, `templates/`, `profiles/` (as an example), the `validate` executable
+with its tests, and the three skills above.
 
-Once that is settled, T11's remaining criteria follow: the rail-referencing skills' CLI
-invocations, materialization, the `.claude/skills` symlink retarget, and shared release identity.
-The chosen skills also need §6.2's portability pass — four of the eight name the consumer.
+Still open, and none of it is a disclosure question:
+
+- **Materialization** — canonical editing location, tracked or generated, stale-copy handling, and
+  the `.claude/skills` symlink retarget. Collider's `.agents/skills/` copies are the frozen
+  compatibility snapshot until T17 switches them.
+- **Shared release identity** between the CLI and the materialized skills, so an agent cannot read
+  instructions for one command contract while executing another.
+- **The three skills still describe consumer workflows in places** — they were written for one
+  repo. Nothing in them names a consumer any more, which is the publishable bar; making them
+  genuinely reusable is a separate piece of work and not this migration's.
+
+The three moved skills' operational instructions will also need re-checking at T17, when
+`ds-skills` commands replace the `pnpm`/`node` invocations they still describe.
 
 ## 7. History and refs
 
