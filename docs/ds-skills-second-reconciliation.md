@@ -9,7 +9,7 @@ inventory §5) and a change caused by relationship enforcement (T12) are differe
 neither may absorb the other. So the T9 table is not edited. This is a second table, and every
 changed input names its cause.
 
-Everything below is measured against the implementation in `atomize-hq/ds-skills` at `c718f69`.
+Everything below is measured against the implementation in `atomize-hq/ds-skills` at `519c96d`.
 
 ## 1. What was implemented
 

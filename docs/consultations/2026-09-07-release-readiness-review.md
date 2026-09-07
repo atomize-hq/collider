@@ -4,7 +4,7 @@
 **Mode:** approach review (`chatgpt-pro-consult`), bounded — five questions, not a migration audit
 **Model:** GPT-5.6, Pro power (5 of 5)
 **Conversation:** https://chatgpt.com/c/6a9f3425-da54-83e9-983a-eedcb6de4a4a
-**Task/spec:** [`SPEC.md`](../../SPEC.md) · [`tasks/todo.md`](../../tasks/todo.md), as committed at `0cfb140`; package at `ds-skills` `2e2b15f`
+**Task/spec:** [`SPEC.md`](../../SPEC.md) · [`tasks/todo.md`](../../tasks/todo.md), as committed at `0cfb140`; package at `ds-skills` `53c758f`
 **Verdict:** ADJUST — do not cut the release immediately; close a bounded readiness delta first
 
 > Advisory only; verify against local project truth and authoritative docs; do not
@@ -42,7 +42,7 @@ from the attachment. That is the intended posture for an approach review, so the
 
 **1. The digest arithmetic — my prompt was ambiguous, its numbers were right.**
 ChatGPT inferred that byte-identical payloads must mean five identical SHA-256 values and asked
-me to correct "four identical digests" to five. Staging `v0.4.2` from `2e2b15f` shows the record's
+me to correct "four identical digests" to five. Staging `v0.4.2` from `53c758f` shows the record's
 actual asset map: four `.tar.gz` assets sharing `c977e6a6…` and one `.zip` at `95e06f9e…`. The
 **unpacked payloads** are identical across all five platforms; the **archives** are not, because
 Windows ships a zip and the rest ship tar.gz. Four identical digests is correct.
