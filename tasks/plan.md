@@ -179,22 +179,37 @@ immutable release cannot be amended after the fact.
 - [x] T10: Move the rail modules under `src/figma/` — `199edf1`; copies not moves, pinned against pre-move outputs, which caught an order-dependent reason-code branch
 - [~] T11: Move skills, schemas, profiles and templates in — schemas/templates/profiles, the validator and **three of the eight skills** moved and gated; `ai-elements` + `ai-elements-plate-builder` stay with the consumer and no shipped skill may reference them. Open: materialization, discovery, shared release identity
 - [x] T12: Own validation, the proof–ledger relationship, status output and parity — `ds-skills` `c718f69` + `7d65967`, reconciled in [`docs/ds-skills-second-reconciliation.md`](../docs/ds-skills-second-reconciliation.md). **Nine** hardcoded consumer constants, not four; no fixture outcome moved across the v2 -> v3 bump; found the package shipping a **real Figma file key** into a public repo, and a `pack-check` assertion that had stopped testing what it claimed
-- [ ] T13: Own the figma commands, serve, baseline, and the rail tests
+- [x] T13: Own the figma commands, serve, baseline, and the rail tests — `ds-skills` `3479c84` + `3831d35`. **S3 and S4 both pass against Collider's real artifact and committed baselines.** Found three defects, one of them inherited verbatim from the consumer: the drift-report endpoint let a client supply its own `artifactSha256` and have it recorded as measured
 - [ ] T14: Test the release product, not a package tarball
 
-**Checkpoint: The package is complete**
+**Checkpoint: The package is complete** — reached 2026-09-07.
 
-- [ ] Every command in `SPEC.md` §4.2 is implemented, with input and side-effect semantics
-      specified per §4.4 and the machine interface per §4.3
-- [ ] The proof–ledger relationship is enforced, with disagreement tests in both directions
-- [ ] `pack-check` passes its decisive scenario: a clean, data-only consumer with no product
-      dependencies, no credentials and **no ambient builder**
-- [ ] A second, differently configured consumer passes — different namespace, paths, origin,
-      plugin identity and profile vocabulary
-- [ ] The pack's suite covers flattener, comparator, theme resolution and `$themeOverrides`
-- [ ] The pack has a lint gate and the LOC guard
-- [ ] T16a's platform, runtime, install-location and enforcement selections are recorded
-- [ ] Collider is untouched by this phase and still green
+- [x] Every command in `SPEC.md` §4.2 is implemented, with input and side-effect semantics
+      specified per §4.4 and the machine interface per §4.3 — all nine, and a test asserts the
+      registry carries no placeholder
+- [x] The proof–ledger relationship is enforced, with disagreement tests in both directions
+- [x] `pack-check` passes its decisive scenario: a clean, data-only consumer with no product
+      dependencies, no credentials and **no ambient builder** — esbuild is added explicitly by the
+      throwaway consumer, never inherited. Removing the optional-peer shape itself is T14's (§7.3)
+- [~] A second, differently configured consumer passes — different namespace, paths, origin,
+  plugin identity and profile vocabulary. **Covered in two halves, not one:** the example
+  config differs from Collider's in namespace, origin, artifact path and plugin identity and
+  runs the full capture/verify loop from an installed tarball; the `consumer-b` profile differs
+  in artifact path, destination identity and mode set and is rejected under A's profile and
+  vice versa. The two have not been exercised **together** as one consumer
+- [x] The pack's suite covers flattener, comparator, theme resolution and `$themeOverrides` — the
+      last as a real-artifact constraint in `figma verify`, not a fixture assertion
+- [x] The pack has a lint gate and the LOC guard — `ds-skills` `3632d7e`. **This item had no owning
+      task**, which is why it outlived T12 and T13; see the note below
+- [x] T16a's platform, runtime, install-location and enforcement selections are recorded
+- [x] Collider is untouched by this phase and still green — `just check` passes, `git status` clean
+      apart from these task files
+
+> **A checkpoint item with no owning task is a requirement nobody is scheduled to meet.** The lint
+> gate and LOC guard sat in this list and in `SPEC.md` §6 and in no task's acceptance criteria.
+> Adopting them found four defects immediately — an unhandled rejection in the Figma plugin, a
+> dropped error `cause`, a `fail()` left undefined by a file split, and baseline output that
+> reordered itself — so the cost of it having no owner was four live defects, not tidiness.
 
 ### Phase 3: Distribution and consumer cutover
 

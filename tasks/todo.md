@@ -1010,24 +1010,24 @@ activation is T17.
 
 _The commands_
 
-- [ ] All five commands implemented per the §4.4 semantics
-- [ ] `figma drift`'s source of observed state is explicit; if it needs a live session it is
+- [x] All five commands implemented per the §4.4 semantics
+- [x] `figma drift`'s source of observed state is explicit; if it needs a live session it is
       **not** a gate command
-- [ ] `figma verify` compares the full normalized mapping against reviewed baseline data, never
+- [x] `figma verify` compares the full normalized mapping against reviewed baseline data, never
       against the current artifact, and reads a **local** artifact path — not the config's
       serving origin
-- [ ] The pack's suite covers flattener, comparator, theme resolution and `$themeOverrides`
-- [ ] Any real-artifact constraint the old `$themeOverrides` assertion protected (per T9) is
+- [x] The pack's suite covers flattener, comparator, theme resolution and `$themeOverrides`
+- [x] Any real-artifact constraint the old `$themeOverrides` assertion protected (per T9) is
       explicitly enforced here. A package fixture does not inherit it, and normalization can
       conceal structural properties
 
 _The builder, and T6's checks made durable_
 
-- [ ] The original consumer's **exact manifest baseline and complete normalized mapping** are
+- [x] The original consumer's **exact manifest baseline and complete normalized mapping** are
       preserved
-- [ ] For **alternate** configurations, the test asserts the intended changed output — byte
+- [x] For **alternate** configurations, the test asserts the intended changed output — byte
       identity to the original digest is the criterion for the original configuration only
-- [ ] **T6's substitution checks become durable tests**, including the two round-4 raised: - the `jsString` escaper is pinned **directly**, on hostile values containing `</script`,
+- [x] **T6's substitution checks become durable tests**, including the two round-4 raised: - the `jsString` escaper is pinned **directly**, on hostile values containing `</script`,
       `<script` and `<!--`. Routing through a URL does not exercise it: `new URL()` rejects
       `<` in a hostname with `ERR_INVALID_URL`, so the escaper is defence in depth for a value
       that cannot currently carry the sequence — which is exactly why nothing pins it today - the generated endpoint is tested **together with manifest permissions**. `networkAccess`
@@ -1037,29 +1037,29 @@ _The builder, and T6's checks made durable_
 
 _Serve_
 
-- [ ] Tests for actual readiness, an occupied port, shutdown, and access **only to the intended
+- [x] Tests for actual readiness, an occupied port, shutdown, and access **only to the intended
       resources**. It must not become a generic server for a consumer checkout because that is
       the easy migration
-- [ ] Bind behaviour specified, and the plugin's embedded URL agrees with the served endpoint
+- [x] Bind behaviour specified, and the plugin's embedded URL agrees with the served endpoint
 
 _Baseline_
 
-- [ ] **Verification and capture are separate behaviours.** Verification never rewrites expected
+- [x] **Verification and capture are separate behaviours.** Verification never rewrites expected
       data and **fails when the required reference is missing**
-- [ ] The non-overwrite guard is preserved and tested: mixed drift across the three artifacts
+- [x] The non-overwrite guard is preserved and tested: mixed drift across the three artifacts
       leaves **all three unchanged**, not just the one that differed first. No partial writes
-- [ ] Automated gates never pass `--force`. A manual demonstration that `--force` works is not a
+- [x] Automated gates never pass `--force`. A manual demonstration that `--force` works is not a
       substitute for these tests
-- [ ] **The T1 reference stays frozen**, with an explicit reconciliation record. It does not
+- [x] **The T1 reference stays frozen**, with an explicit reconciliation record. It does not
       become an automatically refreshed "current baseline"
-- [ ] A small set of **directly asserted semantic examples** sits alongside the historical
+- [x] A small set of **directly asserted semantic examples** sits alongside the historical
       reference — T1 proves preservation of prior behaviour, not that prior behaviour was correct
 
 **Verification:**
 
-- [ ] `pnpm check` passes
-- [ ] `figma verify` against Collider's real artifact matches the T1 baseline (**S3**)
-- [ ] Negative cases: missing input, malformed JSON, mismatched expectations each produce a
+- [x] `pnpm check` passes
+- [x] `figma verify` against Collider's real artifact matches the T1 baseline (**S3**)
+- [x] Negative cases: missing input, malformed JSON, mismatched expectations each produce a
       rail-specific diagnostic and a non-zero exit
 
 > **Hold point** — all builder, serve and baseline behaviour is reachable through installed CLI
@@ -1070,6 +1070,51 @@ _Baseline_
 **Scope:** L — was M, before serve, baseline and the durable T6 tests were counted
 
 ---
+
+**Landed:** `atomize-hq/ds-skills` `3479c84` (commands) and `3831d35` (three constraints made
+checkable). 214 tests, `pnpm check` green, Collider untouched.
+
+**Verified against the consumer's real data, not a package fixture:**
+
+- **S3** — `ds-skills figma verify --config figma/token-sync.config.json --expect
+figma/token-rail.baseline.json --artifact design-tokens/dist/figma/tokens.json` → `✓ collection=Collider
+Tokens variables=176 themes=dark,light default=dark`, exit 0.
+- **S4** — `ds-skills figma baseline --check … --plugin-out figma/plugins/collider-token-sync` →
+  both committed references **unchanged**, exit 0. The manifest is byte-identical to T1's capture
+  (sha256 `df45a8de…`, 373 bytes), and the committed plugin build still matches its config.
+
+**Three defects the new tests found:**
+
+- **Re-capturing a baseline reordered its keys**, so a second run produced a diff with no change
+  in it — indistinguishable from real drift, and directly against the "run it twice, the tree
+  stays clean" property the capture promises. An unchanged reference is now left alone byte for
+  byte, which also stops a consumer's formatter and a re-capture fighting over short arrays.
+- **The drift-report endpoint trusted the client's provenance.** It spread the posted payload
+  _after_ the stamped fields, so a caller could supply its own `artifactSha256` and have the
+  server record it as measured — defeating the one thing the envelope exists for. **Inherited
+  verbatim from Collider's `scripts/serve-figma-tokens.mjs`**, so the relocation would have carried
+  it across silently. Collider still has the original; T17 replaces that file.
+- **A missing config surfaced as an unexpected runtime failure** (exit 3) rather than an inability
+  to evaluate (exit 2), collapsing the distinction T8 §3.1 exists to draw.
+
+**Design decisions worth keeping:**
+
+- **`figma drift` takes observed state from a named file.** Figma variables are readable only
+  inside a plugin session, so a command that produced its own observation would need a live editor
+  and could never be a gate. Recording and checking are two steps; only the second is a check.
+- **`figma verify` reads a local artifact path.** A verifier that fetched what the plugin fetches
+  would pass whenever the server agreed with itself.
+- **One builder, two entry points.** `plugin/build.mjs` is now a wrapper over `src/plugin/build.ts`;
+  pack-check compares the two entry points' output byte for byte, so they cannot drift. The
+  extraction also removed the runtime `import("../src/config.ts")` fallback.
+- **`--plugin-out` was added** so the manifest baseline can name the manifest it describes, and so
+  a committed plugin build that no longer matches its config is its own finding
+  (`RAIL_BASELINE_STALE_BUILD`) — invisible to a baseline captured from a scratch build.
+
+**Not carried across:** the mapping baseline's `railDependency` stamp is consumer provenance the
+portable capturer does not reproduce. It is _preserved_ rather than dropped, and excluded from the
+comparison along with `$comment` and `producedBy` — a capturer that reported drift because the tool
+renamed itself would be crying wolf about its own byline.
 
 ### T14: Test the release product, not a package tarball
 
@@ -1133,7 +1178,7 @@ _Rehearsal_
       release and exercises every command with valid and invalid inputs
 - [ ] A second, differently configured consumer passes: different namespace, paths, origin,
       plugin identity and profile vocabulary
-- [ ] The pack has a lint gate and the LOC guard
+- [x] The pack has a lint gate and the LOC guard — `ds-skills` `3632d7e`; **this item had no owning task**, and adopting it found four live defects
 
 > **Hold point** — the exact candidate assets have passed installed-artifact and prospective
 > consumer-integration tests. Local installer-fixture tests do **not** replace T16b's real
