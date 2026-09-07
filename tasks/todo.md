@@ -1216,7 +1216,32 @@ _Rehearsal_
 
 1. `.agents/skills/profiles/collider.json` lacks `destination-name` and `destination-figma-file`,
    which T12 made required. Every record command exits 2, so `--json` yields no rail projection.
+   **Closed** — the two keys are declared. No Collider code reads that file, so the addition is
+   inert to Collider's gates and `proof validate` against the real proof now exits 0.
 2. `src/figma/sync-ledger.json` is still `ledgerVersion: "2"` with no `publication` block.
+   **Not separable — it is the data half of T17's cutover, and stays at v2 until then.** Migrating
+   it alone was tried and reverted: `scripts/lib/sync-ledger.mjs:80` pins `ledgerVersion` to the
+   literal `'2'` and its key spec has no `publication`, so the migrated ledger fails Collider's own
+   validator and **five tests** across three Storybook suites. Repairing a module T17 deletes, to
+   accept a version its replacement already requires, is throwaway work in both directions. The
+   migration is pre-computed in T17 instead, so the cutover applies it rather than deriving it.
+   Recording where the check lives, since it is not where it looks: `pnpm validate:sync-ledger` has
+   **zero gate callers** — it is in `package.json` and in neither `just check` nor `just preflight`
+   — so the ledger is guarded only through those tests, the same zero-caller shape T9 found on
+   `validate:publish-proof`.
+
+**Found while verifying finding 1, and fixed in the package (`ds-skills` `2e2b15f`):** with a
+publication binding that does not hold, `ledger validate` reported `ok: false` while its `rail`
+block still said `outcome: "satisfied"`, `reasonCodes: []`, `promotable: true`. The rail projection
+is computed from the ledger alone, and a ledger agrees with itself whatever the proof says — but
+that block is the one a status caller is contracted to consume _on its own_, so the single consumer
+that opens neither record was told the rail was fine while the attestation under it was unverified.
+Not a regression: `evaluateStatusRail` was behaviour-pinned against the pre-move implementation,
+which had no binding to consult because v2 had none, so the gap arrived with v3 and the pin
+preserved it by construction. The same defect this command already refused for an _unreadable_
+ledger — the binding was its surviving instance. `rail.outcome` and `promotable` are now withheld
+on a failed binding, with a `ct8b-publication-unverified` reason code; `state` and `freshness` still
+describe the ledger, which is readable and says what it says.
 
 **Full record:** [`docs/ds-skills-release-product-evidence.md`](../docs/ds-skills-release-product-evidence.md)
 
@@ -1375,6 +1400,19 @@ _Activation — all of it, at once_
       the former implementation when the CLI is missing** — a missing tool is a failure, not a
       downgrade
 - [ ] `just figma-plugin-build` calls the CLI; `scripts/build-figma-plugin.mjs` deleted
+
+_Data migration — pre-computed at T14's rehearsal, so the cutover applies it_
+
+- [ ] `src/figma/sync-ledger.json` → `ledgerVersion: "3"` plus the `publication` binding. The
+      exact block, verified against the pack CLI before it was reverted:
+      `{"proof": "./publish-proof.json", "sha256": "1743b844…69167"}` — recompute the digest at
+      cutover rather than trusting this transcription, and note that
+      `src/figma/publish-proof.json` is already Prettier-stable, so `just fmt` cannot silently
+      move the bytes the digest binds to. **No fact changes**: all six §4 agreement facts and the
+      sufficiency check already hold between the v2 ledger and the existing proof, and
+      `dc97a26` is still the last commit to touch the artifact, so this is a shape migration only
+- [ ] Land it in the same commit as the code, never before: it fails `scripts/lib/sync-ledger.mjs`
+      and five tests until that module is gone
 
 _Removal — nothing survives by living somewhere unusual_
 

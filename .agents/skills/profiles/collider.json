@@ -5,6 +5,16 @@
     "const": "design-tokens/dist/figma/tokens.json"
   },
 
+  "destination-name": {
+    "const": "Collider",
+    "description": "Read by the rail validators, not by a schema: the publish proof's destination.name must equal this literal. Declaring it here is what removes the constant from the validators."
+  },
+
+  "destination-figma-file": {
+    "const": "figma://file/23PLdynlRYoBYQx9teoC8A",
+    "description": "The one Figma destination Collider publishes to. The proof names it directly; the ledger names it through publish.figmaFile, and the publication binding is what ties the two together."
+  },
+
   "publish-modes": {
     "enum": ["plugin-import-manual", "tokens-studio-carried"],
     "description": "Collider publishes through the repo-owned Figma plugin. The Enterprise Variables REST rail was retired — seat-gated, never run to success, and its code is gone. The Tokens Studio carrier was defined and never used."
