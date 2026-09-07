@@ -1271,40 +1271,40 @@ packaging gate can claim to exercise them
 
 ## Phase 3 — Distribution and consumer cutover
 
-### T15: Cut the release — **ask first**
+### T15: Cut the release — **ask first** — ✅ **DONE 2026-09-07**
 
 **Description:** The earlier clean scan covered the rail repo as it was on 2026-09-05. It does
 not establish that the **final** package is clean after ~160 files moved in.
 
 **Acceptance criteria:**
 
-- [ ] The final tarball is reviewed for disclosure and redistribution suitability
-- [ ] **The approval packet identifies**: source commit, release tag, the candidate asset
+- [x] The final tarball is reviewed for disclosure and redistribution suitability
+- [x] **The approval packet identifies**: source commit, release tag, the candidate asset
       inventory, bootstrap and payload digests, and the T14 test evidence for those exact bytes.
       Testing candidate A and rebuilding candidate B during publication re-opens every claim
-- [ ] The exact artifact that passed T14 is the one released; nothing is rebuilt
-- [ ] **Annotated-tag identity is recorded separately from the peeled commit.** Git distinguishes
+- [x] The exact artifact that passed T14 is the one released; nothing is rebuilt
+- [x] **Annotated-tag identity is recorded separately from the peeled commit.** Git distinguishes
       dereferencing a tag object from resolving the commit it names, and a field labelled
       `commit` is not evidence of object type — measured at T7, where pnpm's lockfile
       `commit: b00a82d8…` is the **tag object**, not the commit `189db11`
-- [ ] `SHA256SUMS` is published alongside every asset, with per-platform assets where the bundled
+- [x] `SHA256SUMS` is published alongside every asset, with per-platform assets where the bundled
       builder requires them. It covers the bootstrap too, and the bootstrap digest goes into the
       reviewed record
-- [ ] The installer scripts are published as **release assets**, per §10.1 — not merely committed
+- [x] The installer scripts are published as **release assets**, per §10.1 — not merely committed
       at the tag. A `raw.githubusercontent.com/<org>/<repo>/<tag>/…` bootstrap cannot know its own
       version, which is the defect §10.1 removes; the measurement is in T5
-- [ ] **Assembly order: stage a draft with every asset attached, then publish.** Immutable
+- [x] **Assembly order: stage a draft with every asset attached, then publish.** Immutable
       releases forbid adding, replacing or deleting an asset after publication, so a release
       published incomplete cannot be repaired — it needs a new release **and** a new reviewed
       record in Collider. This is an assembly constraint, not only a security one
-- [ ] Rollback is defined as **explicit version selection** — never `latest`, never restoring the
+- [x] Rollback is defined as **explicit version selection** — never `latest`, never restoring the
       retired mode. On a first release there is no compatible earlier version, so rollback is not
       yet a demonstrated recovery procedure; say so rather than implying one exists
-- [ ] User approval obtained before publishing
+- [x] User approval obtained before publishing
 
 _Readiness delta — from the 2026-09-07 consult ([record](../docs/consultations/2026-09-07-release-readiness-review.md)), accepted after local verification_
 
-- [ ] **Every required check is reachable through the released CLI's public command path.** One
+- [x] **Every required check is reachable through the released CLI's public command path.** One
       that is not is a release blocker, distinct from T17's question of whether a gate calls it.
       This is the pre-release half of the caller-proof strengthening; the consumer-gate half is
       T17's
@@ -1354,30 +1354,30 @@ _Readiness delta — from the 2026-09-07 consult ([record](../docs/consultations
       to a first-ever publication. Scope any history scan with `git rev-list origin/main`; `git log
 --all` walks unpushed refs and will report local commits as if they were public, which is how
       this finding first read as an active leak when it was not.
-- [ ] **Disclosure approval names an exact publication scope, and covers reachable history** — not
+- [x] **Disclosure approval names an exact publication scope, and covers reachable history** — not
       the working tree. Deleted content, captured predecessor outputs, fixtures and metadata are all
       published by a push that makes them reachable. Inspect what could broaden the scope
       (`--mirror`, `push.followTags`, `push.default`) and inspect first-push and tag-triggered
       automation, so nothing publishes a release ahead of the approval or leaks through a job's
       output. "The first CI run will scan it" is not available: that run is downstream of the
       publication event
-- [ ] **The reviewed record is not the release description.** Confirm at cut time whether GitHub
+- [x] **The reviewed record is not the release description.** Confirm at cut time whether GitHub
       permits editing an immutable release's title and notes — the consult asserts it does, which
       this repo has not verified. If so, nothing may treat the rendered release page as the
       authority; the committed record is
-- [ ] **Read the uploaded draft back before publishing.** Compare names, sizes and digests against
+- [x] **Read the uploaded draft back before publishing.** Compare names, sizes and digests against
       the reviewed record from the uploaded bytes, not from upload success — and **reject
       unexplained extra assets as well as missing ones**
-- [ ] After publishing, exercise the bootstrap through the **unauthenticated public route** before
+- [x] After publishing, exercise the bootstrap through the **unauthenticated public route** before
       any consumer adopts it. If that surfaces a content mistake, leave the consumer un-cut-over and
       issue a corrected release; never weaken verification to match what shipped
 
 **Verification:**
 
-- [ ] The published version matches the tested digest
-- [ ] **The published release object's immutable status is verified.** The repository-setting
+- [x] The published version matches the tested digest
+- [x] **The published release object's immutable status is verified.** The repository-setting
       check at T5 was preparation, not proof about a future release
-- [ ] On a clean machine: download the bootstrap **asset** for the pinned release, verify it
+- [x] On a clean machine: download the bootstrap **asset** for the pinned release, verify it
       against the reviewed record, execute it, and confirm the installed version is the pinned
       one — not merely that the first request returned 200. The `curl … | bash` one-liner is
       exercised separately, as the documented human path, with `set -o pipefail`
@@ -1387,6 +1387,26 @@ _Readiness delta — from the 2026-09-07 consult ([record](../docs/consultations
 **Scope:** S
 
 ---
+
+**Released:** https://github.com/atomize-hq/ds-skills/releases/tag/v0.4.0 —
+`isImmutable: true`, verified on the release object rather than inferred from a repo setting
+(the repo object exposes no immutability field at all, so the T5 check could never have proved it).
+
+Source `08f7cc8`, tag object `c3ec959` peeling to it. Eight assets. Read back from the draft and
+digest-compared against the record committed here **before** publishing: 8 of 8 matched, no extras,
+none missing. An independent re-stage was byte-identical, so the bytes T14 tested are the bytes
+that shipped.
+
+Public delivery exercised anonymously with no token: fetched `install.sh`, verified it against the
+reviewed record **before executing it**, ran it, and it selected `macos_arm64`, installed to a
+version-specific prefix, reported source `08f7cc8`, and answered `0.4.0` with
+`[RAIL_SKILL_RELEASE] cli=v0.4.0 skills=v0.4.0` — no skew.
+
+Late finding, settled before the push: the 16 unpushed commits carried a different author email
+from the 8 already public. Both author and committer were rewritten to the public identity. That
+cascaded further than metadata sounds like it should — `sourceCommit` is baked into both installers
+and into the payload's `release.json`, so every digest moved and the candidate had to be rebuilt,
+re-tagged and re-staged.
 
 ### T16b: Prove anonymous cold acquisition and provision every environment
 
