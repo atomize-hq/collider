@@ -178,7 +178,7 @@ immutable release cannot be amended after the fact.
 - [x] T16a: Select the execution contract and name the real enforcement checks — `docs/ds-skills-execution-contract.md`; found there was **no required check at all**, and created one (ruleset `main`, 22410608, requiring `Governance` + `Test All`). Job 8 stays advisory: GitHub counts a **skipped** check as success
 - [x] T10: Move the rail modules under `src/figma/` — `199edf1`; copies not moves, pinned against pre-move outputs, which caught an order-dependent reason-code branch
 - [~] T11: Move skills, schemas, profiles and templates in — schemas/templates/profiles, the validator and **three of the eight skills** moved and gated; `ai-elements` + `ai-elements-plate-builder` stay with the consumer and no shipped skill may reference them. Open: materialization, discovery, shared release identity
-- [ ] T12: Own validation, the proof–ledger relationship, status output and parity
+- [x] T12: Own validation, the proof–ledger relationship, status output and parity — `ds-skills` `c718f69` + `7d65967`, reconciled in [`docs/ds-skills-second-reconciliation.md`](../docs/ds-skills-second-reconciliation.md). **Nine** hardcoded consumer constants, not four; no fixture outcome moved across the v2 -> v3 bump; found the package shipping a **real Figma file key** into a public repo, and a `pack-check` assertion that had stopped testing what it claimed
 - [ ] T13: Own the figma commands, serve, baseline, and the rail tests
 - [ ] T14: Test the release product, not a package tarball
 

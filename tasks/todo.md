@@ -898,58 +898,58 @@ result, and the independently invocable parity command.
 
 _Ownership_
 
-- [ ] Every `package-owned` entry from T9 that this task owns is implemented; each inventory
+- [x] Every `package-owned` entry from T9 that this task owns is implemented; each inventory
       entry names **one** implementing task, T12 or T13, with no overlap
-- [ ] `ledger parity` stays independently invocable — its existing governance-step identity is
+- [x] `ledger parity` stays independently invocable — its existing governance-step identity is
       preserved, not absorbed as a side effect of another command
-- [ ] Errors carry a phase (`ledger`, `proof`, `artifact`, …)
-- [ ] Collider's callers have a command to switch to at T17
+- [x] Errors carry a phase (`ledger`, `proof`, `artifact`, …)
+- [x] Collider's callers have a command to switch to at T17
 
 _The proof–ledger relationship — implementing T8's specification_
 
-- [ ] **§3 of the T9 inventory is decided: option (1), wire it.** `ds-skills proof validate` joins
+- [x] **§3 of the T9 inventory is decided: option (1), wire it.** `ds-skills proof validate` joins
       the governance chain, and the relationship check joins `ledger validate`. Porting an
       ungated validator and leaving it ungated by inheritance is not an option
-- [ ] The five duplicated facts are checked **for the exact referenced publication**, per the
+- [x] The five duplicated facts are checked **for the exact referenced publication**, per the
       binding T8 specified. Neither record is ever copied onto the other to make them agree
-- [ ] Sufficiency is checked **separately** from agreement: a valid attestation about an earlier
+- [x] Sufficiency is checked **separately** from agreement: a valid attestation about an earlier
       revision that no longer supports the ledger's present claim fails as _unsupported claim_,
       with its own diagnostic — not as _invalid proof_
-- [ ] Absence behaves as specified: no claim may lack a proof; a current-materialization claim
+- [x] Absence behaves as specified: no claim may lack a proof; a current-materialization claim
       may not; a malformed proof is never ignored
-- [ ] The schema version moves and the fixtures change a second time — and **every changed
+- [x] The schema version moves and the fixtures change a second time — and **every changed
       outcome names its cause**, retirement or relationship (`SPEC.md` §5.2). A second
       reconciliation table is produced; the T9 table is not edited in place
 
 _Portability_
 
-- [ ] All four hardcoded consumer constants generalised (`SPEC.md` §4.5): `publishProofPilotName`,
+- [x] All four hardcoded consumer constants generalised (`SPEC.md` §4.5): `publishProofPilotName`,
       `publishProofPilotFile`, `publishProofArtifactPath`, `syncLedgerArtifactPath`
-- [ ] **Both validators audited for the same pattern**, including defaults and error-message
+- [x] **Both validators audited for the same pattern**, including defaults and error-message
       text — not only the checks
-- [ ] Expected values come from the profile, never from the record under test. Literal equality
+- [x] Expected values come from the profile, never from the record under test. Literal equality
       is preserved; "any string is acceptable" is not a portability fix
-- [ ] A profile cannot re-enable the retired mode or override a portable invariant, and this is
+- [x] A profile cannot re-enable the retired mode or override a portable invariant, and this is
       tested — the retirement touched a schema, two validators, fixtures and error messages, so
       the allowed values exist in several representations that must agree
 
 _Fixtures and tests_
 
-- [ ] The 11 ledger fixtures and 5 proof fixtures move with their validators
-- [ ] **New cases: each record individually valid while their shared claims disagree**, using
+- [x] The 11 ledger fixtures and 5 proof fixtures move with their validators
+- [x] **New cases: each record individually valid while their shared claims disagree**, using
       schema-valid mutations in each direction wherever representable
-- [ ] Also covered: missing required proof, wrong source binding, wrong destination, wrong
+- [x] Also covered: missing required proof, wrong source binding, wrong destination, wrong
       revision, and valid historical proof that no longer supports the current claim
-- [ ] The second consumer is **genuinely different** — different destination identity, artifact
+- [x] The second consumer is **genuinely different** — different destination identity, artifact
       path and policy data — and is tested for both legitimate acceptance and mismatched-record
       rejection. Copying Collider's layout under another name proves nothing
 
 **Verification:**
 
-- [ ] All 11 fixtures produce their frozen outcomes and diagnostic reasons, reconciled twice and
+- [x] All 11 fixtures produce their frozen outcomes and diagnostic reasons, reconciled twice and
       separately: against T1's pre-retirement capture, and against the relationship change. A
       fixture must not pass by failing earlier for an unrelated reason
-- [ ] `pnpm check` passes
+- [x] `pnpm check` passes
 
 > **Hold point** — the status caller obtains its complete rail result **without loading or
 > interpreting either record itself**.
@@ -960,6 +960,44 @@ _Fixtures and tests_
 generalization are each larger than the original "implement the commands" framing
 
 ---
+
+**Landed:** `atomize-hq/ds-skills` `c718f69` (implementation) and `7d65967` (diagnostic phase).
+The reconciliation and the findings are in
+[`docs/ds-skills-second-reconciliation.md`](../docs/ds-skills-second-reconciliation.md).
+
+**What it found:**
+
+- **Nine hardcoded consumer constants, not the four `SPEC.md` §4.5 lists** — the two pilot
+  identifiers, the two independently-declared artifact paths, **two default record paths**, and
+  **three usage strings** naming consumer scripts T17 deletes. The defaults mattered most: a
+  default path is a consumer assumption that fires only when an argument is omitted, which is the
+  case least likely to be tested.
+- **The package was shipping a real Figma file key and the consumer's name into a public
+  repository** — four proof fixtures, five destinations, one prose reason string. Nothing had been
+  pushed. It survived T11's disclosure review because the boundary check reads **modules only**,
+  on the reasoning that a fixture naming a consumer is sample data. True for coupling, false for
+  disclosure: in a public package, sample data is published data.
+- **A `pack-check.sh` assertion had stopped testing what it claimed.** It asserted that
+  `ledger validate --ledger nope.json` exits 2 with empty stdout as evidence that an unimplemented
+  command cannot look like a clean run. Once the command was implemented it still exited 2 with
+  empty stdout — because `--profile` was missing. Green, testing nothing. The fourth
+  filter-shaped lie in this migration.
+- **Sufficiency is structurally subsumed by agreement** once all six facts are enforced: it and
+  `CT-8B_PUBLISH_VALID_REQUIRES_CURRENT_REVISION` fire on the same state. Kept — it reports that
+  state from the publication's side, which is what says re-attesting is not the fix — but recorded
+  as subsumed rather than counted as independent coverage.
+- **Fact 1 cannot fail between two valid records**, because both validators pin `artifact.path` to
+  the same profile key. The comparison is kept as defence in depth and exercised directly, labelled
+  as such rather than counted as a live check.
+- **No fixture outcome moved.** All 11 keep their state, promotability and diagnostics across the
+  v2 -> v3 move. The status-rail baseline is **not** rebaselined: the test substitutes the version
+  segment and asserts the revision segment is byte-identical, so a fixture that changed identity
+  under cover of the schema bump fails.
+
+**Deliberately not done here:** wiring `proof validate` into Collider's governance chain is T17's
+half of the §3 decision — this task owns the command. `SPEC.md` §4.5 and the boundary contract §5
+still say "four constants"; correcting a contract from inside its own implementation is the wrong
+place, so §6 of the reconciliation doc flags it for whoever edits them next.
 
 ### T13: Own the figma commands, serve, baseline, and the rail tests
 
