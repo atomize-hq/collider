@@ -177,26 +177,30 @@ immutable release cannot be amended after the fact.
 - [x] T8: Fix the complete boundary contract — `docs/ds-skills-boundary-contract.md` + scaffold `25f196f`; the failure inspection found the status rail enforces **nothing** in CI, by four independent mechanisms
 - [x] T16a: Select the execution contract and name the real enforcement checks — `docs/ds-skills-execution-contract.md`; found there was **no required check at all**, and created one (ruleset `main`, 22410608, requiring `Governance` + `Test All`). Job 8 stays advisory: GitHub counts a **skipped** check as success
 - [x] T10: Move the rail modules under `src/figma/` — `199edf1`; copies not moves, pinned against pre-move outputs, which caught an order-dependent reason-code branch
-- [~] T11: Move skills, schemas, profiles and templates in — schemas/templates/profiles, the validator and **three of the eight skills** moved and gated; `ai-elements` + `ai-elements-plate-builder` stay with the consumer and no shipped skill may reference them. Open: materialization, discovery, shared release identity
+- [x] T11: Move skills, schemas, profiles and templates in — schemas/templates/profiles, the validator and **three of the eight skills** moved and gated; `ai-elements` + `ai-elements-plate-builder` stay with the consumer and no shipped skill may reference them. Discovery and shared release identity closed at T14 (`ds-skills skills`, fail-closed on skew). One item deliberately deferred to T17: the two skills' `pnpm`/`node` invocation strings, which change when the commands do
 - [x] T12: Own validation, the proof–ledger relationship, status output and parity — `ds-skills` `c718f69` + `7d65967`, reconciled in [`docs/ds-skills-second-reconciliation.md`](../docs/ds-skills-second-reconciliation.md). **Nine** hardcoded consumer constants, not four; no fixture outcome moved across the v2 -> v3 bump; found the package shipping a **real Figma file key** into a public repo, and a `pack-check` assertion that had stopped testing what it claimed
 - [x] T13: Own the figma commands, serve, baseline, and the rail tests — `ds-skills` `3479c84` + `3831d35`. **S3 and S4 both pass against Collider's real artifact and committed baselines.** Found three defects, one of them inherited verbatim from the consumer: the drift-report endpoint let a client supply its own `artifactSha256` and have it recorded as measured
-- [ ] T14: Test the release product, not a package tarball
+- [x] T14: Test the release product, not a package tarball — `ds-skills` `ba37832`, recorded in [`docs/ds-skills-release-product-evidence.md`](../docs/ds-skills-release-product-evidence.md). §7.3's optional-peer defect is gone: the plugin bundle is prebuilt and the package declares no peer dependency at all. Five platforms, both production installers (`install.ps1` runs under `pwsh` in the gate), the whole trust chain with the decisive negative — a modified payload **with** a matching modified `SHA256SUMS`. The cutover rehearsal passes **S3 and S4 against Collider's real data through the installed release**, and found two consumer data migrations T17 must do before it can run at all
 
-**Checkpoint: The package is complete** — reached 2026-09-07.
+**Checkpoint: The package is complete** — reached 2026-09-07, **fully met at T14** (it stood at
+seven of eight, with the second-consumer item covered in two halves that had never been exercised
+as one).
 
 - [x] Every command in `SPEC.md` §4.2 is implemented, with input and side-effect semantics
-      specified per §4.4 and the machine interface per §4.3 — all nine, and a test asserts the
-      registry carries no placeholder
+      specified per §4.4 and the machine interface per §4.3 — **ten**, after T14 added `skills`
+      for T11's discovery question and §10.6's fail-closed skew rule. A test asserts the registry
+      carries no placeholder; that assertion had gone vacuous a third time and now rests on a
+      registry field rather than a proxy
 - [x] The proof–ledger relationship is enforced, with disagreement tests in both directions
 - [x] `pack-check` passes its decisive scenario: a clean, data-only consumer with no product
-      dependencies, no credentials and **no ambient builder** — esbuild is added explicitly by the
-      throwaway consumer, never inherited. Removing the optional-peer shape itself is T14's (§7.3)
-- [~] A second, differently configured consumer passes — different namespace, paths, origin,
-  plugin identity and profile vocabulary. **Covered in two halves, not one:** the example
-  config differs from Collider's in namespace, origin, artifact path and plugin identity and
-  runs the full capture/verify loop from an installed tarball; the `consumer-b` profile differs
-  in artifact path, destination identity and mode set and is rejected under A's profile and
-  vice versa. The two have not been exercised **together** as one consumer
+      dependencies, no credentials and **no ambient builder**. **Closed at T14** — the consumer
+      installs the release and there is no bundler to add, because the package no longer has one
+- [x] A second, differently configured consumer passes — different namespace, paths, origin,
+      plugin identity and profile vocabulary. **Closed at T14**, and as one consumer rather than two
+      halves: `scripts/checks/make-consumer.mjs` authors a complete `beta` consumer — config,
+      profile, artifact, ledger and the proof it binds — differing from `alpha` in every profiled
+      dimension, and every command runs against it. Its expected Figma observation is hand-computed
+      from the artifact rather than produced by the flattener under test, and it matched
 - [x] The pack's suite covers flattener, comparator, theme resolution and `$themeOverrides` — the
       last as a real-artifact constraint in `figma verify`, not a fixture assertion
 - [x] The pack has a lint gate and the LOC guard — `ds-skills` `3632d7e`. **This item had no owning

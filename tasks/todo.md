@@ -825,12 +825,20 @@ materialization here: canonical editing location, tracked or generated, stale-co
 - [x] **Disclosure review before the first public push** —
       [`docs/ds-skills-disclosure-review.md`](../docs/ds-skills-disclosure-review.md), covering
       secrets, profiles, fixtures, schemas, generated output, and history/refs
-- [ ] How installed skill assets are **discovered** after the Collider copy disappears
+- [x] How installed skill assets are **discovered** — `ds-skills skills` prints the path this
+      install actually resolves, so a consumer never has to know the layout. A consumer that has
+      to be told a path can be told the wrong one
 - [x] The retained `.agents/skills/` subtree is the **frozen compatibility snapshot** until T17 —
       Collider is untouched, so the three moved skills exist in both places but only one is edited
 - [x] There are never two independently editable copies — the pack's copies are the ones now
       edited; Collider's are frozen until T17 switches discovery to the installed assets
-- [ ] CLI and materialized skills report the same release identity
+- [x] CLI and materialized skills report the same release identity, and **fail closed on skew**
+      (§10.6). One `release.json` plus one `skills/RELEASE.json`, written from a single object at
+      stage time so they cannot disagree inside an asset; a copy that came from another release
+      is refused with both versions named. A missing stamp is could-not-evaluate, never a
+      default — a fallback would make the check pass on the one machine it cannot protect.
+      Proven by staging the skills stamp from the working tree instead: the release said v0.4.0,
+      the skills said `dev`, and the installed CLI refused
 
 **Verification:**
 
@@ -881,9 +889,10 @@ materialization here: canonical editing location, tracked or generated, stale-co
 
 **Dependencies:** T8 (transitively T9), and T5's materialization decision
 **Files likely touched:** `schemas/`, `templates/`, `profiles/`, `src/validate/`, `package.json`
-**Scope:** L — **substantially done.** Portable assets, the validator and three skills have moved
-and are gated. Open: materialization, discovery and shared release identity — none of which is a
-disclosure question
+**Scope:** L — **done except one item deliberately deferred.** Portable assets, the validator and
+three skills have moved and are gated; discovery and shared release identity closed at T14
+(`ds-skills` `ba37832`). The only open item is the two skills' `pnpm`/`node` invocation strings,
+which are re-checked at T17 when the commands actually change
 
 ---
 
@@ -1127,78 +1136,111 @@ new delivery contract**: a `.tgz` in a temp directory is not the artifact anyone
 
 _The builder_
 
-- [ ] Either invariant plugin code is prebuilt at release with only config-dependent assembly at
-      command time, or the builder dependency is part of the package's own install
-- [ ] The builder is never resolved from Collider
-- [ ] Platform-specific binaries are handled for the platforms T16a selected
-- [ ] `pack-check` no longer installs the builder itself
+- [x] Prebuilt at package build time, with only config-dependent assembly at command time —
+      `scripts/prebuild-plugin.mjs`. The seam is two identifiers `plugin/code.ts` declares and
+      never defines, substituted by JSON literals; the build refuses a bundle where either
+      appears anything but **exactly once**
+- [x] The builder is never resolved from Collider — and now not from anywhere at command time
+- [x] Platform-specific binaries are handled: there are none left. Prebuilding removed the only
+      native dependency, so the §10.5 matrix is retained as the **selection** contract and
+      §10.5 is amended in place to say so
+- [x] `pack-check` no longer installs the builder itself, and asserts none is present.
+      `esbuild` is no longer a peer dependency at all
 
 _The real artifact_
 
-- [ ] Testing targets the **actual staged release archive and production installer**, including
-      resources and runtime dependencies — not `node_modules/.bin`, and not the `files` field,
-      which are development checks only
-- [ ] The installed CLI builds the plugin and runs its commands **without reaching into** the
-      package source tree, Collider's `node_modules`, or undeclared developer tooling. A declared
-      runtime prerequisite is fine; an accidental one is a defect
-- [ ] **The production bash and PowerShell installers are implemented and tested here**, not left
-      to exist by T15. Archive layout, platform selection, integrity enforcement against the
-      reviewed record, and the §10.6 lifecycle behaviours
-- [ ] The bootstrap **hard-fails when its baked release identity is empty** (§10.1)
-- [ ] There is **no `--version` flag**: the asset is the version
-- [ ] **T5's mechanism proof**, inherited because it had nothing to run against, executed on these
-      frozen candidate assets across the §10.5 OS/arch matrix
+- [x] Testing targets the staged release archive and the production installer —
+      `scripts/checks/release-install.sh`, `release-lifecycle.sh`, `release-matrix.sh`.
+      Staging twice produces byte-identical assets, so the tested and published bytes are one
+      claim
+- [x] **Measured, not assumed:** the installed CLI runs with `fs` instrumented and every path it
+      opens is checked against its install prefix and the consumer's data
+      (`scripts/checks/trace-reads.mjs`). Faulted with one stray read, it goes red
+- [x] **Both production installers implemented and tested here.** `install.ps1` runs under
+      `pwsh` in the gate — real archive layout, real platform selection, real integrity
+      enforcement, real refusals. No escape hatch when `pwsh` is absent
+- [x] The bootstrap hard-fails when its baked identity is empty **or still a placeholder** — the
+      ungenerated template is the likeliest way one ends up in that state, and it is tested
+- [x] No `--version` flag, and no flags at all: `curl | bash` has no argv. The two things a
+      caller legitimately varies are env vars. **Proven by accident**: the v0.4.0 bootstrap
+      pointed at a v0.4.1-only mirror 404s, which is now an explicit assertion
+- [x] **T5's mechanism proof** executed on the frozen candidate assets across all five §10.5
+      pairs — each selects **its own** asset, verifies it, and installs a working executable
 
 _Closing the chain_
 
-- [ ] The whole chain is tested, not one layer of it:
-      **reviewed record → verified bootstrap bytes → verified payload bytes → installed
-      executable and resources**. A verified bootstrap that then trusts a replaceable archive plus
-      a replaceable checksum list has moved the trust, not established it
-- [ ] Either the reviewed record binds the payload digests, or the verified bootstrap contains and
-      enforces them. **A baked tag and asset name is selection identity, not payload integrity**
-- [ ] Negative tests at **each** layer, with the reviewed record held unchanged: modified
-      bootstrap, and modified payload **with matching modified checksum metadata**. Rejection
-      occurs **before** untrusted execution
-- [ ] Failure modes covered: installation failure that does not damage an existing installation,
-      paths containing spaces, supported-platform selection, and error propagation in **both**
-      shell and PowerShell
+- [x] Every link tested: record → bootstrap → baked digests → payload → installed executable
+- [x] The bootstrap **contains and enforces** the per-platform digests, so it establishes payload
+      integrity rather than moving the question along
+- [x] Negative tests at each layer with the record held unchanged, including the decisive one —
+      **a modified payload with a matching modified `SHA256SUMS`**. Rejection is asserted to
+      happen before anything is unpacked, not merely before it is used
+- [x] Failure modes: damage-free failure (canary file), paths with spaces, platform selection,
+      Node minimum, and refusals in **both** shell and PowerShell
 
 _Rehearsal_
 
-- [ ] **A pre-release consumer-cutover rehearsal in a disposable checkout**: exercise the proposed
-      T17 caller changes against the staged candidate **before** publishing it. Product activation
-      remains T17's; this is here so the cutover does not discover a missing command semantic
-      after the release is immutable
+- [x] **Run against a disposable clone of Collider**, `pnpm rehearse`. The consumer's tree is
+      asserted untouched. **S3 and S4 both pass through the installed release against Collider's
+      real data.** Five findings, all consumer data migrations for T17 — see below
 
 **Verification:**
 
-- [ ] `pack-check`'s decisive scenario passes: a clean, data-only consumer outside both
-      checkouts — no product dependencies, no credentials, **no ambient builder** — installs the
-      release and exercises every command with valid and invalid inputs
-- [ ] A second, differently configured consumer passes: different namespace, paths, origin,
-      plugin identity and profile vocabulary
+- [x] `pack-check`'s decisive scenario passes: two data-only consumers outside both checkouts,
+      no product dependencies, no credentials, no ambient builder, installing the **release** and
+      exercising every command with valid and invalid inputs
+- [x] The second consumer differs in every profiled dimension — namespace, artifact path, origin,
+      plugin identity, theme names, collection and permitted publish modes. Its expected Figma
+      observation is **hand-computed**, not generated by the code under test
 - [x] The pack has a lint gate and the LOC guard — `ds-skills` `3632d7e`; **this item had no owning task**, and adopting it found four live defects
 
 > **Hold point** — the exact candidate assets have passed installed-artifact and prospective
 > consumer-integration tests. Local installer-fixture tests do **not** replace T16b's real
-> anonymous acquisition.
+> anonymous acquisition. **Held.**
+
+**What T14 found:**
+
+1. **`--port 0` reported port 0** and split the two loopback families across different ephemeral
+   ports — a "serve on any free port" printing a URL nothing can connect to.
+2. **`ds-skills validate` required a path into the package's own tree.** A consumer had to write
+   `<prefix>/lib/schemas/…` — this migration's coupling, reintroduced from the other side. A
+   shipped schema is now named; paths still work for a consumer's own.
+3. **The placeholder assertion had gone vacuous a third time.** Fixed with a registry field
+   (`requiresArguments`) rather than an inline exception that would outlive its reason.
+4. **CI ran neither the lint gate nor the LOC guard** — it listed steps while `pnpm check` listed
+   nine. CI now runs `pnpm check` and installs `tokei`.
+5. Baking the config as a JS _string_ rather than an object parses, runs, and gives every field
+   as `undefined`. Caught by executing the assembled bundle against a stub Figma in `node:vm`.
+
+**Rehearsal findings — T17's, not the package's:**
+
+1. `.agents/skills/profiles/collider.json` lacks `destination-name` and `destination-figma-file`,
+   which T12 made required. Every record command exits 2, so `--json` yields no rail projection.
+2. `src/figma/sync-ledger.json` is still `ledgerVersion: "2"` with no `publication` block.
+
+**Full record:** [`docs/ds-skills-release-product-evidence.md`](../docs/ds-skills-release-product-evidence.md)
 
 **Dependencies:** T10, **T11, T12**, T13 — every command and asset must exist before the
 packaging gate can claim to exercise them
 **Files likely touched:** `plugin/build.mjs`, `scripts/pack-check.sh`, installers, `package.json`, CI
-**Scope:** L — was M, before the chain closure and the rehearsal were counted
+**Scope:** L — was M, before the chain closure and the rehearsal were counted. **Done** —
+`ds-skills` `ba37832`. 244 tests / 20 files, `pnpm check` green end to end
 
 ---
 
 > ### ✅ Checkpoint: The package is complete
 >
-> - [ ] Every §4.2 command implemented with §4.4 semantics specified
-> - [ ] `pack-check` decisive scenario green, plus the second consumer
-> - [ ] The proof–ledger relationship is enforced, with disagreement tests in both directions
-> - [ ] Pack suite covers `$themeOverrides`; lint gate and LOC guard in place
-> - [ ] T16a's platform, runtime, location and enforcement selections are recorded
-> - [ ] **Collider untouched by this phase and still green**
+> - [x] Every §4.2 command implemented with §4.4 semantics specified — **ten**, not nine;
+>       `skills` was added at T14 for discovery and the §10.6 skew rule
+> - [x] `pack-check` decisive scenario green, plus the second consumer
+> - [x] The proof–ledger relationship is enforced, with disagreement tests in both directions
+> - [x] Pack suite covers `$themeOverrides`; lint gate and LOC guard in place, and the guard now
+>       covers `installers/` too
+> - [x] T16a's platform, runtime, location and enforcement selections are recorded — and §10.5's
+>       _rationale_ is amended, since prebuilding the plugin removed the native dependency the
+>       per-platform split was justified by
+> - [x] **Collider untouched by this phase and still green** — the rehearsal runs against a
+>       disposable clone and asserts the working tree is unmodified afterwards
 
 ---
 
