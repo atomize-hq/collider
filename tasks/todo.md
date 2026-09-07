@@ -796,8 +796,9 @@ materialization here: canonical editing location, tracked or generated, stale-co
 **Acceptance criteria:**
 
 - [x] `schemas/`, `profiles/`, `templates/` present in the pack and in `files`
-- [ ] **`skills/` — BLOCKED**, see the disclosure review §6. Not a scheduling slip: publishing it
-      is a licensing decision that is not mine to assume
+- [ ] **`skills/` — open on scope**, see the disclosure review §6. Which of the eight belong in a
+      design-system tooling package; recommended `sync-quality-governor`, `stage-1` and
+      `storybook-rigorous-spec-system` (which owns four of the five schemas that moved)
 - [ ] The two rail-referencing skills (`sync-quality-governor`, `stage-1`) describe CLI
       invocations rather than repo paths — blocked with `skills/`
 - [x] `validate-artifact.mjs` moves behind `ds-skills validate` unchanged, **and its test
@@ -851,10 +852,15 @@ materialization here: canonical editing location, tracked or generated, stale-co
    `scripts/validate-*.mjs` paths T17 deletes, so after cutover they instruct a user to run a
    script that does not exist. `defaultSyncLedgerPath` and `defaultPublishProofPath` are consumer
    layout. All five are the "defaults and error messages" class round 4 named.
-4. **`skills/` cannot be published on my own judgement.** `ai-elements/` is 129 files including
-   **80 vendored third-party `.tsx` sources with no recorded licence anywhere in the repo**.
-   Private-repo use is not public redistribution. Four of the eight skills are also Collider
-   documents rather than portable ones.
+4. **`skills/` is a scope question, and "the 8 skills" was never examined.** `ai-elements/` is a
+   mirror of a third-party library's **documentation** — 49 doc pages plus the 80 usage examples
+   they reference, every one importing from `@/components/ai-elements/*` rather than implementing
+   anything. **The vendored component sources are `src/components/ai-elements/`** — 91 files,
+   12k lines — and were never in this migration's scope. My first reading of this said "80 vendored
+   component sources" and was wrong; it came from filenames rather than from opening the files.
+   Corrected, the question is cohesion: a token-rail CLI should not ship someone else's
+   component-library docs, which also means no licence review is needed. Four of the eight skills
+   name the consumer and need the schemas' portability pass.
 
 **Dependencies:** T8 (transitively T9), and T5's materialization decision
 **Files likely touched:** `schemas/`, `templates/`, `profiles/`, `src/validate/`, `package.json`

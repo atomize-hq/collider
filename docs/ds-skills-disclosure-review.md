@@ -105,20 +105,60 @@ error messages" class:
 `SPEC.md` §3.1 says `skills/ # the 8 skills, shipped as data`. That was written before anyone read
 their contents. Two findings block it:
 
-### 6.1 Eighty vendored third-party `.tsx` files, no licence
+### 6.1 `ai-elements` is a mirror of a third-party documentation site
 
-`.agents/skills/ai-elements/` is 129 files: 49 Markdown and **80 vendored `.tsx` component sources**
-copied from the AI Elements registry. There is **no `LICENSE` file, and no recorded licence** for
-them anywhere in this repository — `upstream-policy.json` records API contracts and deviations, not
-terms.
+**Corrected 2026-09-06.** An earlier draft of this section called these "80 vendored `.tsx`
+component sources copied from the AI Elements registry." That was wrong, and it was wrong because
+it was written from filenames and a `SKILL.md` line rather than from reading the files.
 
-Today they sit in a **private** repository, which is a use. Pushing them to a **public** one is
-**redistribution of third-party source**. That is a licensing decision with a real answer, and it
-is not mine to assume — AI Elements may well permit it, but "probably fine" is not a licence
-review.
+What `.agents/skills/ai-elements/` actually is:
 
-**Nothing from `ai-elements/` has been copied into the pack.** It stays in Collider pending that
-decision.
+| Part              | Count | What it is                                                                        |
+| ----------------- | ----: | --------------------------------------------------------------------------------- |
+| `references/*.md` |    49 | The AI Elements documentation pages, one per component, mirrored                  |
+| `scripts/*.tsx`   |    80 | The code examples those pages point at — `See scripts/agent.tsx for this example` |
+
+The examples are 7,453 lines total, ~20–35 lines each, and every one of them **imports from**
+`@/components/ai-elements/*` rather than implementing anything. They are usage demos.
+
+**The component sources were never here.** They live in `src/components/ai-elements/` — 91 files,
+12,259 lines — which is a different directory, is not under `.agents/`, and is not in this
+migration's scope at any point.
+
+So the licensing concern is real but much smaller than stated, and of a different kind.
+Documentation examples exist to be copied into user code; that is their purpose. Mirroring a
+vendor's entire docs site into a public, redistributable package is a different act from using an
+example, and it carries no attribution or licence note today — but it is not redistributing a
+component library, which is what the earlier draft claimed.
+
+### 6.1b The better question is fit, not licence
+
+`ds-skills` is design-system **tooling**: token rails, ledgers, portable schemas, the Figma plugin
+builder. A 129-file mirror of a third-party component library's documentation has nothing to do
+with any of that. It shares a repository with the rail today because `.agents/skills/` is where
+this repo keeps agent skills — which is a hosting decision, not a cohesion one.
+
+`SPEC.md` §3.1 said `skills/ # the 8 skills, shipped as data`. That line was written without anyone
+examining what the eight skills were. Grouped by what they actually do:
+
+| Skill                                  | Relationship to this package                             |
+| -------------------------------------- | -------------------------------------------------------- |
+| `sync-quality-governor`                | **Rail governance** — pairs directly with the CLI        |
+| `stage-1-foundation-primitives-system` | **Tokens, Figma variables, sync policy** — rail-adjacent |
+| `storybook-rigorous-spec-system`       | Owns four of the five schemas that moved                 |
+| `stage-2-component-roundtrip-loop`     | Workflow, not tooling                                    |
+| `stage-3-organism-layout-assembler`    | Workflow, not tooling                                    |
+| `stack-orchestrator`                   | Routes between the stage skills                          |
+| `ai-elements`                          | Third-party docs mirror — no rail relationship           |
+| `ai-elements-plate-builder`            | Same                                                     |
+
+**Recommendation: move the first three, leave the rest.** That needs no licence review, because the
+two `ai-elements` skills stop being candidates on cohesion grounds alone — a token-rail CLI should
+not ship someone else's component-library documentation.
+
+If the workflow skills are wanted in the package later, that is a separate decision about what
+`ds-skills` is for, and it should be made on those terms rather than inherited from where the files
+happened to live.
 
 ### 6.2 Several skills are Collider documents, not portable ones
 
@@ -144,11 +184,18 @@ treatment: describe the extension point, let the consumer supply the answer.
 
 ### 6.3 What this blocks
 
-T11 cannot close. Moved and cleared: `schemas/`, `templates/`, `profiles/` (as an example), and the
-`validate` executable with its tests. Not moved: `skills/`. Until §6.1 is answered, the skills stay
-in Collider, and with them T11's remaining criteria — the two rail-referencing skills' CLI
-invocations, skill materialization, the `.claude/skills` symlink retarget, and shared release
-identity.
+Moved and cleared: `schemas/`, `templates/`, `profiles/` (as an example), and the `validate`
+executable with its tests. Not moved: `skills/`.
+
+What remains is a **scope decision, not a licence review**: which of the eight skills belong in a
+design-system tooling package. §6.1b recommends three — `sync-quality-governor`, `stage-1`, and
+`storybook-rigorous-spec-system`, the last because it owns four of the five schemas that already
+moved. The two `ai-elements` skills are out on cohesion, which is also why no licence question
+needs answering.
+
+Once that is settled, T11's remaining criteria follow: the rail-referencing skills' CLI
+invocations, materialization, the `.claude/skills` symlink retarget, and shared release identity.
+The chosen skills also need §6.2's portability pass — four of the eight name the consumer.
 
 ## 7. History and refs
 
