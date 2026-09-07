@@ -85,8 +85,11 @@ Worth stating plainly, because the T9 inventory's framing — "CI job 8 quietly 
 rail" — turned out to be too generous. There is no CT-8B gate in CI to lose. Four independent
 mechanisms, each measured:
 
-1. **No required check exists.** `main` is unprotected and the repo has no rulesets
-   ([`ds-skills-execution-contract.md`](ds-skills-execution-contract.md) §5.1).
+1. ~~**No required check exists.**~~ **Closed 2026-09-06** — ruleset `main` (22410608) now
+   requires `Governance` and `Test All`. Job 8's context is deliberately _not_ required, because a
+   skipped job reports Success to a required check
+   ([`ds-skills-execution-contract.md`](ds-skills-execution-contract.md) §5.1–§5.2). The other
+   three mechanisms below are untouched, so the rail is still inert — three ways over.
 2. **Job 8 does not run.** It `needs: chromatic-review`, which fails on BL-2, and a failed `needs:`
    skips the dependent job. Latest `main` run: 1–6 green, 7 failure, 8 **skipped**.
 3. **CI cannot reach blocking mode.** `blockingAllowed` requires `changeClassSource === 'explicit'`;
@@ -96,7 +99,8 @@ mechanisms, each measured:
    `REUSABLE_COMPONENT_PROMOTION_CONSUMER: ci`.
 
 So CT-8B's real CI enforcement is **job 1**, through `validate:sync-ledger`'s exit status — a hard
-gate that fails the job and the pre-push hook. Job 8 **reports**; it does not enforce.
+gate that fails the job, the pre-push hook, and now a required check. Job 8 **reports**; it does
+not enforce, and requiring it would not change that — it would only hide it behind a green check.
 
 Two corrections follow, and both matter for how this work is judged:
 

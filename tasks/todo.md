@@ -709,11 +709,14 @@ a new reviewed record.
 
 **What it found, and it outranks the naming:**
 
-1. **There is no required check.** `/branches/main/protection` → 404 "Branch not protected";
-   `/rulesets` → `[]`. Every job is advisory; a red job blocks nothing. Earlier drafts said "the
-   required job" as though one existed. **It does not**, and this task cannot name one until it is
-   created — which is a repository-settings change, so §6 of the record raises it rather than
-   performing it.
+1. **There was no required check — and now there is.** `/branches/main/protection` → 404 "Branch
+   not protected"; `/rulesets` → `[]`. Every job was advisory; a red job blocked nothing, and
+   earlier drafts said "the required job" as though one existed. Created with approval:
+   repository ruleset **`main` (22410608)**, `active`, requiring **`Governance`** and
+   **`Test All`** pinned to the GitHub Actions app, empty bypass list, verified through
+   `/rules/branches/main`. Direct pushes to `main` are now rejected — PR-only, which is the
+   intended cost. **Job 8 is deliberately not required**: GitHub counts a **skipped** check as
+   success, so requiring it would install a check that passes without running.
 2. **Job 8 is not running, and has not been.** The fork guard I expected to be the hazard is
    **unreachable** — the repo is private with `allow_forking: false`, so the fork condition is
    never true. The live mechanism is duller: job 8 `needs: chromatic-review`, job 7 **fails** on
@@ -730,13 +733,13 @@ a new reviewed record.
    `esbuild` still an optional peer, one CI job on one platform, and `files` lists none of the four
    directories T11 moves in.
 
-> **Hold point** — the enforcement path is identified by name and trigger condition, and the
-> platform/runtime/location selections are settled. **Partially blocked**: there is no
-> required-check binding to identify, and creating one is the user's call (§6 of the record).
+> **Hold point** — the enforcement path is identified by name and trigger condition, the
+> platform/runtime/location selections are settled, and the required-check binding **exists**.
+> **Held.**
 
 **Dependencies:** none blocking; runs concurrently with T8
-**Files likely touched:** `SPEC.md` §5.4, a decision record
-**Scope:** S — **done**, except the branch-protection decision it surfaced
+**Files likely touched:** `SPEC.md` §5.4, a decision record, the repository ruleset
+**Scope:** S — **done**
 
 ---
 
@@ -1287,10 +1290,13 @@ the gate can still fail.
 
 **Verification:**
 
-- [ ] A PR run goes green end to end, **and** a deliberate regression turns the named required job
-      red (**S8**). The regression targets the seam this migration created: a **schema-valid
-      proof–ledger disagreement that leaves each record individually valid**. Malformed JSON that
-      only trips a linter would not establish this
+- [ ] A PR run goes green end to end, **and** a deliberate regression turns the named required
+      check red (**S8**). The binding is ruleset **`main` (22410608)** and the context is
+      **`Governance`**, since the validators run in job 1 through `governanceSteps`. The regression
+      targets the seam this migration created: a **schema-valid proof–ledger disagreement that
+      leaves each record individually valid**. Malformed JSON that only trips a linter would not
+      establish this. Evidence must show the merge **blocked**, not merely the job red — and must
+      not use a check whose job can be skipped, since GitHub counts `skipped` as success
 - [ ] **Every independent enforcement path across T14–T18 has a durable test**: parity failure,
       structured-status failure handling, missing or wrong CLI, baseline drift without rewriting,
       and acquisition tampering. Not every mutation needs its own live PR — but every boundary

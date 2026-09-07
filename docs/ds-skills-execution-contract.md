@@ -102,15 +102,63 @@ not the job id** — confirmed against `/commits/main/check-runs`, not inferred:
 Workflow file: `.github/workflows/ci.yml`. Triggers: `pull_request` (no branch filter) and `push`
 to `main`. Three jobs enforce the rail surface: **1**, **4** and **8**.
 
-### 5.1 There is no required check
+### 5.1 There was no required check. There is now.
+
+**As measured**, before this task acted:
 
 - `GET /repos/atomize-hq/collider/branches/main/protection` → **404, "Branch not protected"**
 - `GET /repos/atomize-hq/collider/rulesets` → **`[]`**
 
-Every job above is advisory. A red job blocks nothing. Earlier drafts of this plan said "the
-required job" as though one existed; **it does not**, and T16a cannot name one until it is created.
+Every job was advisory. A red job blocked nothing. Earlier drafts of this plan said "the required
+job" as though one existed; it did not, which is why T16a could not name one.
 
-### 5.2 Job 8 is not running, and has not been
+**Created 2026-09-06 with user approval** — a repository ruleset, not classic branch protection:
+
+|                   |                                                                             |
+| ----------------- | --------------------------------------------------------------------------- |
+| ruleset           | `main`, id **22410608**, repository-scoped, `enforcement: active`           |
+| targets           | `~DEFAULT_BRANCH`                                                           |
+| rules             | `deletion`, `non_fast_forward`, `required_status_checks`                    |
+| required contexts | **`Governance`** and **`Test All`**, both pinned to `integration_id: 15368` |
+| bypass            | `bypass_actors: []`; `current_user_can_bypass: "never"`                     |
+| strict policy     | `false` — a branch need not be up to date with `main` to merge              |
+
+Verified against `GET /repos/atomize-hq/collider/rules/branches/main`, which reports all three
+rules applying to the branch and both contexts under the required-checks rule.
+
+Three deliberate choices:
+
+- **A ruleset, not classic protection.** Classic `enforce_admins` defaults to `false`, so the
+  repository admin would have been silently exempt — a gate that does not apply to the person most
+  likely to trip it is decoration. A ruleset denies everyone not in `bypass_actors`, and that list
+  is empty.
+- **`integration_id` pinned to GitHub Actions.** Every context on this repo is reported by the
+  `github-actions` app (id `15368`), confirmed from the check-runs API. Pinning it means no other
+  app can post a passing `Governance`.
+- **Direct pushes to `main` now fail.** Required status checks cannot be satisfied by a commit
+  that has not been tested, so the ruleset rejects the push. Everything goes through a pull
+  request. That is the intended cost, not a side effect.
+
+### 5.2 Why `Reusable Component Promotion` is deliberately **not** required
+
+Because requiring it would make things worse, and the reason is documented GitHub behaviour rather
+than a guess:
+
+> Successful check statuses are success, **skipped**, and neutral.
+
+A job skipped by a failed `needs:` reports **Success** to a required check. So requiring job 8
+would produce a check that passes while never running its commands — the exact failure this whole
+migration is about, installed at the enforcement layer. Blocking would have been the safer wrong
+answer; this is the unsafe one.
+
+(The inverse trap, same source: a skipped **workflow** — path- or branch-filtered — stays
+**Pending** and _does_ block. Jobs and workflows behave oppositely, which is why "skipped" alone is
+never a sufficient description of what happened.)
+
+Job 8 stays advisory until BL-2 is resolved and it can actually run. The rail protection lives in
+jobs 1 and 4, which is where §5.4 already put it.
+
+### 5.3 Job 8 is not running, and has not been
 
 Job 7 carries `if: github.event_name != 'pull_request' || …head.repo.fork == false`. That guard is
 **unreachable as configured** — the repository is private with `allow_forking: false`, so the fork
@@ -136,7 +184,7 @@ This is the round-4 warning made concrete, by a mechanism nobody predicted: not 
 that did not run", but a check that is neither required nor running, in a repository where being
 red would not have blocked anything anyway.
 
-### 5.3 Decisions that follow
+### 5.4 Decisions that follow
 
 - **The replacement rail verification goes upstream of Chromatic.** Job **1 `governance`** for the
   ledger, parity and proof validators — they already live in `governanceSteps`. Job **4 `test-all`**
@@ -149,18 +197,17 @@ red would not have blocked anything anyway.
 - **T18's S8 needs a required-check binding to exist**, or "a deliberate regression turns the
   required job red" degrades to "turns a job red, which blocks nothing".
 
-## 6. Open, and needing the user
+## 6. Settled, and what remains
 
-**Branch protection or a repository ruleset does not exist and this work assumes one.** Creating it
-is a repository-settings change, so it is ask-first and T16a raises it rather than performing it.
-The minimum that makes S8 meaningful: `main` protected, with `Governance` and `Test All` as
-required status checks.
+**~~Branch protection or a repository ruleset does not exist and this work assumes one.~~**
+**Closed 2026-09-06** — ruleset `main` (22410608) created with approval; see §5.1. S8 now has a
+real binding to turn red.
 
-Two things to decide alongside it, because they change the answer:
+Two things that stay open:
 
-- Requiring `Reusable Component Promotion` while job 7 fails would **block every merge**, since a
-  skipped required check does not satisfy a requirement. Either BL-2 gets resolved first, or job 8
-  stays advisory and the rail protection lives in jobs 1 and 4 — which §5.3 already prefers.
-- `allow_forking: false` is what makes job 7's guard unreachable. If forking is ever enabled, job 7
-  skips on fork PRs, job 8 skips with it, and a required job-8 check would then pass by being
-  skipped. That is the hazard worth writing down before it becomes real.
+- **BL-2 gates job 8's promotion to required.** Until `chromatic-review` passes, job 8 cannot run,
+  and a required-but-skipped check reports Success (§5.2). Resolve BL-2 first, then require it.
+- **`allow_forking: false` is load-bearing.** It is what makes job 7's fork guard unreachable. If
+  forking is ever enabled, job 7 skips on fork PRs, job 8 skips with it, and — by the same
+  documented behaviour — a required job-8 check would pass by being skipped. Worth knowing before
+  it becomes real rather than after.

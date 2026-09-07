@@ -450,10 +450,18 @@ accurate** — a smaller claim than "keep all three biting", and the accurate on
 
 **Measured against the live repository on 2026-09-06, and it is worse than the workflow reads.**
 
-_There is no required check._ `main` is **not protected** (`/branches/main/protection` → 404
-"Branch not protected") and the repository has **zero rulesets** (`/rulesets` → `[]`). Every job
-above is advisory: a red job blocks nothing today. "The required job" in earlier drafts of this
-plan named something that does not exist, and T16a cannot name one until it does.
+_There was no required check; T16a created one._ `main` was **not protected**
+(`/branches/main/protection` → 404) and the repository had **zero rulesets** (`/rulesets` → `[]`),
+so every job was advisory. Repository ruleset **`main` (id 22410608)** now requires `Governance`
+and `Test All`, pinned to the GitHub Actions app, with an empty bypass list. Direct pushes to
+`main` are consequently rejected — everything goes through a pull request.
+
+_`Reusable Component Promotion` is deliberately **not** required._ GitHub documents that
+successful check statuses are "success, **skipped**, and neutral", so a job skipped by a failed
+`needs:` reports **Success** to a required check. Requiring job 8 today would install a check that
+passes without running — this migration's own failure mode, at the enforcement layer. It stays
+advisory until BL-2 lets it run. (Inverse trap, same source: a skipped _workflow_ stays **Pending**
+and does block. Jobs and workflows behave oppositely.)
 
 _Job 7's fork guard is unreachable._ The repository is private with `allow_forking: false`, so
 `github.event.pull_request.head.repo.fork` is always false and the `if:` never skips job 7 for
@@ -484,9 +492,9 @@ Three consequences, none optional:
   job ran. Enforcement evidence must name the workflow file, job id, emitted check context,
   trigger conditions, required-check or ruleset binding, **and** the conditions under which the
   job does not execute — including an upstream `needs:` failure.
-- **S8 needs a required-check binding to exist.** Demonstrating a red job is not demonstrating a
-  blocked merge. Creating branch protection or a ruleset is a repository-settings change and is
-  therefore **ask-first**; T16a raises it rather than performing it.
+- **S8 has a binding to turn red.** Demonstrating a red job is not demonstrating a blocked merge,
+  which is why the ruleset had to exist first. T18 names ruleset `main` (22410608) and the context
+  it turns red — `Governance` for a proof–ledger disagreement, since the validators run in job 1.
 
 The emitted check contexts are confirmed against the live check-runs API and are the `name:`
 values, not the job ids: `Governance`, `Storybook Proof`, `Quality`, `Test All`, `Build Next.js`,
