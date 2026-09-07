@@ -1308,7 +1308,25 @@ _Readiness delta — from the 2026-09-07 consult ([record](../docs/consultations
       that is not is a release blocker, distinct from T17's question of whether a gate calls it.
       This is the pre-release half of the caller-proof strengthening; the consumer-gate half is
       T17's
-- [ ] **The bounded stale-check inspection is done**, in four areas and no wider: every
+- [x] **The bounded stale-check inspection is done** — 2026-09-07, `ds-skills` `a1b48fd`,
+      `e5ed7e3`. **It found a second instance of the same defect.** `ledger parity` printed ✓ and
+      exited 0 on the exact records `ledger validate` rejects: required parity affirms
+      `E-promotion-complete`, and that rung is what the binding's own sufficiency check rests on
+      the bound publication, so it was asserting the thing the binding underwrites while reading
+      one record. Fixed at the caller, with deferred parity deliberately left alone — it affirms
+      the deferral, not a rung — and both directions tested, since the deferred case staying green
+      under the inverse control is what makes it evidence rather than decoration.
+      Area A also found that the **installed-artifact gate never asserted the rail block**, only
+      `DIGEST_MISMATCH` on stderr, so the correction was proven by a unit test and not by the bytes
+      that ship. `consumer.sh` now asserts both commands through the installed executable, and
+      reverting either fix turns the installed gate red.
+      Area B's one-factor counterexample is pinned: a substitute proof that is individually valid
+      and agrees on all six §4 facts, so only the digest can catch it — disabling that comparison
+      lets the swap through undetected. Area C's one pin spanning a contract change is
+      `status-rail.baseline.json`, and it is correct as a pin: it describes a ledger-only function,
+      and the prerequisite now lives in the two callers that compose an answer. Area D was already
+      covered — the vm test executes the shipped bundle after substitution, not a rebuild.
+      The four areas, as scoped: every
       independently consumed affirmative projection; cross-record relationships and any
       single-input shortcut, probed with **one-factor counterexamples** — hold the status-producing
       record fixed and break only its partner or binding, and swap the partners of two individually
@@ -1334,7 +1352,7 @@ _Readiness delta — from the 2026-09-07 consult ([record](../docs/consultations
       `1a57225` (2026-09-05) with **8 commits already public**, and those eight are clean — the key
       appears in none of them. The disclosure gate therefore applies to the unpushed commits, not
       to a first-ever publication. Scope any history scan with `git rev-list origin/main`; `git log
-  --all` walks unpushed refs and will report local commits as if they were public, which is how
+--all` walks unpushed refs and will report local commits as if they were public, which is how
       this finding first read as an active leak when it was not.
 - [ ] **Disclosure approval names an exact publication scope, and covers reachable history** — not
       the working tree. Deleted content, captured predecessor outputs, fixtures and metadata are all
