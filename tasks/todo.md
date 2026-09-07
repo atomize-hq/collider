@@ -745,44 +745,52 @@ a new reviewed record.
 
 ### T10: Move the rail modules under `src/figma/`
 
-**Description:** A move, but **not the move the first draft named**. Round 4: it must carry the
+**Description:** Copies, not moves — the Phase 2 checkpoint requires Collider untouched and
+green, and removing these before T17's atomic cutover would break the consumer for all of
+Phase 2. And **not the set the first draft named**. Round 4: it must carry the
 status-rail computation and the standalone parity policy module too, or the boundary closes
 around a subset. "No behaviour change" survives as a rule for the relocated code; it is not a
 description of the task's scope.
 
 **Acceptance criteria:**
 
-- [ ] Modules under `src/figma/`; every relative import carries a `.js` specifier;
+- [x] Modules under `src/figma/`; every relative import carries a `.js` specifier;
       `moduleResolution: NodeNext` passes typecheck
-- [ ] **`figma-parity.mjs` (112 lines) moves** — the standalone CT-15B promotion policy on top of
+- [x] **`figma-parity.mjs` (112 lines) moves** — the standalone CT-15B promotion policy on top of
       the ledger evaluator, which the first draft's "ledger and conformance modules" did not name
-- [ ] **The status-rail computation moves** — the 36 lines of `summarizeCt8b()` that evaluate,
+- [x] **The status-rail computation moves** — the 36 lines of `summarizeCt8b()` that evaluate,
       not the 611 lines of Storybook/Chromatic reporting around it. The carve-out boundary is
       T9 §2 and it is exact
-- [ ] **One evaluator, four surfaces.** Human output, `--json`, the standalone commands and the
+- [x] **One evaluator, four surfaces.** Human output, `--json`, the standalone commands and the
       status projection share the same decisions. A second evaluator written "just for JSON" is
       the defect this criterion exists to prevent
-- [ ] **Relocation and intentional change stay separately reviewable.** Relocation means
+- [x] **Relocation and intentional change stay separately reviewable.** Relocation means
       behaviour equivalent to the reconciled post-T3 reference. Intentional change means
       proof–ledger enforcement, portability corrections and newly specified boundary behaviour.
       Without the distinction a regression is explained away as "part of the move", and a
       necessary new check is hidden by rebaselining
-- [ ] Tests move **with** their code, and where a moved assertion now executes is recorded. A
+- [x] Tests move **with** their code, and where a moved assertion now executes is recorded. A
       lower Collider test count is not a regression if the tests are running in the package —
       but that has to be shown, not asserted
 
 **Verification:**
 
-- [ ] `pnpm check` passes including `smoke` (the built ESM loads under Node)
-- [ ] Full normalized mapping matches the T1 baseline (**S3**)
-- [ ] The package evaluates the relevant fixture inputs **without importing product code** and
+- [x] `pnpm check` passes including `smoke` (the built ESM loads under Node)
+- [x] Full normalized mapping matches the T1 baseline (**S3**)
+- [x] The package evaluates the relevant fixture inputs **without importing product code** and
       without depending on Collider's checkout layout
 
 > **Hold point** — the package can evaluate the fixture inputs standing alone.
 
 **Dependencies:** T8 (transitively T9)
 **Files likely touched:** 5–6 moved, `src/index.ts`
-**Scope:** M — was S, before the parity module and the status computation were counted
+**Scope:** M — **done**, `199edf1`. Was S, before the parity module and the status computation
+were counted
+
+**What it found:** the reason-code branches are **order-dependent** — a stale ledger whose parity
+is deferred reports `ct8b-parity-stale`, not `ct8b-parity-deferred`. Reordering them changes what a
+reviewer is told while every outcome stays identical. Caught because expected values were captured
+from the pre-move implementation rather than from the moved one describing itself.
 
 ---
 
