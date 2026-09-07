@@ -1302,6 +1302,39 @@ not establish that the **final** package is clean after ~160 files moved in.
       yet a demonstrated recovery procedure; say so rather than implying one exists
 - [ ] User approval obtained before publishing
 
+_Readiness delta — from the 2026-09-07 consult ([record](../docs/consultations/2026-09-07-release-readiness-review.md)), accepted after local verification_
+
+- [ ] **Every required check is reachable through the released CLI's public command path.** One
+      that is not is a release blocker, distinct from T17's question of whether a gate calls it.
+      This is the pre-release half of the caller-proof strengthening; the consumer-gate half is
+      T17's
+- [ ] **The bounded stale-check inspection is done**, in four areas and no wider: every
+      independently consumed affirmative projection; cross-record relationships and any
+      single-input shortcut, probed with **one-factor counterexamples** — hold the status-producing
+      record fixed and break only its partner or binding, and swap the partners of two individually
+      valid pairs; behaviour pins that span a contract change; and whether the **distributed
+      prebuilt bundle after substitution** is what the bundle tests exercise, rather than the source
+      entry point or a separately rebuilt one. Do not regenerate goldens from the successor — that
+      swaps one circular oracle for another. Exit condition: no current invariant is supported only
+      by predecessor parity
+- [ ] **Disclosure approval names an exact publication scope, and covers reachable history** — not
+      the working tree. Deleted content, captured predecessor outputs, fixtures and metadata are all
+      published by a push that makes them reachable. Inspect what could broaden the scope
+      (`--mirror`, `push.followTags`, `push.default`) and inspect first-push and tag-triggered
+      automation, so nothing publishes a release ahead of the approval or leaks through a job's
+      output. "The first CI run will scan it" is not available: that run is downstream of the
+      publication event
+- [ ] **The reviewed record is not the release description.** Confirm at cut time whether GitHub
+      permits editing an immutable release's title and notes — the consult asserts it does, which
+      this repo has not verified. If so, nothing may treat the rendered release page as the
+      authority; the committed record is
+- [ ] **Read the uploaded draft back before publishing.** Compare names, sizes and digests against
+      the reviewed record from the uploaded bytes, not from upload success — and **reject
+      unexplained extra assets as well as missing ones**
+- [ ] After publishing, exercise the bootstrap through the **unauthenticated public route** before
+      any consumer adopts it. If that surfaces a content mistake, leave the consumer un-cut-over and
+      issue a corrected release; never weaken verification to match what shipped
+
 **Verification:**
 
 - [ ] The published version matches the tested digest
@@ -1413,6 +1446,16 @@ _Data migration — pre-computed at T14's rehearsal, so the cutover applies it_
       `dc97a26` is still the last commit to touch the artifact, so this is a shape migration only
 - [ ] Land it in the same commit as the code, never before: it fails `scripts/lib/sync-ledger.mjs`
       and five tests until that module is gone
+
+- [ ] **Effective enforcement, not a caller.** For each retained check, record its mandatory
+      gate, the installed-CLI entry point, the consumer input it reads, the expected failure, and
+      negative-test evidence — then run that gate path with otherwise-valid data carrying one
+      violation, observe the diagnostic and the non-zero gate result, restore, observe success.
+      The regression must fail when the **integration edge** is cut in a disposable tree, not only
+      when the validator itself is broken: a test that calls the validator directly stays green
+      through exactly the defect this criterion exists to catch. A deliberately retired check gets
+      a recorded retirement, never an artificial caller. Prompted by `pnpm validate:sync-ledger`
+      and `pnpm validate:publish-proof`, which are the two zero-caller validators found so far
 
 _Removal — nothing survives by living somewhere unusual_
 

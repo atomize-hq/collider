@@ -933,13 +933,29 @@ list, rather than downloading something that will not run.
 **Amended at T14.** This originally read "per-platform _because the bundled plugin builder
 carries a native binary_". §7.3 offered two routes and T14 took the second: the plugin bundle is
 built once when the package is built and shipped inside the release, with the consumer's config
-substituted in at command time. Nothing native survives, so **the five payloads are currently
-byte-identical** and four of the five digests match. The matrix is kept anyway, and deliberately:
-it is what makes an unsupported platform fail with a list, it is what the reviewed record's
-per-platform digest map is keyed on, and an immutable release cannot gain an asset later — so a
-future version that does need platform-specific content already has the naming and the selection
-logic. Anyone reviewing a record with four identical digests should read this paragraph, not
-assume a staging bug.
+substituted in at command time. Nothing native survives, so **all five platforms currently carry
+the identical unpacked payload**. Two claims worth keeping apart, because they are not the same
+claim: the _payload_ is identical on all five, while the _archives_ are identical on only four —
+Windows ships a `.zip` and the other four a `.tar.gz`, so its bytes differ by container format
+alone. Hence four matching digests in the record, not five.
+
+That is a fact about this release, **not an invariant**. A later version with genuinely
+platform-specific content will produce five distinct digests, and nothing may read that as a
+regression — in particular, neither the staging script nor the record's reviewer may collapse the
+five platform entries by digest. Support and packaging are separate: the matrix declares which
+targets are installable, the digest identifies content, and two supported targets may legitimately
+name the same bytes.
+
+The matrix is kept anyway, and deliberately: it is what makes an unsupported platform fail with a
+list, it is what the reviewed record's per-platform digest map is keyed on, and an immutable
+release cannot gain an asset later — so a future version that does need platform-specific content
+already has the naming and the selection logic. Immutability binds the _published_ release and not
+future ones, so a later layout change is available; it is simply not free. Anyone reviewing a
+record with four identical digests should read this paragraph, not assume a staging bug.
+
+**Identical bytes make installation a weak signal, so the matrix gate asserts selection.** When
+every asset verifies, "it installed" is true for a wrong platform choice too — so each installer
+reports the asset it picked and the gate asserts on that name, per §7.5.
 
 **The release does not ship a Node runtime.** `ds-skills` requires a supported Node provided by
 the environment, declared as a hard minimum and checked at install with an actionable message.
