@@ -176,8 +176,8 @@ immutable release cannot be amended after the fact.
 - [x] T9: Produce the executable-path disposition inventory — `docs/ds-skills-disposition-inventory.md`; found an unnamed consumer, an ungated validator and 3 missing commands
 - [x] T8: Fix the complete boundary contract — `docs/ds-skills-boundary-contract.md` + scaffold `25f196f`; the failure inspection found the status rail enforces **nothing** in CI, by four independent mechanisms
 - [x] T16a: Select the execution contract and name the real enforcement checks — `docs/ds-skills-execution-contract.md`; found there was **no required check at all**, and created one (ruleset `main`, 22410608, requiring `Governance` + `Test All`). Job 8 stays advisory: GitHub counts a **skipped** check as success
-- [ ] T10: Move the rail modules under `src/figma/` — including the parity module and the status-rail computation
-- [ ] T11: Move skills, schemas, profiles and templates in — preparation only, with the full disclosure review
+- [x] T10: Move the rail modules under `src/figma/` — `199edf1`; copies not moves, pinned against pre-move outputs, which caught an order-dependent reason-code branch
+- [~] T11: Move skills, schemas, profiles and templates in — schemas/templates/profiles and the validator moved and gated; **`skills/` blocked** on a licensing decision (80 vendored third-party `.tsx`, no recorded licence). See `docs/ds-skills-disclosure-review.md`
 - [ ] T12: Own validation, the proof–ledger relationship, status output and parity
 - [ ] T13: Own the figma commands, serve, baseline, and the rail tests
 - [ ] T14: Test the release product, not a package tarball
@@ -281,8 +281,10 @@ accessible transitional artifact for the existing dependency, which is not in sc
   anonymous tag-pinned fetches were verified at two existing tags. Remaining approvals: the
   repository rename (T7) and cutting the release (T15). The consequence that moves earlier is
   that migrated material is exposed on push, so disclosure review happens at T11, not T15.
-- **Does `.agents/skills/` become generated output or stay tracked?** Blocks T11. If generated,
-  the "edit only in `.agents`" rule and the `.claude/skills` symlinks both need revisiting.
+- **Does `.agents/skills/` become generated output or stay tracked?** Blocks the rest of T11, and
+  is now downstream of a prior question: **may the skills be published at all?**
+  `.agents/skills/ai-elements/` holds 80 vendored third-party `.tsx` sources with no recorded
+  licence, and the pack repo is public. Private-repo use is not public redistribution.
 - **Where does `figma drift` get observed state?** If it needs a live Figma session, it cannot
   be a gate command.
 - ~~**Is `validate:publish-proof` wired, kept as a test, or deleted?**~~ **Settled 2026-09-06** —

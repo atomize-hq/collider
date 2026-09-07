@@ -795,51 +795,71 @@ materialization here: canonical editing location, tracked or generated, stale-co
 
 **Acceptance criteria:**
 
-- [ ] `skills/`, `schemas/`, `profiles/`, `templates/` present in the pack and in `files`
+- [x] `schemas/`, `profiles/`, `templates/` present in the pack and in `files`
+- [ ] **`skills/` — BLOCKED**, see the disclosure review §6. Not a scheduling slip: publishing it
+      is a licensing decision that is not mine to assume
 - [ ] The two rail-referencing skills (`sync-quality-governor`, `stage-1`) describe CLI
-      invocations rather than repo paths
-- [ ] `validate-artifact.mjs` moves behind `ds-skills validate` unchanged, **and its test
-      moves with it** — `validate-artifact.test.mjs` is Collider's only coverage of that
-      script, and it tests the process contract, so it ports without rewriting
-- [ ] **Prove the moved executable is actually inside the package's gates.** "The package check
-      is green" is not evidence unless that file is in the program — which is exactly how it
-      escaped Collider's gates for as long as it did: `**` does not match a leading-dot
-      directory, so nothing ever looked. Show the file in the checked set; do not infer coverage
-      from a directory name or a green aggregate. Deliberately not building temporary
-      product-side type-check machinery stays the right call (T2), and this is where the
-      coverage actually lands
-- [ ] **Provenance drives exclusions.** Justified upstream/vendored exclusions are retained by
-      path and reason; newly moved **owned** code must not be swept into a vendored-payload
-      exclusion because it landed nearby
-- [ ] **Operational instructions are reviewed, not just imports.** Skills, Markdown, YAML,
-      templates and examples can carry obsolete commands, install URLs, product paths or inline
-      rail logic while the import graph is spotless
-- [ ] **Disclosure review before the first public push**, covering **all consumer-derived
-      material that becomes public** — profiles, fixtures, baselines, token values, file
-      identifiers, generated output, source maps, **and the history and refs being pushed** — not
-      merely the final archive. Consumer-specific values belong in declared JSON, not in portable
-      validators; anything intentionally published as an example is reviewed as such
-- [ ] How installed skill assets are **discovered** after the Collider copy disappears is proven,
-      not designed on paper
-- [ ] The retained `.agents/skills/` subtree is declared the **frozen compatibility snapshot**
-      until T17 — still active for agents, not a second independently maintained source
-- [ ] There are never two independently editable copies
-- [ ] CLI and materialized skills report the same release identity
+      invocations rather than repo paths — blocked with `skills/`
+- [x] `validate-artifact.mjs` moves behind `ds-skills validate` unchanged, **and its test
+      moves with it** — now `src/validate/artifact.mjs` + `artifact.test.mjs`, 6 cases, repointed
+      at the pack's own fixture and example profile
+- [x] **Prove the moved executable is actually inside the package's gates.** Not inferred from a
+      directory name: `vitest.config.ts` gained `src/**/*.test.mjs` (the suite is spawn-based,
+      because every caller invokes it as `node …`), and the gate was **proven to bite** — stubbing
+      out the unimplemented-keyword rejection turned `pnpm vitest` red on exactly that case
+- [x] **Provenance drives exclusions.** Nothing from `.agents/skills/ai-elements/` was copied, so
+      no vendored payload was swept in alongside owned code
+- [x] **Operational instructions reviewed**, and three were stale — found by reading, not by the
+      import graph, exactly as round 4 predicted
+- [x] **Disclosure review before the first public push** —
+      [`docs/ds-skills-disclosure-review.md`](../docs/ds-skills-disclosure-review.md), covering
+      secrets, profiles, fixtures, schemas, generated output, and history/refs
+- [ ] How installed skill assets are **discovered** after the Collider copy disappears — blocked
+      with `skills/`
+- [ ] The retained `.agents/skills/` subtree declared the **frozen compatibility snapshot** —
+      blocked with `skills/`
+- [ ] There are never two independently editable copies — holds today (nothing duplicated), but
+      unprovable until `skills/` moves
+- [ ] CLI and materialized skills report the same release identity — blocked with `skills/`
 
 **Verification:**
 
-- [ ] `pack-check` confirms all four directories survive packing
-- [ ] Every real Collider artifact validates against its schema, with and without the profile
+- [x] `pack-check` confirms the moved directories survive packing — checked in the **installed**
+      package, not by reading `files`, because a `files` entry naming a directory that does not
+      ship still looks correct
+- [x] The installed schemas carry no consumer namespace — a new `pack-check` assertion, which
+      **caught four `description` fields** after the `$id` fix had already been made
+- [ ] Every real Collider artifact validates against its schema, with and without the profile —
+      belongs with T17's `ds-skills validate` wiring
 - [ ] The old v1 templates are still correctly rejected
-- [ ] Collider is unchanged by this task and still green
+- [x] Collider is unchanged by this task and still green — tree clean, `just check` 0 errors
 
 > **Hold point** — disclosure review happens before newly moved consumer-derived content is
-> pushed publicly, not merely before T15 publishes a release.
+> pushed publicly. **Held**: the review is written, and nothing is pushed.
+
+**What the review found:**
+
+1. **`SPEC.md` §3.1 and T9's inventory contradicted each other about `collider.json`**, and the
+   inventory was right. A consumer's profile does not ship from a portable package — a second
+   consumer would be adding its vocabulary to someone else's repository. The pack ships
+   `profiles/example.json` instead, with vocabulary deliberately unlike any real consumer's, so a
+   validator with baked-in values **fails against it** rather than passing by coincidence.
+2. **All five "portable" schemas named Collider** — every `$id`, four `description` fields, and
+   most of `schemas/README.md`. No _constraint_ did, so the shapes really were portable, but the
+   package would have published one consumer's namespace and worked examples.
+3. **Nine hardcoded consumer constants, not four.** The three usage strings name
+   `scripts/validate-*.mjs` paths T17 deletes, so after cutover they instruct a user to run a
+   script that does not exist. `defaultSyncLedgerPath` and `defaultPublishProofPath` are consumer
+   layout. All five are the "defaults and error messages" class round 4 named.
+4. **`skills/` cannot be published on my own judgement.** `ai-elements/` is 129 files including
+   **80 vendored third-party `.tsx` sources with no recorded licence anywhere in the repo**.
+   Private-repo use is not public redistribution. Four of the eight skills are also Collider
+   documents rather than portable ones.
 
 **Dependencies:** T8 (transitively T9), and T5's materialization decision
-**Files likely touched:** ~160 moved into the pack, `package.json` `files`
-**Scope:** L — large by count; discovery paths, relative references and symlinks make it more
-than mechanical
+**Files likely touched:** `schemas/`, `templates/`, `profiles/`, `src/validate/`, `package.json`
+**Scope:** L — **partially done.** The portable assets and the validator have moved and are
+gated; `skills/` awaits a licensing decision
 
 ---
 

@@ -111,16 +111,35 @@ the public identity. Verified free in the org before choosing it.
 │   ├── figma/                    # the absorbed rail: token-mapping, drift, plugin builder
 │   ├── ledger/                   # CT-8B read/write/promote, parameterized by profile
 │   └── verify/                   # artifact-vs-expectations checker
-├── skills/                       # the 8 skills, shipped as data
+├── skills/                       # the 8 skills, shipped as data — BLOCKED, see below
 ├── schemas/                      # 5 portable JSON Schemas
-├── profiles/                     # repo vocabulary (collider.json, …)
+├── profiles/                     # example.json only — a consumer's profile stays with the consumer
 ├── templates/
 └── plugin/                       # code.ts, ui.html, manifest.template.json
 ```
 
-Schemas stay **portable shapes**; profiles stay **repo vocabulary**. That split already exists
-and is the model for everything else here — porting means writing a profile, never editing a
-schema.
+Schemas stay **portable shapes**; profiles stay **repo vocabulary**. Porting means writing a
+profile, never editing a schema.
+
+Two corrections from the T11 disclosure review, both of which this section had wrong:
+
+- **A consumer's profile does not ship from here.** `collider.json` stays in Collider as `data`
+  (T9's disposition, which contradicted this diagram and was right). Shipping one consumer's
+  vocabulary from a portable package reintroduces the coupling the migration removes, and would
+  make a second consumer add its vocabulary to someone else's repository. The pack ships
+  `profiles/example.json`, whose vocabulary is deliberately unlike any real consumer's so that a
+  validator with baked-in values fails against it.
+- **"That split already exists" was true of the constraints and false of everything else.** All
+  five schemas named Collider — in every `$id`, in four `description` fields, and throughout
+  `schemas/README.md`. No _constraint_ did, so the shapes really were portable, but the package
+  would have published one consumer's namespace and worked examples. Fixed, and `pack-check` now
+  fails if the **installed** schemas name a consumer.
+
+**`skills/` is blocked on a licensing decision.** `ai-elements/` is 129 files including **80
+vendored third-party `.tsx` sources with no recorded licence**. Private-repo use is not public
+redistribution, and that decision is the user's. Several skills are also Collider documents rather
+than portable ones. See [`docs/ds-skills-disclosure-review.md`](docs/ds-skills-disclosure-review.md)
+§6.
 
 ### 3.2 Collider after
 
