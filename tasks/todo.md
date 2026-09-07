@@ -1317,6 +1317,17 @@ _Readiness delta — from the 2026-09-07 consult ([record](../docs/consultations
       entry point or a separately rebuilt one. Do not regenerate goldens from the successor — that
       swaps one circular oracle for another. Exit condition: no current invariant is supported only
       by predecessor parity
+- [ ] **BLOCKING, found 2026-09-07: three unpushed commits carry the real Figma file key.**
+      `199edf1`, `3305d35` and `f807713` each contain it in five files — four `publish-proof`
+      fixtures and `publish-proof.mjs`. T12 fixed the working tree and HEAD is clean, but a push
+      publishes history, not the tip. Settle this before any push: rewrite those three commits, or
+      decide the key is not sensitive and record why. A rewrite after the fact does not recall it
+      from clones or forks.
+      Also correcting the standing note: **the repo has already been pushed.** `origin/main` is at
+      `1a57225` (2026-09-05) with **8 commits already public**, and those eight are clean — the key
+      appears in none of them. So the disclosure gate applies to the 14 unpushed commits, not to a
+      first-ever publication. Scope any history scan with `git rev-list origin/main`; `git log
+  --all` walks unpushed refs and will report local commits as if they were public
 - [ ] **Disclosure approval names an exact publication scope, and covers reachable history** — not
       the working tree. Deleted content, captured predecessor outputs, fixtures and metadata are all
       published by a push that makes them reachable. Inspect what could broaden the scope
