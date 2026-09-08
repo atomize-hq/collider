@@ -286,6 +286,20 @@ tree against the record and reinstalls if it does not identify itself correctly,
 so a poisoned or half-written entry cannot be inherited. Both the executable path
 and the release read back off disk are reported per job.
 
+**Nothing inside the action depends on a `$GITHUB_ENV` write landing.** The prefix
+is emitted as a step **output** and passed to every subsequent step explicitly;
+the env var is still written, but only for the calling job's later steps. Whether
+an `env:` written by one step of a composite action reaches a later step's `with:`
+is a detail that would have been taken on faith, and the failure it hides is
+quiet: a prefix falling back to the user-level default installs outside the
+job-local location, caches an empty directory, and looks like success.
+
+This was settled by **modelling the pessimistic case**, not by reasoning about it.
+The action's steps were executed locally with GitHub's `GITHUB_OUTPUT` /
+`GITHUB_ENV` semantics and then again with env propagation switched off entirely;
+with it off the install still lands in `RUNNER_TEMP`. Before the fix it would have
+landed in `~/.local/share/ds-skills`.
+
 ### 7.4 What the negative cases are
 
 Each of these is a way the pin could stop pinning while everything still looked

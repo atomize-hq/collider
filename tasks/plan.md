@@ -218,7 +218,7 @@ as one).
 ### Phase 3: Distribution and consumer cutover
 
 - [ ] T15: Cut the release — **ask first**
-- [~] T16b: Prove anonymous cold acquisition and provision every environment — `c64a88c`. Cold anonymous acquisition of v0.4.0 proved from a clean checkout, with an invalid token in the environment as the inverse control; ten negative cases; cold 1078 ms / warm 207 ms; a tampered cache reinstalls rather than being inherited. **One criterion open**: exercising the enforcement path needs a CI run, and the ruleset made `main` PR-only, so it waits on pushing a branch 181 commits ahead of `origin/main`
+- [x] T16b: Prove anonymous cold acquisition and provision every environment — `c64a88c`. Cold anonymous acquisition of v0.4.0 proved from a clean checkout, with an invalid token in the environment as the inverse control; ten negative cases; cold 1078 ms / warm 207 ms; a tampered cache reinstalls rather than being inherited. Exercised on a real runner in PR #1 (run `34174322072`): the setup step is green inside the required `Governance` check, picked `linux_x86_64` itself, and keyed its cache on the **measured** `node22.23.2`. The job still fails at `pnpm install` on the private `git+ssh` dependency — which **T17 deletes**, exactly as this task's verification predicted
 - [ ] T17: Activate Collider's callers and delete what they supersede
 
 **Checkpoint: The boundary holds**

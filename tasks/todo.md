@@ -1437,7 +1437,10 @@ anonymously retrievable. The contract selection it used to carry is **T16a**, do
 - [x] The conditional-execution analysis is **re-confirmed against the live API**: run
       `31917271403` still reports 1–6 success, 7 **failure**, 8 **skipped**, and ruleset `main`
       (22410608) is still `active` requiring `Governance` + `Test All` on app `15368`
-- [ ] The enforcement path T16a named is **exercised** — blocked, see below
+- [x] The enforcement path T16a named is **exercised** — PR
+      [#1](https://github.com/atomize-hq/collider/pull/1), run `34174322072`.
+      The `Set up ds-skills` step ran **green on a real runner inside the required `Governance`
+      check**, all four sub-steps `outcome=success`. Its full green is T17's, not T16b's
 - [x] The approved release's skill assets are staged **without being activated**: the payload
       carries `lib/skills/` with its own `RELEASE.json`, and two tests assert Collider still
       resolves its own skills from the checkout
@@ -1459,8 +1462,43 @@ anonymously retrievable. The contract selection it used to carry is **T16a**, do
       exercised end-to-end against the real release
 
 > **Hold point** — the exact release is anonymously obtainable, every rail caller environment can
-> execute it, and the required enforcement path is identified **and** exercised.
-> **Two of three held.** The third needs a CI run — see "What is left".
+> execute it, and the required enforcement path is identified **and** exercised. **Held.**
+
+**What the real runner proved, that no local test could.** From run `34174322072`, inside the
+required `Governance` check:
+
+```
+Cache not found for input keys: ds-skills-Linux-X64-node22.23.2-v0.4.0-6b4ff9b2…
+fetching https://github.com/atomize-hq/ds-skills/releases/download/v0.4.0/install.sh
+verified install.sh against the reviewed record
+ds-skills v0.4.0 installed
+  asset       ds-skills-v0.4.0-linux_x86_64.tar.gz (linux_x86_64)
+  executable  /home/runner/work/_temp/ds-skills/v0.4.0/bin/ds-skills
+```
+
+- **`node22.23.2`**, not the `'22'` the workflow declares — the key carries what ran, so a job
+  that quietly changed runtime cannot reuse an install made under a different one
+- **`linux_x86_64`** — the installer selected the platform asset itself; the same command picks
+  `macos_arm64` on E1. Identical payload bytes make "it installed" a weak signal, so what is
+  asserted is the **selection** (§10.5)
+- Fetched **anonymously by a runner holding no credentials** for that release — the stranger's
+  route, on infrastructure that is not this machine
+- Job-local prefix under `RUNNER_TEMP`, 1.1 s, all four sub-steps `outcome=success`
+
+**The job still fails, for the reason this task's own verification predicted.** `pnpm install
+--frozen-lockfile` cannot clone `git@github.com:atomize-hq/figma-token-rail.git` — a runner has no
+key for it, and every other job skips behind `Governance`. **T17 deletes that dependency
+outright**, so repairing the URL here would be work T17 removes and would pull a dependency change
+out of the atomic cutover it belongs to. This is the documented boundary between T16b and T17, not
+a discovery.
+
+**Two composite-action defects, found by distrusting my own test.** The local step-runner expands
+`env.DS_SKILLS_PREFIX` in a `with:` — but it implements _my assumption_ about composite actions,
+not GitHub's, so it could only ever confirm it. `d7992a2` moved the cache path onto a step output;
+`f99f90c` passed the prefix explicitly to every step. Then the runner was taught to disable
+`GITHUB_ENV` propagation entirely, and with it off the install still lands in `RUNNER_TEMP`.
+Before the fix it would have landed in `~/.local/share/ds-skills`, cached an empty directory, and
+looked exactly like success.
 
 **How anonymity was proved, rather than assumed:** the cold install ran from a fresh `git clone`
 under `env -i`, with a **deliberately invalid** `GITHUB_TOKEN`/`GH_TOKEN` in the environment. An
@@ -1481,15 +1519,11 @@ makes the skew rule checkable at all.
 "do not run an ambient binary to decide whether to trust it" is only implementable because the
 payload carries its provenance as data.
 
-**What is left, and why it is not mine to take:** exercising the enforcement path needs a real CI
-run. CI triggers on `pull_request` and on `push` to `main`, and the ruleset now makes `main`
-PR-only — so this branch must be pushed and a PR opened. It is **181 commits ahead of
-`origin/main`**, which makes that an outward-facing action of a size that is the user's call, not
-a step to take quietly. Everything short of it is done, including executing the composite action's
-steps locally, in order, with GitHub's `GITHUB_OUTPUT`/`GITHUB_ENV` semantics: outputs propagate,
-the cache key resolves to
-`ds-skills-<os>-<arch>-node<measured>-v0.4.0-<record digest>`, and `DS_SKILLS` is exported from
-the path read back off disk.
+**Getting a CI run at all was the constraint.** CI triggers on `pull_request` and on `push` to
+`main`, the T16a ruleset made `main` PR-only, and there is no `workflow_dispatch` — adding one
+would not help, since GitHub only honours that trigger for workflows already on the default
+branch. So the branch had to be pushed and a PR opened, 182 commits ahead of `origin/main`. Done
+with approval; PR [#1](https://github.com/atomize-hq/collider/pull/1).
 
 **A note on cache hits.** A restored cache is not evidence. The provisioning step re-verifies the
 tree against the record; a tampered cached identity was detected and **reinstalled** rather than
@@ -1501,7 +1535,7 @@ inherited. Proven by tampering with one, not by reading the code.
 `.github/actions/setup-ds-skills/action.yml`, `.github/workflows/ci.yml`, `justfile`,
 `package.json`, `src/lib/tokens/ds-skills-provisioning.test.ts`, `SPEC.md` §10.6,
 `docs/ds-skills-execution-contract.md` §7
-**Scope:** M — **implementation done, `c64a88c`; one criterion blocked on a CI run**
+**Scope:** M — **done.** `c64a88c`, `d7992a2`, `f99f90c`; exercised on run `34174322072`
 
 ---
 
