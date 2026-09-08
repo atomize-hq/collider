@@ -800,3 +800,113 @@ present in both.
 
 Revisit as a pair with **BL-5**, which would typecheck the Node tooling: both are about a check
 that exists but does not see everything it should.
+
+---
+
+## BL-8 — The pilot retirement shipped its first half only, and the second half was never filed
+
+**Raised:** 2026-09-08, from a question about why an unwired validator sits in `scripts/`.
+**Surface:** `design-tokens/src/recipes/pilot-components.json`,
+`scripts/lib/component-recipe-validator-conformance.mjs`, `scripts/lib/component-mapping.mjs`,
+`design-tokens/src/recipes/README.md`, `scripts/fixtures/component-recipes/`,
+`scripts/validate-component-recipe.mjs`.
+
+The pilot boundary was a March scoping device: one blessed component whose shape was pinned so
+it could not drift while the contract was being designed. `5fe557d` (2026-09-03) retired the
+concept in the docs model — `pilotRecipeDocs.ts` became `recipeDocs.ts`, the allowlist inverted
+into a `deferred`-only exclusion, the single-entry cap went, tests 4 → 6. That half is done and
+correct.
+
+That commit also named what it was leaving behind, and why:
+
+> Two live sites still key off `pilot` and are deliberately untouched here, because changing
+> either one has consequences beyond a rename.
+
+**The deferral was reasoned. It was recorded only in a commit message.** Nothing carried it to
+this file, so the remainder had no surface anyone would find when choosing what to work on next.
+This entry is that surface, filed five days late.
+
+### The two named sites, and what each one costs now
+
+**1. `component-mapping.mjs:374` — a filter that matches nothing, permanently.**
+
+`loadPilotComponentIds` selects `index.json` entries with `status === 'pilot'`. No entry has that
+status and none will: `d8aefc2` gave badge `status: "active"` _specifically_ to stay out of this
+rail, because `"pilot"` would have pulled it into the retired CT-11B mapping and crashed
+`loadRecipeProjection` on a TSX file. `component-mapping.mjs:70` maps over the result, so the
+mapping produces zero records by construction. The rail reports `not-applicable` forever.
+
+**2. `pilot-components.json` — a second registry that restates the recipe it validates.**
+
+`token-validation.mjs:80` reads it on every `govern:tokens` run, so this one is live and gating.
+`validatePilotContract` checks a recipe's `variantAxes`, `defaults`, `slots`, `states` and
+`fallbacks` against a declaration of the same five fields in the registry. Measured against
+badge, the only recipe that exists:
+
+| field         | recipe vs registry                        |
+| ------------- | ----------------------------------------- |
+| `variantAxes` | byte-identical                            |
+| `defaults`    | byte-identical                            |
+| `fallbacks`   | byte-identical                            |
+| `slots`       | same names (registry drops token payload) |
+| `states`      | same names (registry drops token payload) |
+
+The registry adds exactly two fields of its own: `pilotStatus`, read only by
+`createActivePilotRegistry`, and `handoffStatus`, which **has no reader anywhere in the repo**.
+
+So the gate asserts that a file matches its own copy. That is coherent as a pilot boundary —
+pinning one shape against drift is the whole point — and incoherent as an ongoing contract: every
+recipe must now be authored twice, identically, in two files, or `govern:tokens` fails. Badge was
+hand-added to both in `d8aefc2`, and no gate would have said anything if it had landed in only
+one. The atom-layer direction is recipe-driven, so this is a per-component tax about to be paid
+repeatedly.
+
+### Two docs surfaces fall out with them
+
+**`design-tokens/src/recipes/README.md:65` "V1 Pilot Boundary"** declares `componentId: button`
+normative with `input` and `card` deferred. Badge — the only recipe in the repo — appears
+nowhere in the file. Line 204 "Pilot Boundary Registry" documents the second registry as a
+standing contract.
+
+**`scripts/fixtures/component-recipes/README.md`** was accurate when written (`e4f21a1`,
+2026-09-03) and was falsified the next day by `d8aefc2`. It states the registry "has no active
+components" (badge is active) and that the live validators "run over zero recipe files"
+(`badge.recipe.json` exists). Its four fixtures target `button`, so three fail at
+`$.componentId` — including `button.valid.recipe.json`, the positive control. A fixture set
+whose valid case cannot pass proves nothing.
+
+`scripts/validate-component-recipe.mjs` and `scripts/lib/component-recipe-validator.mjs` are the
+CLI those fixtures exist for. It has no caller in `package.json`, the justfile, or CI, and it is
+redundant rather than merely unwired: `validatePilotConformance` is `validatePilotContract` plus
+two `validateTokenLeaves` calls, which `token-validation.mjs` already runs inline at `:86` and
+`:120-121` on every preflight. There is no capability here to preserve — moving it to `ds-skills`
+would relocate a duplicate, and the pack has already paid once for hosting validators with no
+consumer (three forks that drifted five months and crashed on Collider's own artifacts).
+
+### The decision
+
+Finish the retirement. One registry, no dead filter, names that describe what the code does.
+
+1. Fold `pilot-components.json` into `index.json`. The five duplicated fields come from the
+   recipe file itself; `pilotStatus: "active" | "deferred"` becomes the existing `status`;
+   `handoffStatus` has no reader and goes.
+2. Rewrite `validatePilotContract` as a check against the recipe's own schema rather than
+   against a mirror of the recipe. Rename it and `createActivePilotRegistry` accordingly.
+3. Delete `loadPilotComponentIds` and give CT-11B a scope input that can be non-empty — or
+   record explicitly that CT-11B is dormant until the atom-layer work supplies one.
+4. Delete `scripts/validate-component-recipe.mjs` and `scripts/lib/component-recipe-validator.mjs`.
+5. Retarget the four fixtures to badge and wire them to a test, or delete them with the CLI.
+   Wiring is preferable: they are the only negative-case coverage the recipe rules have.
+6. Rewrite both README surfaces against what exists.
+
+Steps 2 and 3 change a live governance gate, which is SPEC §8 ask-first territory — `govern:tokens`
+currently fails closed on a recipe that disagrees with the registry, and any replacement must
+still fail closed on the cases the fixtures name.
+
+### Why it was not done at the time
+
+`5fe557d` was correct to stop where it did. The docs model was a self-contained rename; the two
+remaining sites are a gate and a CI scope input, and folding them in would have put a governance
+change inside a refactor diff. The error was not the scope — it was letting the follow-up live in
+a commit message, where it stayed invisible until `d8aefc2` had to work around one leftover and
+hand-sync the other on the same day.
