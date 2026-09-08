@@ -166,6 +166,79 @@ validates the scope, refuses to publish without `CHROMATIC_PROJECT_TOKEN`, and e
 artifact records the deferral rather than a review: CI regenerates the file before
 validating it, so the committed copy only has to be honest, not fresh.
 
+### 2026-09-08 — the rail published again, and four of the five unknowns are now answered
+
+Opening PR #1 did what step 1 said it would. `chromatic-review` ran on
+[`34238311954`](https://github.com/atomize-hq/collider/actions/runs/34238311954) (build 20) and
+[`34243650410`](https://github.com/atomize-hq/collider/actions/runs/34243650410) (build 21).
+Both **published**, and both then **failed on 2 component errors**, exit 2.
+
+```
+✖ Encountered 2 build errors: failing with exit code 2
+    → Tested 229 stories across 42 components; captured 226 snapshots and found 2 component errors
+```
+
+| unknown above                                         | answer                                                                                                                                                                                                                                                                                                                              |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Is `CHROMATIC_PROJECT_TOKEN` still valid?          | **Yes.** Two builds authenticated and uploaded.                                                                                                                                                                                                                                                                                     |
+| 2. Does the project still exist and accept builds?    | **Yes.** `69b96940ff7216b1df881d31`, builds 20 and 21.                                                                                                                                                                                                                                                                              |
+| 3. First build comes back `changed`, accept baselines | **No — it comes back `failed`.** Baselines cannot be accepted while the build errors, so step 2 of "The work" is blocked behind the component errors, not behind a decision.                                                                                                                                                        |
+| 4. Snapshot budget ~205                               | **Wrong by ~11%, and for a structural reason.** Chromatic snapshots the **whole Storybook**, not the proof scope: **229 stories across 42 components**, of which 1 sets `disableSnapshot`, so 228 are attempted. The ~205 figure came from the 32-component proof scope, which only governs the _review_, never what gets captured. |
+| 5. Does `reusable-component-promotion` run?           | **Still no.** It declares `needs: chromatic-review`, so a failing review skips it. The CT-11B gate remains skipped rather than run — the same knock-on as before, now for a different reason.                                                                                                                                       |
+
+**The counts reconcile exactly**: 229 total − 1 `disableSnapshot` − 2 errored = 226 captured. So it
+is precisely two stories, not a flaky pair.
+
+#### Which two is not currently knowable from CI, and that is its own defect
+
+The job never preserves the evidence. `chromatic-review.mjs` writes
+`artifacts/chromatic/chromatic-diagnostics.json`, and `runChromaticReview()` reads it — but
+**only to pull the build URL** (`resolveChromaticBuildUrl`); everything else is discarded. The
+workflow uploads `status.json` alone, and that file records `diffOutcome` and scope, never
+per-story outcomes. So a build can fail on component errors and leave nothing behind that says
+which components.
+
+The diagnostics file **is safe to upload**: checked by running the CLI with a deliberately
+invalid token (`chpt_0000…`, auth refused, nothing published) and searching the resulting file —
+the project token does not appear anywhere in it. The CLI also accepts `--junit-report`, which is
+purpose-built for naming failing tests and is not currently passed.
+
+Making one of those an artifact is the smallest change that turns this from unanswerable into
+answerable. Not taken here: the rail is governed by this item, and the sequencing below is the
+user's call.
+
+#### Leading hypothesis, held loosely
+
+The only two stories that render the entire 653-token registry are also the only two extreme
+outliers in the build, measured in a real browser against the exact `storybook-static` artifact
+Chromatic tested:
+
+| story                                        | rendered height | nodes  |
+| -------------------------------------------- | --------------- | ------ |
+| `Contracts/Tokens > Docs`                    | **203,191 px**  | 10,866 |
+| `Contracts/Generated Tokens > TokenRegistry` | **122,464 px**  | 5,518  |
+| every other story                            | ordinary        | —      |
+
+Two candidates, two errors. But this is correlation: both stories **render without error** in that
+static build, all 458 vitest story-tests pass, and Chromatic's docs state no size limit — their
+FAQ says only that a component error means Chromatic "cannot render one or more components".
+So treat it as the first thing to check, not the answer.
+
+Also ruled out: the two stories fixed in `dfcb5f6` are **not** these. Build 21 ran after that fix
+and reported the same 2 errors, unchanged.
+
+#### Revised order of work
+
+1. Get the story names. Either upload `chromatic-diagnostics.json`, add `--junit-report` and
+   upload that, or read build 21 directly in the Chromatic UI — the fastest route if someone has
+   the login, since the build page names errored components.
+2. Fix the two stories, then accept the ~228 baselines.
+3. Then steps 3–5 of "The work" above, unchanged.
+
+Note that `chromatic-review` is **not** a required check — the `main` ruleset requires only
+`Governance` and `Test All` — so none of this blocks the PR. What it blocks is
+`reusable-component-promotion`, and through it the CT-11B gate.
+
 ---
 
 ## BL-3 — `@atomize-hq/figma-token-rail` is not installable outside this machine
