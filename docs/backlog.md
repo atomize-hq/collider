@@ -178,16 +178,16 @@ Both **published**, and both then **failed on 2 component errors**, exit 2.
     → Tested 229 stories across 42 components; captured 226 snapshots and found 2 component errors
 ```
 
-| unknown above                                         | answer                                                                                                                                                                                                                                                                                                                              |
-| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. Is `CHROMATIC_PROJECT_TOKEN` still valid?          | **Yes.** Two builds authenticated and uploaded.                                                                                                                                                                                                                                                                                     |
-| 2. Does the project still exist and accept builds?    | **Yes.** `69b96940ff7216b1df881d31`, builds 20 and 21.                                                                                                                                                                                                                                                                              |
-| 3. First build comes back `changed`, accept baselines | **No — it comes back `failed`.** Baselines cannot be accepted while the build errors, so step 2 of "The work" is blocked behind the component errors, not behind a decision.                                                                                                                                                        |
-| 4. Snapshot budget ~205                               | **Wrong by ~11%, and for a structural reason.** Chromatic snapshots the **whole Storybook**, not the proof scope: **229 stories across 42 components**, of which 1 sets `disableSnapshot`, so 228 are attempted. The ~205 figure came from the 32-component proof scope, which only governs the _review_, never what gets captured. |
-| 5. Does `reusable-component-promotion` run?           | **Still no.** It declares `needs: chromatic-review`, so a failing review skips it. The CT-11B gate remains skipped rather than run — the same knock-on as before, now for a different reason.                                                                                                                                       |
+| unknown above                                         | answer                                                                                                                                                                                                                                                                                                                             |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Is `CHROMATIC_PROJECT_TOKEN` still valid?          | **Yes.** Two builds authenticated and uploaded.                                                                                                                                                                                                                                                                                    |
+| 2. Does the project still exist and accept builds?    | **Yes.** `69b96940ff7216b1df881d31`, builds 20 and 21.                                                                                                                                                                                                                                                                             |
+| 3. First build comes back `changed`, accept baselines | **No — it comes back `failed`.** Baselines cannot be accepted while the build errors, so step 2 of "The work" is blocked behind the component errors, not behind a decision.                                                                                                                                                       |
+| 4. Snapshot budget ~205                               | **Wrong by ~11%, and for a structural reason.** Chromatic snapshots the **whole Storybook**, not the proof scope: **229 stories across 42 components**, of which 3 set `disableSnapshot`, so 226 are attempted. The ~205 figure came from the 32-component proof scope, which only governs the _review_, never what gets captured. |
+| 5. Does `reusable-component-promotion` run?           | **Still no.** It declares `needs: chromatic-review`, so a failing review skips it. The CT-11B gate remains skipped rather than run — the same knock-on as before, now for a different reason.                                                                                                                                      |
 
-**The counts reconcile exactly**: 229 total − 1 `disableSnapshot` − 2 errored = 226 captured. So it
-is precisely two stories, not a flaky pair.
+**The counts reconcile**: 229 total − 3 `disableSnapshot` = 226 attempted, of which 2 errored. So
+it is precisely two stories, not a flaky pair.
 
 #### Which two is not currently knowable from CI, and that is its own defect
 
@@ -238,6 +238,45 @@ and reported the same 2 errors, unchanged.
 Note that `chromatic-review` is **not** a required check — the `main` ruleset requires only
 `Governance` and `Test All` — so none of this blocks the PR. What it blocks is
 `reusable-component-promotion`, and through it the CT-11B gate.
+
+#### 2026-09-08, later — confirmed from the Chromatic UI, and fixed
+
+Build 22 names both, and the cause is a hard product limit that is not in Chromatic's public
+docs — only in the build UI:
+
+> Your story couldn't be captured because it exceeds our 25,000,000px limit. Its dimensions are
+> 1,200x43,080px.
+
+| story                                         | dimensions    | pixels | over the limit |
+| --------------------------------------------- | ------------- | ------ | -------------- |
+| `Contracts/Generated Tokens > Token Registry` | 1200 × 43,080 | 51.7M  | 2.1×           |
+| `Contracts/Tokens > Docs`                     | 1200 × 88,925 | 106.7M | 4.3×           |
+
+At 1200px wide the ceiling is **~20,833px tall**. The size hypothesis above was right, and the
+mechanism was exactly size — but note it was still only correlation until the UI confirmed it,
+and Chromatic's own suggestions ("separate pages into components", "minimize the number of very
+large elements") do not apply: no layout of 653 token cards fits under 20,833px. The real choice
+was to snapshot a subset or not snapshot.
+
+**Fix: `chromatic: { disableSnapshot: true }` on both**, with the measurement recorded at each
+story. Justification, in order of weight:
+
+- Both are **contract** stories, outside `story-inventory.json` and so outside the CT-11B review
+  scope. They prove generated artifacts drive a page; the assertions are structural.
+- A whole-registry visual diff repaints on any token change, so it could never isolate a
+  regression — the snapshot was never going to be useful even if it fit.
+- Nothing is lost: Chromatic has never once captured them, and `Test All` still runs both stories
+  with the a11y gate at `error` over every node.
+- Precedent: three stories already set `disableSnapshot` for their own recorded reasons.
+
+If per-family visual coverage is ever wanted, the honest version is splitting the registry into
+one story per token family — each within limits — rather than truncating one page.
+
+**Correction to the entry above.** It said "1 sets `disableSnapshot`, so 228 are attempted" and
+"229 − 1 − 2 = 226". Both wrong: **3** stories set `disableSnapshot` (`tool`, `code-block`,
+`reasoning`), so 229 − 3 = **226 attempted**, of which 2 errored. The arithmetic looked like it
+reconciled only because two mistakes cancelled. With the two contract stories now disabled, the
+next build attempts 224.
 
 ---
 

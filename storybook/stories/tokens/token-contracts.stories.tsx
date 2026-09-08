@@ -22,6 +22,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Docs: Story = {
+  // Chromatic cannot capture this story, and no layout change fixes it. The
+  // registry is 653 tokens, which renders 1200x88,925px -- ~107M pixels
+  // against Chromatic's 25,000,000px limit, so at this width the story would
+  // have to fit in ~20,833px. Build 22 reported it, and
+  // `Contracts/Generated Tokens` at 1200x43,080px, as the build's only two
+  // component errors.
+  //
+  // Not snapshotting it costs nothing real: a whole-registry visual diff
+  // repaints on any token change, so it could never isolate a regression. The
+  // contract this story exists to prove is structural, asserted below, and the
+  // a11y gate still audits every node of it in `Test All`.
+  parameters: { chromatic: { disableSnapshot: true } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 

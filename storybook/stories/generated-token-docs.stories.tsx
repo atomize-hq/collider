@@ -89,6 +89,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const TokenRegistry: Story = {
+  // 1200x43,080px is ~51.7M pixels against Chromatic's 25,000,000px limit --
+  // see the same note on `Contracts/Tokens > Docs`, the other half of build
+  // 22's two component errors. Both render the full 653-token registry, and
+  // neither fits under the ~20,833px this width allows.
+  parameters: { chromatic: { disableSnapshot: true } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const heading = await canvas.findByTestId('token-docs-heading');
