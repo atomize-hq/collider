@@ -1416,42 +1416,92 @@ anonymously retrievable. The contract selection it used to carry is **T16a**, do
 
 **Acceptance criteria:**
 
-- [ ] Cold acquisition **of the exact release** succeeds with **no usable authentication**, fresh
+- [x] Cold acquisition **of the exact release** succeeds with **no usable authentication**, fresh
       relevant caches, and **no existing rail installation** — from a clean checkout, via the
       pinned installer URL, with integrity verified against the reviewed record. A corrupted
-      asset **fails**
-- [ ] **Each required environment from T16a is provisioned.** Installing in one CI job does not
-      establish availability in the others — all 8 jobs provision via a shared setup step rather
-      than eight copies
-- [ ] **The reviewed toolchain record is created here** — the JSON naming package, exact release
-      and integrity that §10.4 specified — along with the provisioning/execution behaviour that
-      reads it
-- [ ] **Invocation binds to the installed, verified executable**, never to whichever `ds-skills`
-      appears first on a developer's `PATH`
-- [ ] The enforcement path T16a named is **exercised**, and the conditional-execution analysis is
-      confirmed against a real run: a skipped job reports success, so a required check is not
-      evidence its commands ran
-- [ ] The approved release's skill assets are staged **without being activated**
-- [ ] Local provisioning documented; pre-push acquires nothing
-- [ ] Cache keys distinguish release, toolchain version and platform; a miss installs the same
-      release
+      asset **fails** — see "How anonymity was proved" below
+- [x] **Each required environment from T16a is provisioned.** E1/E2/E4 share one machine and one
+      prefix (`just ds-skills-install`); E3 gets
+      [`.github/actions/setup-ds-skills`](../.github/actions/setup-ds-skills/action.yml), used by
+      the **three** jobs that invoke the rail rather than all eight — T16a §5.4 measured which
+      three, and a job that provisions a tool it never runs proves availability of nothing. The
+      count in this criterion predated that measurement
+- [x] **The reviewed toolchain record is created here** — created at T15, **moved here** to the
+      repo root where §10.4 always said it goes. Nothing read it until now, so this was the last
+      free moment to fix the drift. The provisioning/execution behaviour that reads it is
+      `scripts/lib/ds-skills.mjs` (resolve, never networked) and
+      `scripts/lib/ds-skills-acquire.mjs` (acquire, explicit)
+- [x] **Invocation binds to the installed, verified executable** — resolution is from the record's
+      version at the version-specific path, and the action exports `DS_SKILLS` from what it read
+      back off disk. `PATH` is never consulted; an ambient binary is never executed
+- [x] The conditional-execution analysis is **re-confirmed against the live API**: run
+      `31917271403` still reports 1–6 success, 7 **failure**, 8 **skipped**, and ruleset `main`
+      (22410608) is still `active` requiring `Governance` + `Test All` on app `15368`
+- [ ] The enforcement path T16a named is **exercised** — blocked, see below
+- [x] The approved release's skill assets are staged **without being activated**: the payload
+      carries `lib/skills/` with its own `RELEASE.json`, and two tests assert Collider still
+      resolves its own skills from the checkout
+- [x] Local provisioning documented — `docs/ds-skills-execution-contract.md` §7; pre-push acquires
+      nothing, enforced by a test that walks the whole preflight recipe graph
+- [x] Cache keys distinguish release, toolchain version and platform; a miss installs the same
+      release. Node is **measured, not declared** — a job that quietly changed runtime would
+      otherwise reuse an install made under a different one
 
 **Verification:**
 
-- [ ] **Provisioning probes** succeed cold and warm and are measured. Not full product
-      workflows — the private `git+ssh` dependency is still in the lockfile until T17, so
-      ordinary CI cannot be green yet. Clean product install belongs to T17/T18
-- [ ] `ds-skills --version` reports the approved release in every environment
-- [ ] Negative cases all fail or use the intended release, never acquiring at execution time and
-      never falling back: wrong selected release, missing install, an unrelated global binary on
-      `PATH`, integrity mismatch during acquisition or cache acceptance
+- [x] **Provisioning probes** succeed cold and warm and are measured: **cold 1078 ms** (acquires),
+      **warm 207 ms** (verifies, acquires nothing)
+- [x] `ds-skills --version` reports `0.4.0` in every environment reachable from this machine, and
+      `skills` reports `cli=v0.4.0 skills=v0.4.0` — no skew
+- [x] Negative cases all fail or use the intended release. Ten of them, each a way the pin could
+      stop pinning while everything still looked green — the table is in the contract doc §7.4,
+      the tests in `src/lib/tokens/ds-skills-provisioning.test.ts`, and six were additionally
+      exercised end-to-end against the real release
 
 > **Hold point** — the exact release is anonymously obtainable, every rail caller environment can
 > execute it, and the required enforcement path is identified **and** exercised.
+> **Two of three held.** The third needs a CI run — see "What is left".
+
+**How anonymity was proved, rather than assumed:** the cold install ran from a fresh `git clone`
+under `env -i`, with a **deliberately invalid** `GITHUB_TOKEN`/`GH_TOKEN` in the environment. An
+authenticated request carrying that token would have returned 401; it returned the asset. That is
+an inverse control for anonymity, not an absence of evidence. The corrupted-integrity case ran
+against the real network too: one hex character of the expected digest changed, the real
+`install.sh` fetched, mismatch reported with both digests, **nothing executed and nothing
+installed**.
+
+**What installing the real release corrected:** the payload unpacks as `bin/` + `lib/`, so the
+identity a consumer reads is at `lib/release.json` and `lib/skills/RELEASE.json` — not at the
+install root, which is where the resolver was first written to look. A fixture built from the
+layout this repo expected would have passed against a resolver that could never work. `SPEC.md`
+§10.6 amended to record the layout and to say why the **pair** of files, not either alone, is what
+makes the skew rule checkable at all.
+
+**Identity is read, never executed.** Nothing is spawned to establish what an install is. The rule
+"do not run an ambient binary to decide whether to trust it" is only implementable because the
+payload carries its provenance as data.
+
+**What is left, and why it is not mine to take:** exercising the enforcement path needs a real CI
+run. CI triggers on `pull_request` and on `push` to `main`, and the ruleset now makes `main`
+PR-only — so this branch must be pushed and a PR opened. It is **181 commits ahead of
+`origin/main`**, which makes that an outward-facing action of a size that is the user's call, not
+a step to take quietly. Everything short of it is done, including executing the composite action's
+steps locally, in order, with GitHub's `GITHUB_OUTPUT`/`GITHUB_ENV` semantics: outputs propagate,
+the cache key resolves to
+`ds-skills-<os>-<arch>-node<measured>-v0.4.0-<record digest>`, and `DS_SKILLS` is exported from
+the path read back off disk.
+
+**A note on cache hits.** A restored cache is not evidence. The provisioning step re-verifies the
+tree against the record; a tampered cached identity was detected and **reinstalled** rather than
+inherited. Proven by tampering with one, not by reading the code.
 
 **Dependencies:** T15 (and T16a's selections)
-**Files likely touched:** `.github/workflows/ci.yml`, setup action, `ds-skills.release.json`, docs
-**Scope:** M
+**Files touched:** `ds-skills.release.json` (moved to root), `scripts/lib/ds-skills.mjs`,
+`scripts/lib/ds-skills-acquire.mjs`, `scripts/install-ds-skills.mjs`,
+`.github/actions/setup-ds-skills/action.yml`, `.github/workflows/ci.yml`, `justfile`,
+`package.json`, `src/lib/tokens/ds-skills-provisioning.test.ts`, `SPEC.md` §10.6,
+`docs/ds-skills-execution-contract.md` §7
+**Scope:** M — **implementation done, `c64a88c`; one criterion blocked on a CI run**
 
 ---
 
