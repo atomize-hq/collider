@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Stage 2 Component Loop'
+  short_description: 'Run the story, Figma, code, and Storybook round-trip'
+  default_prompt: 'Use $stage-2-component-roundtrip-loop to run the repeatable story-to-Figma-to-code-to-Storybook loop for a single reusable component or a tightly related primitive batch.'

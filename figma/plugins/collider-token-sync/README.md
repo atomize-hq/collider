@@ -1,19 +1,46 @@
-# Collider Token Sync (Figma Plugin)
+# Collider Token Sync (build output)
 
-This is a repo-owned Figma plugin that materializes `design-tokens/dist/figma/tokens.json` into a local variables collection inside the current Figma file.
+**This directory is generated. Do not edit it.**
 
-## Import
+```bash
+pnpm figma:plugin:build
+```
 
-Import the plugin by selecting this file in Figma:
+Then import `figma/plugins/collider-token-sync/manifest.json` into Figma
+(Plugins → Development → Import plugin from manifest).
 
-`figma/plugins/collider-token-sync/manifest.json`
+## Where the plugin actually lives
 
-Do not import `dist/` (that folder is not the runtime entrypoint for this plugin).
+The plugin source is [`@atomize-hq/ds-skills`](https://github.com/atomize-hq/ds-skills), the pinned release named in `ds-skills.release.json`.
+Everything specific to this repo is in [`figma/token-sync.config.json`](../../token-sync.config.json):
+the `Collider Tokens` collection name, the localhost artifact URL, the
+`com.atomizehq.collider` `$extensions` namespace, the `dark` default theme, and the
+plugin's Figma name and id.
 
-## Build
+The build stamps that config into the bundle and the manifest, so the plugin id
+Figma already knows stays stable across rebuilds.
 
-From the repo root:
+## The two actions
 
-`pnpm figma:plugin:build`
+- **Sync Variables** — writes the published artifact into the Figma file, then re-reads it and
+  runs the drift comparison to confirm the write actually landed. Upserts, so `VariableID`s and
+  the paint bindings pointing at them survive.
+- **Check Drift** — read-only. Reports where the file disagrees with the artifact, in either
+  direction.
 
-This writes `code.js` next to `manifest.json` (gitignored).
+A finding from Check Drift is a _proposal_, never a source of truth.
+`design-tokens/src/tokens/` is the only authoring surface; fix it there and re-publish.
+
+## Serving the artifact
+
+The plugin fetches over HTTP, so run the local proof server first:
+
+```bash
+pnpm figma:tokens:serve
+```
+
+## Tests
+
+The rail is unit-tested in its own repo. What this repo asserts — that _our_ artifact and _our_
+config produce the variable set we expect — is in
+`pnpm figma:verify`, which runs as a step of `pnpm govern:tokens`.

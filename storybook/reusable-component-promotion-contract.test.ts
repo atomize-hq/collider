@@ -7,8 +7,6 @@ import syncLedger from '../src/figma/sync-ledger.json';
 import reusableComponentStatusReusableFixture from '../scripts/fixtures/reusable-component-status/valid-reusable-component-status.json';
 import reusableComponentStatusProofOnlyFixture from '../scripts/fixtures/reusable-component-status/valid-proof-only-status.json';
 import reusableComponentStatusTokenOnlyFixture from '../scripts/fixtures/reusable-component-status/valid-token-only-status.json';
-// Component spec was removed during zero-components cleanup; inline fixture for contract tests
-const buttonSpec = { componentId: 'thinking-indicator' };
 import contractDoc from './reusable-component-promotion-contract.md?raw';
 import policyDoc from './reusable-component-promotion-policy.md?raw';
 import storyInventory from './story-inventory.json';
@@ -213,7 +211,12 @@ describe('reusable component promotion contract fixtures', () => {
       'ct10b',
     ]);
     expect(reusableComponentStatusReusableFixture.railSummaries.ct11b.freshness).toBe('current');
-    expect(reusableComponentStatusReusableFixture.railSummaries.ct11b.outcome).toBe('satisfied');
+    // Code Connect is retired, so the mapping rail has nothing to measure. It reports
+    // `not-applicable` rather than `satisfied` — an empty mapping is not a passed check.
+    expect(reusableComponentStatusReusableFixture.railSummaries.ct11b.outcome).toBe(
+      'not-applicable'
+    );
+    expect(reusableComponentStatusReusableFixture.reasonCodes).toContain('ct11b-mapping-retired');
   });
 });
 
@@ -225,18 +228,104 @@ describe('reusable component promotion cross-contract provenance', () => {
     const ct11bMarker = `mappingStatusVersion:${reusableComponentMappingStatus.mappingStatusVersion}`;
 
     expect(ct8bMarker).toBe(
-      'ledgerVersion:2|artifactRevision:2ee89e27306a1caa846d904ad6229370f371b1b3'
+      'ledgerVersion:3|artifactRevision:dc97a2671dbcc6e2a71873042566f4937b766d9d'
     );
     expect(ct9bMarker).toBe('inventoryVersion:1|proofCoverageVersion:1');
-    expect(ct10bMarker).toBe('statusVersion:1|revision:e4a9f4f4e0a9dd75744a80cfe6a323882855c16e');
+    expect(ct10bMarker).toBe('statusVersion:1|revision:0244cbdf98aa95ccba0ff0f842bf6aa59cada849');
     expect(ct11bMarker).toBe('mappingStatusVersion:1');
   });
 
   it('uses current repo-owned proof and mapping surfaces instead of prose-only assumptions', () => {
-    // With zero components, inventory and proof coverage are empty
-    expect(storyInventory.components).toEqual([]);
-    expect(proofCoverage.components).toEqual([]);
-    expect(chromaticStatus.review.scope.componentIds).toContain(buttonSpec.componentId);
+    // Story inventory preserves Stage-2 loop order: Message (primitive), Reasoning
+    // (interactive), CodeBlock (primitive), then Tool (interactive).
+    expect(storyInventory.components.map((component) => component.componentId)).toEqual([
+      'message',
+      'reasoning',
+      'code-block',
+      'tool',
+      'sources',
+      'task',
+      'chain-of-thought',
+      'suggestion',
+      'inline-citation',
+      'context',
+      'prompt-input',
+      'snippet',
+      'image',
+      'open-in-chat',
+      'artifact',
+      'web-preview',
+      'confirmation',
+      'plan',
+      'attachments',
+      'agent',
+      'queue',
+      'checkpoint',
+      'package-info',
+      'environment-variables',
+      'test-results',
+      'file-tree',
+      'schema-display',
+      'commit',
+      'stack-trace',
+      'jsx-preview',
+      'terminal',
+      'sandbox',
+      'badge',
+    ]);
+    // Proof coverage is generated in componentId-sorted order.
+    expect(proofCoverage.components.map((component) => component.componentId)).toEqual([
+      'agent',
+      'artifact',
+      'attachments',
+      'badge',
+      'chain-of-thought',
+      'checkpoint',
+      'code-block',
+      'commit',
+      'confirmation',
+      'context',
+      'environment-variables',
+      'file-tree',
+      'image',
+      'inline-citation',
+      'jsx-preview',
+      'message',
+      'open-in-chat',
+      'package-info',
+      'plan',
+      'prompt-input',
+      'queue',
+      'reasoning',
+      'sandbox',
+      'schema-display',
+      'snippet',
+      'sources',
+      'stack-trace',
+      'suggestion',
+      'task',
+      'terminal',
+      'test-results',
+      'tool',
+      'web-preview',
+    ]);
+    // The chromatic review scope is derived from the same inventory, so the two
+    // must agree exactly. Asserting containment of a single id let the artifact
+    // keep naming a component the inventory no longer had.
+    expect(chromaticStatus.review.scope.componentIds).toEqual(
+      storyInventory.components.map((component) => component.componentId)
+    );
+    expect(Object.keys(chromaticStatus.review.scope.componentTiers).sort()).toEqual(
+      storyInventory.components.map((component) => component.componentId).sort()
+    );
+    // The Chromatic project is real and CI does publish to it — 20 builds went up
+    // between 2026-03-21 and 2026-03-24. None covered these components: the review
+    // job resolves the proof scope before it publishes, and that scope has thrown
+    // CHROMATIC_REVIEW_EMPTY_SCOPE since 96d5c39, so nothing has reached Chromatic
+    // since 24 Mar. The artifact records that deferral rather than carrying the
+    // March pilot's verdict forward over a component set Chromatic has never seen.
+    expect(chromaticStatus.review.diffOutcome).toBe('deferred');
+    expect(chromaticStatus.check.conclusion).toBe('skipped');
     expect(reusableComponentMappingStatus.summary.componentCount).toBe(0);
   });
 });

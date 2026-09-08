@@ -1,0 +1,22 @@
+{
+  "proofVersion": "1",
+  "mode": "plugin-import-manual",
+  "artifact": {
+    "path": "design-tokens/dist/figma/tokens.json",
+    "gitSha": "1111111111111111111111111111111111111111"
+  },
+  "destination": {
+    "name": "Collider",
+    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
+  },
+  "materialization": {
+    "status": "passed",
+    "attemptedAt": "2026-03-21T00:00:00Z",
+    "notes": "Fixture for the promotion gate's parity-deferred case. A publication that really happened, on a ledger whose parity is still deferred — the gate has to block on the deferral, not on the publication."
+  },
+  "carrier": {
+    "used": false,
+    "reason": null,
+    "exitExpectation": null
+  }
+}

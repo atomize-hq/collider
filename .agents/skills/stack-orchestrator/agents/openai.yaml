@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Stack Orchestrator'
+  short_description: 'Route work across the Collider app stack and stages'
+  default_prompt: 'Use $stack-orchestrator to classify this request, route it to the right stage skill, and enforce the shared rules for the Next.js, Tauri, Storybook, Figma, and AI UI stack.'

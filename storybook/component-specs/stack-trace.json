@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "stack-trace",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-stack-trace--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-stack-trace--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-stack-trace--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-stack-trace--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-stack-trace--expand-workflow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-stack-trace--expand-transition", "kinds": ["motion"] },
+    { "storyId": "ai-elements-stack-trace--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/stack-trace.tsx",
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2307:646",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-stack-trace--default",
+      "ai-elements-stack-trace--state-matrix",
+      "ai-elements-stack-trace--keyboard",
+      "ai-elements-stack-trace--focus",
+      "ai-elements-stack-trace--expand-workflow",
+      "ai-elements-stack-trace--expand-transition",
+      "ai-elements-stack-trace--docs"
+    ]
+  }
+}

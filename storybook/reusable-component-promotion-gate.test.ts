@@ -135,10 +135,20 @@ describe('evaluateReusableComponentPromotionDecision', () => {
 
   it('blocks release while parity remains deferred', () => {
     const workspace = copyBaseWorkspace();
+    // A published ledger whose parity is still deferred, with the proof its
+    // `publication` binding names. Both are needed: the CLI resolves the proof
+    // relative to the ledger, and a broken binding would block for the wrong
+    // reason — `ct8b-publication-unverified` rather than the deferral this
+    // asserts.
     replaceWorkspaceFile(
       workspace,
       'src/figma/sync-ledger.json',
-      'scripts/fixtures/sync-ledger/valid.sync-ledger.json'
+      'scripts/fixtures/promotion-gate/sync-ledger.json'
+    );
+    replaceWorkspaceFile(
+      workspace,
+      'src/figma/publish-proof.json',
+      'scripts/fixtures/promotion-gate/publish-proof.json'
     );
     const status = createReusableComponentStatus({
       changeClass: 'reusable-component-advancement',
@@ -239,6 +249,13 @@ function copyBaseWorkspace() {
   const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'reusable-component-promotion-'));
   const filesToCopy: Array<{ source: string; dest: string }> = [
     { source: 'src/figma/sync-ledger.json', dest: 'src/figma/sync-ledger.json' },
+    // The ledger's `publication` binding resolves the proof relative to the
+    // ledger, and the CLI reads Collider's vocabulary from the profile.
+    { source: 'src/figma/publish-proof.json', dest: 'src/figma/publish-proof.json' },
+    {
+      source: '.agents/skills/profiles/collider.json',
+      dest: '.agents/skills/profiles/collider.json',
+    },
     {
       source: 'scripts/fixtures/component-mapping-workspace/storybook/story-inventory.json',
       dest: 'storybook/story-inventory.json',

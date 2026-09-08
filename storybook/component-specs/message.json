@@ -1,0 +1,27 @@
+{
+  "specVersion": "1",
+  "componentId": "message",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-message--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-message--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "ai-elements-message--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/message.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2193-8",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-message--default",
+      "ai-elements-message--variant-matrix",
+      "ai-elements-message--docs"
+    ]
+  }
+}

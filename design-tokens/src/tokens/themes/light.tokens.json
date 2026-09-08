@@ -1,0 +1,116 @@
+{
+  "$description": "Additive light theme. Extends dark, so it only needs to publish the paths whose values differ.",
+  "$extensions": {
+    "com.atomizehq.collider": {
+      "themeId": "light"
+    }
+  },
+  "accent": {
+    "sidebar-primary": {
+      "$type": "color",
+      "$value": "#155dfc"
+    }
+  },
+  "semantic": {
+    "color": {
+      "background": {
+        "base": {
+          "$value": "{core.color.white}",
+          "$type": "color"
+        },
+        "surface": {
+          "$value": "{core.color.neutral.50}",
+          "$type": "color"
+        },
+        "elevated": {
+          "$value": "{core.color.neutral.100}",
+          "$type": "color"
+        },
+        "overlay": {
+          "$value": "{core.color.neutral.200}",
+          "$type": "color"
+        },
+        "white-10": {
+          "$value": "{core.color.black-alpha.10}",
+          "$type": "color"
+        }
+      },
+      "border": {
+        "subtle": {
+          "$value": "{core.color.black-alpha.10}",
+          "$type": "color"
+        },
+        "default": {
+          "$value": "{core.color.neutral.200}",
+          "$type": "color"
+        },
+        "strong": {
+          "$value": "{core.color.neutral.300}",
+          "$type": "color"
+        }
+      },
+      "interaction": {
+        "focus-ring": {
+          "$value": "{core.color.neutral.600}",
+          "$type": "color"
+        }
+      },
+      "text": {
+        "primary": {
+          "$value": "{core.color.neutral.950}",
+          "$type": "color"
+        },
+        "secondary": {
+          "$value": "{core.color.neutral.600}",
+          "$type": "color"
+        },
+        "tertiary": {
+          "$value": "{core.color.neutral.500}",
+          "$type": "color"
+        },
+        "dim": {
+          "$value": "{core.color.black-alpha.30}",
+          "$type": "color"
+        },
+        "success": {
+          "$value": "{core.color.green.800}",
+          "$type": "color"
+        },
+        "error": {
+          "$value": "{core.color.red.700}",
+          "$type": "color"
+        },
+        "warning": {
+          "$value": "{core.color.amber.700}",
+          "$type": "color"
+        },
+        "caution": {
+          "$value": "{core.color.orange.700}",
+          "$type": "color"
+        },
+        "info": {
+          "$value": "{core.color.blue.700}",
+          "$type": "color"
+        },
+        "ai": {
+          "$value": "{core.color.violet.700}",
+          "$type": "color"
+        }
+      },
+      "status-strip": {
+        "running": {
+          "$value": "{core.color.neutral.950}",
+          "$type": "color"
+        },
+        "neutral": {
+          "$value": "{core.color.neutral.950}",
+          "$type": "color"
+        },
+        "ai": {
+          "$value": "{core.color.violet.700}",
+          "$type": "color"
+        }
+      }
+    }
+  }
+}

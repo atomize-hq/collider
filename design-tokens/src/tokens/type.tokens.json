@@ -1,0 +1,102 @@
+{
+  "font": {
+    "poppins": {
+      "$value": "Poppins",
+      "$type": "string"
+    },
+    "roboto-mono": {
+      "$value": "Roboto Mono",
+      "$type": "string"
+    }
+  },
+  "size": {
+    "2xs": {
+      "$value": "10px",
+      "$type": "dimension"
+    },
+    "xs": {
+      "$value": "12px",
+      "$type": "dimension"
+    },
+    "sm": {
+      "$value": "14px",
+      "$type": "dimension"
+    },
+    "base": {
+      "$value": "16px",
+      "$type": "dimension"
+    },
+    "lg": {
+      "$value": "18px",
+      "$type": "dimension"
+    },
+    "xl": {
+      "$value": "20px",
+      "$type": "dimension"
+    },
+    "2xl": {
+      "$value": "24px",
+      "$type": "dimension"
+    }
+  },
+  "weight": {
+    "regular": {
+      "$value": 400,
+      "$type": "number"
+    },
+    "medium": {
+      "$value": 500,
+      "$type": "number"
+    },
+    "semibold": {
+      "$value": 600,
+      "$type": "number"
+    },
+    "bold": {
+      "$value": 700,
+      "$type": "number"
+    }
+  },
+  "leading": {
+    "tight": {
+      "$value": 1.2,
+      "$type": "number"
+    },
+    "normal": {
+      "$value": 1.5,
+      "$type": "number"
+    },
+    "relaxed": {
+      "$value": 1.75,
+      "$type": "number"
+    }
+  },
+  "tracking": {
+    "normal": {
+      "$value": "0em",
+      "$type": "dimension"
+    },
+    "wide": {
+      "$value": "0.025em",
+      "$type": "dimension"
+    }
+  },
+  "role": {
+    "path": {
+      "$value": "{type.size.base}",
+      "$type": "dimension"
+    },
+    "output-line": {
+      "$value": "{type.size.base}",
+      "$type": "dimension"
+    },
+    "secondary": {
+      "$value": "{type.size.xs}",
+      "$type": "dimension"
+    },
+    "status-letter": {
+      "$value": "{type.size.2xs}",
+      "$type": "dimension"
+    }
+  }
+}

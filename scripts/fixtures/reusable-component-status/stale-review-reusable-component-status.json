@@ -8,7 +8,7 @@
       "threadId": "THR-05",
       "sourcePath": "src/figma/sync-ledger.json",
       "claimRelevant": true,
-      "sourceVersionOrRevision": "ledgerVersion:2|artifactRevision:2ee89e27306a1caa846d904ad6229370f371b1b3",
+      "sourceVersionOrRevision": "ledgerVersion:3|artifactRevision:dc97a2671dbcc6e2a71873042566f4937b766d9d",
       "freshness": "current",
       "outcome": "satisfied"
     },
@@ -37,7 +37,7 @@
       "claimRelevant": true,
       "sourceVersionOrRevision": "mappingStatusVersion:1",
       "freshness": "current",
-      "outcome": "satisfied"
+      "outcome": "not-applicable"
     }
   },
   "claimProfiles": {
@@ -81,6 +81,6 @@
     "profileId": "reusable-component-advancement",
     "claimId": "reusable-component-proof-ready"
   },
-  "reasonCodes": ["ct10b-review-informational", "ct10b-review-stale"],
+  "reasonCodes": ["ct10b-review-informational", "ct10b-review-stale", "ct11b-mapping-retired"],
   "enforcementMode": "informational"
 }

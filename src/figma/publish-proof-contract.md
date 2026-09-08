@@ -11,11 +11,11 @@ This document defines the seam-owned publish-proof facts for `SEAM-5B`. It is th
 ## Required Proof Fields
 
 - `proofVersion`: must be exactly `"1"`.
-- `mode`: must be exactly one of `plugin-import-manual`, `rest-variables-oauth`, or `tokens-studio-carried`.
+- `mode`: must be exactly one of `plugin-import-manual` or `tokens-studio-carried`.
 - `artifact.path`: must be exactly `design-tokens/dist/figma/tokens.json`.
 - `artifact.gitSha`: records the repo revision of the artifact used for the publish attempt. Use a 40-character lowercase git SHA.
-- `destination.name`: must be exactly `Collider Copy pilot`.
-- `destination.figmaFile`: must be exactly `figma://file/SVcsU6gVvpezsJYrvBsS3V`.
+- `destination.name`: must be exactly `Collider`.
+- `destination.figmaFile`: must be exactly `figma://file/23PLdynlRYoBYQx9teoC8A`.
 - `materialization.status`: must be exactly `passed` or `failed`.
 - `materialization.attemptedAt`: records when the publish attempt was executed. Use a UTC ISO-8601 timestamp.
 - `materialization.notes`: required for failed attempts and optional for passed attempts.
@@ -46,8 +46,8 @@ This document defines the seam-owned publish-proof facts for `SEAM-5B`. It is th
     "gitSha": "5a567cd7d07860135ab0bfb1d8f2873ef1eec836"
   },
   "destination": {
-    "name": "Collider Copy pilot",
-    "figmaFile": "figma://file/SVcsU6gVvpezsJYrvBsS3V"
+    "name": "Collider",
+    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
   },
   "materialization": {
     "status": "passed",

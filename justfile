@@ -64,9 +64,28 @@ figma-plugin-build:
 figma-token-server:
     pnpm figma:tokens:serve
 
-# Enterprise-only rail (Figma Variables REST API; requires Enterprise/full-seat access)
-figma-sync-variables-enterprise:
-    pnpm figma:sync:variables:enterprise
+# ══════════════════════════════════════════════════════════════════════════════
+# DS-SKILLS — the pinned design-system CLI
+# Collider runs the release named in ds-skills.release.json, resolved at its
+# version-specific path. An ambient `ds-skills` on your PATH is never used and
+# is never executed — not even to read its version.
+#
+# Provisioning is explicit and one-time. `just preflight` acquires nothing: if
+# the release is missing it fails and tells you to run the install recipe, so a
+# network outage can never turn into a failing push.
+# ══════════════════════════════════════════════════════════════════════════════
+
+# Install the pinned ds-skills release and point skill discovery at it
+# (idempotent; the install is a no-op when already present)
+ds-skills-install:
+    pnpm ds-skills:install
+    pnpm ds-skills:link
+
+# Verify the pinned release is present and correctly identified — acquires nothing
+ds-skills-check:
+    pnpm ds-skills:check
+    node scripts/ds-skills.mjs skills
+    pnpm ds-skills:link:check
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers
@@ -113,6 +132,27 @@ check-ts:
     @echo "── eslint ────────────────────────────────────"
     pnpm exec eslint .
 
+# Upstream policy: our intentional deviations from shadcn / ai-elements are still
+# in place, and the upstream API we depend on has not been refactored away.
+# No network — pattern-matches the working tree, finishes in milliseconds.
+check-upstream:
+    @echo "── upstream policy ───────────────────────────"
+    pnpm validate:upstream-policy
+
+# Check what ai-elements needs from src/components/ui: every imported export still
+# exists, and every `[data-slot=x]` a component styles is emitted by the component that
+# OWNS that slot name — not merely declared somewhere in the tree, which any file could
+# satisfy by accident.
+#
+# NOT in `check` yet — it currently reports one real defect. `button-group.tsx` styles
+# `[data-slot=select-trigger]`, which only the v4 Select emits; our pre-v4 Select
+# declares no slots, so those two rules have never once matched. The shadcn v4 migration
+# resolves it, and wiring this into `check` is that migration's acceptance criterion.
+# Run `pnpm validate:consumer-contract --report` for the full API surface.
+check-contract:
+    @echo "── consumer contract ─────────────────────────"
+    pnpm validate:consumer-contract
+
 # Fast Rust check: fmt + clippy
 check-rs:
     @echo "── cargo fmt ─────────────────────────────────"
@@ -120,24 +160,37 @@ check-rs:
     @echo "── clippy ────────────────────────────────────"
     pnpm cargo:clippy
 
-# Fast full check: TS + Rust
-check: check-ts check-rs
+# Fast full check: TS + upstream policy + Rust
+check: check-ts check-upstream check-rs
 
 # ══════════════════════════════════════════════════════════════════════════════
 # LOC — lines-of-code guards via tokei (code lines only; blanks + comments excluded)
 #   Rust  src-tauri/src/**/*.rs   max 400 code lines
-#   TSX   src/**/*.tsx            max 200 code lines  (components / pages)
-#   TS    src/**/*.ts             max 300 code lines  (hooks / utils / lib)
+#   TSX   src/**/*.tsx            max 300 code lines
+#   TS    src/**/*.ts             max 300 code lines
 #   test and story files are excluded from the TS check
+#
+# TSX and TS share one limit. They used to differ (TSX 200 / TS 300) on the
+# theory that components decompose cheaply and logic modules don't, so you
+# tighten the side where splitting is a free win. The theory is sound; the
+# numbers never matched this repo. TSX is 84 of the 94 guarded files and carried
+# every near-limit case, while nothing among the 10 TS files came within 50
+# lines of 300 — so the split squeezed the large population and never once fired
+# on the small one. It also produced splits that were guard artifacts rather
+# than seams: prompt-input-helpers.ts (62) and prompt-input-select.tsx (57)
+# exist because something had to give at 200, not because a boundary was there.
+#
+# validate-loc.mjs still takes both limits, so the split can be reintroduced
+# without a script change.
 # ══════════════════════════════════════════════════════════════════════════════
 
 # Check Rust file sizes via tokei (max 400 code lines)
 loc-rs:
     tokei --files --output json src-tauri/src | node scripts/validate-loc.mjs rs 400
 
-# Check TS/TSX file sizes via tokei (.tsx max 200, .ts max 300 — excludes tests + stories)
+# Check TS/TSX file sizes via tokei (max 300 code lines — excludes tests + stories)
 loc-ts:
-    tokei --files --output json src | node scripts/validate-loc.mjs ts 200 300
+    tokei --files --output json src | node scripts/validate-loc.mjs ts 300 300
 
 # Check all file sizes: Rust + TS
 loc: loc-rs loc-ts

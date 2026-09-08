@@ -26,7 +26,12 @@ describe('token build contracts', () => {
     const graph = loadBuildGraph();
     const typedSource = fs.readFileSync(typedArtifactPath, 'utf8');
 
-    expect(Object.keys(generated).sort()).toEqual(['recipeMap', 'themeRegistry', 'tokenMap']);
+    expect(Object.keys(generated).sort()).toEqual([
+      'recipeMap',
+      'themeOverrides',
+      'themeRegistry',
+      'tokenMap',
+    ]);
     expect(typedSource).toMatch(
       /export type ThemeId = \(typeof themeRegistry\.themes\)\[number\]\[['"]id['"]\];/
     );
@@ -35,24 +40,87 @@ describe('token build contracts', () => {
     expect(generated.recipeMap).toEqual(graph.recipeMap);
   });
 
+  it('carries every non-default theme in the typed module, as a diff of tokenMap', async () => {
+    const generated = await import('../../../design-tokens/dist/tokens');
+    const overrides = generated.themeOverrides as Record<
+      string,
+      Record<string, { themeId: string; type: string; value: unknown }>
+    >;
+    const tokenMap = generated.tokenMap as Record<string, { type: string; value: unknown }>;
+    const nonDefault = generated.themeRegistry.themes
+      .map((theme) => theme.id)
+      .filter((id) => id !== generated.themeRegistry.defaultThemeId);
+
+    // The typed module was flattened to the default theme long after the Figma
+    // document and the runtime CSS both carried every theme, which silently made
+    // each in-repo proof built on it a single-theme proof.
+    expect(Object.keys(overrides).sort()).toEqual([...nonDefault].sort());
+
+    for (const [themeId, entries] of Object.entries(overrides)) {
+      for (const [tokenId, entry] of Object.entries(entries)) {
+        // An override is a diff: it names a token that exists, tags the theme it
+        // belongs to, keeps the base type, and never restates the base value.
+        expect(tokenMap[tokenId], `${themeId} overrides unknown token ${tokenId}`).toBeDefined();
+        expect(entry.themeId).toBe(themeId);
+        expect(entry.type).toBe(tokenMap[tokenId].type);
+        expect(entry.value).not.toEqual(tokenMap[tokenId].value);
+      }
+    }
+  });
+
   it('keeps the figma export token-only and DTCG-shaped', () => {
     const figma = JSON.parse(fs.readFileSync(figmaArtifactPath, 'utf8')) as Record<string, unknown>;
 
     expect(Object.keys(figma)).toEqual([
       '$extensions',
+      '$themeOverrides',
       'accent',
       'core',
-      'font',
+      'elevation',
+      'layout',
       'motion',
       'radius',
       'semantic',
+      'shape',
       'spacing',
-      'tailwind-colors',
-      'tailwind-variables',
-      'theme',
+      'type',
     ]);
     expect(figma).not.toHaveProperty('recipeMap');
     expect(JSON.stringify(figma)).not.toContain('"componentId"');
+  });
+
+  it('withholds the consumer-less families from Figma while keeping them in runtime css', () => {
+    const figma = JSON.parse(fs.readFileSync(figmaArtifactPath, 'utf8')) as Record<string, unknown>;
+    const runtimeCss = fs.readFileSync(runtimeCssArtifactPath, 'utf8');
+
+    // These families are withheld from the Figma variable publish only — they
+    // have no consumers and would otherwise bury the design-system variables in
+    // Figma's picker. They must stay in runtime css, because withholding them
+    // there would remove public token IDs and become a CHANGE_POLICY migration
+    // event. See `figmaExcludedFamilies` in scripts/lib/token-build-graph.mjs.
+    for (const family of ['tailwind-colors', 'tailwind-variables', 'font']) {
+      expect(figma).not.toHaveProperty(family);
+      expect(runtimeCss).toContain(`--${family}-`);
+    }
+  });
+
+  it('carries theme overrides under a key the token walker skips', () => {
+    const figma = JSON.parse(fs.readFileSync(figmaArtifactPath, 'utf8')) as Record<string, unknown>;
+    const overrides = figma.$themeOverrides as Record<string, unknown>;
+
+    // Non-default themes ride under a `$` key so the token walker skips them:
+    // the document stays a single-theme artifact for every existing reader while
+    // the publish plugin gets one Figma mode per theme out of the same file.
+    expect(Object.keys(overrides)).toEqual(['light']);
+
+    // The other half of that claim — that the overrides really do stay out of the
+    // flattened variable set — used to be asserted here by importing the rail's
+    // flattener. It is now `pnpm figma:verify`, a step of `pnpm govern:tokens`,
+    // and it is a stronger check: renaming `$themeOverrides` so it leaks was
+    // measured to produce four diagnostics there (leafCount 198 vs 176, a lost
+    // `light` theme, 198 differing variables, 198 theme-incomplete) against this
+    // test's single count equality. Collider owns the artifact; the pack owns
+    // what flattening it means.
   });
 
   it('emits lexical ordering for css vars, token map keys, and figma json keys', async () => {

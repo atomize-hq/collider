@@ -22,17 +22,37 @@
         "$type": "color"
       }
     },
+    "border": {
+      "subtle": {
+        "$value": "{core.color.white-alpha.10}",
+        "$type": "color"
+      },
+      "default": {
+        "$value": "{core.color.neutral.800}",
+        "$type": "color"
+      },
+      "strong": {
+        "$value": "{core.color.neutral.700}",
+        "$type": "color"
+      }
+    },
+    "interaction": {
+      "focus-ring": {
+        "$value": "{core.color.neutral.400}",
+        "$type": "color"
+      }
+    },
     "text": {
       "primary": {
         "$value": "{core.color.white}",
         "$type": "color"
       },
       "secondary": {
-        "$value": "{core.color.neutral.500}",
+        "$value": "{core.color.neutral.400}",
         "$type": "color"
       },
       "tertiary": {
-        "$value": "{core.color.neutral.300}",
+        "$value": "{core.color.neutral.500}",
         "$type": "color"
       },
       "dim": {
@@ -44,7 +64,7 @@
         "$type": "color"
       },
       "error": {
-        "$value": "{core.color.red.500}",
+        "$value": "{core.color.red.400}",
         "$type": "color"
       },
       "warning": {
@@ -60,7 +80,7 @@
         "$type": "color"
       },
       "ai": {
-        "$value": "{core.color.violet.500}",
+        "$value": "{core.color.violet.400}",
         "$type": "color"
       }
     },

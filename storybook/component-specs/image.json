@@ -1,0 +1,27 @@
+{
+  "specVersion": "1",
+  "componentId": "image",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-image--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-image--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "ai-elements-image--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/image.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2233-1628",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-image--default",
+      "ai-elements-image--variant-matrix",
+      "ai-elements-image--docs"
+    ]
+  }
+}

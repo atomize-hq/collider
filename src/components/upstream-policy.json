@@ -1,0 +1,172 @@
+{
+  "policyVersion": "1",
+  "upstream": {
+    "primitives": "https://ui.shadcn.com/r/styles/new-york",
+    "aiElements": "https://elements.ai-sdk.dev/api/registry"
+  },
+  "invariants": [
+    {
+      "id": "focus-ring-policy",
+      "directory": "src/components/ui",
+      "forbid": ["focus-visible:ring-", "focus:ring-"],
+      "reason": "The repo focus ring is a themed neutral applied through the `focus-ring` utility. shadcn ships `focus-visible:ring-1 focus-visible:ring-ring` (and older styles `focus:ring-2`), which re-derives the ring from the accent — and the accent is becoming a user knob, so nothing functional may derive from it.",
+      "instead": "focus-visible:focus-ring"
+    },
+    {
+      "id": "destructive-is-not-a-fill",
+      "directory": "src/components/ui",
+      "forbid": ["bg-destructive(?![-/])"],
+      "reason": "`--destructive` is a TEXT colour (`semantic.color.text.error`, tuned to read on a dark ground). Used as a solid fill it puts white on #ff6467 for 2.89:1, below the 4.5:1 minimum. A tonal `bg-destructive/10` is fine; a solid fill is not.",
+      "instead": "bg-destructive-surface"
+    }
+  ],
+  "deviations": [
+    {
+      "id": "badge-destructive-surface",
+      "file": "src/components/ui/badge.tsx",
+      "require": ["bg-destructive-surface"],
+      "reason": "Solid destructive badge must use the dedicated surface role (6.42:1 with white in both themes), not the text colour."
+    },
+    {
+      "id": "badge-status-variants",
+      "file": "src/components/ui/badge.tsx",
+      "require": ["bg-success/10", "bg-warning/10", "bg-destructive/10"],
+      "reason": "Tonal status variants added on top of upstream's four. Without them, organisms hand-paint status chips at the call site over `variant=\"secondary\"`."
+    },
+    {
+      "id": "button-destructive-surface",
+      "file": "src/components/ui/button.tsx",
+      "require": ["bg-destructive-surface"],
+      "reason": "Button carried the same white-on-#ff6467 pair as badge. Same fix, same reason."
+    },
+    {
+      "id": "button-icon-sm-size",
+      "file": "src/components/ui/button.tsx",
+      "require": ["'icon-sm'"],
+      "reason": "Added size not present upstream. ai-elements toolbars need a 32px icon button; without it they set `className=\"h-8 w-8\"` at every call site."
+    },
+    {
+      "id": "button-link-not-accent",
+      "file": "src/components/ui/button.tsx",
+      "require": ["link: 'text-info"],
+      "reason": "Upstream's link variant is `text-primary`, which resolves to the accent (#155dfc) and gives 3.42:1 on the dark ground — below the 4.5:1 minimum for text. The accent is becoming a user knob, so no text colour may derive from it. `info` is a themed role: 6.80:1 dark, 6.83:1 light.",
+      "instead": "text-info"
+    },
+    {
+      "id": "hover-card-portal",
+      "file": "src/components/ui/hover-card.tsx",
+      "require": ["HoverCardPrimitive\\.Portal"],
+      "reason": "Inline citations render inside <p>. Upstream's un-portalled content makes h4/p/blockquote descendants of a paragraph, which is invalid HTML and reflows unpredictably."
+    },
+    {
+      "id": "command-no-dialog",
+      "file": "src/components/ui/command.tsx",
+      "forbid": ["CommandDialog"],
+      "reason": "Upstream's CommandDialog pulls in the dialog primitive for a subcomponent nothing here uses, and pushes the file over the LOC guard."
+    }
+  ],
+  "contracts": [
+    {
+      "id": "agent-tool-type",
+      "file": "src/components/ai-elements/agent.tsx",
+      "require": ["import type \\{[^}]*\\bTool\\b[^}]*\\} from 'ai'"],
+      "reason": "Agent is typed against the AI SDK tool definition."
+    },
+    {
+      "id": "attachments-file-parts",
+      "file": "src/components/ai-elements/attachments.tsx",
+      "require": ["import type \\{[^}]*\\bFileUIPart\\b[^}]*\\} from 'ai'"],
+      "reason": "Attachments consume the SDK's file/source message parts rather than a local shape."
+    },
+    {
+      "id": "confirmation-tool-part",
+      "file": "src/components/ai-elements/confirmation.tsx",
+      "require": ["import type \\{[^}]*\\bToolUIPart\\b[^}]*\\} from 'ai'"],
+      "reason": "Confirmation renders a tool-call part straight off the message stream."
+    },
+    {
+      "id": "context-usage-type",
+      "file": "src/components/ai-elements/context.tsx",
+      "require": ["import type \\{[^}]*\\bLanguageModelUsage\\b[^}]*\\} from 'ai'"],
+      "reason": "The context meter reads the SDK's usage record; a local shape would silently drift from provider field moves."
+    },
+    {
+      "id": "context-usage-tokenlens",
+      "file": "src/components/ai-elements/context-usage.tsx",
+      "require": ["from 'tokenlens"],
+      "reason": "Context window sizes come from tokenlens, not a hand-maintained table."
+    },
+    {
+      "id": "image-generated-type",
+      "file": "src/components/ai-elements/image.tsx",
+      "require": ["import type \\{[^}]*\\bExperimental_GeneratedImage\\b[^}]*\\} from 'ai'"],
+      "reason": "Image renders the SDK's generated-image payload."
+    },
+    {
+      "id": "message-ui-message",
+      "file": "src/components/ai-elements/message.tsx",
+      "require": ["import type \\{[^}]*\\bUIMessage\\b[^}]*\\} from 'ai'"],
+      "reason": "Message is typed against the SDK message protocol — the core contract of the whole set."
+    },
+    {
+      "id": "message-streamdown",
+      "file": "src/components/ai-elements/message.tsx",
+      "require": ["from 'streamdown'"],
+      "reason": "Streaming markdown rendering is Streamdown's job. Replacing it with a plain markdown renderer loses partial-token handling mid-stream."
+    },
+    {
+      "id": "prompt-input-file-parts",
+      "file": "src/components/ai-elements/prompt-input.tsx",
+      "require": ["import type \\{[^}]*\\bFileUIPart\\b[^}]*\\} from 'ai'"],
+      "reason": "Composer attachments are SDK message parts, so what the composer produces is submittable without translation."
+    },
+    {
+      "id": "prompt-input-context-file-parts",
+      "file": "src/components/ai-elements/prompt-input-context.tsx",
+      "require": ["import type \\{[^}]*\\bFileUIPart\\b[^}]*\\} from 'ai'"],
+      "reason": "Same contract as prompt-input; this file holds the shared context after the LOC split."
+    },
+    {
+      "id": "prompt-input-chat-status",
+      "file": "src/components/ai-elements/prompt-input-controls.tsx",
+      "require": ["import type \\{[^}]*\\bChatStatus\\b[^}]*\\} from 'ai'"],
+      "reason": "Submit/stop button state is driven by the SDK chat status, not a local enum."
+    },
+    {
+      "id": "reasoning-streamdown",
+      "file": "src/components/ai-elements/reasoning.tsx",
+      "require": ["from 'streamdown'"],
+      "reason": "Reasoning bodies arrive token by token; Streamdown handles partial markdown."
+    },
+    {
+      "id": "reasoning-controllable-state",
+      "file": "src/components/ai-elements/reasoning.tsx",
+      "require": ["from '@radix-ui/react-use-controllable-state'", "AUTO_CLOSE_DELAY"],
+      "reason": "Upstream's open/duration state machine — controllable open state plus auto-close once streaming ends. Re-implementing it with plain useState loses the controlled-prop path."
+    },
+    {
+      "id": "chain-of-thought-controllable-state",
+      "file": "src/components/ai-elements/chain-of-thought.tsx",
+      "require": ["from '@radix-ui/react-use-controllable-state'"],
+      "reason": "Controlled/uncontrolled open state, as upstream."
+    },
+    {
+      "id": "sandbox-tool-part",
+      "file": "src/components/ai-elements/sandbox.tsx",
+      "require": ["import type \\{[^}]*\\bToolUIPart\\b[^}]*\\} from 'ai'"],
+      "reason": "Sandbox renders a tool-call part off the message stream."
+    },
+    {
+      "id": "stack-trace-controllable-state",
+      "file": "src/components/ai-elements/stack-trace.tsx",
+      "require": ["from '@radix-ui/react-use-controllable-state'"],
+      "reason": "Controlled/uncontrolled open state, as upstream."
+    },
+    {
+      "id": "tool-part-types",
+      "file": "src/components/ai-elements/tool.tsx",
+      "require": ["import type \\{[^}]*\\bToolUIPart\\b[^}]*\\} from 'ai'"],
+      "reason": "Tool lifecycle states come from the SDK part union, so new SDK states surface as type errors rather than silently unrendered."
+    }
+  ]
+}

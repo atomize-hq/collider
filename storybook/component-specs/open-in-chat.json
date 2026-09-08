@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "open-in-chat",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-open-in-chat--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-open-in-chat--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-open-in-chat--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-open-in-chat--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-open-in-chat--open-menu-flow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-open-in-chat--menu-open-transition", "kinds": ["motion"] },
+    { "storyId": "ai-elements-open-in-chat--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/open-in-chat.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2236-1692",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-open-in-chat--default",
+      "ai-elements-open-in-chat--state-matrix",
+      "ai-elements-open-in-chat--keyboard",
+      "ai-elements-open-in-chat--focus",
+      "ai-elements-open-in-chat--open-menu-flow",
+      "ai-elements-open-in-chat--menu-open-transition",
+      "ai-elements-open-in-chat--docs"
+    ]
+  }
+}

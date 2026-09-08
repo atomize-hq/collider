@@ -1,0 +1,80 @@
+name: Set up ds-skills
+description: >-
+  Provision the ds-skills release pinned in ds-skills.release.json into a
+  job-local prefix and verify it. One shared step: installing in one job
+  establishes nothing about the others, and eight copies of this would drift.
+
+outputs:
+  executable:
+    description: Absolute path to the verified ds-skills executable.
+    value: ${{ steps.resolve.outputs.executable }}
+  release:
+    description: The release actually provisioned, read back from the install.
+    value: ${{ steps.resolve.outputs.release }}
+
+runs:
+  using: composite
+  steps:
+    # Requires Node — run this action after actions/setup-node, not before.
+    - name: Read the reviewed release record
+      id: record
+      shell: bash
+      run: |
+        set -euo pipefail
+        release="$(node -p 'require("./ds-skills.release.json").release')"
+        digest="$(sha256sum ds-skills.release.json | cut -d' ' -f1)"
+        node_version="$(node -p 'process.versions.node')"
+        echo "release=$release" >> "$GITHUB_OUTPUT"
+        echo "digest=$digest" >> "$GITHUB_OUTPUT"
+        echo "node=$node_version" >> "$GITHUB_OUTPUT"
+        # §10.6: a job-local prefix under the runner temp dir. Every job installs;
+        # nothing persists between them.
+        #
+        # Emitted as an output as well as an env var, and every step below reads
+        # the OUTPUT. Whether an `env:` written here reaches a later step of the
+        # same composite action is a detail I would be taking on faith; a step
+        # output is defined to. The env var is still written, because the CALLING
+        # job's later steps need it — but nothing inside this action depends on
+        # that write landing. A prefix that silently fell back to the default
+        # would install to the wrong place, cache an empty directory, and look
+        # like it worked.
+        echo "prefix=$RUNNER_TEMP/ds-skills" >> "$GITHUB_OUTPUT"
+        echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
+
+    # The key distinguishes the release, the Node that runs it, and the platform.
+    # It is measured, not declared: a job that quietly changed Node would
+    # otherwise reuse an install made under a different runtime. The record's own
+    # digest is in the key too, so editing the pin cannot hit a stale entry.
+    - name: Restore the cached install
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.record.outputs.prefix }}
+        key: >-
+          ds-skills-${{ runner.os }}-${{ runner.arch }}-node${{ steps.record.outputs.node }}-${{
+          steps.record.outputs.release }}-${{ steps.record.outputs.digest }}
+
+    # A cache hit is not evidence. This re-verifies the restored tree against the
+    # record and reinstalls if it does not identify itself correctly, so a
+    # poisoned or half-written cache entry cannot be inherited. On a clean hit it
+    # touches no network.
+    - name: Provision and verify
+      shell: bash
+      env:
+        DS_SKILLS_PREFIX: ${{ steps.record.outputs.prefix }}
+      run: node scripts/install-ds-skills.mjs
+
+    - name: Resolve the executable
+      id: resolve
+      shell: bash
+      env:
+        DS_SKILLS_PREFIX: ${{ steps.record.outputs.prefix }}
+      run: |
+        set -euo pipefail
+        executable="$(node scripts/install-ds-skills.mjs --print)"
+        echo "executable=$executable" >> "$GITHUB_OUTPUT"
+        echo "DS_SKILLS=$executable" >> "$GITHUB_ENV"
+        # Report what was provisioned, not what was requested — they are the same
+        # claim only if something checks.
+        version="$("$executable" --version)"
+        echo "release=$version" >> "$GITHUB_OUTPUT"
+        echo "ds-skills $version at $executable" >> "$GITHUB_STEP_SUMMARY"

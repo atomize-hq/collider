@@ -7,15 +7,15 @@
 
 ## App setup
 
-| Concern    | Choice                              | Notes                                         |
-| ---------- | ----------------------------------- | --------------------------------------------- |
-| Framework  | Next.js 16 App Router               | Turbopack for dev                             |
-| Styling    | Tailwind v4 + CSS custom properties | Token vars feed Tailwind theme                |
-| Desktop    | Tauri v2 static-export bundle       | `pnpm build:tauri` → `out/` → loaded by Tauri |
-| Fonts      | Roboto Mono (used in design system) | Loaded at root layout or via tokens           |
-| Path alias | `@/*` → `./src/*`                   | Defined in `tsconfig.json`                    |
-| Lint       | ESLint 9 + Prettier 3               | Enforced in pre-commit hooks                  |
-| Dead code  | Knip                                | `pnpm check`                                  |
+| Concern    | Choice                                      | Notes                                                                                                                                            |
+| ---------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Framework  | Next.js 16 App Router                       | Turbopack for dev                                                                                                                                |
+| Styling    | Tailwind v4 + CSS custom properties         | Token vars feed Tailwind theme                                                                                                                   |
+| Desktop    | Tauri v2 static-export bundle               | `pnpm build:tauri` → `out/` → loaded by Tauri                                                                                                    |
+| Fonts      | Poppins (UI sans) + Roboto Mono (code/data) | Declared in `design-tokens/src/tokens/font.tokens.json`; webfonts imported and `--font-sans` / `--font-mono` bound in `src/lib/tokens/fonts.css` |
+| Path alias | `@/*` → `./src/*`                           | Defined in `tsconfig.json`                                                                                                                       |
+| Lint       | ESLint 9 + Prettier 3                       | Enforced in pre-commit hooks                                                                                                                     |
+| Dead code  | Knip                                        | `pnpm check`                                                                                                                                     |
 
 ---
 
@@ -77,7 +77,7 @@ All day-to-day commands go through `just`. Never call `pnpm` scripts directly fo
 - `just preflight` must pass locally before every push. No exceptions.
 - Pre-commit hooks (Husky + lint-staged) run ESLint + Prettier on staged files.
 - Husky hooks mirror CI. Local pass = CI pass.
-- LOC guards are enforced in `just preflight`: TSX ≤200, TS ≤300, Rust ≤400 code lines.
+- LOC guards are enforced in `just preflight`: TSX/TS ≤300, Rust ≤400 code lines.
 
 ---
 

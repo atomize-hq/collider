@@ -1,8 +1,18 @@
 /* Design system font definitions — loaded by both app/globals.css and Storybook preview */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
 
+/*
+ * Family names come from `type.tokens.json`; this file owns the webfont
+ * request and the fallback stacks. Custom properties resolve lazily, so
+ * referencing tokens.css here is safe despite it being imported afterwards.
+ */
+/*
+ * Left side is the Tailwind role namespace that utilities read; right side names
+ * the actual typeface. This is where a font swap happens — repoint the role at a
+ * different `--type-font-*` token rather than renaming the token itself.
+ */
 :root {
-  --font-sans: 'Poppins', sans-serif;
-  --font-mono: 'Roboto Mono', monospace;
+  --font-sans: var(--type-font-poppins), sans-serif;
+  --font-mono: var(--type-font-roboto-mono), monospace;
 }

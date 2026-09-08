@@ -1,0 +1,50 @@
+{
+  "opacity": {
+    "disabled": {
+      "$value": 0.35,
+      "$type": "number"
+    },
+    "subtle": {
+      "$value": 0.5,
+      "$type": "number"
+    },
+    "dim": {
+      "$value": 0.7,
+      "$type": "number"
+    },
+    "full": {
+      "$value": 1,
+      "$type": "number"
+    }
+  },
+  "border": {
+    "width": {
+      "default": {
+        "$value": "1px",
+        "$type": "dimension"
+      },
+      "strong": {
+        "$value": "2px",
+        "$type": "dimension"
+      }
+    }
+  },
+  "role": {
+    "inactive": {
+      "$value": "{shape.opacity.disabled}",
+      "$type": "number"
+    },
+    "dot-sep": {
+      "$value": "{shape.opacity.subtle}",
+      "$type": "number"
+    },
+    "branch-container": {
+      "$value": "{shape.opacity.dim}",
+      "$type": "number"
+    },
+    "selection": {
+      "$value": 0.3,
+      "$type": "number"
+    }
+  }
+}

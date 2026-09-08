@@ -1,0 +1,51 @@
+{
+  "specVersion": "1",
+  "componentId": "environment-variables",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
+  "ownedStoryRefs": [
+    {
+      "storyId": "ai-elements-environment-variables--default",
+      "kinds": ["default"]
+    },
+    {
+      "storyId": "ai-elements-environment-variables--variant-matrix",
+      "kinds": ["variant-matrix"]
+    },
+    {
+      "storyId": "ai-elements-environment-variables--visibility-action",
+      "kinds": ["actions"]
+    },
+    {
+      "storyId": "ai-elements-environment-variables--keyboard",
+      "kinds": ["keyboard"]
+    },
+    {
+      "storyId": "ai-elements-environment-variables--focus",
+      "kinds": ["focus"]
+    },
+    {
+      "storyId": "ai-elements-environment-variables--docs",
+      "kinds": ["docs"]
+    }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/environment-variables.tsx",
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2287:2",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-environment-variables--default",
+      "ai-elements-environment-variables--variant-matrix",
+      "ai-elements-environment-variables--visibility-action",
+      "ai-elements-environment-variables--keyboard",
+      "ai-elements-environment-variables--focus",
+      "ai-elements-environment-variables--docs"
+    ]
+  }
+}

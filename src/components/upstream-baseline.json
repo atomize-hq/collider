@@ -1,0 +1,743 @@
+{
+  "baselineVersion": "2",
+  "capturedAt": "2026-09-05",
+  "note": "What upstream contained when this repo last compared against it. `payloadSha256` is the full digest of the canonical registry payload, so a change there means upstream moved. Regenerate with `pnpm baseline:upstream`.",
+  "primitives": {
+    "role": "migration-target",
+    "registry": "https://ui.shadcn.com/r/styles/new-york-v4",
+    "style": "new-york-v4",
+    "components": {
+      "accordion": {
+        "status": "tracked",
+        "payloadSha256": "93254d43d27259998b10c7bb5261f85bdc44509d46309a5c10a1e5d126a8d279",
+        "files": {
+          "accordion.tsx": "99de242681eb43121969db02bbb102aeeb1865ef52c7635672508a58c5429085"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 2038
+      },
+      "alert": {
+        "status": "tracked",
+        "payloadSha256": "413c97869ec0e53efa4a37f590833bcf4a7a57255f5a2e909c6bb5bac7b4570d",
+        "files": {
+          "alert.tsx": "d03dcae5cdb63c381c1144ca9a0c49ba0e46466967d7deb94662034042acb034"
+        },
+        "dependencies": ["cn"],
+        "registryDependencies": [],
+        "bytes": 1604
+      },
+      "avatar": {
+        "status": "tracked",
+        "payloadSha256": "f843fc6e2d2fea1337bdcdc8b70c5189f84562d87f8e852e994f4bbdd7cd229d",
+        "files": {
+          "avatar.tsx": "0c5c48b8a1dff4fdc5ff9b6cb79cc9cd138682b7d86868068f571befe9675e88"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 2906
+      },
+      "badge": {
+        "status": "tracked",
+        "payloadSha256": "0f988b37cf1c56e7ecc83b1dcf24c9af4e73ce4341da5caf2c9d9b07a551319b",
+        "files": {
+          "badge.tsx": "13a9380dfff853ee730c14a52df49f22aecd31f40f2998d7c1e7ec458b6e1650"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 1766
+      },
+      "button": {
+        "status": "tracked",
+        "payloadSha256": "4b8d7d848742727973c1b088af8d15f0b628272a1316f2d2fa344e73ddff9e9c",
+        "files": {
+          "button.tsx": "79dd6f75f8136394442202d6b8b922fb269eaad0a5dba579397c9d5b41f893bb"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 2382
+      },
+      "button-group": {
+        "status": "tracked",
+        "payloadSha256": "750f0d0a247e36446efcb257b289657a6f98a492b4b7c5a2b7aabe291d23f1ec",
+        "files": {
+          "button-group.tsx": "a9ac862707ff8d78255f2696baf48f9a87d9e92e21eb476f8f9e9361313c1761"
+        },
+        "dependencies": ["cn"],
+        "registryDependencies": ["button", "separator"],
+        "bytes": 2203
+      },
+      "card": {
+        "status": "tracked",
+        "payloadSha256": "c7ebaa49ba2a0613838558f3892c5007523c2dc26d6b36a244145d454a796106",
+        "files": {
+          "card.tsx": "ef8305b12c3112dab42a4708b41b1ebcc042fa5ab4c20f039da8d45b09ed5059"
+        },
+        "dependencies": ["cn"],
+        "registryDependencies": [],
+        "bytes": 1977
+      },
+      "carousel": {
+        "status": "tracked",
+        "payloadSha256": "85fb22d3ec3b4db46aa107bdc57747543e2819049c31f48e6d50a3a14a10268b",
+        "files": {
+          "carousel.tsx": "70ba30941a3adb448166ddcf8557c97734b7be09f6fd69512a6e444084365557"
+        },
+        "dependencies": ["cn", "embla-carousel-react"],
+        "registryDependencies": ["button"],
+        "bytes": 5557
+      },
+      "collapsible": {
+        "status": "tracked",
+        "payloadSha256": "fdc6666e9c728d7e731b0e4d67e11db81020aff47408c259549fc1aefcc8e3e7",
+        "files": {
+          "collapsible.tsx": "c6598e5584f4258b5d9fefadbc5ad6a66888ad58729f4b634a0bb2d9c513188b"
+        },
+        "dependencies": ["radix-ui"],
+        "registryDependencies": [],
+        "bytes": 795
+      },
+      "command": {
+        "status": "tracked",
+        "payloadSha256": "c1f02d0805a0c5c55428e3350214ca8150a4ce98a40ec962118ec66709f60038",
+        "files": {
+          "command.tsx": "319e9264567dd46f04d705028bc345470663ca5919f31292c4ec43ea5ceb9336"
+        },
+        "dependencies": ["cn", "cmdk"],
+        "registryDependencies": ["dialog"],
+        "bytes": 4819
+      },
+      "dropdown-menu": {
+        "status": "tracked",
+        "payloadSha256": "235b1231cf71d94225eccd6c19117e7fa7b09cf256d23a199d63aee53265fd52",
+        "files": {
+          "dropdown-menu.tsx": "d954efb735f13734751207ad22cb0cddd7f6ec53c59d16675d103dae08cb61fb"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 8408
+      },
+      "hover-card": {
+        "status": "tracked",
+        "payloadSha256": "205af771916016bd2d483032060ca4c10eb3f72887230d1acc258c2229e4e63a",
+        "files": {
+          "hover-card.tsx": "73f59aa759656501ed615604ac3f2c04ba564acaea4529288fe3a487ad934953"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 1516
+      },
+      "input": {
+        "status": "tracked",
+        "payloadSha256": "b1fffa12ba72ce30a291749012b47235eda110648b8106725ced22b5b31c8f1b",
+        "files": {
+          "input.tsx": "0c9457181f6ddc80969bcf854e92c362903a55b6e889fbef3fd85343ecc4af5b"
+        },
+        "dependencies": ["cn"],
+        "registryDependencies": [],
+        "bytes": 952
+      },
+      "input-group": {
+        "status": "tracked",
+        "payloadSha256": "6f9d7df429c5916bb4a5ade1a12e912e51fc7e0cf1539edf2b296d1994967c70",
+        "files": {
+          "input-group.tsx": "e379899ac50d6cabc9d9eb1668f265176951c62b1fe83a6f23ee97fe8074d526"
+        },
+        "dependencies": ["cn"],
+        "registryDependencies": ["button", "input", "textarea"],
+        "bytes": 5086
+      },
+      "progress": {
+        "status": "tracked",
+        "payloadSha256": "ca0c7ae4d88b8039a9ee64653569cf8be6a058070d9f719d2294c9d49d56bcab",
+        "files": {
+          "progress.tsx": "e012e1f7e6e66d11229d1233eccf91954edcd9179b418ff1d114dc651b86fd35"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 725
+      },
+      "scroll-area": {
+        "status": "tracked",
+        "payloadSha256": "a5e2e040b90e584c5282ee7ea758d1af5f5fbd88ecc89f11dddb098462d1e865",
+        "files": {
+          "scroll-area.tsx": "8b73bb9be51300079c7f561bafbe43ee10f6f464cf39c8c1b25123cd4edb94dd"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 1629
+      },
+      "select": {
+        "status": "tracked",
+        "payloadSha256": "ca3189ea8101a04f144b6d0f0e7330841639bfa5f4d57e7cca0894d39b30817b",
+        "files": {
+          "select.tsx": "962830436bd0b7ee50e556f0747e277d6a86869ed27d167516346b15f26309d8"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 6343
+      },
+      "separator": {
+        "status": "tracked",
+        "payloadSha256": "4242a9fe839cae9083acff1280b7cccfda10e97bbc83283aed12d2d12bebdc6a",
+        "files": {
+          "separator.tsx": "ad7d5403fe337160e41dbf04147896e448ae3a747b8d06660d627d74d60021bc"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 684
+      },
+      "spinner": {
+        "status": "tracked",
+        "payloadSha256": "9516791ff6443cb5dee344f4f61df812c6b1fa455b86eb2febd10acc66c0c178",
+        "files": {
+          "spinner.tsx": "5d040fc49cb54c0296070644053b5a8840ddbfca89a430546bf308df3fffad65"
+        },
+        "dependencies": ["cn", "class-variance-authority"],
+        "registryDependencies": [],
+        "bytes": 321
+      },
+      "switch": {
+        "status": "tracked",
+        "payloadSha256": "cc526c3a4827be315be746355a988e22dacc99d663ed31924fd30c2507cdc005",
+        "files": {
+          "switch.tsx": "743676f33f823ffa8008bbd5eb94cb68e227599447d60e132a202291a395f8e4"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 1398
+      },
+      "tabs": {
+        "status": "tracked",
+        "payloadSha256": "49320e6dcf56570753bb14ed3f5d66acf07d12e183c0e9024466995b25be5b1d",
+        "files": {
+          "tabs.tsx": "e1df6e2f95ece373ca909c1d54b8ba8cf4c47dd425c1784bbb9a01c38dd0936b"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 3772
+      },
+      "textarea": {
+        "status": "tracked",
+        "payloadSha256": "2367d3964326b19ca2355f872d08153c86932abd4b103b5fd02039a3f2cb8ae5",
+        "files": {
+          "textarea.tsx": "5cafcfeeee29534f449387a16b585f5923d2faab1a0cdc50a874416b175f59ce"
+        },
+        "dependencies": ["cn"],
+        "registryDependencies": [],
+        "bytes": 749
+      },
+      "tooltip": {
+        "status": "tracked",
+        "payloadSha256": "1b7b452b34beab05b22bd653963abd1c88ebd8e9ebcc89dcaebf4ac4938c929e",
+        "files": {
+          "tooltip.tsx": "611e4305879b2773eafe76bf3c5caa69d8e47367fd97887a71634a27828f4433"
+        },
+        "dependencies": ["cn", "radix-ui"],
+        "registryDependencies": [],
+        "bytes": 1820
+      }
+    }
+  },
+  "aiElements": {
+    "role": "current-source",
+    "registry": "https://elements.ai-sdk.dev/api/registry",
+    "indexedComponents": 136,
+    "components": {
+      "agent": {
+        "status": "tracked",
+        "payloadSha256": "f0742c2070a59d58814943d1724bc1e01f8976dd1004921a5027b29b7ae6cee1",
+        "files": {
+          "agent.tsx": "cf1f7b066f8a2fe7501f7eff7420ef4c8647eed09061e6a484dd9cbae799ba2a"
+        },
+        "dependencies": ["ai", "lucide-react"],
+        "registryDependencies": [
+          "accordion",
+          "badge",
+          "https://elements.ai-sdk.dev/api/registry/code-block.json"
+        ],
+        "bytes": 3978
+      },
+      "artifact": {
+        "status": "tracked",
+        "payloadSha256": "6df97316a98e33936fc001b6b57bbd0fb45efcec5a52b0bc460836eb08a00c9a",
+        "files": {
+          "artifact.tsx": "acabdfc7f977bb8871b6d470ba3e706791bb4f938ae8a0885985b59e73d02c0f"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["button", "tooltip"],
+        "bytes": 3374
+      },
+      "attachment-parts": {
+        "status": "split",
+        "splitOf": "attachments"
+      },
+      "attachments": {
+        "status": "tracked",
+        "payloadSha256": "919d3098dd2c93263a4caa579443cee5860ccc83ee6144a37fb96ed7ce8c26a5",
+        "files": {
+          "attachments.tsx": "4fa02d79baf076b24de75d167b84f19490ba76bfd769799e369fec5c6d1eca9a"
+        },
+        "dependencies": ["ai", "lucide-react"],
+        "registryDependencies": ["button", "hover-card"],
+        "bytes": 11387
+      },
+      "chain-of-thought": {
+        "status": "tracked",
+        "payloadSha256": "b00bcc24d60cafc322c507f0de97bec7ef7c9550b369cbb53f60458f64b14f73",
+        "files": {
+          "chain-of-thought.tsx": "5ccfddc925c98161c2508f63632380bb9976bfe95ffede4b9332451dcb6f0b70"
+        },
+        "dependencies": ["@radix-ui/react-use-controllable-state", "lucide-react"],
+        "registryDependencies": ["badge", "collapsible"],
+        "bytes": 6237
+      },
+      "checkpoint": {
+        "status": "tracked",
+        "payloadSha256": "b6729416ac7d934c2f9e16c7abd61fc0d827ac11a3ace60c0b39ab235643e744",
+        "files": {
+          "checkpoint.tsx": "c6c0aaf4123fc4fc69964170e8db22e149ca7d852d07961c411a8e41dca79f03"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["button", "separator", "tooltip"],
+        "bytes": 1645
+      },
+      "code-block": {
+        "status": "tracked",
+        "payloadSha256": "b5ac0e9373b26576c69a2035aae8868d957189bd3c52807bfa91e2a12904db32",
+        "files": {
+          "code-block.tsx": "ebb49caa19633483de34b191552eb8d0a9b06266dc7180e1a357b45e74c510bf"
+        },
+        "dependencies": ["lucide-react", "shiki"],
+        "registryDependencies": ["button", "select"],
+        "bytes": 13815
+      },
+      "code-block-body": {
+        "status": "split",
+        "splitOf": "code-block"
+      },
+      "code-block-highlight": {
+        "status": "split",
+        "splitOf": "code-block"
+      },
+      "code-block-parts": {
+        "status": "split",
+        "splitOf": "code-block"
+      },
+      "code-block-theme": {
+        "status": "split",
+        "splitOf": "code-block"
+      },
+      "commit": {
+        "status": "tracked",
+        "payloadSha256": "95cc59a93caff07b3f3eb21e77de7f3577857986531c8039c8f454f675d006e3",
+        "files": {
+          "commit.tsx": "ec929111d28e081c94e18d8db4b605edb792f1fb7cb4ad24caf6f6c7adaf4336"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["avatar", "button", "collapsible"],
+        "bytes": 9784
+      },
+      "commit-files": {
+        "status": "split",
+        "splitOf": "commit"
+      },
+      "confirmation": {
+        "status": "tracked",
+        "payloadSha256": "46c75b46b40421a5489238c9d537de59e79acb7673b87dbc688fcfe1ffc2909f",
+        "files": {
+          "confirmation.tsx": "68e5fa3bc8961531bfb4f6d004a01562047d0544e210256420c6f6c413337cea"
+        },
+        "dependencies": ["ai"],
+        "registryDependencies": ["alert", "button"],
+        "bytes": 3889
+      },
+      "context": {
+        "status": "tracked",
+        "payloadSha256": "73e26e24d5b0b2c06d392ff75d3d463f9d18369140385f577c6180040e961c89",
+        "files": {
+          "context.tsx": "ef122d0a025ad8d04e3fb38bc6ba6546bfe1e9f4aa27dd1d443758a743399c3b"
+        },
+        "dependencies": ["ai", "tokenlens"],
+        "registryDependencies": ["button", "hover-card", "progress"],
+        "bytes": 9907
+      },
+      "context-usage": {
+        "status": "split",
+        "splitOf": "context"
+      },
+      "environment-variables": {
+        "status": "tracked",
+        "payloadSha256": "a6fd4cc1bff3c93bb6744d629a4be0337dffd507fef042bb1d25462aa2ce4375",
+        "files": {
+          "environment-variables.tsx": "c8f63a6d8ab1c9bbdf4c8f61c4d31f997458b0e520becdfd2fb507bfd43c08a1"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["badge", "button", "switch"],
+        "bytes": 7940
+      },
+      "environment-variables-parts": {
+        "status": "split",
+        "splitOf": "environment-variables"
+      },
+      "file-tree": {
+        "status": "tracked",
+        "payloadSha256": "df8b9be8407e5a23bc6ca181cbdbea582daa2be36e5c22774bd651e0855632c7",
+        "files": {
+          "file-tree.tsx": "bc9730ca4f1db9be601671bd33357bfdba59d240e2b2ef9f1cd722e30237be3d"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["collapsible"],
+        "bytes": 7658
+      },
+      "file-tree-items": {
+        "status": "split",
+        "splitOf": "file-tree"
+      },
+      "image": {
+        "status": "tracked",
+        "payloadSha256": "2124d2c514e5cb2c6a1aaa3420e6a69ec866de9b5284900f3ddf5d3357ceaf95",
+        "files": {
+          "image.tsx": "9360ca3e8945a64cc8d5c71a9304d7c8371d66f52b535f838bfe3ef3f55291ce"
+        },
+        "dependencies": ["ai"],
+        "registryDependencies": [],
+        "bytes": 493
+      },
+      "inline-citation": {
+        "status": "tracked",
+        "payloadSha256": "467c12b8fe844b044fbd57fbbd5e53374a37c5301f9e8311aaeaffd982935ed3",
+        "files": {
+          "inline-citation.tsx": "9aec10df2f14d1e6db58bfb6dec0232231031d029e2bb3e1dd5b44cbb667b047"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["badge", "carousel", "hover-card"],
+        "bytes": 6719
+      },
+      "inline-citation-carousel": {
+        "status": "split",
+        "splitOf": "inline-citation"
+      },
+      "jsx-preview": {
+        "status": "tracked",
+        "payloadSha256": "92cdae23823d88cf753060bf8465eb65bbc9d2958d95b093976f0bce4766478e",
+        "files": {
+          "jsx-preview.tsx": "fac1e742140fa2d2e30b07eb20fe60023a86596e5bb8a74dfb13130e7f3f5ada"
+        },
+        "dependencies": ["lucide-react", "react-jsx-parser"],
+        "registryDependencies": [],
+        "bytes": 7442
+      },
+      "jsx-preview-parts": {
+        "status": "split",
+        "splitOf": "jsx-preview"
+      },
+      "message": {
+        "status": "tracked",
+        "payloadSha256": "c37a2189906cf9e14d95f304d609dc6c0b53e22f78d1d644cddbe1d62284e804",
+        "files": {
+          "message.tsx": "db7d416e1515b8e3f39390119192bdd4f11647ed8bae92d1588726dc4227b568"
+        },
+        "dependencies": [
+          "@streamdown/cjk",
+          "@streamdown/code",
+          "@streamdown/math",
+          "@streamdown/mermaid",
+          "ai",
+          "lucide-react",
+          "streamdown"
+        ],
+        "registryDependencies": ["button", "button-group", "tooltip"],
+        "bytes": 8572
+      },
+      "message-branch": {
+        "status": "split",
+        "splitOf": "message"
+      },
+      "open-in-chat": {
+        "status": "tracked",
+        "payloadSha256": "75e03883b55e0b8950a63ece413070fe666a89dfcf1893dfac2776de3b06f23a",
+        "files": {
+          "open-in-chat.tsx": "f109f8b79480df7eb7bcb0c836cf093d94822f46e3af214566c7dec23bb8be58"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["button", "dropdown-menu"],
+        "bytes": 16624
+      },
+      "open-in-chat-providers": {
+        "status": "split",
+        "splitOf": "open-in-chat"
+      },
+      "package-info": {
+        "status": "tracked",
+        "payloadSha256": "250a6e474312b05c24bb40babcdf5d3d91504a720255ef1a08d73c942f6c01a1",
+        "files": {
+          "package-info.tsx": "1e390ddf6a9de134094433a0e8dde2f731da8e72f7b7e9bd6d96dd7a034b94e1"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["badge"],
+        "bytes": 6049
+      },
+      "package-info-parts": {
+        "status": "split",
+        "splitOf": "package-info"
+      },
+      "plan": {
+        "status": "tracked",
+        "payloadSha256": "9ecc4ab02e4fca327ffa029e6b255811bf3910764306c431dc51487f21fc58b8",
+        "files": {
+          "plan.tsx": "97a210d4bba6868d0225273f296451454443791ef44bb7eba04f455b03f3589f"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": [
+          "button",
+          "card",
+          "collapsible",
+          "https://elements.ai-sdk.dev/api/registry/shimmer.json"
+        ],
+        "bytes": 3562
+      },
+      "prompt-input": {
+        "status": "tracked",
+        "payloadSha256": "660efa7c9a10c204ceeb8d32a320ef430a26776b283a148113a1f672a90af0b8",
+        "files": {
+          "prompt-input.tsx": "9402979f8ce84d58e889971370567a8f97f9940154862fa43c52c71f54a0ede2"
+        },
+        "dependencies": ["ai", "lucide-react", "nanoid"],
+        "registryDependencies": [
+          "command",
+          "dropdown-menu",
+          "hover-card",
+          "input-group",
+          "select",
+          "spinner",
+          "tooltip"
+        ],
+        "bytes": 38976
+      },
+      "prompt-input-actions": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-context": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-controls": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-helpers": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-hooks": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-parts": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "prompt-input-select": {
+        "status": "split",
+        "splitOf": "prompt-input"
+      },
+      "queue": {
+        "status": "tracked",
+        "payloadSha256": "edb9b1228e5d9c026c7e705268883cfe109e48032f867e3246dce5daef5ede89",
+        "files": {
+          "queue.tsx": "6d46ac152f237f8f5618bd0fee754c2b97db572ac629246571be04e64ef061ac"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["button", "collapsible", "scroll-area"],
+        "bytes": 6256
+      },
+      "queue-item": {
+        "status": "split",
+        "splitOf": "queue"
+      },
+      "reasoning": {
+        "status": "tracked",
+        "payloadSha256": "4d2e0195a483c40f3cb976ba87df2a931edbb3098bf968ba780f1cc155d5c1e9",
+        "files": {
+          "reasoning.tsx": "f2047dec91f18c922c56c04edc53398d981ac43fa47be583703d9138fbdb03e8"
+        },
+        "dependencies": [
+          "@radix-ui/react-use-controllable-state",
+          "@streamdown/cjk",
+          "@streamdown/code",
+          "@streamdown/math",
+          "@streamdown/mermaid",
+          "lucide-react",
+          "streamdown"
+        ],
+        "registryDependencies": [
+          "collapsible",
+          "https://elements.ai-sdk.dev/api/registry/shimmer.json"
+        ],
+        "bytes": 6263
+      },
+      "sandbox": {
+        "status": "tracked",
+        "payloadSha256": "3fd684f3a6ace01315ac4567c8ebf83e5772b3b96f37c992f07642aa0d24f148",
+        "files": {
+          "sandbox.tsx": "f218135ced794e772334152e812b6a77cabe0da9b3592994df046e5c326cdf57"
+        },
+        "dependencies": ["ai", "lucide-react"],
+        "registryDependencies": [
+          "collapsible",
+          "tabs",
+          "https://elements.ai-sdk.dev/api/registry/tool.json"
+        ],
+        "bytes": 3416
+      },
+      "schema-display": {
+        "status": "tracked",
+        "payloadSha256": "90973919a371fdaeb88e22768b683d7234ad3b49f0317ff6a2b7730504f2eaab",
+        "files": {
+          "schema-display.tsx": "cb64d37e8df27d4b921ba52b0275c59db7964ca285d911aac4dda7e66dafc723"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["badge", "collapsible"],
+        "bytes": 12734
+      },
+      "schema-display-parts": {
+        "status": "split",
+        "splitOf": "schema-display"
+      },
+      "schema-display-property": {
+        "status": "split",
+        "splitOf": "schema-display"
+      },
+      "shimmer": {
+        "status": "tracked",
+        "payloadSha256": "8b4b49bfa332e84db6bb2e8b717e65663af6085ac10e757eeb6a6889e8c787ae",
+        "files": {
+          "shimmer.tsx": "24bcb9b1dd45d616bd50dc6500e9f414ccabf440efb249e8d92522344b9057d6"
+        },
+        "dependencies": ["motion"],
+        "registryDependencies": [],
+        "bytes": 2121
+      },
+      "snippet": {
+        "status": "tracked",
+        "payloadSha256": "f27c0c3cb77a2a25afabaa1db5672422b006b2385a22160ec241b32da1094dc0",
+        "files": {
+          "snippet.tsx": "04e34edeea7330a75a467f57a2b8c6dbe3e8314a7bc163a53a05b1d0c87d0206"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["input-group"],
+        "bytes": 3231
+      },
+      "sources": {
+        "status": "tracked",
+        "payloadSha256": "ded01a76a27cf4f2a8f49c88b300df02e07b25a812b3785798f731823621d978",
+        "files": {
+          "sources.tsx": "6fa3ca4cc72a87e3a5cc37d4004b0bb87ba8432c27a56fb442161d86de1939e7"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["collapsible"],
+        "bytes": 1864
+      },
+      "stack-trace": {
+        "status": "tracked",
+        "payloadSha256": "9dd7d0896bd5bc6bb8434bcaca45dda2cc37574836150cc4bcfd21aef646d2d3",
+        "files": {
+          "stack-trace.tsx": "fe3999ac2c7b97f1c4dbfa3b2613f545105e0e03e68ab4d02c57d9d5c294991a"
+        },
+        "dependencies": ["@radix-ui/react-use-controllable-state", "lucide-react"],
+        "registryDependencies": ["button", "collapsible"],
+        "bytes": 13799
+      },
+      "stack-trace-frames": {
+        "status": "split",
+        "splitOf": "stack-trace"
+      },
+      "stack-trace-header": {
+        "status": "split",
+        "splitOf": "stack-trace"
+      },
+      "suggestion": {
+        "status": "tracked",
+        "payloadSha256": "28ec9a94a5485f525ce90560e59b70a76b717f4a822508566b731756793c6b45",
+        "files": {
+          "suggestion.tsx": "4fbf7d90cac64b771dd4e0fa99d7099e4d102aed1249333ef4fcdf9456807a00"
+        },
+        "dependencies": [],
+        "registryDependencies": ["button", "scroll-area"],
+        "bytes": 1354
+      },
+      "task": {
+        "status": "tracked",
+        "payloadSha256": "076f6d41d93ba96a0bd08ed9ff055d6fd1b01d2082fa854064b3e6bf6f0f18db",
+        "files": {
+          "task.tsx": "ecc83dc185a0b0fecba918adab5bfce14c712d72595be074ed8b428ca02d7efa"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["collapsible"],
+        "bytes": 2351
+      },
+      "terminal": {
+        "status": "tracked",
+        "payloadSha256": "5ae72226211cce8fec7c09520a412ab6eb6f849267ecab45748cebeca1655bd6",
+        "files": {
+          "terminal.tsx": "b8516497a8ae6abdc3336efe3d04c0097a5321529e999089b401e9906938da19"
+        },
+        "dependencies": ["ansi-to-react", "lucide-react"],
+        "registryDependencies": ["button"],
+        "bytes": 6144
+      },
+      "terminal-parts": {
+        "status": "split",
+        "splitOf": "terminal"
+      },
+      "test-results": {
+        "status": "tracked",
+        "payloadSha256": "db9b8ef2b898bf8c74bc92673ed6b32b1885bd52f791a9c23770e21881cd20a7",
+        "files": {
+          "test-results.tsx": "85e5dc066e70d8fb69c637f7e2b94011965973dc218f065780b27b30c30f8763"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["badge", "collapsible"],
+        "bytes": 11448
+      },
+      "test-results-suite": {
+        "status": "split",
+        "splitOf": "test-results"
+      },
+      "test-results-test": {
+        "status": "split",
+        "splitOf": "test-results"
+      },
+      "tool": {
+        "status": "tracked",
+        "payloadSha256": "ac2f38003fe00b0a0b7594bc028f0d6ff09db1a8a79a40bb4fa632565c06194b",
+        "files": {
+          "tool.tsx": "b142e6ab3889bb9e8462b5d9af55f7880082ed60f98f0d3234eabdafd3ab32ca"
+        },
+        "dependencies": ["ai", "lucide-react"],
+        "registryDependencies": [
+          "badge",
+          "collapsible",
+          "https://elements.ai-sdk.dev/api/registry/code-block.json"
+        ],
+        "bytes": 5046
+      },
+      "web-preview": {
+        "status": "tracked",
+        "payloadSha256": "026d9450b55ae67b25447c290f3f76784598afd0eb5c764b2339eab3d50ba24f",
+        "files": {
+          "web-preview.tsx": "015aeaf7c2ad253e45511ceda55cb7629a95c7890a52c47457b697b5a7c96d55"
+        },
+        "dependencies": ["lucide-react"],
+        "registryDependencies": ["button", "collapsible", "input", "tooltip"],
+        "bytes": 7106
+      },
+      "web-preview-console": {
+        "status": "split",
+        "splitOf": "web-preview"
+      }
+    }
+  }
+}

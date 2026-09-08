@@ -160,8 +160,11 @@ describe('runReusableComponentStatusValidation', () => {
 
     expect(exitCode).toBe(0);
     expect(stderr.read()).toBe('');
+    // `reviewed` requires a satisfied CT-10B rail. Chromatic last received a build
+    // on 24 Mar, covering the pilot component only, so no review exists for the
+    // current component set and the earned claim stops at `proof-ready`.
     expect(stdout.read()).toContain(
-      'Highest earned claim: reusable-component-advancement/reusable-component-reviewed'
+      'Highest earned claim: reusable-component-advancement/reusable-component-proof-ready'
     );
   });
 
@@ -235,6 +238,15 @@ function copyBaseWorkspace() {
   const workspace = fs.mkdtempSync(path.join(os.tmpdir(), 'reusable-component-status-'));
   const filesToCopy: Array<{ source: string; dest: string }> = [
     { source: 'src/figma/sync-ledger.json', dest: 'src/figma/sync-ledger.json' },
+    // The ledger's `publication` binding resolves the proof relative to the
+    // ledger, and the CLI reads Collider's vocabulary from the profile. A
+    // workspace missing either is a workspace where the CT-8B rail cannot be
+    // evaluated — which the gate correctly reports rather than assuming.
+    { source: 'src/figma/publish-proof.json', dest: 'src/figma/publish-proof.json' },
+    {
+      source: '.agents/skills/profiles/collider.json',
+      dest: '.agents/skills/profiles/collider.json',
+    },
     {
       source: 'scripts/fixtures/component-mapping-workspace/storybook/story-inventory.json',
       dest: 'storybook/story-inventory.json',

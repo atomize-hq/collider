@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "storybook",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["storybook", "--ci"],
+      "port": 6006
+    },
+    {
+      "name": "figma-tokens",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["figma:tokens:serve"],
+      "port": 4173
+    }
+  ]
+}

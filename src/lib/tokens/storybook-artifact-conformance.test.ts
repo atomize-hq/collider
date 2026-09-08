@@ -14,7 +14,7 @@ describe('storybook artifact conformance', () => {
     expect(diagnostics).toEqual([]);
     expect(artifact?.themeRegistry.defaultThemeId).toBe('dark');
     expect(artifact?.tokenMap['semantic.color.background.surface']?.value).toBe('#202020');
-    expect(artifact?.tokenMap['semantic.color.text.secondary']?.value).toBe('#6a7282');
+    expect(artifact?.tokenMap['semantic.color.text.secondary']?.value).toBe('#9ca2af');
   });
 
   it('reports a deterministic missing-artifact diagnostic when the loader fails', async () => {

@@ -1,0 +1,166 @@
+'use client';
+
+import { cn } from '@/lib/utils';
+import type { CSSProperties } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import type { BundledLanguage, ThemedToken } from 'shiki';
+
+import { addKeysToTokens, createRawTokens, highlightCode } from './code-block-highlight';
+import type { KeyedLine, TokenizedCode } from './code-block-highlight';
+
+// In dual-theme mode shiki puts everything on `htmlStyle` and leaves the token's
+// own `color`, `fontStyle` and `bgColor` undefined — so anything not read back
+// out of a custom property here simply does not render. The light colour arrives
+// as a plain `color` declaration; the dark one and every font style arrive as
+// `--shiki-dark` and `--shiki-{light,dark}-font-style` / `-font-weight` /
+// `-text-decoration`.
+//
+// Per-token backgrounds are dropped by shiki entirely, which is why nothing here
+// paints one: every token sits on the container's `bg-background`, and
+// `code-block-theme.test.ts` measures the palette against that single ground.
+const TOKEN_CLASSES = cn(
+  '[font-style:var(--shiki-light-font-style,inherit)]',
+  '[font-weight:var(--shiki-light-font-weight,inherit)]',
+  '[text-decoration:var(--shiki-light-text-decoration,inherit)]',
+  'dark:!text-[var(--shiki-dark)]',
+  'dark:![font-style:var(--shiki-dark-font-style,inherit)]',
+  'dark:![font-weight:var(--shiki-dark-font-weight,inherit)]',
+  'dark:![text-decoration:var(--shiki-dark-text-decoration,inherit)]'
+);
+
+// Token rendering component
+const TokenSpan = ({ token }: { token: ThemedToken }) => (
+  <span
+    className={TOKEN_CLASSES}
+    // `color` still carries the raw-token fallback shown before shiki loads,
+    // where `createRawTokens` sets `inherit`; `htmlStyle` overrides it after.
+    style={{ color: token.color, ...token.htmlStyle } as CSSProperties}
+  >
+    {token.content}
+  </span>
+);
+
+// Line number styles using CSS counters
+const LINE_NUMBER_CLASSES = cn(
+  'block',
+  'before:content-[counter(line)]',
+  'before:inline-block',
+  'before:[counter-increment:line]',
+  'before:w-8',
+  'before:mr-4',
+  'before:text-right',
+  'before:text-muted-foreground',
+  'before:font-mono',
+  'before:select-none'
+);
+
+// Line rendering component
+const LineSpan = ({
+  keyedLine,
+  showLineNumbers,
+}: {
+  keyedLine: KeyedLine;
+  showLineNumbers: boolean;
+}) => (
+  <span className={showLineNumbers ? LINE_NUMBER_CLASSES : 'block'}>
+    {keyedLine.tokens.length === 0
+      ? '\n'
+      : keyedLine.tokens.map(({ token, key }) => <TokenSpan key={key} token={token} />)}
+  </span>
+);
+
+const CodeBlockBody = memo(
+  ({
+    tokenized,
+    showLineNumbers,
+    className,
+  }: {
+    tokenized: TokenizedCode;
+    showLineNumbers: boolean;
+    className?: string;
+  }) => {
+    const keyedLines = useMemo(() => addKeysToTokens(tokenized.tokens), [tokenized.tokens]);
+
+    // The `pre` sets no background or colour of its own, so code inherits the
+    // card's `bg-background` and `text-foreground` and shares a ground with the
+    // rest of the app. Only the token spans are painted, and only by the theme.
+    return (
+      <pre className={cn('m-0 p-4 text-sm', className)}>
+        <code
+          className={cn(
+            'font-mono text-sm',
+            showLineNumbers && '[counter-increment:line_0] [counter-reset:line]'
+          )}
+        >
+          {keyedLines.map((keyedLine) => (
+            <LineSpan key={keyedLine.key} keyedLine={keyedLine} showLineNumbers={showLineNumbers} />
+          ))}
+        </code>
+      </pre>
+    );
+  },
+  (prevProps, nextProps) =>
+    prevProps.tokenized === nextProps.tokenized &&
+    prevProps.showLineNumbers === nextProps.showLineNumbers &&
+    prevProps.className === nextProps.className
+);
+
+CodeBlockBody.displayName = 'CodeBlockBody';
+
+export const CodeBlockContent = ({
+  code,
+  language,
+  showLineNumbers = false,
+}: {
+  code: string;
+  language: BundledLanguage;
+  showLineNumbers?: boolean;
+}) => {
+  // Memoized raw tokens for immediate display
+  const rawTokens = useMemo(() => createRawTokens(code), [code]);
+
+  // Synchronous cache lookup — avoids setState in effect for cached results
+  const syncTokens = useMemo(
+    () => highlightCode(code, language) ?? rawTokens,
+    [code, language, rawTokens]
+  );
+
+  // Async highlighting result (populated after shiki loads)
+  const [asyncTokens, setAsyncTokens] = useState<TokenizedCode | null>(null);
+  const asyncKeyRef = useRef({ code, language });
+
+  // Invalidate stale async tokens synchronously during render
+  if (asyncKeyRef.current.code !== code || asyncKeyRef.current.language !== language) {
+    asyncKeyRef.current = { code, language };
+    setAsyncTokens(null);
+  }
+
+  useEffect(() => {
+    let cancelled = false;
+
+    highlightCode(code, language, (result) => {
+      if (!cancelled) {
+        setAsyncTokens(result);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [code, language]);
+
+  const tokenized = asyncTokens ?? syncTokens;
+
+  return (
+    // A scrollable region has to be reachable by keyboard: without a tab stop
+    // the only way to read a wide line is a pointer.
+    <div
+      aria-label={`${language} code`}
+      className="relative overflow-auto focus-visible:focus-ring"
+      role="group"
+      tabIndex={0}
+    >
+      <CodeBlockBody showLineNumbers={showLineNumbers} tokenized={tokenized} />
+    </div>
+  );
+};

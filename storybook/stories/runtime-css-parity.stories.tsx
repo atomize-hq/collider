@@ -8,6 +8,7 @@ import {
   resolveGeneratedTokenStyleValue,
   type StorybookArtifactConformanceDiagnostic,
 } from '@/lib/tokens/storybook-artifact-conformance';
+import { resolveStorybookThemeId } from '@/lib/tokens/storybookTheme';
 
 function RuntimeCssParityProbe() {
   return (
@@ -33,7 +34,8 @@ function RuntimeCssParityProbe() {
       >
         <p
           style={{
-            color: 'var(--color-text-tertiary)',
+            // text/tertiary is AA-large-only; this eyebrow is 14px normal.
+            color: 'var(--color-text-secondary)',
             fontSize: '0.875rem',
             letterSpacing: '0.08em',
             margin: 0,
@@ -81,7 +83,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const BaselineTheme: Story = {
-  play: async ({ canvasElement }) => {
+  // Runs in whichever theme the project sets, and asserts against that theme's
+  // resolved token values. The typed artifact used to be flattened to the
+  // default theme, which made this a dark-only proof; it now carries
+  // `themeOverrides`, so the same story proves parity in both.
+  play: async ({ canvasElement, globals }) => {
     const { artifact, diagnostics } = await loadGeneratedTokenArtifact();
     if (artifact) {
       diagnostics.push(...createRuntimeCssParityDiagnostics(artifact));
@@ -95,15 +101,20 @@ export const BaselineTheme: Story = {
     const panel = await canvas.findByTestId('runtime-panel');
     const copy = await canvas.findByTestId('runtime-copy');
     const rootStyles = window.getComputedStyle(document.documentElement);
+    const themeId = resolveStorybookThemeId(globals.theme);
     const expectedPanelBackground = resolveGeneratedTokenStyleValue(
       artifact,
       'semantic.color.background.surface',
-      'backgroundColor'
+      'backgroundColor',
+      document,
+      themeId
     );
     const expectedCopyColor = resolveGeneratedTokenStyleValue(
       artifact,
       'semantic.color.text.secondary',
-      'color'
+      'color',
+      document,
+      themeId
     );
 
     expect(rootStyles.getPropertyValue('--color-background-surface').trim()).not.toBe('');

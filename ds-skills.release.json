@@ -1,0 +1,46 @@
+{
+  "$comment": "The reviewed release record. Collider resolves the ds-skills binary from THIS release's version at the version-specific path, never from PATH. Digests are the trust chain's root: the bootstrap is verified against them before it executes, and it verifies the payload against digests baked into itself. Four asset digests are identical because the payload is platform-independent and only Windows differs by container format — see SPEC.md 10.5, and do not collapse the entries.",
+  "repository": "atomize-hq/ds-skills",
+  "release": "v0.4.0",
+  "sourceCommit": "08f7cc8e14acdd899df3af82e775810353fcb11c",
+  "bootstrap": {
+    "asset": "install.sh",
+    "sha256": "6931991d669c2d6389378602d5df9d9683bc57d9796f26a7381548f5ce8bcf65"
+  },
+  "bootstrapPowershell": {
+    "asset": "install.ps1",
+    "sha256": "9ee64de2fc093113c048f266634e8df7395eb7b12e14281fefff375e45c8e4de"
+  },
+  "checksums": {
+    "asset": "SHA256SUMS",
+    "sha256": "e071e6fbbb9830abb425fd93e4f091ca07eaf17aacfe38654d37faaee5b6d98c"
+  },
+  "assets": {
+    "macos_arm64": {
+      "asset": "ds-skills-v0.4.0-macos_arm64.tar.gz",
+      "sha256": "0888ac31ed1c37784a76a0608d2b78977cc7b7564a95cb4f12ed57b37de8b3e5"
+    },
+    "macos_x86_64": {
+      "asset": "ds-skills-v0.4.0-macos_x86_64.tar.gz",
+      "sha256": "0888ac31ed1c37784a76a0608d2b78977cc7b7564a95cb4f12ed57b37de8b3e5"
+    },
+    "linux_x86_64": {
+      "asset": "ds-skills-v0.4.0-linux_x86_64.tar.gz",
+      "sha256": "0888ac31ed1c37784a76a0608d2b78977cc7b7564a95cb4f12ed57b37de8b3e5"
+    },
+    "linux_aarch64": {
+      "asset": "ds-skills-v0.4.0-linux_aarch64.tar.gz",
+      "sha256": "0888ac31ed1c37784a76a0608d2b78977cc7b7564a95cb4f12ed57b37de8b3e5"
+    },
+    "windows_x86_64": {
+      "asset": "ds-skills-v0.4.0-windows_x86_64.zip",
+      "sha256": "3a94e819f91700bda7c9c637eac375b7b66865237900918a73c140f5fed990b5"
+    }
+  },
+  "tag": {
+    "name": "v0.4.0",
+    "object": "c3ec95909b90661afce27dff727896dab275f689",
+    "objectType": "tag",
+    "peeledCommit": "08f7cc8e14acdd899df3af82e775810353fcb11c"
+  }
+}

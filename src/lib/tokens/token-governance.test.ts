@@ -35,8 +35,10 @@ describe('runTokenGovernance', () => {
       'build:tokens',
       'scripts/validate-token-runtime-compatibility.mjs',
       'scripts/validate-token-artifacts.mjs',
+      'figma:verify',
       'validate:sync-ledger',
       'validate:figma-parity',
+      'validate:publish-proof',
     ]);
   });
 
@@ -155,12 +157,14 @@ describe('runTokenGovernance', () => {
     });
 
     expect(exitCode).toBe(1);
+    // Stops at parity: validate:publish-proof is the next step and must not run.
     expect(calls).toEqual([
       'validate:tokens',
       'runtime-css-drift-guard',
       'build:tokens',
       'scripts/validate-token-runtime-compatibility.mjs',
       'scripts/validate-token-artifacts.mjs',
+      'figma:verify',
       'validate:sync-ledger',
       'validate:figma-parity',
     ]);
@@ -206,11 +210,24 @@ describe('governance package contract', () => {
     };
 
     expect(packageJson.scripts?.['govern:tokens']).toBe('node scripts/govern-tokens.mjs');
+    // Every rail step is an invocation of the pinned CLI and nothing else. The
+    // literal is asserted because that is the whole of Collider's ownership here:
+    // if one of these grows an argument that carries policy, it belongs upstream.
     expect(packageJson.scripts?.['validate:sync-ledger']).toBe(
-      'node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json'
+      'node scripts/ds-skills.mjs ledger validate --ledger src/figma/sync-ledger.json ' +
+        '--profile .agents/skills/profiles/collider.json'
     );
     expect(packageJson.scripts?.['validate:figma-parity']).toBe(
-      'node scripts/validate-figma-parity.mjs'
+      'node scripts/ds-skills.mjs ledger parity --ledger src/figma/sync-ledger.json ' +
+        '--profile .agents/skills/profiles/collider.json'
+    );
+    expect(packageJson.scripts?.['validate:publish-proof']).toBe(
+      'node scripts/ds-skills.mjs proof validate --proof src/figma/publish-proof.json ' +
+        '--profile .agents/skills/profiles/collider.json'
+    );
+    expect(packageJson.scripts?.['figma:verify']).toBe(
+      'node scripts/ds-skills.mjs figma verify --config figma/token-sync.config.json ' +
+        '--expect figma/token-rail.baseline.json --artifact design-tokens/dist/figma/tokens.json'
     );
   });
 
@@ -221,8 +238,10 @@ describe('governance package contract', () => {
       'build:tokens',
       'runtime-compatibility',
       'artifact-freshness',
+      'figma:verify',
       'validate:sync-ledger',
       'validate:figma-parity',
+      'validate:publish-proof',
     ]);
   });
 

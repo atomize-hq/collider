@@ -89,6 +89,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const TokenRegistry: Story = {
+  // 1200x43,080px is ~51.7M pixels against Chromatic's 25,000,000px limit --
+  // see the same note on `Contracts/Tokens > Docs`, the other half of build
+  // 22's two component errors. Both render the full 653-token registry, and
+  // neither fits under the ~20,833px this width allows.
+  parameters: { chromatic: { disableSnapshot: true } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const heading = await canvas.findByTestId('token-docs-heading');
@@ -145,8 +150,10 @@ const heroStyle = {
   padding: '1.5rem',
 };
 
+// text/tertiary is an AA-large-only step (3.36:1 on surface). This eyebrow is
+// 16px at normal weight, so it needs 4.5:1 and has to use text/secondary.
 const eyebrowStyle = {
-  color: 'var(--color-text-tertiary)',
+  color: 'var(--color-text-secondary)',
   letterSpacing: '0.08em',
   margin: 0,
   textTransform: 'uppercase' as const,
@@ -184,11 +191,16 @@ const groupCardStyle = {
 };
 const groupHeadingStyle = { margin: 0 };
 const tokenListStyle = { display: 'grid', gap: '0.75rem' };
+// Grid items default to `min-width: auto`, so a `1fr`/`auto` pair cannot shrink
+// below its content and the row spills past the card's right edge. That is not
+// only a layout bug: text sitting outside its own card no longer has a painted
+// background behind it, so axe measures it against the white page default and
+// every value in the registry reads as a contrast failure.
 const tokenRowStyle = {
   alignItems: 'center',
   display: 'grid',
   gap: '0.75rem',
-  gridTemplateColumns: '2.5rem 1fr auto',
+  gridTemplateColumns: '2.5rem minmax(0, 1fr) minmax(0, auto)',
 };
 const tokenSwatchStyle = {
   border: '1px solid var(--color-background-overlay)',
@@ -196,10 +208,17 @@ const tokenSwatchStyle = {
   height: '2.5rem',
   width: '2.5rem',
 };
-const tokenTextStyle = { display: 'grid', gap: '0.2rem' };
+const tokenTextStyle = {
+  display: 'grid',
+  gap: '0.2rem',
+  minWidth: 0,
+  overflowWrap: 'anywhere' as const,
+};
 const tokenMetaStyle = {
   color: 'var(--color-text-secondary)',
   display: 'grid',
   gap: '0.2rem',
+  minWidth: 0,
+  overflowWrap: 'anywhere' as const,
   textAlign: 'right' as const,
 };

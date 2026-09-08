@@ -11,47 +11,33 @@ export const themeRegistry = {
       id: 'dark',
       required: true,
     },
+    {
+      extends: 'dark',
+      file: 'light.tokens.json',
+      id: 'light',
+      required: false,
+    },
   ],
   unknownThemeIdBehavior: 'error',
 } as const;
 
 export const tokenMap = {
-  'accent.dark.primary': {
+  'accent.primary': {
     themeId: 'dark',
     type: 'color',
     value: '#155dfc',
   },
-  'accent.dark.primary-foreground': {
+  'accent.primary-foreground': {
     themeId: 'dark',
     type: 'color',
     value: '#eff6ff',
   },
-  'accent.dark.sidebar-primary': {
+  'accent.sidebar-primary': {
     themeId: 'dark',
     type: 'color',
     value: '#2b7fff',
   },
-  'accent.dark.sidebar-primary-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#eff6ff',
-  },
-  'accent.light.primary': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#155dfc',
-  },
-  'accent.light.primary-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#eff6ff',
-  },
-  'accent.light.sidebar-primary': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#155dfc',
-  },
-  'accent.light.sidebar-primary-foreground': {
+  'accent.sidebar-primary-foreground': {
     themeId: 'dark',
     type: 'color',
     value: '#eff6ff',
@@ -61,10 +47,35 @@ export const tokenMap = {
     type: 'color',
     value: '#e8d1a2',
   },
+  'core.color.amber.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#8a5300',
+  },
+  'core.color.black-alpha.10': {
+    themeId: 'dark',
+    type: 'color',
+    value: 'rgba(0, 0, 0, 0.1)',
+  },
+  'core.color.black-alpha.30': {
+    themeId: 'dark',
+    type: 'color',
+    value: 'rgba(0, 0, 0, 0.3)',
+  },
   'core.color.blue.500': {
     themeId: 'dark',
     type: 'color',
     value: '#51a2ff',
+  },
+  'core.color.blue.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#155dfc',
+  },
+  'core.color.blue.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#1447e6',
   },
   'core.color.blue.800': {
     themeId: 'dark',
@@ -81,15 +92,45 @@ export const tokenMap = {
     type: 'color',
     value: '#0e5e2e',
   },
+  'core.color.neutral.100': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#f5f5f5',
+  },
+  'core.color.neutral.200': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#e5e5e5',
+  },
   'core.color.neutral.300': {
     themeId: 'dark',
     type: 'color',
     value: '#b0bac8',
   },
+  'core.color.neutral.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9ca2af',
+  },
+  'core.color.neutral.50': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#fafafa',
+  },
   'core.color.neutral.500': {
     themeId: 'dark',
     type: 'color',
     value: '#6a7282',
+  },
+  'core.color.neutral.600': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#535966',
+  },
+  'core.color.neutral.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#3f3f3f',
   },
   'core.color.neutral.800': {
     themeId: 'dark',
@@ -116,20 +157,45 @@ export const tokenMap = {
     type: 'color',
     value: '#f08000',
   },
+  'core.color.orange.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9a3412',
+  },
+  'core.color.red.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#ff6467',
+  },
   'core.color.red.500': {
     themeId: 'dark',
     type: 'color',
     value: '#fb2c36',
+  },
+  'core.color.red.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#c10007',
   },
   'core.color.red.800': {
     themeId: 'dark',
     type: 'color',
     value: '#5b1d20',
   },
+  'core.color.violet.400': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#a566f7',
+  },
   'core.color.violet.500': {
     themeId: 'dark',
     type: 'color',
     value: '#8a38f5',
+  },
+  'core.color.violet.700': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#6d28d9',
   },
   'core.color.white': {
     themeId: 'dark',
@@ -146,20 +212,185 @@ export const tokenMap = {
     type: 'color',
     value: 'rgba(255, 255, 255, 0.3)',
   },
+  'elevation.level.0': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'none',
+  },
+  'elevation.level.1': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 1px 2px rgba(0, 0, 0, 0.4)',
+  },
+  'elevation.level.2': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 2px 6px rgba(0, 0, 0, 0.5)',
+  },
+  'elevation.level.3': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 4px 12px rgba(0, 0, 0, 0.6)',
+  },
+  'elevation.level.4': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 12px 32px rgba(0, 0, 0, 0.7)',
+  },
+  'elevation.role.card': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 1px 2px rgba(0, 0, 0, 0.4)',
+  },
+  'elevation.role.dropdown': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 2px 6px rgba(0, 0, 0, 0.5)',
+  },
+  'elevation.role.flat': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'none',
+  },
+  'elevation.role.modal': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 12px 32px rgba(0, 0, 0, 0.7)',
+  },
+  'elevation.role.popover': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 4px 12px rgba(0, 0, 0, 0.6)',
+  },
+  'elevation.role.sheet': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 12px 32px rgba(0, 0, 0, 0.7)',
+  },
+  'elevation.role.tooltip': {
+    themeId: 'dark',
+    type: 'string',
+    value: '0 2px 6px rgba(0, 0, 0, 0.5)',
+  },
   'font.font-family': {
     themeId: 'dark',
     type: 'string',
     value: 'Poppins',
   },
-  'motion.placeholder.durationQuick': {
+  'layout.container.doc': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1160px',
+  },
+  'layout.container.narrow': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '540px',
+  },
+  'layout.container.page': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1060px',
+  },
+  'layout.container.reading': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '680px',
+  },
+  'layout.container.shell': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1200px',
+  },
+  'layout.gutter.default': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'layout.gutter.tight': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'motion.duration.base': {
     themeId: 'dark',
     type: 'duration',
-    value: '150ms',
+    value: '190ms',
+  },
+  'motion.duration.fast': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '130ms',
+  },
+  'motion.duration.instant': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '80ms',
+  },
+  'motion.duration.slow': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '280ms',
+  },
+  'motion.duration.slower': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '420ms',
+  },
+  'motion.easing.in-out': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.45, 0, 0.2, 1)',
+  },
+  'motion.easing.out': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.22, 0.61, 0.2, 1)',
+  },
+  'motion.easing.spring': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.34, 1.3, 0.5, 1)',
+  },
+  'motion.role.appear.duration': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '190ms',
+  },
+  'motion.role.appear.easing': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.22, 0.61, 0.2, 1)',
+  },
+  'motion.role.dismiss.duration': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '130ms',
+  },
+  'motion.role.dismiss.easing': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.45, 0, 0.2, 1)',
+  },
+  'motion.role.hover.duration': {
+    themeId: 'dark',
+    type: 'duration',
+    value: '80ms',
+  },
+  'motion.role.hover.easing': {
+    themeId: 'dark',
+    type: 'string',
+    value: 'cubic-bezier(0.22, 0.61, 0.2, 1)',
   },
   'radius.2xl': {
     themeId: 'dark',
     type: 'dimension',
     value: '16px',
+  },
+  'radius.2xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
   },
   'radius.full': {
     themeId: 'dark',
@@ -180,6 +411,36 @@ export const tokenMap = {
     themeId: 'dark',
     type: 'dimension',
     value: '0px',
+  },
+  'radius.pill': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'radius.role.git-file-row': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'radius.role.hints-bar': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
+  },
+  'radius.role.keycap': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'radius.role.run-badge': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
+  },
+  'radius.role.toolbar-btn': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '3px',
   },
   'radius.sm': {
     themeId: 'dark',
@@ -216,6 +477,26 @@ export const tokenMap = {
     type: 'color',
     value: 'rgba(255, 255, 255, 0.1)',
   },
+  'semantic.color.border.default': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#303030',
+  },
+  'semantic.color.border.strong': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#3f3f3f',
+  },
+  'semantic.color.border.subtle': {
+    themeId: 'dark',
+    type: 'color',
+    value: 'rgba(255, 255, 255, 0.1)',
+  },
+  'semantic.color.interaction.focus-ring': {
+    themeId: 'dark',
+    type: 'color',
+    value: '#9ca2af',
+  },
   'semantic.color.status-strip.ai': {
     themeId: 'dark',
     type: 'color',
@@ -249,7 +530,7 @@ export const tokenMap = {
   'semantic.color.text.ai': {
     themeId: 'dark',
     type: 'color',
-    value: '#8a38f5',
+    value: '#a566f7',
   },
   'semantic.color.text.caution': {
     themeId: 'dark',
@@ -264,7 +545,7 @@ export const tokenMap = {
   'semantic.color.text.error': {
     themeId: 'dark',
     type: 'color',
-    value: '#fb2c36',
+    value: '#ff6467',
   },
   'semantic.color.text.info': {
     themeId: 'dark',
@@ -279,7 +560,7 @@ export const tokenMap = {
   'semantic.color.text.secondary': {
     themeId: 'dark',
     type: 'color',
-    value: '#6a7282',
+    value: '#9ca2af',
   },
   'semantic.color.text.success': {
     themeId: 'dark',
@@ -289,22 +570,82 @@ export const tokenMap = {
   'semantic.color.text.tertiary': {
     themeId: 'dark',
     type: 'color',
-    value: '#b0bac8',
+    value: '#6a7282',
   },
   'semantic.color.text.warning': {
     themeId: 'dark',
     type: 'color',
     value: '#e8d1a2',
   },
+  'shape.border.width.default': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '1px',
+  },
+  'shape.border.width.strong': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
+  'shape.opacity.dim': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.7,
+  },
+  'shape.opacity.disabled': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.35,
+  },
+  'shape.opacity.full': {
+    themeId: 'dark',
+    type: 'number',
+    value: 1,
+  },
+  'shape.opacity.subtle': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.5,
+  },
+  'shape.role.branch-container': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.7,
+  },
+  'shape.role.dot-sep': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.5,
+  },
+  'shape.role.inactive': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.35,
+  },
+  'shape.role.selection': {
+    themeId: 'dark',
+    type: 'number',
+    value: 0.3,
+  },
   'spacing.0': {
     themeId: 'dark',
     type: 'dimension',
     value: '0px',
   },
+  'spacing.0-5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '2px',
+  },
   'spacing.1': {
     themeId: 'dark',
     type: 'dimension',
     value: '4px',
+  },
+  'spacing.1-5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
   },
   'spacing.10': {
     themeId: 'dark',
@@ -316,15 +657,50 @@ export const tokenMap = {
     type: 'dimension',
     value: '48px',
   },
+  'spacing.14': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '56px',
+  },
+  'spacing.16': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '64px',
+  },
   'spacing.2': {
     themeId: 'dark',
     type: 'dimension',
     value: '8px',
   },
+  'spacing.2-5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'spacing.20': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '80px',
+  },
+  'spacing.24': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '96px',
+  },
   'spacing.3': {
     themeId: 'dark',
     type: 'dimension',
     value: '12px',
+  },
+  'spacing.3-5': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '14px',
+  },
+  'spacing.32': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '128px',
   },
   'spacing.4': {
     themeId: 'dark',
@@ -341,10 +717,85 @@ export const tokenMap = {
     type: 'dimension',
     value: '24px',
   },
+  'spacing.7': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '28px',
+  },
   'spacing.8': {
     themeId: 'dark',
     type: 'dimension',
     value: '32px',
+  },
+  'spacing.gap.branch-inner': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
+  },
+  'spacing.gap.git-file-row': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '8px',
+  },
+  'spacing.gap.header-path': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'spacing.gap.hint-key': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
+  },
+  'spacing.gap.hint-open': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'spacing.gap.hints-bar': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '15px',
+  },
+  'spacing.gap.run-badge': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'spacing.gap.toolbar-btn': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '7px',
+  },
+  'spacing.padding.block-header-pl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'spacing.padding.block-header-py': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
+  },
+  'spacing.padding.git-file-row-pl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '4px',
+  },
+  'spacing.padding.hints-bar-px': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'spacing.padding.hints-bar-py': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '6px',
+  },
+  'spacing.padding.keycap-px': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '5px',
   },
   'tailwind-colors.amber.100': {
     themeId: 'dark',
@@ -2726,284 +3177,286 @@ export const tokenMap = {
     type: 'dimension',
     value: '16px',
   },
-  'theme._external.claude-bg': {
+  'type.font.poppins': {
     themeId: 'dark',
-    type: 'color',
-    value: '#faf9f5',
+    type: 'string',
+    value: 'Poppins',
   },
-  'theme._external.claude-messsage': {
+  'type.font.roboto-mono': {
     themeId: 'dark',
-    type: 'color',
-    value: '#f0eee6',
+    type: 'string',
+    value: 'Roboto Mono',
   },
-  'theme._external.claude-primary': {
+  'type.leading.normal': {
     themeId: 'dark',
-    type: 'color',
-    value: '#c96442',
+    type: 'number',
+    value: 1.5,
   },
-  'theme._external.code-1': {
+  'type.leading.relaxed': {
     themeId: 'dark',
-    type: 'color',
-    value: '#0184bc',
+    type: 'number',
+    value: 1.75,
   },
-  'theme._external.code-2': {
+  'type.leading.tight': {
     themeId: 'dark',
-    type: 'color',
-    value: '#4078f2',
+    type: 'number',
+    value: 1.2,
   },
-  'theme._external.code-3': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#a626a4',
-  },
-  'theme._external.code-4': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#50a14f',
-  },
-  'theme._external.code-5': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#e45649',
-  },
-  'theme._external.code-6': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#b76b01',
-  },
-  'theme._external.code-comment': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#a0a1a7',
-  },
-  'theme._external.code-fg': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#383a42',
-  },
-  'theme._external.code-symbol': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#696c77',
-  },
-  'theme._external.streamdown-bg': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#ffffff',
-  },
-  'theme._external.streamdown-fg': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#24292e',
-  },
-  'theme.components.*ring-destructive': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#e7000b33',
-  },
-  'theme.components.*ring-focus': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#a1a1a180',
-  },
-  'theme.components.Button.variant=destructive bg': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#e7000b',
-  },
-  'theme.components.Button.variant=destructive bg:hover': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#e7000be5',
-  },
-  'theme.components.Button.variant=ghost bg:hover': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#f5f5f5',
-  },
-  'theme.components.Button.variant=outline bg': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#ffffff',
-  },
-  'theme.components.Button.variant=outline bg:hover': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#f5f5f5',
-  },
-  'theme.components.Button.variant=outline border': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#e5e5e5',
-  },
-  'theme.components.Confirmation.accepted-icon': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#00a63e',
-  },
-  'theme.components.Input.bg': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#ffffff00',
-  },
-  'theme.components.Input.bg:hover (Select only)': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#ffffff00',
-  },
-  'theme.components.Kbd.bg-tooltip': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#ffffff33',
-  },
-  'theme.theme.accent': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#f5f5f5',
-  },
-  'theme.theme.accent-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#171717',
-  },
-  'theme.theme.background': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#ffffff',
-  },
-  'theme.theme.border': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#e5e5e5',
-  },
-  'theme.theme.card': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#ffffff',
-  },
-  'theme.theme.card-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#0a0a0a',
-  },
-  'theme.theme.destructive': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#e7000b',
-  },
-  'theme.theme.foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#0a0a0a',
-  },
-  'theme.theme.input': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#e5e5e5',
-  },
-  'theme.theme.muted': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#f5f5f5',
-  },
-  'theme.theme.muted-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#737373',
-  },
-  'theme.theme.popover': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#ffffff',
-  },
-  'theme.theme.popover-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#0a0a0a',
-  },
-  'theme.theme.primary': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#155dfc',
-  },
-  'theme.theme.primary-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#eff6ff',
-  },
-  'theme.theme.ring': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#a1a1a1',
-  },
-  'theme.theme.secondary': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#f5f5f5',
-  },
-  'theme.theme.secondary-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#171717',
-  },
-  'theme.theme.sidebar': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#fafafa',
-  },
-  'theme.theme.sidebar-accent': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#f5f5f5',
-  },
-  'theme.theme.sidebar-accent-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#171717',
-  },
-  'theme.theme.sidebar-border': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#e5e5e5',
-  },
-  'theme.theme.sidebar-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#404040',
-  },
-  'theme.theme.sidebar-primary': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#155dfc',
-  },
-  'theme.theme.sidebar-primary-foreground': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#eff6ff',
-  },
-  'theme.theme.sidebar-ring': {
-    themeId: 'dark',
-    type: 'color',
-    value: '#a1a1a1',
-  },
-  'theme.theme.sidebar-width': {
+  'type.role.output-line': {
     themeId: 'dark',
     type: 'dimension',
-    value: '256px',
+    value: '16px',
   },
-  'theme.theme.sidebar-width-icon': {
+  'type.role.path': {
     themeId: 'dark',
     type: 'dimension',
-    value: '48px',
+    value: '16px',
   },
-  'theme.transparent': {
+  'type.role.secondary': {
     themeId: 'dark',
-    type: 'color',
-    value: '#ffffff00',
+    type: 'dimension',
+    value: '12px',
+  },
+  'type.role.status-letter': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'type.size.2xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '24px',
+  },
+  'type.size.2xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '10px',
+  },
+  'type.size.base': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '16px',
+  },
+  'type.size.lg': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '18px',
+  },
+  'type.size.sm': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '14px',
+  },
+  'type.size.xl': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '20px',
+  },
+  'type.size.xs': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '12px',
+  },
+  'type.tracking.normal': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0em',
+  },
+  'type.tracking.wide': {
+    themeId: 'dark',
+    type: 'dimension',
+    value: '0.025em',
+  },
+  'type.weight.bold': {
+    themeId: 'dark',
+    type: 'number',
+    value: 700,
+  },
+  'type.weight.medium': {
+    themeId: 'dark',
+    type: 'number',
+    value: 500,
+  },
+  'type.weight.regular': {
+    themeId: 'dark',
+    type: 'number',
+    value: 400,
+  },
+  'type.weight.semibold': {
+    themeId: 'dark',
+    type: 'number',
+    value: 600,
   },
 } as const;
 
-export const recipeMap = {} as const;
+export const themeOverrides = {
+  light: {
+    'accent.sidebar-primary': {
+      themeId: 'light',
+      type: 'color',
+      value: '#155dfc',
+    },
+    'semantic.color.background.base': {
+      themeId: 'light',
+      type: 'color',
+      value: '#ffffff',
+    },
+    'semantic.color.background.elevated': {
+      themeId: 'light',
+      type: 'color',
+      value: '#f5f5f5',
+    },
+    'semantic.color.background.overlay': {
+      themeId: 'light',
+      type: 'color',
+      value: '#e5e5e5',
+    },
+    'semantic.color.background.surface': {
+      themeId: 'light',
+      type: 'color',
+      value: '#fafafa',
+    },
+    'semantic.color.background.white-10': {
+      themeId: 'light',
+      type: 'color',
+      value: 'rgba(0, 0, 0, 0.1)',
+    },
+    'semantic.color.border.default': {
+      themeId: 'light',
+      type: 'color',
+      value: '#e5e5e5',
+    },
+    'semantic.color.border.strong': {
+      themeId: 'light',
+      type: 'color',
+      value: '#b0bac8',
+    },
+    'semantic.color.border.subtle': {
+      themeId: 'light',
+      type: 'color',
+      value: 'rgba(0, 0, 0, 0.1)',
+    },
+    'semantic.color.interaction.focus-ring': {
+      themeId: 'light',
+      type: 'color',
+      value: '#535966',
+    },
+    'semantic.color.status-strip.ai': {
+      themeId: 'light',
+      type: 'color',
+      value: '#6d28d9',
+    },
+    'semantic.color.status-strip.neutral': {
+      themeId: 'light',
+      type: 'color',
+      value: '#171717',
+    },
+    'semantic.color.status-strip.running': {
+      themeId: 'light',
+      type: 'color',
+      value: '#171717',
+    },
+    'semantic.color.text.ai': {
+      themeId: 'light',
+      type: 'color',
+      value: '#6d28d9',
+    },
+    'semantic.color.text.caution': {
+      themeId: 'light',
+      type: 'color',
+      value: '#9a3412',
+    },
+    'semantic.color.text.dim': {
+      themeId: 'light',
+      type: 'color',
+      value: 'rgba(0, 0, 0, 0.3)',
+    },
+    'semantic.color.text.error': {
+      themeId: 'light',
+      type: 'color',
+      value: '#c10007',
+    },
+    'semantic.color.text.info': {
+      themeId: 'light',
+      type: 'color',
+      value: '#1447e6',
+    },
+    'semantic.color.text.primary': {
+      themeId: 'light',
+      type: 'color',
+      value: '#171717',
+    },
+    'semantic.color.text.secondary': {
+      themeId: 'light',
+      type: 'color',
+      value: '#535966',
+    },
+    'semantic.color.text.success': {
+      themeId: 'light',
+      type: 'color',
+      value: '#0e5e2e',
+    },
+    'semantic.color.text.warning': {
+      themeId: 'light',
+      type: 'color',
+      value: '#8a5300',
+    },
+  },
+} as const;
+
+export const recipeMap = {
+  badge: {
+    componentId: 'badge',
+    defaults: {
+      state: 'rest',
+      variants: {
+        variant: 'default',
+      },
+    },
+    fallbacks: {
+      missingVariantBehavior: 'use-defaults',
+      stateFallbacks: {
+        focus: 'rest',
+        hover: 'rest',
+      },
+    },
+    recipeVersion: '1',
+    slots: {
+      icon: {
+        color: '{accent.primary-foreground}',
+      },
+      label: {
+        text: '{accent.primary-foreground}',
+      },
+      root: {
+        background: '{accent.primary}',
+      },
+    },
+    states: {
+      focus: {
+        root: {
+          outline: '{semantic.color.interaction.focus-ring}',
+        },
+      },
+      hover: {
+        root: {
+          background: '{accent.primary}',
+        },
+      },
+      rest: {
+        root: {
+          background: '{accent.primary}',
+        },
+      },
+    },
+    variantAxes: [
+      {
+        name: 'variant',
+        values: ['default', 'secondary', 'destructive', 'outline', 'success', 'warning', 'error'],
+      },
+    ],
+  },
+} as const;
 
 export type ThemeId = (typeof themeRegistry.themes)[number]['id'];
 export type TokenId = keyof typeof tokenMap;

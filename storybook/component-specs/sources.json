@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "sources",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-sources--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-sources--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-sources--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-sources--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-sources--expand-collapse-flow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-sources--collapse-transition", "kinds": ["motion"] },
+    { "storyId": "ai-elements-sources--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/sources.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2203-93",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-sources--default",
+      "ai-elements-sources--state-matrix",
+      "ai-elements-sources--keyboard",
+      "ai-elements-sources--focus",
+      "ai-elements-sources--expand-collapse-flow",
+      "ai-elements-sources--collapse-transition",
+      "ai-elements-sources--docs"
+    ]
+  }
+}

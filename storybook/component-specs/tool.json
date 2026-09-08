@@ -1,0 +1,49 @@
+{
+  "specVersion": "1",
+  "componentId": "tool",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "variant-matrix",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "motion",
+    "async",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-tool--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-tool--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "ai-elements-tool--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "ai-elements-tool--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "ai-elements-tool--focus", "kinds": ["focus"] },
+    { "storyId": "ai-elements-tool--expand-collapse-flow", "kinds": ["workflow"] },
+    { "storyId": "ai-elements-tool--collapse-transition", "kinds": ["motion"] },
+    { "storyId": "ai-elements-tool--tool-call-lifecycle", "kinds": ["async"] },
+    { "storyId": "ai-elements-tool--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/tool.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2201-74",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-tool--default",
+      "ai-elements-tool--variant-matrix",
+      "ai-elements-tool--state-matrix",
+      "ai-elements-tool--keyboard",
+      "ai-elements-tool--focus",
+      "ai-elements-tool--expand-collapse-flow",
+      "ai-elements-tool--collapse-transition",
+      "ai-elements-tool--tool-call-lifecycle",
+      "ai-elements-tool--docs"
+    ]
+  }
+}

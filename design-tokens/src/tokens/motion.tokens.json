@@ -1,8 +1,70 @@
 {
-  "placeholder": {
-    "durationQuick": {
-      "$value": "150ms",
+  "duration": {
+    "instant": {
+      "$value": "80ms",
       "$type": "duration"
+    },
+    "fast": {
+      "$value": "130ms",
+      "$type": "duration"
+    },
+    "base": {
+      "$value": "190ms",
+      "$type": "duration"
+    },
+    "slow": {
+      "$value": "280ms",
+      "$type": "duration"
+    },
+    "slower": {
+      "$value": "420ms",
+      "$type": "duration"
+    }
+  },
+  "easing": {
+    "out": {
+      "$value": "cubic-bezier(0.22, 0.61, 0.2, 1)",
+      "$type": "string"
+    },
+    "in-out": {
+      "$value": "cubic-bezier(0.45, 0, 0.2, 1)",
+      "$type": "string"
+    },
+    "spring": {
+      "$value": "cubic-bezier(0.34, 1.3, 0.5, 1)",
+      "$type": "string"
+    }
+  },
+  "role": {
+    "hover": {
+      "duration": {
+        "$value": "{motion.duration.instant}",
+        "$type": "duration"
+      },
+      "easing": {
+        "$value": "{motion.easing.out}",
+        "$type": "string"
+      }
+    },
+    "appear": {
+      "duration": {
+        "$value": "{motion.duration.base}",
+        "$type": "duration"
+      },
+      "easing": {
+        "$value": "{motion.easing.out}",
+        "$type": "string"
+      }
+    },
+    "dismiss": {
+      "duration": {
+        "$value": "{motion.duration.fast}",
+        "$type": "duration"
+      },
+      "easing": {
+        "$value": "{motion.easing.in-out}",
+        "$type": "string"
+      }
     }
   }
 }

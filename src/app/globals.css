@@ -1,3 +1,311 @@
 @import '../lib/tokens/fonts.css';
 @import '../lib/tokens/tokens.css';
 @import 'tailwindcss';
+
+/*
+ * Point Tailwind's `dark:` variant at our `data-theme` attribute instead of its
+ * default `prefers-color-scheme`. Without this the two disagree: the token layer
+ * switches on `data-theme` while every `dark:` utility switches on the OS
+ * setting. Shiki is the visible casualty — CodeBlock renders its light-theme
+ * colors in `token.color` and swaps to the dark theme via
+ * `dark:!text-[var(--shiki-dark)]`,
+ * so on a light theme with a dark OS it painted dark-theme syntax colors on a
+ * white card at 1.28:1.
+ *
+ * Dark is the default, so the variant matches unless light is explicitly set.
+ * Deliberately scoped to any ancestor rather than to `:root`: Storybook's
+ * decorator themes a wrapper div, and a light panel inside a dark shell should
+ * work the same way. Custom properties already inherit, so the token layer is
+ * scope-agnostic too.
+ */
+@custom-variant dark (&:where(:not([data-theme='light'] *):not([data-theme='light'])));
+
+/*
+ * shadcn / ai-elements semantic roles bridged onto Collider design tokens.
+ * Hand-authored (tokens.css is generated). Collider `--color-*` / `--accent-*`
+ * stay canonical; these roles alias them so ai-elements utility classes
+ * (bg-secondary, text-foreground, ...) resolve to real values.
+ *
+ * These are all `var()` indirections onto themed tokens, so the whole shadcn
+ * layer follows the theme for free. Only the roles that do NOT resolve correctly
+ * by theme substitution are repeated in the light block below.
+ *
+ * `[data-theme]` is in the selector because a `var()` inside a custom property
+ * resolves on the element that declares it. Declared only on `:root`, these
+ * would compute against the default theme and then merely inherit, so a themed
+ * subtree would move the tokens while these roles stayed dark. Re-declaring them
+ * on the themed element makes them recompute in that scope, at no duplication.
+ */
+:root,
+[data-theme] {
+  --background: var(--color-background-base);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-background-surface);
+  --card-foreground: var(--color-text-primary);
+  --popover: var(--color-background-elevated);
+  --popover-foreground: var(--color-text-primary);
+  --primary: var(--accent-primary);
+  --primary-foreground: var(--accent-primary-foreground);
+  --secondary: var(--color-background-elevated);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: var(--color-background-surface);
+  --muted-foreground: var(--color-text-secondary);
+  --accent: var(--color-background-elevated);
+  --accent-foreground: var(--color-text-primary);
+  --destructive: var(--color-text-error);
+  --destructive-foreground: var(--color-text-primary);
+  /*
+   * `--destructive` is a TEXT color — `semantic.color.text.error` is tuned to
+   * read on a dark ground (5.64:1 on `background/surface`). Used as a *fill* it
+   * fails: white on the dark theme's #ff6467 measures 2.89:1. One value cannot
+   * serve both roles, so the solid destructive surface gets its own, dark enough
+   * for white in either theme (6.42:1).
+   */
+  --destructive-surface: var(--core-color-red-700);
+  /*
+   * `destructive` used to be the only status role on the bridge, which meant
+   * `text-destructive` existed and `text-success` did not. Components needing a
+   * non-error status had nothing to reach for and hand-rolled Tailwind palette
+   * pairs instead — `text-green-600 dark:text-green-400` — picking a light value
+   * nobody measured. Every one of those failed AA on white. The tokens were
+   * always correct in both themes; only the bridge was short.
+   */
+  --success: var(--color-text-success);
+  --warning: var(--color-text-warning);
+  --info: var(--color-text-info);
+  --border: var(--semantic-color-border-default);
+  --input: var(--semantic-color-border-default);
+  --ring: var(--semantic-color-interaction-focus-ring);
+}
+
+/*
+ * Dark is the default theme and lives unqualified in `:root`, so an app with no
+ * `data-theme` attribute stays dark. Only one role needs restating here:
+ * `--destructive-foreground` sits on a saturated red fill in both themes, so it
+ * must stay light instead of following text/primary, which would drop it to
+ * 2.79:1 against the light theme's #c10007.
+ *
+ * The accent roles used to be restated here too, back when `accent.tokens.json`
+ * keyed them by theme in the token *name* (`accent.light.*` / `accent.dark.*`)
+ * and the switch had to happen at this layer. They now carry one name with a
+ * value per theme, so they ride the theme rail like every other role.
+ */
+[data-theme='light'] {
+  --destructive-foreground: var(--core-color-white);
+}
+
+/*
+ * Tailwind v4 defaults the `border` utility to currentColor (a v3→v4 break).
+ * Restore v3 behavior so `border` alone paints in the semantic border color,
+ * matching every ai-elements card that doesn't spell out `border-border`.
+ */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--border);
+  }
+
+  /*
+   * Selection follows the accent, and is the mirror of the focus ring: it is a
+   * decorative brand surface rather than a functional indicator, so tracking a
+   * user-set accent is exactly what it should do. It has to be computed here
+   * because DTCG cannot express "alias plus alpha", and a baked rgba could not
+   * follow a runtime knob at all. The ratio stays a token.
+   */
+  ::selection {
+    background-color: color-mix(
+      in srgb,
+      var(--primary) calc(var(--shape-role-selection) * 100%),
+      transparent
+    );
+  }
+}
+
+/*
+ * Typography scale bridged from `type.tokens.json` onto Tailwind's theme
+ * namespaces. Tailwind v4 only generates a utility for a theme key it knows
+ * about, so every scale step has to be declared here — `tailwind.config.ts`
+ * is not loaded (no `@config` directive) and cannot do this.
+ *
+ * xs/sm/base/lg/xl/2xl keep Tailwind's existing values, so this rebinds them
+ * to tokens without moving any type. `2xs` (10px) is the one new step, added
+ * for Collider-Old's status letters.
+ */
+@theme inline {
+  --text-2xs: var(--type-size-2xs);
+  --text-2xs--line-height: 1.4;
+  --text-xs: var(--type-size-xs);
+  --text-sm: var(--type-size-sm);
+  --text-base: var(--type-size-base);
+  --text-lg: var(--type-size-lg);
+  --text-xl: var(--type-size-xl);
+  --text-2xl: var(--type-size-2xl);
+
+  --font-weight-normal: var(--type-weight-regular);
+  --font-weight-medium: var(--type-weight-medium);
+  --font-weight-semibold: var(--type-weight-semibold);
+  --font-weight-bold: var(--type-weight-bold);
+
+  --leading-tight: var(--type-leading-tight);
+  --leading-normal: var(--type-leading-normal);
+  --leading-relaxed: var(--type-leading-relaxed);
+
+  --tracking-normal: var(--type-tracking-normal);
+  --tracking-wide: var(--type-tracking-wide);
+}
+
+/*
+ * Motion bridged from `motion.tokens.json`. Tailwind v4 has an `--ease-*`
+ * theme namespace, so easings become utilities just by being declared here.
+ * It has no `--duration-*` namespace — `duration-*` is a functional utility
+ * that only takes bare numbers — so the named durations are exposed as
+ * static utilities instead.
+ */
+@theme inline {
+  --ease-out: var(--motion-easing-out);
+  --ease-in-out: var(--motion-easing-in-out);
+  --ease-spring: var(--motion-easing-spring);
+}
+
+@utility duration-instant {
+  transition-duration: var(--motion-duration-instant);
+}
+@utility duration-fast {
+  transition-duration: var(--motion-duration-fast);
+}
+@utility duration-base {
+  transition-duration: var(--motion-duration-base);
+}
+@utility duration-slow {
+  transition-duration: var(--motion-duration-slow);
+}
+@utility duration-slower {
+  transition-duration: var(--motion-duration-slower);
+}
+
+/*
+ * Elevation bridged from `elevation.tokens.json`. The semantic roles are what
+ * components should reach for (`shadow-card`, `shadow-modal`); the raw
+ * `--elevation-level-*` scale stays available for one-off use via var().
+ * Dark-only single values — there is no light theme to vary against yet.
+ */
+@theme inline {
+  --shadow-card: var(--elevation-role-card);
+  --shadow-dropdown: var(--elevation-role-dropdown);
+  --shadow-tooltip: var(--elevation-role-tooltip);
+  --shadow-popover: var(--elevation-role-popover);
+  --shadow-modal: var(--elevation-role-modal);
+  --shadow-sheet: var(--elevation-role-sheet);
+}
+
+/*
+ * Layout containers bridged from `layout.tokens.json`. Tailwind's
+ * `--container-` namespace drives the max-width and width scales, so these
+ * register as `max-w-page`, `max-w-reading`, and so on. `reading` and `shell`
+ * avoid the names `prose` and `max`, which Tailwind already defines as
+ * max-width keywords (65ch and max-content) and which would win over these.
+ * Gutters have no matching namespace and stay available as
+ * `--layout-gutter-` vars.
+ */
+@theme inline {
+  --container-narrow: var(--layout-container-narrow);
+  --container-reading: var(--layout-container-reading);
+  --container-page: var(--layout-container-page);
+  --container-doc: var(--layout-container-doc);
+  --container-shell: var(--layout-container-shell);
+}
+
+/*
+ * Shape. Existing rounded- utilities already resolve to tokens because
+ * `radius.tokens.json` emits the very `--radius-` names Tailwind reads, so
+ * only the two steps Tailwind has no key for are declared here. They use
+ * `@utility` rather than `@theme`, because a theme entry would have to read
+ * `--radius-2xs: var(--radius-2xs)` and that self-reference only resolves by
+ * accident of the unlayered token winning the cascade.
+ *
+ * Opacity has a real `--opacity-` namespace, so the scale bridges normally.
+ * Semantic role aliases stay var-only: they name Collider-Old usages rather
+ * than general-purpose steps, and would only clutter the utility surface.
+ */
+@theme inline {
+  --opacity-disabled: var(--shape-opacity-disabled);
+  --opacity-subtle: var(--shape-opacity-subtle);
+  --opacity-dim: var(--shape-opacity-dim);
+}
+
+@utility rounded-2xs {
+  border-radius: var(--radius-2xs);
+}
+@utility rounded-pill {
+  border-radius: var(--radius-pill);
+}
+
+/*
+ * Focus. One place for the whole focus treatment, so the ring can be re-tuned
+ * without touching every primitive that wears it.
+ *
+ * `outline` rather than Tailwind's `ring`, for two reasons. A ring is a
+ * box-shadow, so its offset has to be PAINTED — `ring-offset-background`
+ * guesses `background/base` and draws a wrong-coloured halo whenever the
+ * component sits on `surface` or `elevated`. `outline-offset` leaves a real
+ * gap, so whatever is actually behind the component shows through and the gap
+ * is right on every surface.
+ *
+ * The gap is also what makes the ring accent-independent. With an offset, the
+ * ring's adjacent colour is always the GAP — i.e. the surface behind the
+ * control — never the control's own fill. So a themed neutral `--ring` stays
+ * legible whatever the accent is set to, which matters because the accent is
+ * meant to become a user-facing knob. Do NOT alias `--ring` to the accent: it
+ * would be 1:1 against a filled button's own fill, and blue-600 measured only
+ * 2.74 on `background/elevated` and 2.52 on `overlay` in dark — below the 3:1
+ * floor on exactly the surfaces dialogs and menus use.
+ *
+ * Width is `border/width/strong` (2px) because WCAG 2.4.11 asks for at least a
+ * 2px-thick perimeter — the old `ring-1` failed on size as well as contrast.
+ */
+@utility focus-ring {
+  outline: var(--shape-border-width-strong) solid var(--ring);
+  outline-offset: var(--shape-border-width-strong);
+}
+
+/*
+ * Spacing. Tailwind v4 derives its whole spacing scale from one multiplier
+ * rather than per-step keys, so pointing `--spacing` at the 4px base token
+ * makes every p-, m-, and gap- utility token-driven, including fractional
+ * steps like p-0.5 and large ones like p-32 that it generates on demand.
+ * The per-step tokens therefore exist for Figma and design parity rather
+ * than to feed utilities, and the gap and padding role aliases record
+ * Collider-Old usages.
+ */
+@theme inline {
+  --spacing: var(--spacing-1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-surface: var(--destructive-surface);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}

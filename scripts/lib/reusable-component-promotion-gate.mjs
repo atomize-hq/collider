@@ -162,7 +162,7 @@ export function evaluateReusableComponentPromotionDecision(status, options = {})
     } else if (rails.ct10b.claimRelevant) {
       advisoryReasons.push('ct10b-review-informational');
     }
-    if (!isRailCurrentSatisfied(rails.ct11b)) {
+    if (!isRailCurrentSatisfied(rails.ct11b) && !isRailOutOfPlay(rails.ct11b)) {
       blockingReasons.push(...collectBlockingReason('mapping', rails.ct11b));
     }
     if (consumer === 'release') {
@@ -366,6 +366,14 @@ function normalizeChangedFiles(changedFiles) {
 
 function isRailCurrentSatisfied(rail) {
   return rail.freshness === 'current' && rail.outcome === 'satisfied';
+}
+
+// A rail reporting `not-applicable` has nothing to measure — with Code Connect
+// retired, ct11b is permanently in that state. Blocking on it would fail the gate
+// for a check that was never meant to run. `unsatisfied`, `stale` and `missing`
+// still block.
+function isRailOutOfPlay(rail) {
+  return rail.freshness === 'current' && rail.outcome === 'not-applicable';
 }
 
 function isDocsPath(file) {

@@ -1,38 +1,18 @@
 {
-  "light": {
-    "primary": {
-      "$type": "color",
-      "$value": "#155dfc"
-    },
-    "primary-foreground": {
-      "$type": "color",
-      "$value": "#eff6ff"
-    },
-    "sidebar-primary": {
-      "$type": "color",
-      "$value": "#155dfc"
-    },
-    "sidebar-primary-foreground": {
-      "$type": "color",
-      "$value": "#eff6ff"
-    }
+  "primary": {
+    "$type": "color",
+    "$value": "#155dfc"
   },
-  "dark": {
-    "primary": {
-      "$type": "color",
-      "$value": "#155dfc"
-    },
-    "primary-foreground": {
-      "$type": "color",
-      "$value": "#eff6ff"
-    },
-    "sidebar-primary": {
-      "$type": "color",
-      "$value": "#2b7fff"
-    },
-    "sidebar-primary-foreground": {
-      "$type": "color",
-      "$value": "#eff6ff"
-    }
+  "primary-foreground": {
+    "$type": "color",
+    "$value": "#eff6ff"
+  },
+  "sidebar-primary": {
+    "$type": "color",
+    "$value": "#2b7fff"
+  },
+  "sidebar-primary-foreground": {
+    "$type": "color",
+    "$value": "#eff6ff"
   }
 }

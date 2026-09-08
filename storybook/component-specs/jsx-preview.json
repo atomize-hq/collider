@@ -1,0 +1,29 @@
+{
+  "specVersion": "1",
+  "componentId": "jsx-preview",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "async", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "ai-elements-jsx-preview--default", "kinds": ["default"] },
+    { "storyId": "ai-elements-jsx-preview--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "ai-elements-jsx-preview--async", "kinds": ["async"] },
+    { "storyId": "ai-elements-jsx-preview--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ai-elements/jsx-preview.tsx",
+    "figmaComponentRef": "23PLdynlRYoBYQx9teoC8A#2308:661",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "ai-elements-jsx-preview--default",
+      "ai-elements-jsx-preview--variant-matrix",
+      "ai-elements-jsx-preview--async",
+      "ai-elements-jsx-preview--docs"
+    ]
+  }
+}

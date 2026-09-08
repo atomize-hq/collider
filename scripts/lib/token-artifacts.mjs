@@ -16,7 +16,11 @@ import {
   ensureStyleDictionaryHooksRegistered,
 } from '../../design-tokens/build/style-dictionary.config.mjs';
 import { buildPublishedRuntimeCss } from './runtime-css-publication.mjs';
-import { createFigmaTokenDocument, loadBuildGraph } from './token-build-graph.mjs';
+import {
+  createFigmaTokenDocument,
+  createThemeOverrideMaps,
+  loadBuildGraph,
+} from './token-build-graph.mjs';
 
 const newline = '\n';
 const typedFileBanner = `// ${generatedFileBanner.slice(3, -3).trim()}`;
@@ -25,16 +29,23 @@ export async function buildTokenArtifacts(options = {}) {
   const graph = loadBuildGraph(options);
   const artifactManifest = options.artifacts ?? getBuildArtifacts(options);
   const before = captureArtifactContents(artifactManifest);
+  const themeVariants = await buildThemeVariants(graph, options);
+  const themeOverrides = themeVariants.map(({ themeId, stagedCss }) => ({ themeId, stagedCss }));
+  // Built last so the staged css artifact is left holding the default theme.
   const cssContents = await buildRuntimeCssArtifact(graph.materializedTokens, options);
   const publishedRuntimeCss = buildPublishedRuntimeCss({
     stagedCss: cssContents,
     themeId: graph.themeId,
+    themeOverrides,
     generatedFileBanner,
     runtimeAliasMapPath: options.runtimeAliasMapPath,
     runtimeInventoryPath: options.runtimeInventoryPath,
   });
-  const typedModule = await generateTypedTokenModule(graph);
-  const figmaDocument = serializeJson(createFigmaTokenDocument(graph));
+  const typedModule = await generateTypedTokenModule(
+    graph,
+    createThemeOverrideMaps(graph, themeVariants)
+  );
+  const figmaDocument = serializeJson(createFigmaTokenDocument(graph, themeVariants));
 
   const statuses = {
     'typed-tokens': writeTextArtifact(
@@ -65,13 +76,15 @@ export async function buildTokenArtifacts(options = {}) {
   };
 }
 
-export async function generateTypedTokenModule(graph) {
+export async function generateTypedTokenModule(graph, themeOverrides = {}) {
   const sections = [
     typedFileBanner,
     '',
     `export const themeRegistry = ${serializeJson(graph.themeRegistry).trimEnd()} as const;`,
     '',
     `export const tokenMap = ${serializeJson(graph.tokenMap).trimEnd()} as const;`,
+    '',
+    `export const themeOverrides = ${serializeJson(themeOverrides).trimEnd()} as const;`,
     '',
     `export const recipeMap = ${serializeJson(graph.recipeMap).trimEnd()} as const;`,
     '',
@@ -102,6 +115,43 @@ function captureArtifactContents(artifacts) {
         : null,
     ])
   );
+}
+
+/**
+ * Every registry theme other than the default is materialized through its own
+ * build graph, then reused by both consumers: the css publication step diffs the
+ * staged css to emit a minimal override block, and the Figma document diffs the
+ * materialized tokens to emit per-mode values. Each one stages to a scratch path
+ * so it never disturbs the staged css artifact, which must keep the default
+ * theme.
+ */
+async function buildThemeVariants(graph, options = {}) {
+  const themes = graph.themeRegistry?.themes ?? [];
+  const overrides = [];
+
+  for (const theme of themes) {
+    if (theme.id === graph.themeId) continue;
+
+    const themeGraph = loadBuildGraph({ ...options, themeId: theme.id });
+    // Style Dictionary always writes `tokens.css` into its build directory, so
+    // the scratch location has to be its own directory rather than a filename.
+    const scratchDir = path.join(
+      path.dirname(options.stagedRuntimeCssPath ?? stagedRuntimeCssPath),
+      `.theme-${theme.id}`
+    );
+
+    try {
+      const stagedCss = await buildRuntimeCssArtifact(themeGraph.materializedTokens, {
+        ...options,
+        stagedRuntimeCssPath: path.join(scratchDir, 'tokens.css'),
+      });
+      overrides.push({ themeId: theme.id, stagedCss, tokens: themeGraph.materializedTokens });
+    } finally {
+      fs.rmSync(scratchDir, { force: true, recursive: true });
+    }
+  }
+
+  return overrides;
 }
 
 async function buildRuntimeCssArtifact(tokens, options = {}) {

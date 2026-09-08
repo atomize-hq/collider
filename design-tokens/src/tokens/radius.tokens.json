@@ -3,6 +3,10 @@
     "$value": "0px",
     "$type": "dimension"
   },
+  "2xs": {
+    "$value": "1px",
+    "$type": "dimension"
+  },
   "sm": {
     "$value": "2px",
     "$type": "dimension"
@@ -23,8 +27,34 @@
     "$value": "16px",
     "$type": "dimension"
   },
+  "pill": {
+    "$value": "24px",
+    "$type": "dimension"
+  },
   "full": {
     "$value": "9999px",
     "$type": "dimension"
+  },
+  "role": {
+    "keycap": {
+      "$value": "{radius.sm}",
+      "$type": "dimension"
+    },
+    "toolbar-btn": {
+      "$value": "3px",
+      "$type": "dimension"
+    },
+    "git-file-row": {
+      "$value": "{radius.md}",
+      "$type": "dimension"
+    },
+    "run-badge": {
+      "$value": "5px",
+      "$type": "dimension"
+    },
+    "hints-bar": {
+      "$value": "5px",
+      "$type": "dimension"
+    }
   }
 }

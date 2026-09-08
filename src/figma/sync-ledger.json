@@ -1,21 +1,25 @@
 {
-  "ledgerVersion": "2",
+  "ledgerVersion": "3",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
-    "revision": "2ee89e27306a1caa846d904ad6229370f371b1b3"
+    "revision": "dc97a2671dbcc6e2a71873042566f4937b766d9d"
   },
   "publish": {
     "mode": "plugin-import-manual",
     "tokensStudioCarrier": false,
-    "figmaFile": "figma://file/SVcsU6gVvpezsJYrvBsS3V"
+    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
   },
   "verification": {
     "materializationStatus": "passed",
-    "lastVerifiedRevision": "2ee89e27306a1caa846d904ad6229370f371b1b3"
+    "lastVerifiedRevision": "dc97a2671dbcc6e2a71873042566f4937b766d9d"
   },
   "promotion": {
     "parityMode": "required",
     "highestEarnedLevel": "E-promotion-complete"
   },
-  "exceptions": []
+  "exceptions": [],
+  "publication": {
+    "proof": "./publish-proof.json",
+    "sha256": "1743b84408dd943480a49cd723186f8e82a75b74c917ecbabd150e0c01969167"
+  }
 }

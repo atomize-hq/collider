@@ -284,6 +284,7 @@ function TokenCard({ token }: { token: TokenRecord }) {
     >
       {isColor ? (
         <div
+          role="img"
           aria-label={`${token.id} swatch`}
           style={{
             background: token.value,
