@@ -1682,26 +1682,30 @@ _Removal — nothing survives by living somewhere unusual_
       was reading a stale `tsconfig.tsbuildinfo`. `tsconfig.json` sets `incremental: true` and the
       file is gitignored, so it survives `rm -rf node_modules` — a clean _install_ is not a clean
       _typecheck_. With the file deleted, `pnpm typecheck` reports two pre-existing errors in
-      `message.tsx` and `reasoning.tsx`. See the parity note below; every rail-specific result
-      above was re-measured after the correction and is unaffected
+      `message.tsx` and `reasoning.tsx`. See the notes below; every rail-specific result above was
+      re-measured after the correction and is unaffected. **Re-verified after the `shiki` pin**:
+      clean install _and_ deleted build info, `just preflight` green — 262 unit + 458 Storybook
 - [x] `node_modules/.cache/storybook` cleared before the run
 
-**Two findings this task did not cause and did surface.** Recorded here because T17 is what made
+**Two findings this task did not cause and did surface.** Recorded because T17 is what made
 them visible: `Governance` passing is what let `Quality` run at all, and it had been skipped in
 every previous run of PR #1.
 
-1. **`streamdown` resolves two `shiki` majors.** `streamdown@2.5.0` uses `shiki@4.4.3` while
-   `@streamdown/code@1.1.1` pins `shiki@^3.19.0`, and the two `HighlightOptions` types are not
-   assignable. Measured at `HEAD~1` with **its own** lockfile and no build info: the same two
-   errors, in two files T17 does not touch. `@streamdown/code` is already at its latest version,
-   so there is no clean upstream bump — the choice is an override, a downgrade of Collider's
-   direct `shiki: ^4.4.3`, or a cast, and Collider uses `shiki` directly in six files of the
-   code-block subsystem. That is a dependency decision, not a cutover detail.
-2. **`just preflight` does not mirror CI for `tsc`.** CLAUDE.md's standard is "if it passes
-   locally, CI passes". CI is always cold; a developer machine never is, and the build info is
-   gitignored, so this specific class of failure can only ever be seen on CI. Deleting the file
-   does not fix it — the check then simply fails locally too, blocking every push until (1) is
-   resolved. The two have to be fixed together, in that order.
+1. **`streamdown` resolved two `shiki` majors — fixed here.** `a395f0c` added
+   `"shiki": "^4.4.3"` as a direct dependency while `@streamdown/code@1.1.1` pins `^3.19.0`, and
+   the two `HighlightOptions` are not assignable. The ai-elements registry declares `shiki` with
+   **no version constraint**, so that 4.x was `latest` on the day, not a requirement — measured
+   at `17cf091` (one shiki, 0 errors) against `a395f0c` (two, those exact errors). Collider's
+   direct `shiki` is now `^3.23.0`, one major in the tree, both consumers satisfied within their
+   declared ranges. Token output is byte-identical either way, through both highlighting paths.
+   The reasoning, the measurements and the retirement condition are
+   [`docs/backlog.md`](../docs/backlog.md) **BL-7**.
+2. **`just preflight` does not mirror CI for `tsc`** — open, tracked in BL-7. CLAUDE.md's
+   standard is "if it passes locally, CI passes". `incremental: true` plus a gitignored
+   `tsconfig.tsbuildinfo` means a developer machine answers from a warm cache and CI never does,
+   so this class of failure can surface **only** on CI. Deliberately not changed here: forcing a
+   cold typecheck on every preflight is a workflow cost, and it is a separate decision from the
+   cutover.
 
 > **Hold point** — one consumer change switches all required callers and removes the superseded
 > implementations, with no intermediate split-authority state. **Held.**

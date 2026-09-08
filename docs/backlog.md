@@ -527,3 +527,59 @@ regression indistinguishable from noise on first sight.
   `storybook` and `storybook-light` are the same 84 files rendered twice.
 - Consider bounding worker concurrency for the browser projects specifically, rather than for
   the whole suite — the unit project is fast and unaffected.
+
+---
+
+## BL-7 — `shiki` is pinned to 3.x to keep one major in the tree
+
+**Not a defect to fix — a pin with a retirement condition.** Recorded so nobody "upgrades" it
+back without re-reading this.
+
+Collider has two shiki consumers:
+
+| consumer                         | what it highlights                                      | declared range               |
+| -------------------------------- | ------------------------------------------------------- | ---------------------------- |
+| Collider's own `code-block-*.ts` | the `CodeBlock` component                               | Collider's direct dependency |
+| `@streamdown/code@1.1.1`         | code inside streamed markdown, in Message and Reasoning | `shiki: ^3.19.0`             |
+
+`a395f0c` (CodeBlock loop, 2026-08-18) added `"shiki": "^4.4.3"` as a direct dependency. That was
+`latest` on the day — the ai-elements registry declares `"dependencies": ["lucide-react", "shiki"]`
+with **no version constraint**, so `npx ai-elements add code-block` installs whatever is newest.
+Nothing in the loop needed 4.
+
+Two majors in one tree makes `streamdown`'s `HighlightOptions` and `@streamdown/code`'s
+mutually unassignable, so `plugins={streamdownPlugins}` fails to typecheck in `message.tsx` and
+`reasoning.tsx`. Measured: `17cf091` (one shiki) — 0 errors; `a395f0c` (two) — those exact two.
+
+### Why it hid for 21 days
+
+`tsconfig.json` sets `incremental: true` and `tsconfig.tsbuildinfo` is gitignored, so a developer
+machine answers from a warm cache and CI never does. CI is the only place this can surface — and
+CI had never run on this branch until PR #1, because the workflow triggers are `pull_request` and
+`push` to `main`. **A clean install is not a clean typecheck**; `rm -rf node_modules` does not
+touch the build info.
+
+### What retires this pin
+
+`@streamdown/code` moving to shiki 4. It is at its latest (1.1.1) and still on `^3.19.0`, and
+nothing upstream is pending: `streamdown` 2.5.0 and 2.6.0 declare no `shiki` and no
+`@streamdown/*` dependencies at all — the four plugins are Collider's own direct dependencies,
+opted into at `8806ed4`. When that moves, raise Collider's `shiki` with it, in one line.
+
+### The alternative, measured and not taken
+
+`"pnpm": { "overrides": { "@streamdown/code>shiki": "^4.4.3" } }` also works, and was tested:
+one shiki, 0 type errors, 262 unit + 458 Storybook tests green, and `@streamdown/code@1.1.1`
+really does run on shiki 4 — it loads the 346-language bundle and highlights correctly.
+
+It was not taken because it forces a package off its own declared range to no measured benefit.
+Token output is **byte-identical** between the two majors, both through Collider's `CodeBlock`
+(7 grammars) and through `@streamdown/code` (7 grammars, 74 tokens), and every dual-theme
+premise `9faf284` depends on holds in both: `color`, `bgColor` and `fontStyle` all undefined,
+`htmlStyle` populated on every token with the same font-weight custom properties, per-token
+backgrounds dropped. The only difference is 14 extra languages in shiki 4's bundle, none of
+which the repo highlights — it uses bash, json, jsx, log, python, tsx, typescript and diff, all
+present in both.
+
+Revisit as a pair with **BL-5**, which would typecheck the Node tooling: both are about a check
+that exists but does not see everything it should.
