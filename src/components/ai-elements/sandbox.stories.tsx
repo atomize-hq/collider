@@ -130,7 +130,18 @@ export const TabSwitchFlow: Story = {
     const outputTab = await canvas.findByRole('tab', { name: /output/i });
     await userEvent.click(outputTab);
     await waitFor(() => expect(outputTab).toHaveAttribute('data-state', 'active'));
-    await canvas.findByText(/Found 15 prime numbers/i);
+
+    // Assert on `textContent`, not `findByText`. Shiki's `log` grammar splits
+    // this line into five sibling spans -- "Found ", "15", " prime numbers up
+    // to ", "50", ":" -- and Testing Library's text matcher joins only an
+    // element's own direct text nodes, so once highlighting lands no element
+    // carries the phrase. `findByText` could therefore only ever match the
+    // raw-token fallback `createRawTokens` renders before shiki resolves, and
+    // the story passed only by winning that race. `textContent` traverses
+    // descendants, so it holds in both states -- the same reasoning
+    // `code-block.stories.tsx > AsyncHighlight` already records.
+    const output = await canvas.findByRole('group', { name: /log code/i });
+    await waitFor(() => expect(output).toHaveTextContent(/Found 15 prime numbers/i));
   },
 };
 

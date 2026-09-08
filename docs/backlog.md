@@ -492,95 +492,115 @@ migration diff makes both harder to review.
 
 ---
 
-## BL-6 — two Storybook stories fail on CI and pass locally
+## BL-6 — RESOLVED: two Storybook stories failed on CI and passed locally
 
-**Observed:** 2026-09-06 as an intermittent local failure; 2026-09-08 as a _reproducible_ CI
-failure. The 2026-09-08 entry supersedes the original diagnosis — read it first.
+**Raised:** 2026-09-06 as an apparent local flake. **Diagnosed and fixed:** 2026-09-08.
+**Two unrelated defects**, not one — the entry that treated them as a single phenomenon was
+wrong, and so was its error text. Corrections are called out inline below.
 
-Both failures were in the Playwright-backed Storybook projects, and both passed clean on an
-immediate re-run with no change:
+| project               | file                                                   | story           | actual failure                                                |
+| --------------------- | ------------------------------------------------------ | --------------- | ------------------------------------------------------------- |
+| `storybook`, `-light` | `src/components/ai-elements/sandbox.stories.tsx`       | Tab Switch Flow | `Unable to find an element with the text` — **not** a timeout |
+| `storybook`, `-light` | `storybook/stories/tokens/token-contracts.stories.tsx` | Docs            | `Test timed out in 15000ms`                                   |
 
-| run | project           | files reported                                                                  |
-| --- | ----------------- | ------------------------------------------------------------------------------- |
-| 1   | `storybook`       | `button-group.stories.tsx`, `card.stories.tsx`                                  |
-| 2   | `storybook-light` | `generated-token-docs.stories.tsx`, `badge.stories.tsx`, `artifact.stories.tsx` |
+**Correction to the 2026-09-08 entry this replaces.** It reported `Test timed out in 15000ms`
+as the error for all four failures. Only `token-contracts` timed out. `sandbox` failed on the
+assertion, in 4452 ms / 5374 ms of file time. The two have nothing in common but the run.
 
-Different files each time, so it is not story-specific. The failures are reported at **file**
-level rather than as assertion failures, which points at browser/worker startup rather than test
-logic. The timings support that: a 23s wall run reports `setup 96.84s, import 99.93s, tests
-135.66s` across workers, so the projects are heavily parallel and contending.
+### Defect 1 — `sandbox > Tab Switch Flow` asserted on a DOM that only exists before shiki lands
 
-Neither occurrence could be reproduced afterwards, so **no error text was captured** — the
-re-run was green before the output could be inspected. Next occurrence: capture the failing
-run's full output before re-running anything.
-
-### 2026-09-08 — captured on CI, and it is not a flake
-
-First occurrence with error text, and it **reproduces**: run
-[`34238311954`](https://github.com/atomize-hq/collider/actions/runs/34238311954) `Test All`, then
-the identical 4 failures again on `gh run rerun --failed`. Same files, same stories, same error.
+`await canvas.findByText(/Found 15 prime numbers/i)` can never match highlighted output. Shiki's
+`log` grammar splits that line into five sibling spans — measured, not assumed:
 
 ```
-Test timed out in 15000ms.
+[0] "Found "  [1] "15"  [2] " prime numbers up to "  [3] "50"  [4] ":"
 ```
 
-| project           | file                                                   | story           |
-| ----------------- | ------------------------------------------------------ | --------------- |
-| `storybook`       | `storybook/stories/tokens/token-contracts.stories.tsx` | Docs            |
-| `storybook-light` | `storybook/stories/tokens/token-contracts.stories.tsx` | Docs            |
-| `storybook`       | `src/components/ai-elements/sandbox.stories.tsx`       | Tab Switch Flow |
-| `storybook-light` | `src/components/ai-elements/sandbox.stories.tsx`       | Tab Switch Flow |
+Testing Library's text matcher joins only an element's **own direct text nodes**, so once those
+spans exist no element carries the phrase. Before shiki resolves, `createRawTokens` emits one
+token per whole line, so a single span holds the full text and the matcher hits. The story was
+therefore asserting on the pre-highlight fallback and passed only by winning a race.
 
-454 of 458 passed. `token-contracts` reported 25298 ms / 24311 ms at file level, against a
-15000 ms per-test timeout.
+That explains the behaviour the old entry could not: it failed **in isolation** (the preceding
+`Keyboard` story mounts the output tab, so the `log` tokens are already cached and the first
+render is highlighted) and passed **in the full run** (under load shiki had not resolved yet, so
+the raw fallback was still on screen). "Whatever makes it pass is a property of the full run" was
+right; the property was slowness.
 
-**Two corrections to the entry above.** It is not intermittent — two independent runs produced
-byte-identical failures. And it is not browser/worker startup: the tests start and run, they do
-not finish.
+Probe at assertion time on the fixed story confirms all three facts at once:
+`spansInFirstLine=5`, `oldMatcherHits=0`, `textContent="Found 15 prime numbers up to 50:"`.
 
-**The local suite does not catch it, and that is the finding.**
-`sandbox.stories.tsx > Tab Switch Flow` **fails locally in isolation** — `Unable to find an
-element with the text: /Found 15 prime numbers/i`, in about 1 s, which is `findByText`'s own
-default timeout — and **passes in the full 42-file project run**. Running
-`code-block.stories.tsx` first does not help, so it is not a module-scope shiki cache being
-warmed. Whatever makes it pass is a property of the full run, so **`just preflight` green is not
-evidence that this story works.** On CI the same story waits out the 15 s test timeout instead of
-failing fast. The text it waits for lives inside a `CodeBlock` with `language="log"`, so the
-story asserts on shiki-rendered output.
+**Fix:** assert on `textContent`, which traverses descendants and so holds in both states —
+the reasoning `code-block.stories.tsx > AsyncHighlight` already records for the same component.
+`sandbox` was the only story with this defect; the other 20 text queries were checked, and
+`terminal.stories.tsx:199` is the only other one inside streamed output, which does not go
+through shiki.
 
-**Not caused by the `ds-skills` cutover or the `shiki` pin**, checked rather than assumed:
+### Defect 2 — `token-contracts > Docs` is genuinely slower than the default budget
 
-- the identical sandbox failure reproduces with a **single shiki 4.4.3** in the tree, so BL-7's
-  pin is not the cause;
+Not a race. Vitest defaults `testTimeout` to **15 s in browser mode** (`resolved.testTimeout ??=
+resolved.browser.enabled ? 15e3 : 5e3`) — nothing in this repo had set it. The story renders the
+whole generated registry, 653 tokens, and the a11y addon then runs axe over every node.
+
+Measured by turning axe off for that story alone:
+
+|             | test time  |
+| ----------- | ---------- |
+| with axe    | **6.90 s** |
+| without axe | **0.42 s** |
+
+So ~94% of the cost is the audit, not the render. And the runner is **~3.7× slower** than this
+machine — a ratio that holds across two independent stories, so it is a usable multiplier:
+
+| story                                        | local  | CI                | budget              |
+| -------------------------------------------- | ------ | ----------------- | ------------------- |
+| `Contracts/Tokens > Docs`                    | 6.90 s | **25.0 / 25.8 s** | 15 s ✗              |
+| `Contracts/Generated Tokens > TokenRegistry` | 2.92 s | **11.3 / 11.5 s** | 15 s — 25% headroom |
+| next slowest (`sandbox`, 7 tests)            | —      | 5.4 s             | fine                |
+
+**This was never a one-story problem.** The second-slowest story sits at 11.3 s of a 15 s budget
+and would have become the next failure on any slower runner.
+
+**Fix:** `testTimeout: 60_000` on both browser projects in `vitest.config.ts`, sized from the
+25 s worst case. This keeps the audit whole rather than trimming what axe sees.
+
+Two things checked rather than assumed while choosing that knob:
+
+- `parameters: { test: { timeout: N } }` on a story is **silently ignored** by
+  `@storybook/addon-vitest` — a 1 ms budget still passed. Per-story timeouts do not exist here.
+- `testTimeout` in `vitest.config.ts` **is** honoured — the same 1 ms control produced
+  `Test timed out in 1ms`.
+
+### Residual — worth doing, deliberately not done here
+
+Auditing 653 structurally identical token cards costs ~50 s of CI wall time (two projects) for
+the a11y information of one card. Cutting it would change what the gate sees, and SPEC §8 makes
+"any change that weakens what `just preflight` catches" ask-first, so it is recorded rather than
+taken. If it is ever taken, the honest version bounds what the _story_ renders, not what axe is
+allowed to look at.
+
+### Why it stayed invisible so long
+
+`Test All` had been skipped in every earlier run of PR #1, behind a failing `Governance`. Before
+that, the last CI run to reach any conclusion on this repository was **2026-03-24** — the whole of
+Stage 2, the token work and the a11y gate landed with no CI at all. That run was this suite's
+first on a runner.
+
+### Not caused by the `ds-skills` cutover or the `shiki` pin
+
+Checked rather than assumed, and still true after diagnosis — both defects predate both changes:
+
+- the sandbox failure reproduces with a **single shiki 4.4.3** in the tree, so BL-7's pin is not
+  the cause;
 - `esbuild`, `vite@7.3.1`, `vitest@4.1.0` and `playwright@1.58.2` resolve identically before and
-  after the cutover, so dropping the direct `esbuild` devDependency changed no part of the
-  transform or browser toolchain;
+  after the cutover;
 - neither story file appears in either commit's diff.
 
-**Why it is only visible now.** `Test All` had been skipped in every previous run of PR #1, behind
-a failing `Governance`. Before that, the last CI run to reach any conclusion on this repository
-was **2026-03-24** — the whole of Stage 2, the token work and the a11y gate landed with no CI at
-all. This is the first time this suite has run on a runner.
+### The standing lesson
 
-**`chromatic-review` failed in the same run and the same way twice**: "Tested 229 stories across
-42 components; captured 226 snapshots and found 2 component errors", exit 2. Two errors out of
-229, rendering the same Storybook. Check whether they are these same two stories before treating
-it as separate.
-
-### Why it matters more than a normal flake
-
-CLAUDE.md's standard is "a pre-push hook runs `just preflight`, which mirrors CI — if it passes
-locally, CI passes." A gate that fails ~1 run in 5 for reasons unrelated to the diff trains
-people to re-run until green, which is the same reflex as `--no-verify`. It also makes a real
-regression indistinguishable from noise on first sight.
-
-### Where to start
-
-- Capture a failing run in full: `pnpm test:storybook 2>&1 | tee /tmp/sb.log`.
-- Check whether the two browser projects run concurrently and how many workers each gets;
-  `storybook` and `storybook-light` are the same 84 files rendered twice.
-- Consider bounding worker concurrency for the browser projects specifically, rather than for
-  the whole suite — the unit project is fast and unaffected.
+`just preflight` green was **not** evidence that the sandbox story worked — it passed there for
+the wrong reason. A test whose result depends on losing a race reports the timing, not the
+behaviour. Both fixes remove the timing dependence rather than widening a tolerance.
 
 ---
 
