@@ -30,11 +30,14 @@ runs:
         # §10.6: a job-local prefix under the runner temp dir. Every job installs;
         # nothing persists between them.
         #
-        # Emitted as an output as well as an env var, and the cache step reads the
-        # OUTPUT. Whether `env:` written here is visible to a later step's `with:`
-        # inside the same composite action is a detail I would be taking on faith;
-        # a step output is defined to be. The env var is still set, because the
-        # provisioning steps and the calling job both need it.
+        # Emitted as an output as well as an env var, and every step below reads
+        # the OUTPUT. Whether an `env:` written here reaches a later step of the
+        # same composite action is a detail I would be taking on faith; a step
+        # output is defined to. The env var is still written, because the CALLING
+        # job's later steps need it — but nothing inside this action depends on
+        # that write landing. A prefix that silently fell back to the default
+        # would install to the wrong place, cache an empty directory, and look
+        # like it worked.
         echo "prefix=$RUNNER_TEMP/ds-skills" >> "$GITHUB_OUTPUT"
         echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
 
@@ -56,11 +59,15 @@ runs:
     # touches no network.
     - name: Provision and verify
       shell: bash
+      env:
+        DS_SKILLS_PREFIX: ${{ steps.record.outputs.prefix }}
       run: node scripts/install-ds-skills.mjs
 
     - name: Resolve the executable
       id: resolve
       shell: bash
+      env:
+        DS_SKILLS_PREFIX: ${{ steps.record.outputs.prefix }}
       run: |
         set -euo pipefail
         executable="$(node scripts/install-ds-skills.mjs --print)"
