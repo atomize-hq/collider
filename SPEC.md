@@ -975,6 +975,14 @@ Executable at `<prefix>/bin/ds-skills` on Unix and `<prefix>\bin\ds-skills.cmd` 
 bash and PowerShell installers are a **matched pair**, not an afterthought: same prefix scheme,
 same verification, same failure modes.
 
+**Amended at T16b, from installing the real release rather than reading the staging script.** The
+payload unpacks as `bin/` + `lib/`, with the package root at `lib/` — so the identity a consumer
+checks lives at `<prefix>/<version>/lib/release.json`, and the skills' own copy at
+`<prefix>/<version>/lib/skills/RELEASE.json`. Both matter, because that pair is _how_ the skew
+rule below is checkable at all: one file alone can only say what it is, never that the two agree.
+A consumer reads those files; it does not run the binary to ask. Identity established by executing
+the thing whose identity is in question is not established.
+
 **Collider resolves the binary from the reviewed record's version at the version-specific path,
 never from PATH.** An ambient `ds-skills` on someone's machine must not be able to satisfy the
 gate — that is the difference between a pinned toolchain and a hope.

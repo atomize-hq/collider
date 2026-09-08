@@ -34,6 +34,8 @@
     "build:tokens": "node design-tokens/build/build-tokens.mjs",
     "validate:sync-ledger": "node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json",
     "validate:publish-proof": "node scripts/validate-publish-proof.mjs",
+    "ds-skills:install": "node scripts/install-ds-skills.mjs",
+    "ds-skills:check": "node scripts/install-ds-skills.mjs --check",
     "figma:plugin:build": "node scripts/build-figma-plugin.mjs",
     "figma:foundations:build": "node scripts/build-foundations-page.mjs",
     "figma:tokens:serve": "node scripts/serve-figma-tokens.mjs",

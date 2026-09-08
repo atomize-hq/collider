@@ -211,3 +211,105 @@ Two things that stay open:
   forking is ever enabled, job 7 skips on fork PRs, job 8 skips with it, and — by the same
   documented behaviour — a required job-8 check would pass by being skipped. Worth knowing before
   it becomes real rather than after.
+
+---
+
+## 7. Provisioning — how each environment gets the release (T16b)
+
+T16a chose the contract; this is what implements it. One resolver, one installer,
+one composite action, all reading the same reviewed record at
+[`ds-skills.release.json`](../ds-skills.release.json).
+
+### 7.1 The two halves, and why they are separate
+
+| Half        | Owner                               | Reaches the network        |
+| ----------- | ----------------------------------- | -------------------------- |
+| **Resolve** | `scripts/lib/ds-skills.mjs`         | never                      |
+| **Acquire** | `scripts/lib/ds-skills-acquire.mjs` | only when explicitly asked |
+
+Resolution answers "is the reviewed release here, and is it really it?" — from the
+version-specific path and the identity files the payload carries. Acquisition is a
+separate, explicit act. Keeping them apart is what lets the pre-push path check
+without installing, and what keeps a gate from quietly fetching mid-run.
+
+**Identity is read, never executed.** The payload unpacks as `bin/` + `lib/`, and
+carries `lib/release.json` (the CLI) and `lib/skills/RELEASE.json` (the skills)
+stamped at staging time. The resolver compares both against the record. Running an
+unknown binary to find out whether to trust it is not a check — so nothing is
+spawned to establish identity, and an ambient `ds-skills` on `PATH` is not read,
+not run, and not consulted.
+
+That the payload's identity lives at `lib/release.json` rather than the install
+root was found by installing the real release, not by reading the staging script.
+A fixture built from the layout this repo _expected_ would have passed against a
+resolver that could never work.
+
+### 7.2 Local (E1, E2, E4)
+
+```bash
+just ds-skills-install    # idempotent; a no-op when the pinned release is present
+just ds-skills-check      # verify only — acquires nothing, ever
+```
+
+`ds-skills-install` fetches the bootstrap from the release's own URL, verifies it
+against `bootstrap.sha256` in the record **before** executing it, and lets the
+bootstrap enforce the payload digests baked into itself. No authentication is
+sent: the release is public, and a token here would mean the path under test is
+not the path a fresh clone takes.
+
+**`just preflight` acquires nothing** (§10.7). A missing install fails with the
+exact command to run. This is enforced by a test that walks the whole preflight
+recipe graph, not just the recipe named `preflight` — an acquisition added three
+recipes deep would otherwise pass a one-line check.
+
+### 7.3 CI (E3)
+
+[`.github/actions/setup-ds-skills`](../.github/actions/setup-ds-skills/action.yml),
+used by the three jobs that invoke the rail — **1 `governance`, 4 `test-all`,
+8 `reusable-component-promotion`** (§5.4). One shared step, not eight copies.
+
+The other five jobs do not provision, because they do not invoke the rail: 2 and 3
+run the Storybook and static gates, 5 and 6 build, 7 publishes to Chromatic. A job
+that provisions a tool it never runs proves availability of nothing and hides which
+jobs actually depend on it. If a rail command moves into one of them, that job adds
+the step — and until then, the resolver's fail-closed behaviour is what would
+catch the omission, rather than a silent fallback.
+
+Installation goes to a job-local prefix under `RUNNER_TEMP`; nothing persists
+between jobs. The cache key carries the platform, the **measured** Node version,
+the release, and the record's own digest — measured rather than declared, because
+a job that quietly changed Node would otherwise reuse an install made under a
+different runtime.
+
+**A cache hit is not evidence.** The provisioning step re-verifies the restored
+tree against the record and reinstalls if it does not identify itself correctly,
+so a poisoned or half-written entry cannot be inherited. Both the executable path
+and the release read back off disk are reported per job.
+
+### 7.4 What the negative cases are
+
+Each of these is a way the pin could stop pinning while everything still looked
+green. All are covered by
+[`src/lib/tokens/ds-skills-provisioning.test.ts`](../src/lib/tokens/ds-skills-provisioning.test.ts).
+
+| Case                                     | Result                                     |
+| ---------------------------------------- | ------------------------------------------ |
+| nothing installed                        | `not-installed`, names the install command |
+| an unrelated `ds-skills` on `PATH`       | still `not-installed` — `PATH` is not read |
+| a different release installed            | `identity-mismatch`                        |
+| the right tag, a different commit        | `identity-mismatch`                        |
+| CLI and skills disagree                  | `skill-skew`                               |
+| a tree with no stamped identity          | `identity-missing` — a half-restored cache |
+| identified tree, no executable           | `executable-missing`                       |
+| an unsupported OS/arch                   | fails with the supported list, no download |
+| a record missing a required field        | throws; never defaults                     |
+| bootstrap bytes fail the reviewed digest | nothing is written, nothing is executed    |
+
+### 7.5 Skills are staged, not activated
+
+The release carries its skills at `lib/skills/`, with their own `RELEASE.json`.
+Collider does **not** read them yet: `.agents/skills` remains the frozen in-repo
+snapshot until T17 switches discovery. A half-flipped state, where some skills come
+from the install and some from the checkout, is the split authority this migration
+exists to end — so the staging is proven present and the activation is deliberately
+absent, both under test.

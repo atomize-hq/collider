@@ -65,6 +65,25 @@ figma-token-server:
     pnpm figma:tokens:serve
 
 # ══════════════════════════════════════════════════════════════════════════════
+# DS-SKILLS — the pinned design-system CLI
+# Collider runs the release named in ds-skills.release.json, resolved at its
+# version-specific path. An ambient `ds-skills` on your PATH is never used and
+# is never executed — not even to read its version.
+#
+# Provisioning is explicit and one-time. `just preflight` acquires nothing: if
+# the release is missing it fails and tells you to run the install recipe, so a
+# network outage can never turn into a failing push.
+# ══════════════════════════════════════════════════════════════════════════════
+
+# Install the pinned ds-skills release (idempotent; no-op when already present)
+ds-skills-install:
+    pnpm ds-skills:install
+
+# Verify the pinned release is present and correctly identified — acquires nothing
+ds-skills-check:
+    pnpm ds-skills:check
+
+# ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers
 # ══════════════════════════════════════════════════════════════════════════════
 
