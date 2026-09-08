@@ -294,6 +294,12 @@ is a detail that would have been taken on faith, and the failure it hides is
 quiet: a prefix falling back to the user-level default installs outside the
 job-local location, caches an empty directory, and looks like success.
 
+**The warm path has not been observed on CI, only locally.** `actions/cache@v4` does not save in
+its post step when the job has failed, and the first real run failed at `pnpm install` — so no
+cache entry exists yet and every run so far has been a cold miss. Cold 1078 ms / warm 207 ms are
+**E1 measurements**. Nothing about the warm path is unproven in kind, but nothing has proven it on
+a runner either, and the difference is worth keeping visible until T17 makes a job green.
+
 This was settled by **modelling the pessimistic case**, not by reasoning about it.
 The action's steps were executed locally with GitHub's `GITHUB_OUTPUT` /
 `GITHUB_ENV` semantics and then again with env propagation switched off entirely;
