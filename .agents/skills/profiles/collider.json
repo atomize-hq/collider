@@ -1,5 +1,5 @@
 {
-  "$comment": "Collider's values for the x-repo-profile extension points in ../schemas. Pass with --profile to check an artifact against Collider's vocabulary as well as the portable shape. A different repo writes its own file here and changes nothing in schemas/.",
+  "$comment": "Collider's values for the x-repo-profile extension points in the pinned ds-skills release's schemas. Pass with --profile to check an artifact against Collider's vocabulary as well as the portable shape. A different repo writes its own file here and changes nothing in schemas/.",
 
   "artifact-path": {
     "const": "design-tokens/dist/figma/tokens.json"

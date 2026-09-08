@@ -18,8 +18,16 @@ export const governanceSteps = [
     kind: 'node-script',
     scriptPath: 'scripts/validate-token-artifacts.mjs',
   },
+  // Runs after build:tokens, so the artifact it compares is the one this very
+  // process just produced from the commit under test — not a committed copy, not
+  // another job's filesystem, not a cache. Replaces figma-token-rail.test.ts,
+  // which asserted the same mapping by importing the rail.
+  { id: 'figma:verify', kind: 'pnpm-script', scriptName: 'figma:verify' },
   { id: 'validate:sync-ledger', kind: 'pnpm-script', scriptName: 'validate:sync-ledger' },
   { id: 'validate:figma-parity', kind: 'pnpm-script', scriptName: 'validate:figma-parity' },
+  // CT-7B was gated by nothing until now — the validator existed and no caller
+  // ran it. CT-7B and CT-8B are peer contracts; gating one was an accident.
+  { id: 'validate:publish-proof', kind: 'pnpm-script', scriptName: 'validate:publish-proof' },
 ];
 
 export function runTokenGovernance(options = {}) {

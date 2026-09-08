@@ -198,6 +198,13 @@ mapping" does not quietly discard the default-theme assertion:
 The expected side comes from the T1 baseline and is **never regenerated from the current
 artifact during preflight** — that would resurrect the self-referential test in a new form.
 
+**Resolved at T17, in favour of the first branch.** The shipped CLI's
+`figma verify --expect` requires `summary` and `variables` inline and follows no `mapping`
+pointer, and `figma baseline` owns the filename `token-rail.baseline.json` at both ends. So
+`figma/token-rail.baseline.json` **is** the expectations file, and no second file is created:
+duplicating the mapping across two records with nothing comparing them is the defect §5.5 exists
+to close, not a way to satisfy a name. See the disposition inventory §9.1.
+
 `figma verify` must also be bound to a **local artifact path**, separately from the plugin's
 serving origin. The config carries an artifact URL for the plugin; a gate command must not
 depend on a dev server or the network.

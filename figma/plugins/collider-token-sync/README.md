@@ -11,7 +11,7 @@ Then import `figma/plugins/collider-token-sync/manifest.json` into Figma
 
 ## Where the plugin actually lives
 
-The plugin source is [`@atomize-hq/figma-token-rail`](https://github.com/atomize-hq/figma-token-rail).
+The plugin source is [`@atomize-hq/ds-skills`](https://github.com/atomize-hq/ds-skills), the pinned release named in `ds-skills.release.json`.
 Everything specific to this repo is in [`figma/token-sync.config.json`](../../token-sync.config.json):
 the `Collider Tokens` collection name, the localhost artifact URL, the
 `com.atomizehq.collider` `$extensions` namespace, the `dark` default theme, and the
@@ -43,4 +43,4 @@ pnpm figma:tokens:serve
 
 The rail is unit-tested in its own repo. What this repo asserts — that _our_ artifact and _our_
 config produce the variable set we expect — is in
-[`src/lib/tokens/figma-token-rail.test.ts`](../../../src/lib/tokens/figma-token-rail.test.ts).
+`pnpm figma:verify`, which runs as a step of `pnpm govern:tokens`.

@@ -47,8 +47,8 @@ revision. See [`README.md`](./README.md).
 ## Seam-Owned Inputs
 
 - `src/figma/sync-ledger.json`
-- `node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json`
-- `node scripts/validate-figma-parity.mjs`
+- `pnpm validate:sync-ledger`
+- `pnpm validate:figma-parity`
 
 The ledger is the machine-readable truth for the current branch. This policy explains how to interpret `promotion.*` and `exceptions`; it does not replace the JSON contract.
 

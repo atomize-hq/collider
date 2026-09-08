@@ -259,3 +259,54 @@ established here from the caller, not improvised at T17.
   job 8 reports, and cannot block in CI at all. See
   [`ds-skills-boundary-contract.md`](ds-skills-boundary-contract.md) §2.3.
 - Reviewed before T12 starts.
+
+## 9. Corrections found at T17, by executing the inventory rather than reading it
+
+Three. All were found by doing the cutover, not by re-reading the plan.
+
+### 9.1 `figma/token-rail.expectations.json` is not created — the baseline **is** it
+
+SPEC §3.2 offered two shapes: an expectations file carrying the full expected
+mapping, **or** a small file referencing a baseline that does. The shipped CLI
+implements the first. `figma verify --expect <path>` requires `summary` and
+`variables` inline (`requireBaselineShape`) and follows no `mapping` pointer, and
+`figma baseline` writes and checks exactly the filename `token-rail.baseline.json`
+in its `--out` directory — so the pack owns that name at both ends.
+
+`figma/token-rail.baseline.json`, captured at T1, already has precisely that
+shape. Creating a second file to satisfy the criterion's wording would duplicate
+1435 lines across two records with nothing comparing them — the exact defect §3
+of this document identified between the ledger and the proof, reintroduced to
+close a naming gap. The criterion is therefore recorded as **superseded**: the
+expectations file exists, under the name the pack chose.
+
+### 9.2 One sync-ledger fixture is `data`, not `package-owned`
+
+§1.4 dispositioned all 11 `scripts/fixtures/sync-ledger/*` as `package-owned`,
+"they test the validator, not Collider". True of ten. `valid.sync-ledger.json`
+was also read by `storybook/reusable-component-promotion-gate.test.ts` as **input
+to a Collider gate test** — the deferred-parity ledger that test needs in order to
+assert `parity-rail-deferred`. The caller-graph pass in §"How the surface was
+found" swept `scripts/`, `src/`, `design-tokens/`, `storybook/` and `.github/` for
+_importers_; this is a path string in a fixture-copy list, so no import edge
+existed to find.
+
+Replaced by `scripts/fixtures/promotion-gate/{sync-ledger,publish-proof}.json`, a
+v3 pair: a ledger that really was published, whose parity is still deferred. Both
+files, because the v3 binding resolves the proof relative to the ledger — with the
+proof absent the gate still blocks, but on `ct8b-publication-unverified` rather
+than the deferral the test is about.
+
+### 9.3 An unlisted rail import in `token-build-contracts.test.ts`
+
+`src/lib/tokens/token-build-contracts.test.ts:9` imported `flattenTokenDocument`
+from `@atomize-hq/figma-token-rail` to assert that `$themeOverrides` does not leak
+into the flattened variable set. Not in §1.3, because §1.3 lists tests _of the
+rail_ and this is a test of Collider's token build that happened to borrow the
+rail's flattener. The **S1 path enumeration** is what caught it.
+
+The claim survives as `pnpm figma:verify`. Measured, by renaming `$themeOverrides`
+so it leaks: the old assertion compared two counts; `figma verify` reports
+`leafCount is 198, the baseline records 176`, a lost `light` theme, 198 differing
+variables and 198 theme-incomplete. Collider owns the artifact; the pack owns what
+flattening it means.

@@ -38,7 +38,7 @@ This stage is for composition:
 
 Produce or update some or all of:
 
-1. a composition plan — start from `../templates/composition-plan.template.json`. Stage 3 has
+1. a composition plan — start from `../../../.claude/skills/templates/composition-plan.template.json`. Stage 3 has
    not run yet, so no directory convention is established: agree the location with the repo
    before writing one, and do not assume an `assembly/` directory exists
 2. updated organism/layout components

@@ -14,7 +14,7 @@
 > **Token/variable drift is solved, separately.** The repo plugin's read-only `Check Drift` action
 > compares Figma's variables against `design-tokens/dist/figma/tokens.json` and records
 > `artifacts/figma/drift-report.json`. See [`src/figma/README.md`](../src/figma/README.md) and
-> the `@atomize-hq/figma-token-rail` package. That covers variables only, not component nodes.
+> the pinned `@atomize-hq/ds-skills` release. That covers variables only, not component nodes.
 
 ## Context
 

@@ -47,7 +47,7 @@ After the proof attempt, update [`src/figma/sync-ledger.json`](./sync-ledger.jso
 - Keep `promotion.parityMode="deferred"` unless governance has explicitly moved parity to required.
 - Set `promotion.highestEarnedLevel` to `D-publish-valid` only when the current artifact revision materialized successfully.
 - Use `exceptions=[]` on the happy path. Record one `exceptions[]` entry per unresolved blocker with `blocking`, `status`, and the affected `field`.
-- Re-run `node scripts/validate-sync-ledger.mjs src/figma/sync-ledger.json` and confirm the evaluator reports the intended state. `declared`, `verified-stale`, `blocked-exception`, and `incomplete` are all non-promotable outcomes.
+- Re-run `pnpm validate:sync-ledger` and confirm the evaluator reports the intended state. `declared`, `verified-stale`, `blocked-exception`, and `incomplete` are all non-promotable outcomes.
 
 ## If The Proof Is Blocked
 

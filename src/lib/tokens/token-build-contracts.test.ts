@@ -6,7 +6,6 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { preflightBuildArtifacts } from '../../../scripts/lib/token-build-preflight.mjs';
 import { loadBuildGraph } from '../../../scripts/lib/token-build-graph.mjs';
 import { generateTypedTokenModule } from '../../../scripts/lib/token-artifacts.mjs';
-import { flattenTokenDocument } from '@atomize-hq/figma-token-rail';
 
 const repoRoot = process.cwd();
 const stagedCssArtifactPath = path.join(repoRoot, 'design-tokens/dist/css/tokens.css');
@@ -105,7 +104,7 @@ describe('token build contracts', () => {
     }
   });
 
-  it('carries theme overrides without leaking them into the variable set', () => {
+  it('carries theme overrides under a key the token walker skips', () => {
     const figma = JSON.parse(fs.readFileSync(figmaArtifactPath, 'utf8')) as Record<string, unknown>;
     const overrides = figma.$themeOverrides as Record<string, unknown>;
 
@@ -113,11 +112,15 @@ describe('token build contracts', () => {
     // the document stays a single-theme artifact for every existing reader while
     // the publish plugin gets one Figma mode per theme out of the same file.
     expect(Object.keys(overrides)).toEqual(['light']);
-    const withOverrides = flattenTokenDocument(figma).length;
-    const withoutOverrides = flattenTokenDocument(
-      Object.fromEntries(Object.entries(figma).filter(([key]) => key !== '$themeOverrides'))
-    ).length;
-    expect(withOverrides).toBe(withoutOverrides);
+
+    // The other half of that claim — that the overrides really do stay out of the
+    // flattened variable set — used to be asserted here by importing the rail's
+    // flattener. It is now `pnpm figma:verify`, a step of `pnpm govern:tokens`,
+    // and it is a stronger check: renaming `$themeOverrides` so it leaks was
+    // measured to produce four diagnostics there (leafCount 198 vs 176, a lost
+    // `light` theme, 198 differing variables, 198 theme-incomplete) against this
+    // test's single count equality. Collider owns the artifact; the pack owns
+    // what flattening it means.
   });
 
   it('emits lexical ordering for css vars, token map keys, and figma json keys', async () => {

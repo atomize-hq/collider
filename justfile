@@ -75,13 +75,17 @@ figma-token-server:
 # network outage can never turn into a failing push.
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Install the pinned ds-skills release (idempotent; no-op when already present)
+# Install the pinned ds-skills release and point skill discovery at it
+# (idempotent; the install is a no-op when already present)
 ds-skills-install:
     pnpm ds-skills:install
+    pnpm ds-skills:link
 
 # Verify the pinned release is present and correctly identified — acquires nothing
 ds-skills-check:
     pnpm ds-skills:check
+    node scripts/ds-skills.mjs skills
+    pnpm ds-skills:link:check
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers

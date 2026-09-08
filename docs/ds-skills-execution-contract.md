@@ -325,11 +325,34 @@ green. All are covered by
 | a record missing a required field        | throws; never defaults                     |
 | bootstrap bytes fail the reviewed digest | nothing is written, nothing is executed    |
 
-### 7.5 Skills are staged, not activated
+### 7.5 Skills are activated at T17
 
-The release carries its skills at `lib/skills/`, with their own `RELEASE.json`.
-Collider does **not** read them yet: `.agents/skills` remains the frozen in-repo
-snapshot until T17 switches discovery. A half-flipped state, where some skills come
-from the install and some from the checkout, is the split authority this migration
-exists to end — so the staging is proven present and the activation is deliberately
-absent, both under test.
+Staged at T16b, switched at T17. The release carries its skills at `lib/skills/`
+with their own `RELEASE.json`; Collider now reads them.
+
+`.claude/skills` carries two owners in one directory. Collider owns
+`stack-orchestrator`, `stage-2-component-roundtrip-loop`,
+`stage-3-organism-layout-assembler`, `ai-elements`, `ai-elements-plate-builder`
+and `profiles/`, as tracked symlinks into `.agents/skills`. The release owns
+`stage-1-foundation-primitives-system`, `storybook-rigorous-spec-system`,
+`sync-quality-governor`, `schemas/` and `templates/`, as **generated** symlinks
+into the resolved install — written by `scripts/link-ds-skills.mjs`, gitignored
+because the target path is absolute and machine-specific.
+
+Symlinks, not copies. A copy is a second authority that goes stale in silence,
+which is what the removed `schemas/` fork had already done: it sat at ledger v2
+while the rail had moved to v3, and nothing in the repo could notice. A link
+cannot disagree with what it points at.
+
+Two checks, because there are two ways to be wrong:
+
+| check                       | question                                                             | failure                                           |
+| --------------------------- | -------------------------------------------------------------------- | ------------------------------------------------- |
+| `ds-skills skills`          | do the installed CLI and its skills share one release identity?      | `RAIL_SKILL_RELEASE` skew                         |
+| `pnpm ds-skills:link:check` | do Collider's agent-visible links resolve into the _pinned_ release? | `DS_SKILLS_LINK_STALE` / `DS_SKILLS_LINK_MISSING` |
+
+Both run in `just ds-skills-check`. The second compares the **resolved** target,
+not the link text: a link written against an earlier release resolves somewhere
+real, so "it exists" is not the question. Measured against a link repointed at a
+scratch directory, it reports the stale target and exits 2; against a deleted
+link, `DS_SKILLS_LINK_MISSING`.

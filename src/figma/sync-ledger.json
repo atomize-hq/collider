@@ -1,5 +1,5 @@
 {
-  "ledgerVersion": "2",
+  "ledgerVersion": "3",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
     "revision": "dc97a2671dbcc6e2a71873042566f4937b766d9d"
@@ -17,5 +17,9 @@
     "parityMode": "required",
     "highestEarnedLevel": "E-promotion-complete"
   },
-  "exceptions": []
+  "exceptions": [],
+  "publication": {
+    "proof": "./publish-proof.json",
+    "sha256": "1743b84408dd943480a49cd723186f8e82a75b74c917ecbabd150e0c01969167"
+  }
 }

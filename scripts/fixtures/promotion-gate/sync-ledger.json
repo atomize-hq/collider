@@ -1,5 +1,5 @@
 {
-  "ledgerVersion": "2",
+  "ledgerVersion": "3",
   "artifact": {
     "path": "design-tokens/dist/figma/tokens.json",
     "revision": "1111111111111111111111111111111111111111"
@@ -7,7 +7,7 @@
   "publish": {
     "mode": "plugin-import-manual",
     "tokensStudioCarrier": false,
-    "figmaFile": "figma://file/fixture-valid-sync-ledger"
+    "figmaFile": "figma://file/23PLdynlRYoBYQx9teoC8A"
   },
   "verification": {
     "materializationStatus": "passed",
@@ -15,8 +15,12 @@
   },
   "promotion": {
     "parityMode": "deferred",
-    "parityDeferredReason": "Parity remains deferred because the release-governed promotion gate is not yet in place for Collider.",
+    "parityDeferredReason": "Fixture: parity stays deferred so the promotion gate has a deferred rail to block on.",
     "highestEarnedLevel": "D-publish-valid"
   },
-  "exceptions": []
+  "exceptions": [],
+  "publication": {
+    "proof": "./publish-proof.json",
+    "sha256": "d6975d3f854e8b625d3b61072049d17e77711a4ef2548dcb3f22f84e470c8a09"
+  }
 }

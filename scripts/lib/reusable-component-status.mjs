@@ -6,8 +6,7 @@ import {
   defaultChromaticStatusMaxAgeMinutes,
   evaluateChromaticStatus,
 } from './chromatic-status-validator.mjs';
-import { defaultSyncLedgerPath } from './figma-parity.mjs';
-import { evaluateSyncLedgerConformance, loadAndValidateSyncLedger } from './sync-ledger.mjs';
+import { readDsSkillsResult } from './ds-skills-cli.mjs';
 import { validateComponentSpec } from './storybook-component-spec.mjs';
 import {
   defaultStorybookProofCoveragePath,
@@ -42,6 +41,12 @@ export const reusableComponentStatusMaxAgeMinutesEnvVar =
 
 const defaultComponentSpecsDir = 'storybook/component-specs';
 const unavailableSourceVersion = 'unavailable';
+
+// The two inputs the CT-8B rail reads, as paths passed to the CLI rather than
+// files opened here. They match the `validate:sync-ledger` script exactly; the
+// same ledger and the same profile answer both callers.
+const defaultSyncLedgerPath = 'src/figma/sync-ledger.json';
+const defaultRailProfilePath = '.agents/skills/profiles/collider.json';
 
 export function createReusableComponentStatus(options = {}) {
   const rootDir = path.resolve(options.rootDir ?? repoRoot);
@@ -167,40 +172,34 @@ export function validateReusableComponentStatusArtifact(data) {
   return errors;
 }
 
+/**
+ * The CT-8B rail of this report, and only the mapping to it.
+ *
+ * The evaluation — freshness, outcome, reason codes — comes from
+ * `ds-skills ledger validate --json`; this function opens neither the ledger nor
+ * the proof. What stays here is `claimRelevant`, which is a product policy about
+ * whether CT-8B applies to a given change class, not a rail question: the CLI
+ * answers "if the rail applies, what does it say?" and this decides whether it
+ * applies.
+ */
 function summarizeCt8b(context) {
   const base = createSummaryBase('CT-8B', 'THR-05', defaultSyncLedgerPath, context.claimRelevant);
-  const loaded = readJsonWithValidation(() =>
-    loadAndValidateSyncLedger(path.resolve(context.rootDir, defaultSyncLedgerPath))
+  const read = readDsSkillsResult(
+    ['ledger', 'validate', '--ledger', defaultSyncLedgerPath, '--profile', defaultRailProfilePath],
+    { cwd: context.rootDir }
   );
-  if (!loaded.ok) {
-    return buildErroredRail(base, loaded);
+  // An unavailable CLI, an unreadable ledger and an unparseable result are all
+  // "no answer", and all report as errored — never as a satisfied rail.
+  if (!read.ok || read.result.rail === null) {
+    return buildErroredRail(base, read);
   }
 
-  const ledger = loaded.data.data;
-  const conformance = evaluateSyncLedgerConformance(ledger);
-  const freshness = conformance.state === 'verified-stale' ? 'stale' : 'current';
-  const outcome = !context.claimRelevant
-    ? 'not-applicable'
-    : ledger.promotion.parityMode === 'deferred'
-      ? 'deferred'
-      : conformance.state === 'verified-current' &&
-          ledger.promotion.highestEarnedLevel === 'E-promotion-complete'
-        ? 'satisfied'
-        : 'unsatisfied';
-
+  const { rail } = read.result;
   return buildRail(base, {
-    freshness,
-    outcome,
-    sourceVersionOrRevision: `ledgerVersion:${ledger.ledgerVersion}|artifactRevision:${ledger.artifact.revision}`,
-    reasonCodes: !context.claimRelevant
-      ? []
-      : freshness === 'stale'
-        ? ['ct8b-parity-stale']
-        : outcome === 'deferred'
-          ? ['ct8b-parity-deferred']
-          : outcome === 'unsatisfied'
-            ? ['ct8b-parity-unsatisfied']
-            : [],
+    freshness: rail.freshness,
+    outcome: context.claimRelevant ? rail.outcome : 'not-applicable',
+    sourceVersionOrRevision: rail.sourceVersionOrRevision,
+    reasonCodes: context.claimRelevant ? rail.reasonCodes : [],
   });
 }
 

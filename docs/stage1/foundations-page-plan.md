@@ -143,7 +143,7 @@ light   primary 17.93  >  secondary 7.03  >  tertiary 4.84  >  dim (alpha)
 2. ~~Rename/delete the accent variables in Figma.~~ Done via `figma-use`. **Renaming rather than recreating is what made step 3 unnecessary** — VariableIDs survive a rename, so the 16 bindings on `accent/dark/primary` followed it to `accent/primary` with no rebinding at all.
 3. **TODO — manual.** Run the plugin to sync values. It is the only step that cannot be scripted, because the plugin is Figma UI. `pnpm figma:plugin:build` has already been run, so `code.js` is current.
    - Figma → Plugins → **Collider Token Sync**
-   - Start the artifact server first: `pnpm figma:tokens:serve` (script `scripts/serve-figma-tokens.mjs`, port overridable via `FIGMA_TOKEN_SERVER_PORT`). It refuses to boot if `design-tokens/dist/figma/tokens.json` is missing, so run `pnpm build:tokens` before it. There is also a `figma-tokens` entry in `.claude/launch.json`.
+   - Start the artifact server first: `pnpm figma:tokens:serve` (the pinned `ds-skills figma serve`). It refuses to boot if `design-tokens/dist/figma/tokens.json` is missing, so run `pnpm build:tokens` before it. There is also a `figma-tokens` entry in `.claude/launch.json`.
    - Leave the **Artifact URL** on its default `http://localhost:4173/design-tokens/dist/figma/tokens.json` and hit **Fetch**. (The file picker also works, but the URL path is the normal route and is what `manifest.json` whitelists under `devAllowedDomains`.)
    - **Sync Variables**
    - Expect 173 → 176: creates `core/color/neutral/400`, `core/color/neutral/600`, `core/color/violet/400`, and updates the changed per-mode values for `semantic/color/text/{secondary,tertiary,ai}` plus `accent/sidebar-primary` in light.

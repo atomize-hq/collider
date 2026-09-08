@@ -1539,7 +1539,7 @@ inherited. Proven by tampering with one, not by reading the code.
 
 ---
 
-### T17: Activate Collider's callers and delete what they supersede
+### T17: Activate Collider's callers and delete what they supersede — ✅ **DONE**
 
 **Description:** One atomic commit. Invocation changes, deletions, skill activation and the
 lockfile change land together, because the intermediate states are not independently green — and
@@ -1554,101 +1554,165 @@ cutover, after the release is immutable.
 
 _Activation — all of it, at once_
 
-- [ ] **Every** retained caller from T9 is switched, including the two the first draft missed:
+- [x] **Every** retained caller from T9 is switched, including the two the first draft missed:
       `summarizeCt8b()` in `reusable-component-status.mjs`, and the newly wired proof
       relationship check
-- [ ] `summarizeCt8b()` keeps its **mapping to a status rail** and loses all rail policy: it
+- [x] `summarizeCt8b()` keeps its **mapping to a status rail** and loses all rail policy: it
       spawns the CLI and parses the §4.3 result. The other 611 lines of that generator are
       untouched, and the **unaffected portions of its report are compared before and after** to
-      prove it
-- [ ] `figma/token-rail.expectations.json` created
-- [ ] `ds-skills figma verify` wired into `just preflight` **and into the required CI job named at
-      T16a**. No CI job runs preflight — it is the pre-push hook — and `figma-token-rail.test.ts`
-      runs today inside `just test-all`, which **is** a CI job. Wiring only preflight would delete
-      a CI gate while every job stayed green
-- [ ] **The required job's artifact path is established**: which step produces the artifact it
-      verifies, in what order, and that it belongs to the commit under test — not another job's
-      filesystem, a stale committed copy, or a cache
-- [ ] The provisioned CLI and skill assets are selected without ambient fallback: an unrelated
-      binary on `PATH` is **not executed at all**, not even to read its version. **No fallback to
-      the former implementation when the CLI is missing** — a missing tool is a failure, not a
-      downgrade
-- [ ] `just figma-plugin-build` calls the CLI; `scripts/build-figma-plugin.mjs` deleted
+      prove it — captured pre- and post-rewrite, `generatedAt` normalised, **byte-identical**.
+      The only difference anywhere in the report is inside the CT-8B rail itself:
+      `ledgerVersion:2` → `ledgerVersion:3`, caused by the data migration below, not by the
+      rewrite. `freshness` and `outcome` are unchanged
+- [x] ~~`figma/token-rail.expectations.json` created~~ — **superseded, see inventory §9.1.**
+      `figma verify --expect` requires `summary` and `variables` inline and follows no `mapping`
+      pointer; `figma baseline` owns the filename `token-rail.baseline.json` at both ends. The
+      T1 baseline already has exactly that shape, so it **is** the expectations file. A second
+      file would duplicate 1435 lines with nothing comparing them — the defect §5.5 exists to
+      close, reintroduced to satisfy a name
+- [x] `ds-skills figma verify` wired into `just preflight` **and into the required CI job named
+      at T16a** — as `governanceSteps[5]`, so one wiring reaches both: preflight step 1/5 is
+      `pnpm govern:tokens`, and so is the required `Governance` job
+- [x] **The required job's artifact path is established**: `governanceSteps[2]` is `build:tokens`,
+      which writes `design-tokens/dist/figma/tokens.json`; `figma:verify` is step 5 of the same
+      `pnpm govern:tokens` process, in the same job, reading the artifact that process just
+      produced from the commit under test. Not a committed copy — the artifact is gitignored;
+      not another job's filesystem — no `download-artifact` precedes it; not a cache — nothing
+      caches `design-tokens/dist`
+- [x] The provisioned CLI and skill assets are selected without ambient fallback. **Measured**
+      with a decoy `ds-skills` on `PATH` that prints on execution and an empty
+      `DS_SKILLS_PREFIX`: `pnpm validate:sync-ledger` exits **2** with `[DS_SKILLS_UNAVAILABLE]`
+      and the install command; `pnpm govern:tokens` exits 2; `summarizeCt8b()` reports
+      `freshness: missing`, `outcome: unsatisfied`, `ct-8b-missing` — never satisfied. The decoy
+      ran **zero** times, not even for `--version`
+- [x] `just figma-plugin-build` calls the CLI; `scripts/build-figma-plugin.mjs` deleted
 
 _Data migration — pre-computed at T14's rehearsal, so the cutover applies it_
 
-- [ ] `src/figma/sync-ledger.json` → `ledgerVersion: "3"` plus the `publication` binding. The
-      exact block, verified against the pack CLI before it was reverted:
-      `{"proof": "./publish-proof.json", "sha256": "1743b844…69167"}` — recompute the digest at
-      cutover rather than trusting this transcription, and note that
-      `src/figma/publish-proof.json` is already Prettier-stable, so `just fmt` cannot silently
-      move the bytes the digest binds to. **No fact changes**: all six §4 agreement facts and the
-      sufficiency check already hold between the v2 ledger and the existing proof, and
-      `dc97a26` is still the last commit to touch the artifact, so this is a shape migration only
-- [ ] Land it in the same commit as the code, never before: it fails `scripts/lib/sync-ledger.mjs`
-      and five tests until that module is gone
+- [x] `src/figma/sync-ledger.json` → `ledgerVersion: "3"` plus the `publication` binding. The
+      digest was **recomputed at cutover** rather than trusted from the transcription, and came
+      out identical: `1743b84408dd943480a49cd723186f8e82a75b74c917ecbabd150e0c01969167`. No fact
+      changed; `dc97a26` is still the last commit to touch the artifact
+- [x] Landed in the same commit as the code. Confirmed necessary rather than assumed: with the
+      new wiring in place and the v2 ledger still on disk, `ledger validate` reported
+      `[CT-8B_INVALID_LITERAL] ledgerVersion must be 3` and
+      `[CT-8B_MATERIALIZATION_REQUIRES_PUBLICATION]`
 
-- [ ] **Effective enforcement, not a caller.** For each retained check, record its mandatory
-      gate, the installed-CLI entry point, the consumer input it reads, the expected failure, and
-      negative-test evidence — then run that gate path with otherwise-valid data carrying one
-      violation, observe the diagnostic and the non-zero gate result, restore, observe success.
-      The regression must fail when the **integration edge** is cut in a disposable tree, not only
-      when the validator itself is broken: a test that calls the validator directly stays green
-      through exactly the defect this criterion exists to catch. A deliberately retired check gets
-      a recorded retirement, never an artificial caller. Prompted by `pnpm validate:sync-ledger`
-      and `pnpm validate:publish-proof`, which are the two zero-caller validators found so far
+- [x] **Effective enforcement, not a caller.** Each retained check was run through its mandatory
+      gate with otherwise-valid data carrying one violation, then restored:
+
+| check         | gate            | CLI entry point   | input                        | violation injected                                                       | result                                                                                 | restored |
+| ------------- | --------------- | ----------------- | ---------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- | -------- |
+| CT-8B ledger  | `govern:tokens` | `ledger validate` | ledger + profile             | `tokensStudioCarrier: true`                                              | `[CT-8B_INVALID_TOKENS_STUDIO_CARRIER_COMBINATION]`, exit 1                            | exit 0   |
+| CT-8B binding | `govern:tokens` | `ledger validate` | ledger + bound proof         | one second added to `attemptedAt`                                        | `[CT-8B_PUBLICATION_DIGEST_MISMATCH]`, exit 1 — while the proof alone stayed **valid** | exit 0   |
+| CT-7B proof   | `govern:tokens` | `proof validate`  | proof + profile              | `destination.name: NotCollider`, digest re-satisfied so only CT-7B fails | `[CT-7B_PUBLISH_PROOF_INVALID_LITERAL]`, exit 1                                        | exit 0   |
+| CT-15B parity | `govern:tokens` | `ledger parity`   | ledger + profile             | covered by the promotion-gate fixture pair                               | `outcome=deferred`, `ct8b-parity-deferred`                                             | —        |
+| rail mapping  | `govern:tokens` | `figma verify`    | config + baseline + artifact | `summary.leafCount: 175`                                                 | `[RAIL_VERIFY_SUMMARY_DRIFT]`, exit 1                                                  | exit 0   |
+
+**The integration edge, cut in a disposable tree.** `figma:verify` was removed from
+`governanceSteps` while the validator itself was left untouched, and the baseline was set to an
+absurd `leafCount: 999`. `pnpm govern:tokens` exited **0** — the gate dead, nothing noticing.
+Restoring only the one step line, with the same absurd baseline, produced
+`[RAIL_VERIFY_SUMMARY_DRIFT] leafCount is 176, the baseline records 999` and exit 1. Three
+tests in `token-governance.test.ts` fail on the cut: they assert the ordered step ids and the
+literal script commands, so the wiring is what is under test, not the validator.
+No check was retired, so no retirement record is owed.
 
 _Removal — nothing survives by living somewhere unusual_
 
-- [ ] Direct ledger-field reads, evaluator imports, the local parity implementation, the serve
+- [x] Direct ledger-field reads, evaluator imports, the local parity implementation, the serve
       implementation, the baseline implementation, the moved skill executables and superseded
-      wrappers are all removed
-- [ ] `src/lib/tokens/figma-token-rail.test.ts` deleted; the self-referential drift case not
+      wrappers are all removed — 9 scripts, 3 test files, 16 fixtures, the skill validator and
+      its test
+- [x] `src/lib/tokens/figma-token-rail.test.ts` deleted; the self-referential drift case not
       carried over anywhere
-- [ ] `@atomize-hq/figma-token-rail` gone from `package.json`; lockfile regenerated and its edges
-      removed. The pnpm-version-dependent git-dependency install (T7) ends here — it does not
-      justify broadening this migration into supporting arbitrary package-manager versions
-- [ ] **Inline workflow and task-runner bodies are audited as well as files.** Moving an algorithm
-      into a `justfile` recipe or a CI `run:` block does not satisfy the ownership boundary
-- [ ] The generated-plugin exception stays narrow: generated output crosses; product-owned builder
-      source and handwritten or generated governance implementations do not
-- [ ] **Skill cutover**, which T9's executable inventory does not cover: activate the approved
-      release's assets, remove or replace superseded consumer copies, update the canonical
-      editing rule, retarget `.claude/skills` discovery, and detect a stale asset or a skill/CLI
-      release mismatch
-- [ ] Agent-visible skills — not just the copies inside the tarball — belong to the selected
-      release and carry no references to removed scripts
+- [x] `@atomize-hq/figma-token-rail` gone from `package.json`; lockfile regenerated, all three
+      edges removed. The pnpm-version-dependent git-dependency install ends here —
+      `pnpm install --frozen-lockfile` no longer needs SSH access to a private repo, which is
+      what was failing every CI run since the PR opened. **A fourth edge went with it**:
+      `esbuild`, which the lockfile recorded as the rail's resolution suffix
+      (`…#b00a82d8(esbuild@0.25.12)`) and which Collider carried as a direct devDependency only
+      to satisfy the rail's optional peer. T14 removed that peer from the pack — the plugin
+      bundle is prebuilt — so nothing was left to satisfy. `knip` had flagged it as unused on
+      `HEAD` too, so this is the removal of a dependency whose reason to exist ended, not a
+      regression this task introduced
+- [x] **Inline workflow and task-runner bodies audited as well as files.** Every `run:` line in
+      the 8 CI jobs and every `justfile` recipe re-read: the justfile calls `pnpm` scripts, the
+      `pnpm` scripts call `node scripts/ds-skills.mjs` with arguments only. No algorithm moved
+      into a recipe or a `run:` block
+- [x] The generated-plugin exception stays narrow: `figma/plugins/collider-token-sync/` output is
+      gitignored except its `README.md`; the builder source is deleted
+- [x] **Skill cutover.** The release owns `stage-1-foundation-primitives-system`,
+      `storybook-rigorous-spec-system`, `sync-quality-governor`, `schemas/` and `templates/`;
+      Collider's forks of all five are removed. `scripts/link-ds-skills.mjs` writes generated,
+      gitignored symlinks into the resolved install; `--check` compares the **resolved** target
+      so a link written against an earlier release is caught rather than merely existing.
+      Inverse-controlled both ways: `DS_SKILLS_LINK_STALE` against a repointed link,
+      `DS_SKILLS_LINK_MISSING` against a deleted one. The canonical editing rule in
+      `.agents/skills/README.md` is rewritten for two owners in one directory — and its claim
+      that `.agents` is gitignored was stale, contradicted by `.gitignore` itself
+- [x] Agent-visible skills belong to the selected release and carry no references to removed
+      scripts. **The fork was already stale**: Collider's `schemas/sync-ledger.schema.json` was
+      still v2 while the rail had moved to v3, and nothing in the repo could notice. That is the
+      concrete failure the link replaces
 
 **Verification:**
 
-- [ ] **S2** — by the two complementary tests in `SPEC.md` §7.2, **not** an isolated worktree:
-      an isolated worktree's own preflight regenerates the artifact, which isolates the blast
-      radius rather than the overwrite. (1) artifact rejection against a corrupted artifact in a
-      location `build:tokens` does not overwrite; (2) gate propagation under unmodified preflight
-      with a **persistent** expectation mismatch. The evidence must identify the actual input read
-      at verification time
-- [ ] **S4** — manifest byte-identical to the T1 baseline, independently generated
-- [ ] **S1** — enumerate paths **before** inspecting contents (`git ls-files -z | xargs -0 grep`),
-      across `src/`, `scripts/`, `.agents/`, `justfile`, `package.json`, `.github/`, for both
-      package names. A content filter that also matches path text hides real hits — that is how
-      `pack-check.sh:18` survived a `grep -v node_modules` at T7. T9 inventory fully resolved
-- [ ] `rm -rf node_modules && pnpm install --frozen-lockfile && just preflight` passes
-- [ ] Clear `node_modules/.cache/storybook` before blaming any failure on this change
+- [x] **S2** — both complementary tests. (1) **Artifact rejection**: `$themeOverrides` renamed so
+      it leaks, in a scratch location `build:tokens` does not overwrite → four diagnostics
+      (`leafCount is 198, the baseline records 176`; the `light` theme lost; 198 differing
+      variables; 198 theme-incomplete), exit 1. (2) **Gate propagation**: `summary.leafCount`
+      set to 175 in the committed baseline, then **unmodified** `pnpm govern:tokens` →
+      `[RAIL_VERIFY_SUMMARY_DRIFT]`, exit 1, green again on restore. The mismatch survives
+      `build:tokens` regenerating the artifact two steps earlier, because the baseline is not
+      regenerated — which is what makes it persistent. The input read at verification time is
+      `design-tokens/dist/figma/tokens.json`, written by `governanceSteps[2]` of the same process
+- [x] **S4** — the manifest regenerated by `pnpm figma:plugin:build` through the CLI is
+      byte-identical to the T1 baseline: sha256 `df45a8de…b928bc`, 373 bytes, independently
+      recomputed after deleting the file. The plugin's `code.js` and `ui.html` do differ — the
+      pack's bundle gained the drift-report feature between `figma-token-rail` v0.3.0 and
+      `ds-skills` v0.4.0 — and both are gitignored, so neither enters the repo
+- [x] **S1** — paths enumerated before contents (`git ls-files -z | xargs -0 grep -l`). It found
+      a live import no inventory listed: `token-build-contracts.test.ts:9`. Four mentions of the
+      retired package survive, all correct: `SPEC.md` (this migration's own spec), the two T1
+      baselines (`railDependency` is provenance — what produced the reference), and one comment
+      in `token-governance.mjs` naming the test the step replaces
+- [x] `rm -rf node_modules && pnpm install --frozen-lockfile && just preflight` passes —
+      262 unit + 458 Storybook tests, Rust clean
+- [x] `node_modules/.cache/storybook` cleared before the run
 
 > **Hold point** — one consumer change switches all required callers and removes the superseded
-> implementations, with no intermediate split-authority state.
+> implementations, with no intermediate split-authority state. **Held.**
 
 **Dependencies:** T16b
-**Files likely touched:** 2 deleted, 1 new JSON, `justfile`, `package.json`, `pnpm-lock.yaml`,
-`reusable-component-status.mjs`, plus T9's switched callers
-**Scope:** L — atomic by necessity
+**Files touched:** 31 deleted, 3 new scripts, 2 new fixtures, `justfile`, `package.json`,
+`pnpm-lock.yaml`, `.gitignore`, the ledger, `token-governance.mjs`,
+`reusable-component-status.mjs`, 5 test files, 8 status fixtures, 7 docs
+**Scope:** L — atomic by necessity. **Done.**
+
+**What it changed about the plan, all discovered by executing rather than reading:**
+
+1. **The expectations file is the baseline** (inventory §9.1). The pack owns the filename at both
+   ends; a second file would have been duplication with no cross-check.
+2. **One sync-ledger fixture was misdispositioned** (§9.2). Ten test the validator; one was input
+   to a Collider gate test. The caller-graph pass looked for import edges, and a path string in a
+   fixture-copy list is not one.
+3. **An unlisted rail import** (§9.3), caught by the S1 enumeration, not by the inventory.
+4. **The test workspaces were incomplete.** Both status-generator test workspaces copied the
+   ledger without the proof or the profile. Under v3 that is not a valid workspace, and the gate
+   said so — correctly, by reporting `ct8b-publication-unverified` rather than assuming.
 
 ---
 
-> ### ✅ Checkpoint: The boundary holds
+> ### ✅ Checkpoint: The boundary holds — **reached**
 >
-> - [ ] **S1**, **S2**, **S3**, **S4** hold
-> - [ ] `just preflight` green from a clean install
+> - [x] **S1** holds — enumerated by path; the four surviving mentions are the spec, two
+>       provenance fields and one historical comment
+> - [x] **S2** holds — both complementary tests, each with a rail-specific diagnostic
+> - [x] **S3** holds — the drift check's expected side is the T1 baseline, never regenerated
+>       during preflight
+> - [x] **S4** holds — manifest byte-identical, independently regenerated
+> - [x] `just preflight` green from a clean install
 
 ---
 
