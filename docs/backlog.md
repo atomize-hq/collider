@@ -278,6 +278,37 @@ one story per token family — each within limits — rather than truncating one
 reconciled only because two mistakes cancelled. With the two contract stories now disabled, the
 next build attempts 224.
 
+#### Outcome — build 23 passed, and the whole run is green
+
+[`34248843764`](https://github.com/atomize-hq/collider/actions/runs/34248843764), all **8 jobs
+green**, the first fully green run on this repository since **2026-03-24**.
+
+```
+✔ Build 23 passed!
+    → Tested 229 stories across 42 components; captured 224 snapshots in 1 minute 21 seconds
+224 visual changes were found in this build.
+```
+
+224 captured is exactly the 226 attempted minus the two now disabled, so nothing else regressed
+into or out of the snapshot set.
+
+**`Reusable Component Promotion` ran** — success, not skipped — for the first time since 24 March.
+That clears the knock-on this item opens with. **It ran; it did not enforce**: CI still passes
+`REUSABLE_COMPONENT_PROMOTION_CHANGE_CLASS: unknown`, so `changeClassSource` is `heuristic`,
+`blockingAllowed` is false and `enforcementMode` is `advisory`. Two of the three mechanisms that
+make CT-8B inert are untouched by this; only the `needs:` skip is gone.
+
+**Still open, and now unblocked rather than blocked:**
+
+- **Step 2 — accept the baselines.** All 224 are new, so `diffOutcome` is `changed`, which maps to
+  check conclusion `neutral` and exits 0 under `exitZeroOnChanges`. The job is green _because_
+  changes do not fail it, not because the snapshots have been reviewed. Nothing in Chromatic means
+  anything until someone accepts them.
+- **Steps 3–4** — re-pin the CT-10B provenance marker and regenerate the eight CT-12B fixtures,
+  both of which needed a real review to exist first. They now have one.
+- Item 4's original worry stands and is now measured: **224 snapshots per build, ×2 if a light
+  mode is ever added**. Check the plan allowance before this runs on every push.
+
 ---
 
 ## BL-3 — `@atomize-hq/figma-token-rail` is not installable outside this machine
