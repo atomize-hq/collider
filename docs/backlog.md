@@ -492,9 +492,10 @@ migration diff makes both harder to review.
 
 ---
 
-## BL-6 — `just preflight` intermittently fails in the Storybook browser projects
+## BL-6 — two Storybook stories fail on CI and pass locally
 
-**Observed:** 2026-09-06, twice in one session, on doc-only commits that touched no component.
+**Observed:** 2026-09-06 as an intermittent local failure; 2026-09-08 as a _reproducible_ CI
+failure. The 2026-09-08 entry supersedes the original diagnosis — read it first.
 
 Both failures were in the Playwright-backed Storybook projects, and both passed clean on an
 immediate re-run with no change:
@@ -512,6 +513,59 @@ logic. The timings support that: a 23s wall run reports `setup 96.84s, import 99
 Neither occurrence could be reproduced afterwards, so **no error text was captured** — the
 re-run was green before the output could be inspected. Next occurrence: capture the failing
 run's full output before re-running anything.
+
+### 2026-09-08 — captured on CI, and it is not a flake
+
+First occurrence with error text, and it **reproduces**: run
+[`34238311954`](https://github.com/atomize-hq/collider/actions/runs/34238311954) `Test All`, then
+the identical 4 failures again on `gh run rerun --failed`. Same files, same stories, same error.
+
+```
+Test timed out in 15000ms.
+```
+
+| project           | file                                                   | story           |
+| ----------------- | ------------------------------------------------------ | --------------- |
+| `storybook`       | `storybook/stories/tokens/token-contracts.stories.tsx` | Docs            |
+| `storybook-light` | `storybook/stories/tokens/token-contracts.stories.tsx` | Docs            |
+| `storybook`       | `src/components/ai-elements/sandbox.stories.tsx`       | Tab Switch Flow |
+| `storybook-light` | `src/components/ai-elements/sandbox.stories.tsx`       | Tab Switch Flow |
+
+454 of 458 passed. `token-contracts` reported 25298 ms / 24311 ms at file level, against a
+15000 ms per-test timeout.
+
+**Two corrections to the entry above.** It is not intermittent — two independent runs produced
+byte-identical failures. And it is not browser/worker startup: the tests start and run, they do
+not finish.
+
+**The local suite does not catch it, and that is the finding.**
+`sandbox.stories.tsx > Tab Switch Flow` **fails locally in isolation** — `Unable to find an
+element with the text: /Found 15 prime numbers/i`, in about 1 s, which is `findByText`'s own
+default timeout — and **passes in the full 42-file project run**. Running
+`code-block.stories.tsx` first does not help, so it is not a module-scope shiki cache being
+warmed. Whatever makes it pass is a property of the full run, so **`just preflight` green is not
+evidence that this story works.** On CI the same story waits out the 15 s test timeout instead of
+failing fast. The text it waits for lives inside a `CodeBlock` with `language="log"`, so the
+story asserts on shiki-rendered output.
+
+**Not caused by the `ds-skills` cutover or the `shiki` pin**, checked rather than assumed:
+
+- the identical sandbox failure reproduces with a **single shiki 4.4.3** in the tree, so BL-7's
+  pin is not the cause;
+- `esbuild`, `vite@7.3.1`, `vitest@4.1.0` and `playwright@1.58.2` resolve identically before and
+  after the cutover, so dropping the direct `esbuild` devDependency changed no part of the
+  transform or browser toolchain;
+- neither story file appears in either commit's diff.
+
+**Why it is only visible now.** `Test All` had been skipped in every previous run of PR #1, behind
+a failing `Governance`. Before that, the last CI run to reach any conclusion on this repository
+was **2026-03-24** — the whole of Stage 2, the token work and the a11y gate landed with no CI at
+all. This is the first time this suite has run on a runner.
+
+**`chromatic-review` failed in the same run and the same way twice**: "Tested 229 stories across
+42 components; captured 226 snapshots and found 2 component errors", exit 2. Two errors out of
+229, rendering the same Storybook. Check whether they are these same two stories before treating
+it as separate.
 
 ### Why it matters more than a normal flake
 
