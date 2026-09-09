@@ -14,7 +14,6 @@ export const recipeFilesGlob = 'design-tokens/src/recipes/*.recipe.json';
 
 export const themeRegistryPath = path.join(tokenSourceRoot, 'themes/registry.json');
 export const recipeSchemaPath = path.join(recipeSourceRoot, 'schema/recipe.schema.json');
-export const pilotComponentsPath = path.join(recipeSourceRoot, 'pilot-components.json');
 export const runtimeInventoryPath = path.join(
   tokenSourceRoot,
   'migrations/runtime-variable-inventory.json'

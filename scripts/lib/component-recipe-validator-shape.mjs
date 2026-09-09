@@ -104,6 +104,7 @@ function validateDefaults(defaults, rules) {
   const error =
     expectObject(defaults, '$.defaults', 'defaults must be an object') ??
     expectRequired(defaults, rules.defaultsRequired, '$.defaults') ??
+    expectNoExtras(defaults, rules.defaultsRequired, '$.defaults', 'defaults') ??
     expectValue(
       isObject(defaults.variants) && Object.keys(defaults.variants).length > 0,
       '$.defaults.variants',
@@ -186,6 +187,7 @@ function validateFallbacks(fallbacks, rules) {
   const error =
     expectObject(fallbacks, '$.fallbacks', 'fallbacks must be an object') ??
     expectRequired(fallbacks, rules.fallbacksRequired, '$.fallbacks') ??
+    expectNoExtras(fallbacks, rules.fallbacksRequired, '$.fallbacks', 'fallbacks') ??
     expectValue(
       fallbacks.missingVariantBehavior === 'use-defaults',
       '$.fallbacks.missingVariantBehavior',

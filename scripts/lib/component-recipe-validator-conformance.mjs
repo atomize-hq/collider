@@ -1,67 +1,7 @@
-import {
-  diag,
-  formatPath,
-  isObject,
-  readJson,
-  resolveFiles,
-} from './component-recipe-validator-shared.mjs';
+import { diag, formatPath, isObject } from './component-recipe-validator-shared.mjs';
 
-export function createActivePilotRegistry(pilot) {
-  if (!isObject(pilot)) {
-    throw new Error('recipe validator setup: $ [startup] pilot registry must be an object');
-  }
-  if (pilot.registryVersion !== '1') {
-    throw new Error('recipe validator setup: $ [startup] pilot registryVersion must be "1"');
-  }
-  if (!Array.isArray(pilot.components)) {
-    throw new Error(
-      'recipe validator setup: $ [startup] pilot registry components must be an array'
-    );
-  }
-
-  const active = new Map();
-  for (const item of pilot.components) {
-    if (!isObject(item) || typeof item.componentId !== 'string') {
-      throw new Error(
-        'recipe validator setup: $ [startup] pilot registry components require componentId'
-      );
-    }
-    if (item.pilotStatus === 'active') {
-      active.set(item.componentId, item);
-    }
-  }
-  return active;
-}
-
-export function buildTokenInventory() {
-  const ids = new Set();
-  const tokenFiles = resolveTokenFiles('design-tokens/src/tokens/**/*.tokens.json');
-
-  for (const filePath of tokenFiles) {
-    collectTokenIds(readJson(filePath, true), tokenIdPrefix(filePath), ids);
-  }
-
-  return ids;
-}
-
-export function validatePilotConformance(recipe, activePilots, tokenInventory, rules) {
-  return (
-    validatePilotContract(recipe, activePilots) ??
-    validateTokenLeaves(recipe.slots, '$.slots', tokenInventory, rules) ??
-    validateTokenLeaves(recipe.states, '$.states', tokenInventory, rules)
-  );
-}
-
-export function validatePilotContract(recipe, activePilots) {
-  const pilot = activePilots.get(recipe.componentId);
-  if (!pilot) {
-    return diag(
-      '$.componentId',
-      'pilot-component',
-      `component "${recipe.componentId}" is not an active pilot component`
-    );
-  }
-
+/** Validate relationships inside a shape-valid recipe, without a second declaration. */
+export function validateRecipeConsistency(recipe) {
   const axes = new Map();
   for (const [index, axis] of recipe.variantAxes.entries()) {
     if (axes.has(axis.name)) {
@@ -71,134 +11,76 @@ export function validatePilotContract(recipe, activePilots) {
         `duplicate axis "${axis.name}"`
       );
     }
-    axes.set(axis.name, { index, values: axis.values });
+    axes.set(axis.name, axis.values);
   }
-
-  const expectedAxes = new Map(pilot.variantAxes.map((axis) => [axis.name, axis.values]));
-  const axisError = validateSet(
-    [...axes.keys()],
-    [...expectedAxes.keys()],
-    '$.variantAxes',
-    'axis names'
-  );
-  if (axisError) return axisError;
-
-  for (const [name, expectedValues] of expectedAxes.entries()) {
-    const actual = axes.get(name);
-    const valueError = validateSet(
-      actual.values,
-      expectedValues,
-      `$.variantAxes[${actual.index}].values`,
-      `axis "${name}" values`
-    );
-    if (valueError) return valueError;
-  }
-
-  const defaultsError = validateSet(
-    Object.keys(recipe.defaults.variants),
-    [...expectedAxes.keys()],
-    '$.defaults.variants',
-    'default variant keys'
-  );
-  if (defaultsError) return defaultsError;
 
   for (const [name, value] of Object.entries(recipe.defaults.variants)) {
-    if (value !== pilot.defaults.variants[name]) {
-      return diag(
-        `$.defaults.variants${formatPath(name)}`,
-        'pilot-default',
-        `default for "${name}" must be "${pilot.defaults.variants[name]}"`
-      );
+    const values = axes.get(name);
+    const target = `$.defaults.variants${formatPath(name)}`;
+    if (!values) return diag(target, 'default-axis', `unknown default variant axis "${name}"`);
+    if (!values.includes(value)) {
+      return diag(target, 'default-value', `unknown default value "${value}" for axis "${name}"`);
     }
   }
-  if (recipe.defaults.state !== pilot.defaults.state) {
-    return diag(
-      '$.defaults.state',
-      'pilot-default',
-      `default state must be "${pilot.defaults.state}"`
-    );
+  for (const name of axes.keys()) {
+    if (!Object.hasOwn(recipe.defaults.variants, name)) {
+      return diag('$.defaults.variants', 'default-axis', `missing default for axis "${name}"`);
+    }
   }
 
-  const slotError = validateSet(Object.keys(recipe.slots), pilot.slots, '$.slots', 'slot names');
-  if (slotError) return slotError;
-
-  const stateError = validateSet(
-    Object.keys(recipe.states),
-    pilot.states,
-    '$.states',
-    'state names'
-  );
-  if (stateError) return stateError;
-
-  for (const [stateName, overrides] of Object.entries(recipe.states)) {
-    for (const slotName of Object.keys(overrides)) {
-      if (!pilot.slots.includes(slotName)) {
+  const states = new Set(Object.keys(recipe.states));
+  if (!states.has(recipe.defaults.state)) {
+    return diag(
+      '$.defaults.state',
+      'default-state',
+      `unknown default state "${recipe.defaults.state}"`
+    );
+  }
+  const slots = new Set(Object.keys(recipe.slots));
+  for (const [state, overrides] of Object.entries(recipe.states)) {
+    const target = `$.states${formatPath(state)}`;
+    if (!isObject(overrides)) {
+      return diag(target, 'state-slots', 'state overrides must be an object keyed by slot name');
+    }
+    for (const slot of Object.keys(overrides)) {
+      if (!slots.has(slot)) {
         return diag(
-          `$.states${formatPath(stateName)}${formatPath(slotName)}`,
-          'pilot-slot',
-          `unknown slot "${slotName}" for state "${stateName}"`
+          `${target}${formatPath(slot)}`,
+          'state-slot',
+          `unknown slot "${slot}" for state "${state}"`
         );
       }
     }
   }
+  return validateStateFallbacks(recipe.fallbacks.stateFallbacks, states);
+}
 
-  if (recipe.fallbacks.missingVariantBehavior !== pilot.fallbacks.missingVariantBehavior) {
-    return diag(
-      '$.fallbacks.missingVariantBehavior',
-      'pilot-fallback',
-      `missingVariantBehavior must be "${pilot.fallbacks.missingVariantBehavior}"`
-    );
+function validateStateFallbacks(fallbacks, states) {
+  for (const [state, target] of Object.entries(fallbacks)) {
+    const jsonPath = `$.fallbacks.stateFallbacks${formatPath(state)}`;
+    if (!states.has(state))
+      return diag(jsonPath, 'fallback-state', `unknown fallback state "${state}"`);
+    if (!states.has(target))
+      return diag(jsonPath, 'fallback-target', `unknown fallback target "${target}"`);
   }
-
-  const fallbackError = validateSet(
-    Object.keys(recipe.fallbacks.stateFallbacks),
-    Object.keys(pilot.fallbacks.stateFallbacks),
-    '$.fallbacks.stateFallbacks',
-    'state fallback keys'
-  );
-  if (fallbackError) return fallbackError;
-
-  for (const [name, value] of Object.entries(recipe.fallbacks.stateFallbacks)) {
-    if (value !== pilot.fallbacks.stateFallbacks[name]) {
-      return diag(
-        `$.fallbacks.stateFallbacks${formatPath(name)}`,
-        'pilot-fallback',
-        `fallback for "${name}" must be "${pilot.fallbacks.stateFallbacks[name]}"`
-      );
+  // Every chain must terminate. A cycle otherwise passes name validation but can
+  // never produce a fallback, including the one-state self-reference case.
+  for (const start of Object.keys(fallbacks)) {
+    const seen = new Set();
+    let cursor = start;
+    while (Object.hasOwn(fallbacks, cursor)) {
+      if (seen.has(cursor)) {
+        return diag(
+          `$.fallbacks.stateFallbacks${formatPath(start)}`,
+          'fallback-cycle',
+          `fallback cycle from state "${start}"`
+        );
+      }
+      seen.add(cursor);
+      cursor = fallbacks[cursor];
     }
   }
-
   return null;
-}
-
-function collectTokenIds(node, trail, ids) {
-  if (!isObject(node)) return;
-  if ('$value' in node && '$type' in node) {
-    ids.add(trail.join('.'));
-    return;
-  }
-  for (const [key, value] of Object.entries(node)) {
-    if (!key.startsWith('$')) {
-      collectTokenIds(value, [...trail, key], ids);
-    }
-  }
-}
-
-function tokenIdPrefix(filePath) {
-  // Theme files publish already-qualified paths (e.g. `semantic.color.…`), so they add no prefix.
-  if (filePath.includes('/themes/')) return [];
-  // Every other token file is keyed by its family name, matching `inferFamily` in the build graph.
-  const match = /\/([a-z][a-z0-9-]*)\.tokens\.json$/.exec(filePath);
-  return match ? [match[1]] : [];
-}
-
-function resolveTokenFiles(pattern) {
-  const nestedFiles = resolveFiles(pattern);
-  const rootPattern = pattern.replace('/**/*.tokens.json', '/*.tokens.json');
-  const rootFiles = rootPattern === pattern ? [] : resolveFiles(rootPattern);
-  return [...new Set([...nestedFiles, ...rootFiles])].sort((left, right) =>
-    left.localeCompare(right)
-  );
 }
 
 export function validateTokenLeaves(node, jsonPath, tokenInventory, rules) {
@@ -228,16 +110,4 @@ export function validateTokenLeaves(node, jsonPath, tokenInventory, rules) {
   }
 
   return null;
-}
-
-function validateSet(actual, expected, jsonPath, label) {
-  const extras = actual.filter((value) => !expected.includes(value)).sort();
-  if (extras.length) {
-    return diag(jsonPath, 'pilot-contract', `unknown ${label}: ${extras.join(', ')}`);
-  }
-
-  const missing = expected.filter((value) => !actual.includes(value)).sort();
-  return missing.length
-    ? diag(jsonPath, 'pilot-contract', `missing ${label}: ${missing.join(', ')}`)
-    : null;
 }

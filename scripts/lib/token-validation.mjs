@@ -1,7 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
-  pilotComponentsPath as defaultPilotComponentsPath,
   recipeFilesGlob as defaultRecipeFilesGlob,
   recipeSchemaPath as defaultRecipeSchemaPath,
   repoRoot as defaultRepoRoot,
@@ -9,8 +8,7 @@ import {
   tokenFilesGlob as defaultTokenFilesGlob,
 } from '../../design-tokens/build/paths.mjs';
 import {
-  createActivePilotRegistry,
-  validatePilotContract,
+  validateRecipeConsistency,
   validateTokenLeaves,
 } from './component-recipe-validator-conformance.mjs';
 import { createRules, validateRecipeShape } from './component-recipe-validator-shape.mjs';
@@ -25,7 +23,6 @@ export function runTokenValidation(options = {}) {
     recipeGlob: options.recipeGlob ?? defaultRecipeFilesGlob,
     registryPath: options.registryPath ?? defaultThemeRegistryPath,
     recipeSchemaPath: options.recipeSchemaPath ?? defaultRecipeSchemaPath,
-    pilotComponentsPath: options.pilotComponentsPath ?? defaultPilotComponentsPath,
   };
 
   const tokenFiles = resolveTokenFiles(config.tokenGlob);
@@ -77,13 +74,12 @@ export function runTokenValidation(options = {}) {
   }
 
   const rules = createRules(readJson(config.recipeSchemaPath, true));
-  const activePilots = createActivePilotRegistry(readJson(config.pilotComponentsPath, true));
   const recipeDiagnostics = [];
   for (const filePath of recipeFiles) {
     const recipe = sourceDocs.get(filePath);
     const fileStem = path.basename(filePath, '.recipe.json');
     const shapeError =
-      validateRecipeShape(recipe, fileStem, rules) ?? validatePilotContract(recipe, activePilots);
+      validateRecipeShape(recipe, fileStem, rules) ?? validateRecipeConsistency(recipe);
 
     if (shapeError) {
       recipeDiagnostics.push(

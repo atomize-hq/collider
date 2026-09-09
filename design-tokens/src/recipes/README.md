@@ -1,214 +1,88 @@
-# Component Recipe Source Contract
+# Component recipes
 
-`design-tokens/src/recipes/**` is the repo-owned source surface for `CT-3` component recipe manifests. Canonical recipe files use the glob `design-tokens/src/recipes/*.recipe.json`.
+A recipe describes one component's variants, slots, states, defaults, and token
+references. The source is `<component-id>.recipe.json`; `componentId` must match
+that filename. The live example is [badge.recipe.json](badge.recipe.json).
 
-This directory is limited to source contract publication:
+There is no separate enrollment or second declaration of a component's shape.
+Any component may have a recipe. Passing recipe validation means the recipe is
+valid; it does not assert component readiness or successful Figma publication.
 
-- recipe schema and authoring rules live here,
-- validator implementation is added in `S2`,
-- generated outputs and typed helpers belong to `SEAM-3`,
-- Storybook and app/docs consumption belong to `SEAM-4`.
+## Source contract
 
-`CT-3` is versioned independently from `CT-1` tokens. Breaking shape changes require migration notes and downstream validator/consumer updates rather than silent contract drift.
+The v1 structural contract is [schema/recipe.schema.json](schema/recipe.schema.json).
+All seven fields below are required; extra root fields are rejected.
 
-## Ownership Boundary
+| Field           | Meaning                                                              |
+| --------------- | -------------------------------------------------------------------- |
+| `recipeVersion` | Fixed to `"1"`                                                       |
+| `componentId`   | Lowercase kebab-case, aligned with the filename stem                 |
+| `variantAxes`   | Non-empty array of named axes and their supported values             |
+| `defaults`      | Default value for every declared axis and a declared default state   |
+| `slots`         | Named slots containing token-reference trees                         |
+| `states`        | Named states containing overrides keyed by declared slot names       |
+| `fallbacks`     | `missingVariantBehavior: "use-defaults"` and state fallback mappings |
 
-Keep these concerns in `design-tokens/src/recipes/**`:
+Recipe payloads are not runtime component implementations. Changing a recipe does
+not change a component's TSX API or styles automatically. Component source,
+Storybook specifications and applicable proof requirements remain separate concerns.
 
-- versioned source contract shape,
-- component IDs,
-- variant axis declarations,
-- default selections,
-- slot and state naming,
-- fallback rules,
-- pilot-boundary metadata.
+## Validation
 
-Do not put these concerns in this directory during `S1`:
+The actual token validation entry checks recipes in this order:
 
-- validator scripts,
-- generated artifacts,
-- typed projections,
-- Storybook presenters or docs pages,
-- runtime CSS or app wiring,
-- CI or merge-gate policy.
+1. **Shape:** required fields and types, supported version, identifiers, filename
+   alignment, unique axis values, no extra properties in closed objects, and valid
+   token-reference trees. Inline scalar values are not accepted.
+2. **Internal consistency:** unique axis names; defaults refer to every declared
+   axis and one of its values; the default state exists; state overrides refer to
+   declared slots; fallback sources and targets exist and chains terminate.
+3. **Token existence:** every token-bearing leaf resolves to a live source token.
 
-## Reference Rules
+Names and defaults come from the recipe itself, not a mirrored contract. A recipe
+may add or remove its own axes/slots/states or change defaults as long as these
+relationships remain valid. State fallback mappings may be omitted where no
+fallback is needed; a cycle, including a self-reference, is invalid.
 
-Recipe manifests reference canonical `CT-1` token IDs; they do not redefine scalar values inline.
+Use brace-wrapped references accepted by the schema and present in token sources:
 
-Token-bearing leaves must be brace-wrapped DTCG-style reference strings:
+- `{semantic.color.text.primary}`
+- `{accent.primary}`
 
-- Allowed: `{semantic.color.text.primary}`
-- Allowed: `{core.color.neutral.500}`
-- Disallowed: `#ffffff`
-- Disallowed: `rgba(255, 255, 255, 0.1)`
-- Disallowed: `var(--token-name)`
+A raw color such as `#ffffff` or a CSS expression such as `var(--primary)` is not
+a token reference. A well-formed but nonexistent token ID is also rejected.
 
-`S1` documents only the reference-string shape. Actual token-existence checks and fail-closed validation are added in `S2`.
+## Build and documentation
 
-## Top-Level Contract
+`pnpm build:tokens` validates sources before generating the typed `recipeMap` in
+`design-tokens/dist/tokens.ts`. Runtime CSS and the Figma token artifact remain
+token outputs; recipes do not enroll components into a publication workflow.
 
-The v1 source contract is defined structurally in [schema/recipe.schema.json](/Users/spensermcconnell/__Active_Code/atomize-hq/collider/design-tokens/src/recipes/schema/recipe.schema.json).
+Currently, the build discovers all `*.recipe.json` files here. The docs loader uses
+[index.json](index.json) to select displayed entries, excluding `deferred` entries,
+and joins them with the generated map. This remaining build/docs discovery split
+is tracked in the ds-skills separation plan and will be unified during extraction.
+The index is not a validity or readiness gate; do not use its status to claim either.
 
-| Field           | Required | JSON type | v1 rule                                                                                  |
-| --------------- | -------- | --------- | ---------------------------------------------------------------------------------------- |
-| `recipeVersion` | yes      | `string`  | Fixed to `"1"`                                                                           |
-| `componentId`   | yes      | `string`  | Lowercase kebab-case and filename-stem aligned                                           |
-| `variantAxes`   | yes      | `array`   | Array of `{ "name": string, "values": string[] }`                                        |
-| `defaults`      | yes      | `object`  | `{ "variants": Record<string, string>, "state": string }`                                |
-| `slots`         | yes      | `object`  | Object keyed by slot name; token-bearing leaves are `CT-1` references                    |
-| `states`        | yes      | `object`  | Object keyed by state name; token-bearing leaves are `CT-1` references                   |
-| `fallbacks`     | yes      | `object`  | `{ "missingVariantBehavior": "use-defaults", "stateFallbacks": Record<string, string> }` |
+The publication ledger under `src/figma/` records token publication evidence. It
+has no role in allowing a component to have a recipe.
 
-Additional top-level fields are not allowed in v1.
+## Commands and tests
 
-## V1 Pilot Boundary
-
-The current repo does not yet expose verified primitives under `src/components/system`, so the v1 pilot stays intentionally narrow.
-
-Normative v1 pilot:
-
-- `componentId`: `button`
-- Variant axes:
-  - `intent=["primary","secondary"]`
-  - `size=["sm","md"]`
-- Defaults:
-  - `intent=primary`
-  - `size=md`
-  - `state=rest`
-- Slots: `root`, `label`, `icon`
-- States: `rest`, `hover`, `focus`, `disabled`
-- State fallbacks:
-  - `hover -> rest`
-  - `focus -> rest`
-  - `disabled -> rest`
-- `missingVariantBehavior`: `use-defaults`
-
-Deferred, non-normative examples:
-
-- `input`
-- `card`
-
-These deferred examples must not be treated as committed v1 scope until the repo has concrete primitive surfaces to validate against.
-
-## Valid Review Example
-
-This example is a review aid only. It documents the intended source shape without acting as a fixture or claiming token-existence validation.
-
-```json
-{
-  "recipeVersion": "1",
-  "componentId": "button",
-  "variantAxes": [
-    {
-      "name": "intent",
-      "values": ["primary", "secondary"]
-    },
-    {
-      "name": "size",
-      "values": ["sm", "md"]
-    }
-  ],
-  "defaults": {
-    "variants": {
-      "intent": "primary",
-      "size": "md"
-    },
-    "state": "rest"
-  },
-  "slots": {
-    "root": {
-      "background": "{semantic.color.background.surface}"
-    },
-    "label": {
-      "text": "{semantic.color.text.primary}"
-    },
-    "icon": {
-      "color": "{semantic.color.text.primary}"
-    }
-  },
-  "states": {
-    "rest": {
-      "root": {
-        "background": "{semantic.color.background.surface}"
-      }
-    },
-    "hover": {
-      "root": {
-        "background": "{semantic.color.background.elevated}"
-      }
-    },
-    "focus": {
-      "root": {
-        "background": "{semantic.color.background.overlay}"
-      }
-    },
-    "disabled": {
-      "label": {
-        "text": "{semantic.color.text.secondary}"
-      }
-    }
-  },
-  "fallbacks": {
-    "missingVariantBehavior": "use-defaults",
-    "stateFallbacks": {
-      "hover": "rest",
-      "focus": "rest",
-      "disabled": "rest"
-    }
-  }
-}
+```bash
+pnpm validate:tokens
+pnpm build:tokens
+pnpm govern:tokens
+pnpm exec vitest run --project unit src/lib/tokens/recipe-validity.test.ts
 ```
 
-## Invalid Review Example
+`recipe-validity.test.ts` exercises the real token validator with temporary recipe
+files and real token sources. It covers valid new components, lawful shape changes,
+empty recipe sets, internal consistency, malformed shape, and missing references.
+Each negative asserts the intended diagnostic so a failure at an unrelated rule
+cannot masquerade as coverage. These cases replace the unwired duplicate CLI and
+its unusable fixture set.
 
-This example is intentionally wrong and exists only to make the boundary explicit during schema review.
-
-```json
-{
-  "componentId": "Button",
-  "variantAxes": [
-    {
-      "name": "intent",
-      "values": ["primary", "secondary"]
-    }
-  ],
-  "defaults": {
-    "variants": {
-      "intent": "primary"
-    },
-    "state": "rest"
-  },
-  "slots": {
-    "root": {
-      "background": "#ffffff"
-    }
-  },
-  "states": {},
-  "fallbacks": {
-    "missingVariantBehavior": "guess",
-    "stateFallbacks": {}
-  },
-  "notes": "extra top-level field"
-}
-```
-
-Why it is invalid:
-
-- `recipeVersion` is missing.
-- `componentId` is not lowercase kebab-case.
-- `slots.root.background` uses an inline scalar value instead of a `CT-1` reference string.
-- `missingVariantBehavior` uses a value outside the v1 contract.
-- `notes` is an undocumented extra top-level field.
-
-## Pilot Boundary Registry
-
-[pilot-components.json](/Users/spensermcconnell/__Active_Code/atomize-hq/collider/design-tokens/src/recipes/pilot-components.json) is the machine-readable registry for the v1 pilot boundary. It is not a recipe discovery index and it must not duplicate token-bearing recipe payload data.
-
-## Discovery Index and Downstream Handoff
-
-[index.json](/Users/spensermcconnell/__Active_Code/atomize-hq/collider/design-tokens/src/recipes/index.json) is the canonical discovery entrypoint for normative recipe source files in this directory. It is metadata-only and must stay limited to `schemaVersion`, `recipes`, `componentId`, `sourceFile`, and discovery `status`.
-
-`SEAM-2` owns the recipe source files and this discovery metadata only. `SEAM-3` consumes the source recipe files and may derive typed or generated build artifacts from them. `SEAM-4` renders downstream docs and artifacts from upstream contracts and must not become a second source of recipe truth.
-
-Breaking `CT-3` contract changes require validator updates plus downstream consumer migration work. Do not silently change the source recipe shape or move discovery responsibilities into build or Storybook surfaces.
+The implementation still resides in Collider during this first retirement packet.
+The approved ds-skills separation moves reusable schema/validation/build mechanics
+into the installed product; Collider retains its recipe data and integration proof.
