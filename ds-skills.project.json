@@ -42,6 +42,22 @@
         "figma": "design-tokens/dist/figma/tokens.json"
       },
       "lockPath": ".codex-artifacts/locks/build-tokens.lock"
+    },
+    "runtimeChecks": {
+      "compatibilitySurface": "scripts/token-runtime-compatibility-surface.json",
+      "imports": {
+        "format": "css-import-v1",
+        "entries": [
+          {
+            "file": "src/app/globals.css",
+            "specifier": "../lib/tokens/tokens.css"
+          }
+        ]
+      }
+    },
+    "manualEditGuard": {
+      "policy": "git-input-dirty-v1",
+      "generatorInputs": ["ds-skills.release.json"]
     }
   }
 }
