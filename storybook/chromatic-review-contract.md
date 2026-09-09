@@ -55,7 +55,7 @@ The initial `statusVersion` is the literal string `"1"`.
 | `proofInventory.selectedStoryIds`     | Landed `CT-9B`            | Must name the reviewed proof-scope stories selected from the inventory contract.       |
 | `revision.gitSha`                     | Normalized publish output | Repo-owned field derived from the reviewed revision.                                   |
 | `build.url`                           | Normalized publish output | Repo-owned field derived from the reviewed build.                                      |
-| `review.requiredForClaim`             | Repo-owned policy         | Boolean claim-relevance signal for future `SEAM-10B` consumption only.                 |
+| `review.requiredForClaim`             | Repo-owned policy         | Boolean claim-relevance signal for `CT-12B` consumption.                               |
 | `review.scope.*`                      | Landed `CT-9B`            | Must mirror the same reviewed proof selection already recorded under `proofInventory`. |
 | `review.diffOutcome`                  | Normalized publish output | Repo-owned normalized outcome, not vendor response shape.                              |
 | `check.conclusion`                    | Normalized publish output | Repo-owned conclusion surface for the named check.                                     |
@@ -72,7 +72,7 @@ No raw provider payload, response blob, or vendor-only nested shape may appear i
 - `review.scope.componentIds` must match `proofInventory.selectedComponentIds` exactly.
 - `review.scope.storyIds` must match `proofInventory.selectedStoryIds` exactly.
 - `review.scope.componentTiers` must be copied from `storybook/component-specs/<component-id>.json`; it may not be inferred from vendor state.
-- `review.requiredForClaim` is reserved for future reusable-component promotion consumption in `SEAM-10B`. It does not make the `chromatic-review` check a merge gate or approval signal.
+- `review.requiredForClaim` is consumed by reusable-component promotion in `CT-12B`. It does not make the `chromatic-review` check a merge gate or approval signal.
 - The selection and rollout rules for these fields are defined by [storybook/chromatic-review-policy.md](./chromatic-review-policy.md).
 
 ## Compatibility Rule
@@ -81,16 +81,14 @@ Provider or host changes must preserve these field names and meanings. If a tran
 
 ## Downstream Consumption Contract
 
-- `SEAM-9B` may consume only these `CT-10B` fields for Storybook-link publication:
-  - `build.url`
-  - `revision.gitSha`
-  - `proofInventory.selectedComponentIds`
-  - `proofInventory.selectedStoryIds`
-- `SEAM-10B` may consume only these `CT-10B` fields for review-policy promotion:
+- `CT-12B` may consume only these `CT-10B` fields for review-policy promotion:
   - `review.mode`
   - `review.requiredForClaim`
   - `review.scope`
   - `review.diffOutcome`
+  - `revision.gitSha`
+  - `generatedAt`
+  - `statusVersion`
 - `check.name` and `check.conclusion` are execution evidence only. They record whether the `chromatic-review` rail ran and emitted a current artifact; they are not claim-policy inputs and may not be treated as merge or promotion authority.
 - Downstream seams must consume these repo-owned fields from `artifacts/chromatic/status.json`, not vendor UI summaries, prose closeouts, or raw provider payloads.
 

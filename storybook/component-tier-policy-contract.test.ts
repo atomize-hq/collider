@@ -95,7 +95,7 @@ describe('loadAndValidateComponentTierPolicy', () => {
 });
 
 describe('storybook component tier policy helper surface', () => {
-  it('resolves the interactive minimum required kinds for the pilot button assumption', () => {
+  it('resolves the interactive minimum required kinds for a button component', () => {
     const buttonTier = 'interactive';
 
     expect(isKnownTier(buttonTier)).toBe(true);

@@ -1,7 +1,7 @@
 {
   "statusVersion": "1",
   "branch": {
-    "name": "feature/seam-8b-pilot"
+    "name": "feat/component-review"
   },
   "revision": {
     "gitSha": "1111111111111111111111111111111111111111"

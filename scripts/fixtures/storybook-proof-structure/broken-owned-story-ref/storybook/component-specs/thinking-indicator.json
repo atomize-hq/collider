@@ -24,7 +24,7 @@
   ],
   "generatedArtifactRefs": {
     "tokenDocs": null,
-    "recipeDocs": "storybook/stories/pilot-recipe-contract.stories.tsx",
+    "recipeDocs": "storybook/stories/component-recipe-contract.stories.tsx",
     "runtimeParity": null
   },
   "downstreamHooks": {

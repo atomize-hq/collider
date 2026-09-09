@@ -59,11 +59,10 @@ describe('chromatic review contract doc', () => {
       '`review.mode` is restricted to `informational` and `claim-required`.'
     );
     expect(contract).toContain(
-      '`review.requiredForClaim` is reserved for future reusable-component promotion consumption in `SEAM-10B`.'
+      '`review.requiredForClaim` is consumed by reusable-component promotion in `CT-12B`.'
     );
     expect(contract).toContain('## Downstream Consumption Contract');
-    expect(contract).toContain('`SEAM-9B` may consume only these `CT-10B` fields');
-    expect(contract).toContain('`SEAM-10B` may consume only these `CT-10B` fields');
+    expect(contract).toContain('`CT-12B` may consume only these `CT-10B` fields');
     expect(contract).toContain('`check.name` and `check.conclusion` are execution evidence only.');
     expect(contract).toContain('## Downstream Stale Triggers');
     expect(contract).toContain('if the published `build.url` shape changes');
@@ -81,8 +80,8 @@ describe('chromatic review policy doc', () => {
     expect(policy).toContain(
       'Deferred, skipped, or out-of-scope runs do not create a third review mode.'
     );
-    expect(policy).toContain('`componentIds`: `["thinking-indicator"]`');
-    expect(policy).toContain('`componentTiers`: `{ "thinking-indicator": "primitive" }`');
+    expect(policy).toContain('Review scope is derived from the current story inventory');
+    expect(policy).toContain('No component name or library is privileged.');
   });
 });
 

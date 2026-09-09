@@ -24,7 +24,7 @@ type ProofCoverageReport = ReturnType<typeof createStorybookProofCoverageReport>
 type ProofCoverageReadResult = ReturnType<typeof readStorybookProofCoverageReport>;
 
 describe('runStorybookProofGate', () => {
-  it('runs structure validation before coverage generation and passes on ready pilot data', async () => {
+  it('runs structure validation before coverage generation and passes on ready component data', async () => {
     const calls: string[] = [];
     const stdout = createWritableBuffer();
     const stderr = createWritableBuffer();
@@ -89,7 +89,7 @@ describe('runStorybookProofGate', () => {
         return {
           rootDir: repoRoot,
           errors: [
-            '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "thinking-indicator" references unknown tier "pilot" in componentSpec.tier',
+            '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "thinking-indicator" references unknown tier "unsupported-tier" in componentSpec.tier',
           ],
           data: {
             componentFacts: null,
@@ -129,7 +129,7 @@ describe('runStorybookProofGate', () => {
               missingKinds: ['variant-matrix', 'state-matrix', 'motion', 'docs'],
               generatedArtifactRefs: {
                 tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
-                recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
+                recipeDocs: 'storybook/stories/component-recipe-contract.stories.tsx',
                 runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
               },
             },
@@ -200,8 +200,8 @@ describe('evaluateStorybookProofGateReport', () => {
 });
 
 describe('storybook proof gate CLI', () => {
-  it('passes against the valid pilot fixture and writes the report artifact', () => {
-    const rootDir = prepareFixtureRoot('valid-pilot');
+  it('passes against the valid component fixture and writes the report artifact', () => {
+    const rootDir = prepareFixtureRoot('valid-component');
     const cliPath = path.join(repoRoot, 'scripts/govern-storybook-proof.mjs');
     const result = spawnSync('node', [cliPath], {
       cwd: repoRoot,

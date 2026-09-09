@@ -27,20 +27,13 @@
 - `review.scope.componentTiers` must map each selected component ID to the tier recorded in `storybook/component-specs/<component-id>.json`.
 - The review rail may not broaden, narrow, or replace `review.scope` from provider state, GitHub metadata, or manual reviewer choice.
 
-## Initial Pilot Scope
+## Configured Component Scope
 
-The initial landed `CT-9B` pilot scope is:
-
-- `componentIds`: `["thinking-indicator"]`
-- `storyIds`:
-  - `ai-elements-thinking-indicator--default`
-  - `ai-elements-thinking-indicator--variant-matrix`
-  - `ai-elements-thinking-indicator--state-matrix`
-  - `ai-elements-thinking-indicator--motion`
-  - `ai-elements-thinking-indicator--docs`
-- `componentTiers`: `{ "thinking-indicator": "primitive" }`
-
-This pilot scope remains current until `CT-9B` changes.
+Review scope is derived from the current story inventory and matching component
+specifications on each run. No component name or library is privileged. The
+resolver rejects an empty component or story set and missing matching component
+specifications; it does not reuse a previous component set to produce a pass.
+Fixture component names used by tests do not define the consumer's review scope.
 
 ## Normative Examples
 
@@ -55,17 +48,17 @@ The rail may skip execution for a branch that is outside reusable-component adva
 
 ### Claim-Required Example
 
-The rail may run for a reusable-component advancement claim that includes the pilot `thinking-indicator` proof scope. In that case:
+For a reusable-component advancement claim with a nonempty resolved proof scope:
 
 - `review.mode` is `claim-required`
 - `review.requiredForClaim` is `true`
-- `review.scope` mirrors the same pilot `CT-9B` scope:
-  - `componentIds`: `["thinking-indicator"]`
-  - `storyIds`: `["ai-elements-thinking-indicator--default", "ai-elements-thinking-indicator--variant-matrix", "ai-elements-thinking-indicator--state-matrix", "ai-elements-thinking-indicator--motion", "ai-elements-thinking-indicator--docs"]`
-  - `componentTiers`: `{ "thinking-indicator": "primitive" }`
+- `review.scope` contains the selected component IDs, their implemented story IDs,
+  and the tiers from their matching specifications
+
+A scope change requires new evidence; an older successful build covering a
+different component set cannot establish the current review result.
 
 ## Consumer Boundary
 
 - Downstream consumers must read `artifacts/chromatic/status.json` and this policy, not vendor UI, to determine review scope and claim relevance.
-- `SEAM-9B` may later consume repo-owned build URL and scope fields.
-- `SEAM-10B` may later consume `review.mode` and `review.requiredForClaim` when it owns the blocking-policy ratchet.
+- `CT-12B` consumes `review.mode` and `review.requiredForClaim` under the reusable-component promotion policy.

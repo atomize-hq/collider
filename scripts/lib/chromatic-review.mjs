@@ -165,7 +165,7 @@ function createChromaticProofScope(proofStructureData) {
 
   if (!Array.isArray(inventoryComponents) || inventoryComponents.length === 0) {
     throw new Error(
-      '[CHROMATIC_REVIEW_EMPTY_SCOPE] storybook/story-inventory.json did not resolve any pilot proof components'
+      '[CHROMATIC_REVIEW_EMPTY_SCOPE] storybook/story-inventory.json did not resolve any proof components'
     );
   }
 
@@ -213,7 +213,7 @@ function createChromaticProofScope(proofStructureData) {
   const uniqueStoryIds = [...new Set(storyIds)];
   if (uniqueStoryIds.length === 0) {
     throw new Error(
-      '[CHROMATIC_REVIEW_EMPTY_SCOPE] storybook/story-inventory.json did not resolve any pilot proof story IDs'
+      '[CHROMATIC_REVIEW_EMPTY_SCOPE] storybook/story-inventory.json did not resolve any proof story IDs'
     );
   }
 

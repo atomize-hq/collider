@@ -1,6 +1,6 @@
 {
   "statusVersion": "1",
-  "branch": { "name": "feature/seam-8b-pilot" },
+  "branch": { "name": "feat/component-review" },
   "revision": { "gitSha": "4444444444444444444444444444444444444444" },
   "proofInventory": {
     "path": "storybook/story-inventory.json",

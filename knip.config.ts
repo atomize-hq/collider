@@ -24,9 +24,8 @@ const config: KnipConfig = {
     'design-tokens/**/*.mjs',
     'storybook/**/*.{ts,tsx}',
   ],
-  // Duplicate exports are intentional backward-compat aliases (e.g. the
-  // component-mapping "completeness" names alias the older "status" names during
-  // an in-progress rename). Report them, but don't fail the gate on style.
+  // Duplicate-export findings are advisory under the current engineering policy.
+  // Entrypoint and diagnostic policy are audited separately from tool removal.
   rules: {
     duplicates: 'warn',
   },

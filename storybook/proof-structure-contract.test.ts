@@ -731,20 +731,23 @@ describe('loadAndValidateStorybookProofStructure', () => {
     ]);
   });
 
-  it('accepts the valid fixture pilot', () => {
-    const result = loadFixture('valid-pilot');
+  it('accepts the valid component fixture', () => {
+    const result = loadFixture('valid-component');
 
     expect(result.errors).toEqual([]);
     expect(result.data.storyIndex?.fileByStoryId.get('ai-elements-thinking-indicator--docs')).toBe(
       path.join(
-        fixturePath('valid-pilot'),
+        fixturePath('valid-component'),
         'src/components/ai-elements/ThinkingIndicator.stories.tsx'
       )
     );
     expect(
       result.data.storyIndex?.fileByStoryId.get('contracts-generated-tokens--token-registry')
     ).toBe(
-      path.join(fixturePath('valid-pilot'), 'storybook/stories/generated-token-docs.stories.tsx')
+      path.join(
+        fixturePath('valid-component'),
+        'storybook/stories/generated-token-docs.stories.tsx'
+      )
     );
   });
 
@@ -776,7 +779,7 @@ describe('loadAndValidateStorybookProofStructure', () => {
     const result = loadFixture('unknown-tier');
 
     expect(result.errors).toContain(
-      '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "thinking-indicator" references unknown tier "pilot" in componentSpec.tier'
+      '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "thinking-indicator" references unknown tier "unsupported-tier" in componentSpec.tier'
     );
   });
 

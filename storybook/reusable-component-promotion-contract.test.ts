@@ -302,7 +302,7 @@ describe('reusable component promotion cross-contract provenance', () => {
     // job resolves the proof scope before it publishes, and that scope has thrown
     // CHROMATIC_REVIEW_EMPTY_SCOPE since 96d5c39, so nothing has reached Chromatic
     // since 24 Mar. The artifact records that deferral rather than carrying the
-    // March pilot's verdict forward over a component set Chromatic has never seen.
+    // March review verdict forward over a component set Chromatic has never seen.
     expect(chromaticStatus.review.diffOutcome).toBe('deferred');
     expect(chromaticStatus.check.conclusion).toBe('skipped');
   });

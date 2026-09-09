@@ -102,7 +102,7 @@ describe('validateComponentSpec', () => {
     ]);
     expect(spec.generatedArtifactRefs).toEqual({
       tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
-      recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
+      recipeDocs: 'storybook/stories/component-recipe-contract.stories.tsx',
       runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
     });
     expect(spec.downstreamHooks).toEqual({
@@ -222,7 +222,7 @@ describe('validateComponentSpec', () => {
       {
         specVersion: '1',
         componentId: 'thinking-indicator',
-        tier: 'pilot',
+        tier: 'unsupported-tier',
         requiredStoryKinds: ['docs'],
       },
       { filenameStem: 'thinking-indicator' }

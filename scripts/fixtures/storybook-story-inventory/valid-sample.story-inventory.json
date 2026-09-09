@@ -2,7 +2,7 @@
   "inventoryVersion": "1",
   "components": [
     {
-      "componentId": "proof-contract-pilot",
+      "componentId": "proof-contract-component",
       "validatorKinds": ["default", "variant-matrix", "state-matrix", "motion", "docs"],
       "implementedStoryRefs": [
         {

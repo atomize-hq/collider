@@ -101,7 +101,7 @@ describe('createReusableComponentStatus', () => {
           missingKinds: ['docs'],
           generatedArtifactRefs: {
             tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
-            recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
+            recipeDocs: 'storybook/stories/component-recipe-contract.stories.tsx',
             runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
           },
         },
@@ -139,7 +139,7 @@ describe('runReusableComponentStatusValidation', () => {
     expect(exitCode).toBe(0);
     expect(stderr.read()).toBe('');
     // `reviewed` requires a satisfied CT-10B rail. Chromatic last received a build
-    // on 24 Mar, covering the pilot component only, so no review exists for the
+    // on 24 Mar, covering the earlier component set only, so no review exists for the
     // current component set and the earned claim stops at `proof-ready`.
     expect(stdout.read()).toContain(
       'Highest earned claim: reusable-component-advancement/reusable-component-proof-ready'

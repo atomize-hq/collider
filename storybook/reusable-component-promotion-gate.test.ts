@@ -42,7 +42,7 @@ describe('recommendChangeClassFromFiles', () => {
       recommendChangeClassFromFiles(['storybook/component-specs/thinking-indicator.json'])
     ).toBe('reusable-component-advancement');
     expect(
-      recommendChangeClassFromFiles(['storybook/stories/pilot-recipe-contract.stories.tsx'])
+      recommendChangeClassFromFiles(['storybook/stories/component-recipe-contract.stories.tsx'])
     ).toBe('proof-only');
     expect(recommendChangeClassFromFiles(['src/figma/parity-policy.md'])).toBe('token-only');
     expect(recommendChangeClassFromFiles(['README.md'])).toBe('docs-only');

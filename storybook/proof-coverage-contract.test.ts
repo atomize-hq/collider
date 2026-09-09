@@ -16,7 +16,7 @@ const sharedTierPolicyPath = path.join(fixtureDir, '_shared/component-tier-polic
 
 describe('createStorybookProofCoverageReport', () => {
   it('exposes normalized component facts from the proof-structure validator', () => {
-    const result = loadFixture('valid-pilot');
+    const result = loadFixture('valid-component');
 
     expect(result.errors).toEqual([]);
     expect(result.data.componentFacts).toEqual([
@@ -24,7 +24,7 @@ describe('createStorybookProofCoverageReport', () => {
         componentId: 'thinking-indicator',
         generatedArtifactRefs: {
           tokenDocs: 'storybook/stories/generated-token-docs.stories.tsx',
-          recipeDocs: 'storybook/stories/pilot-recipe-contract.stories.tsx',
+          recipeDocs: 'storybook/stories/component-recipe-contract.stories.tsx',
           runtimeParity: 'storybook/stories/runtime-css-parity.stories.tsx',
         },
         implementedKinds: ['default', 'variant-matrix', 'state-matrix', 'motion', 'docs'],
@@ -34,8 +34,8 @@ describe('createStorybookProofCoverageReport', () => {
     ]);
   });
 
-  it('creates a passing pilot report snapshot', () => {
-    const report = createStorybookProofCoverageReport(loadFixture('valid-pilot'));
+  it('creates a passing component report snapshot', () => {
+    const report = createStorybookProofCoverageReport(loadFixture('valid-component'));
 
     expect(report).toMatchInlineSnapshot(`
       {
@@ -43,7 +43,7 @@ describe('createStorybookProofCoverageReport', () => {
           {
             "componentId": "thinking-indicator",
             "generatedArtifactRefs": {
-              "recipeDocs": "storybook/stories/pilot-recipe-contract.stories.tsx",
+              "recipeDocs": "storybook/stories/component-recipe-contract.stories.tsx",
               "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx",
               "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
             },
@@ -79,7 +79,7 @@ describe('createStorybookProofCoverageReport', () => {
     );
   });
 
-  it('creates a failing pilot report snapshot when a required kind is missing', () => {
+  it('creates a failing component report snapshot when a required kind is missing', () => {
     const report = createStorybookProofCoverageReport(loadFixture('missing-required-kind'));
 
     expect(report).toMatchInlineSnapshot(`
@@ -88,7 +88,7 @@ describe('createStorybookProofCoverageReport', () => {
           {
             "componentId": "thinking-indicator",
             "generatedArtifactRefs": {
-              "recipeDocs": "storybook/stories/pilot-recipe-contract.stories.tsx",
+              "recipeDocs": "storybook/stories/component-recipe-contract.stories.tsx",
               "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx",
               "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
             },
@@ -125,7 +125,7 @@ describe('createStorybookProofCoverageReport', () => {
 
 describe('storybook proof coverage CLI', () => {
   it('writes proof coverage output for a structurally valid fixture and prints summary counts', () => {
-    const rootDir = prepareCliFixture('valid-pilot');
+    const rootDir = prepareCliFixture('valid-component');
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'storybook-proof-coverage-'));
     const outputPath = path.join(tempDir, 'proof-coverage.json');
     const cliPath = path.join(repoRoot, 'scripts/generate-storybook-proof-coverage.mjs');
@@ -171,7 +171,7 @@ describe('storybook proof coverage CLI', () => {
     expect(result.status).toBe(1);
     expect(result.stdout).toBe('');
     expect(result.stderr).toContain(
-      '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "thinking-indicator" references unknown tier "pilot" in componentSpec.tier'
+      '[CT-9B_PROOF_STRUCTURE_UNKNOWN_TIER] componentId "thinking-indicator" references unknown tier "unsupported-tier" in componentSpec.tier'
     );
     expect(fs.existsSync(outputPath)).toBe(false);
   });

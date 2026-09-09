@@ -32,7 +32,7 @@ const QUEUED = [
   {
     id: 'q1',
     title: 'Draft the launch announcement',
-    description: 'Target pilot cohort · ship Thu',
+    description: 'Finalize release notes · ship Thu',
   },
   {
     id: 'q2',

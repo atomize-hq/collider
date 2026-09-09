@@ -29,11 +29,11 @@ CT-15B is satisfied when **all five** conditions hold simultaneously:
 3. `promotion.highestEarnedLevel` = `"E-promotion-complete"`
 4. `exceptions` array contains no blocking items (all have `"blocking": false`)
 5. `artifacts/harness/reusable-component-status.json` reflects full completion for the **release-grade** reusable-component claim surface:
+   - `statusVersion` = `"2"`
    - `changeClass` = `"reusable-component-advancement"`
    - `railSummaries.ct8b.freshness` = `"current"` and `railSummaries.ct8b.outcome` = `"satisfied"`
    - `railSummaries.ct9b.freshness` = `"current"` and `railSummaries.ct9b.outcome` = `"satisfied"`
    - `railSummaries.ct10b.freshness` = `"current"` and `railSummaries.ct10b.outcome` = `"satisfied"`
-   - `railSummaries.ct11b.freshness` = `"current"` and `railSummaries.ct11b.outcome` = `"satisfied"`
    - `highestEarnedClaim.profileId` = `"reusable-component-advancement"` and `highestEarnedClaim.claimId` = `"reusable-component-parity-current"`
 
    Note: these checks are intentionally aligned to the repo-owned `CT-12B` contract and evaluator semantics (see `storybook/reusable-component-promotion-contract.md` and `scripts/lib/reusable-component-status.mjs`).
@@ -97,18 +97,18 @@ The consumer detects stale state by:
 }
 ```
 
-And `artifacts/harness/reusable-component-status.json`:
+Relevant fields from `artifacts/harness/reusable-component-status.json`
+(illustrative excerpt, not a complete valid report):
 
 ```json
 {
-  "statusVersion": "1",
+  "statusVersion": "2",
   "generatedAt": "2026-03-22T00:00:00.000Z",
   "changeClass": "reusable-component-advancement",
   "railSummaries": {
     "ct8b": { "outcome": "satisfied" },
     "ct9b": { "outcome": "satisfied" },
-    "ct10b": { "outcome": "satisfied" },
-    "ct11b": { "outcome": "satisfied" }
+    "ct10b": { "outcome": "satisfied" }
   },
   "highestEarnedClaim": {
     "profileId": "reusable-component-advancement",

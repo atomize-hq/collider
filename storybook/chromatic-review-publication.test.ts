@@ -20,7 +20,7 @@ const thinkingIndicatorStoryIds = [
 ];
 
 describe('runChromaticReview', () => {
-  it('writes a passed CT-10B artifact for the pilot proof scope', async () => {
+  it('writes a passed CT-10B artifact for the configured proof scope', async () => {
     const workspace = createWorkspace();
     const result = await runChromaticReview({
       artifactPath: path.join(workspace, 'artifacts/chromatic/status.json'),
@@ -49,6 +49,44 @@ describe('runChromaticReview', () => {
         diffOutcome: 'passed',
       },
     });
+  });
+
+  it('derives a different multi-component review scope from the current inputs', async () => {
+    const workspace = createWorkspace();
+    const componentIds = ['notice', 'editor'];
+    const storyIds = ['custom-notice--default', 'custom-editor--default'];
+    const componentTiers = { notice: 'primitive', editor: 'interactive' };
+    try {
+      const result = await runChromaticReview({
+        artifactPath: path.join(workspace, 'artifacts/chromatic/status.json'),
+        buildDir: 'storybook-static',
+        cwd: workspace,
+        env: createEnv({ [chromaticReviewClaimRequiredEnvVar]: 'true' }),
+        loadProofStructure: createProofStructureLoader({
+          inventoryComponents: componentIds.map((componentId, index) => ({
+            componentId,
+            implementedStoryRefs: [{ storyId: storyIds[index]! }],
+          })),
+          componentSpecs: Object.entries(componentTiers).map(([componentId, tier]) => ({
+            data: { componentId, tier },
+          })),
+        }),
+        providerExecutor: async () => ({
+          buildUrl: 'https://example.invalid/chromatic/builds/current-scope',
+          code: 0,
+        }),
+        rootDir: workspace,
+      });
+      expect(result.exitCode).toBe(0);
+      expect(result.status?.review).toMatchObject({
+        requiredForClaim: true,
+        scope: { componentIds, storyIds, componentTiers },
+      });
+      expect(result.status?.proofInventory.selectedComponentIds).toEqual(componentIds);
+      expect(result.status?.proofInventory.selectedStoryIds).toEqual(storyIds);
+    } finally {
+      fs.rmSync(workspace, { recursive: true, force: true });
+    }
   });
 
   it('records changed builds as claim-required without failing the job', async () => {
@@ -190,8 +228,8 @@ function createEnv(overrides: Record<string, string> = {}) {
     ...process.env,
     CHROMATIC_PROJECT_TOKEN: 'test-token',
     GITHUB_ACTIONS: 'true',
-    GITHUB_HEAD_REF: 'feature/seam-8b-pilot',
-    GITHUB_REF_NAME: 'feature/seam-8b-pilot',
+    GITHUB_HEAD_REF: 'feat/component-review',
+    GITHUB_REF_NAME: 'feat/component-review',
     GITHUB_SHA: '1234567890abcdef1234567890abcdef12345678',
     ...overrides,
   };
