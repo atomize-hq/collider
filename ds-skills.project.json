@@ -58,6 +58,15 @@
     "manualEditGuard": {
       "policy": "git-input-dirty-v1",
       "generatorInputs": ["ds-skills.release.json"]
+    },
+    "governance": {
+      "publication": {
+        "config": "figma/token-sync.config.json",
+        "baseline": "figma/token-rail.baseline.json",
+        "ledger": "src/figma/sync-ledger.json",
+        "profile": ".agents/skills/profiles/collider.json",
+        "proof": "src/figma/publish-proof.json"
+      }
     }
   }
 }
