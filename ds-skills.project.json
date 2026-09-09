@@ -1,0 +1,16 @@
+{
+  "projectVersion": "1",
+  "tokens": {
+    "format": "family-files-v1",
+    "sourceDir": "design-tokens/src/tokens",
+    "recipesDir": "design-tokens/src/recipes",
+    "extensionsNamespace": "com.atomizehq.collider",
+    "themes": {
+      "registry": "design-tokens/src/tokens/themes/registry.json",
+      "directory": "design-tokens/src/tokens/themes"
+    },
+    "figma": {
+      "excludedFamilies": ["tailwind-colors", "tailwind-variables", "font"]
+    }
+  }
+}
