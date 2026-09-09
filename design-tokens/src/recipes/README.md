@@ -58,11 +58,12 @@ a token reference. A well-formed but nonexistent token ID is also rejected.
 `design-tokens/dist/tokens.ts`. Runtime CSS and the Figma token artifact remain
 token outputs; recipes do not enroll components into a publication workflow.
 
-Currently, the build discovers all `*.recipe.json` files here. The docs loader uses
-[index.json](index.json) to select displayed entries, excluding `deferred` entries,
-and joins them with the generated map. This remaining build/docs discovery split
-is tracked in the ds-skills separation plan and will be unified during extraction.
-The index is not a validity or readiness gate; do not use its status to claim either.
+The build discovers all regular `*.recipe.json` sources here. The docs model reads
+exactly the generated `recipeMap`, and the Generated Tokens Storybook surface
+renders those entries. There is no hand-maintained discovery index or independent
+status filter. Adding a valid source and rebuilding makes it available to both
+consumers; the docs integration test detects a stale source/generated-map split.
+Documentation presence is not a validity, readiness, or publication claim.
 
 The publication ledger under `src/figma/` records token publication evidence. It
 has no role in allowing a component to have a recipe.

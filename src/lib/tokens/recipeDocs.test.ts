@@ -1,96 +1,68 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import recipeIndex from '../../../design-tokens/src/recipes/index.json';
 import { recipeMap } from '../../../design-tokens/dist/tokens';
-import { buildRecipeDocsModel } from './recipeDocs';
+import { buildRecipeDocsModel, loadRecipeDocsModel } from './recipeDocs';
 
 const artifactRecipe = {
-  defaults: { state: 'rest', variants: {} },
-  fallbacks: { missingVariantBehavior: 'error', stateFallbacks: {} },
+  componentId: 'notice',
+  defaults: { state: 'rest', variants: { intent: 'normal' } },
+  fallbacks: { missingVariantBehavior: 'use-defaults', stateFallbacks: {} },
   recipeVersion: '1',
-  slots: {},
-  states: {},
-  variantAxes: [],
+  slots: { body: { color: '{semantic.color.text.primary}' } },
+  states: { rest: { body: { color: '{semantic.color.text.primary}' } } },
+  variantAxes: [{ name: 'intent', values: ['normal'] }],
 };
 
-describe('buildRecipeDocsModel', () => {
-  it('joins every live index entry against the generated recipeMap', () => {
-    const result = buildRecipeDocsModel(recipeIndex, recipeMap);
-    const discoverable = recipeIndex.recipes.filter((entry) => entry.status !== 'deferred');
-
-    expect(result.map((entry) => entry.componentId)).toEqual(
-      discoverable.map((entry) => entry.componentId)
-    );
+describe('artifact-backed recipe docs', () => {
+  it('uses precisely the generated recipe set and matches current regular source files', () => {
+    const sourceIds = fs
+      .readdirSync(path.resolve('design-tokens/src/recipes'), { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.recipe.json'))
+      .map((entry) => entry.name.slice(0, -'.recipe.json'.length))
+      .sort();
+    const result = loadRecipeDocsModel();
+    expect(result.map((entry) => entry.componentId)).toEqual(Object.keys(recipeMap).sort());
+    expect(result.map((entry) => entry.componentId)).toEqual(sourceIds);
     for (const entry of result) {
       expect(entry.variantAxes.length).toBeGreaterThan(0);
       expect(Object.keys(entry.slots).length).toBeGreaterThan(0);
+      expect(entry).not.toHaveProperty('status');
     }
   });
-
-  it('returns an empty list for an explicitly empty recipes array', () => {
-    expect(buildRecipeDocsModel({ recipes: [] }, recipeMap)).toEqual([]);
+  it('returns empty docs for an empty generated map', () => {
+    expect(buildRecipeDocsModel({})).toEqual([]);
   });
-
-  it('excludes deferred entries', () => {
-    const result = buildRecipeDocsModel(
-      {
-        recipes: [
-          { componentId: 'example', sourceFile: 'example.recipe.json', status: 'deferred' },
-        ],
-      },
-      recipeMap
+  it('shows any generated component without a second registry or status', () => {
+    const result = buildRecipeDocsModel({
+      zebra: { ...artifactRecipe, componentId: 'zebra' },
+      notice: artifactRecipe,
+    });
+    expect(result.map((entry) => entry.componentId)).toEqual(['notice', 'zebra']);
+    expect(result[0]?.sourceFile).toBe('notice.recipe.json');
+    expect(result.every((entry) => !('status' in entry))).toBe(true);
+  });
+  it('uses evolved contract fields from the generated recipe rather than pinning shape', () => {
+    const evolved = {
+      ...artifactRecipe,
+      variantAxes: [{ name: 'density', values: ['compact'] }],
+      defaults: { state: 'rest', variants: { density: 'compact' } },
+    };
+    expect(buildRecipeDocsModel({ notice: evolved })[0]?.variantAxes).toEqual(evolved.variantAxes);
+  });
+  it('rejects missing artifact payloads instead of inventing docs', () => {
+    expect(() => buildRecipeDocsModel({ absent: null })).toThrow(
+      'Missing generated recipeMap entry'
     );
-    expect(result).toEqual([]);
   });
-
-  it('returns every discoverable entry rather than capping at one', () => {
-    const result = buildRecipeDocsModel(
-      {
-        recipes: [
-          {
-            componentId: 'button-primary',
-            sourceFile: 'button-primary.recipe.json',
-            status: 'active',
-          },
-          {
-            componentId: 'button-secondary',
-            sourceFile: 'button-secondary.recipe.json',
-            status: 'active',
-          },
-        ],
-      },
-      { 'button-primary': artifactRecipe, 'button-secondary': artifactRecipe }
+  it('rejects a generated entry missing a field needed by the surface', () => {
+    const withoutSlots: Partial<typeof artifactRecipe> = { ...artifactRecipe };
+    delete withoutSlots.slots;
+    expect(() => buildRecipeDocsModel({ notice: withoutSlots })).toThrow(
+      'missing required field "slots"'
     );
-
-    expect(result.map((entry) => entry.componentId)).toEqual([
-      'button-primary',
-      'button-secondary',
-    ]);
-    expect(result[0]?.sourceFile).toBe('button-primary.recipe.json');
-    expect(result[0]?.status).toBe('active');
   });
-
-  it('throws when the generated recipeMap has no entry for a discoverable component', () => {
-    expect(() =>
-      buildRecipeDocsModel(
-        {
-          recipes: [{ componentId: 'absent', sourceFile: 'absent.recipe.json', status: 'active' }],
-        },
-        {}
-      )
-    ).toThrow('Missing generated recipeMap entry for component "absent"');
-  });
-
-  it('throws when a generated recipeMap entry is missing a required field', () => {
-    const { slots: _slots, ...withoutSlots } = artifactRecipe;
-    expect(() =>
-      buildRecipeDocsModel(
-        {
-          recipes: [
-            { componentId: 'partial', sourceFile: 'partial.recipe.json', status: 'active' },
-          ],
-        },
-        { partial: withoutSlots }
-      )
-    ).toThrow('missing required field "slots"');
+  it('rejects artifact key and payload identity disagreement', () => {
+    expect(() => buildRecipeDocsModel({ other: artifactRecipe })).toThrow('identity mismatch');
   });
 });

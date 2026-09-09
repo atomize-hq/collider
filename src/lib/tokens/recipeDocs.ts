@@ -1,30 +1,12 @@
-// Docs model for the component recipes discovered through
-// `design-tokens/src/recipes/index.json`.
-//
-// The index is metadata-only: it names a componentId, its source file, and a discovery
-// status. The token payload lives in the generated `recipeMap` inside
-// `design-tokens/dist/tokens.ts`. This module joins the two and asserts the artifact
-// actually carries the fields a docs surface needs.
-//
-// `deferred` entries are excluded — they are recorded but not published. Every other
-// discoverable entry is returned, however many there are.
-
-import recipeIndex from '../../../design-tokens/src/recipes/index.json';
+// App documentation projection of the generated recipe map. Source discovery
+// belongs to the token build; docs do not maintain another eligibility index.
 import { recipeMap } from '../../../design-tokens/dist/tokens';
 
-type RecipeIndexEntry = {
-  componentId: string;
-  sourceFile: string;
-  status: string;
-};
-
-type RecipeIndexContract = {
-  recipes: ReadonlyArray<RecipeIndexEntry>;
-};
-
-type RecipeValueMap = Record<string, string>;
+type RecipeValue = string | { [key: string]: RecipeValue };
+type RecipeValueMap = Record<string, RecipeValue>;
 
 type RecipeContract = {
+  componentId: string;
   defaults: {
     state: string;
     variants: Record<string, string>;
@@ -50,11 +32,11 @@ export type RecipeDocsModel = {
   slots: RecipeContract['slots'];
   sourceFile: string;
   states: RecipeContract['states'];
-  status: string;
   variantAxes: RecipeContract['variantAxes'];
 };
 
 const REQUIRED_FIELDS = [
+  'componentId',
   'variantAxes',
   'defaults',
   'slots',
@@ -64,44 +46,41 @@ const REQUIRED_FIELDS = [
 ] as const satisfies ReadonlyArray<keyof RecipeContract>;
 
 export function buildRecipeDocsModel(
-  sourceRecipeIndex: RecipeIndexContract,
   artifactRecipeMap: Record<string, unknown>
 ): RecipeDocsModel[] {
-  return sourceRecipeIndex.recipes
-    .filter((entry) => entry.status !== 'deferred')
-    .map((entry) => buildEntry(entry, artifactRecipeMap));
+  return Object.keys(artifactRecipeMap)
+    .sort()
+    .map((componentId) => buildEntry(componentId, artifactRecipeMap[componentId]));
 }
 
 export function loadRecipeDocsModel(): RecipeDocsModel[] {
-  return buildRecipeDocsModel(recipeIndex, recipeMap);
+  return buildRecipeDocsModel(recipeMap);
 }
 
-function buildEntry(
-  entry: RecipeIndexEntry,
-  artifactRecipeMap: Record<string, unknown>
-): RecipeDocsModel {
-  const artifactRecipe = artifactRecipeMap[entry.componentId];
+function buildEntry(componentId: string, artifactRecipe: unknown): RecipeDocsModel {
   if (!artifactRecipe || typeof artifactRecipe !== 'object') {
     throw new Error(
-      `Missing generated recipeMap entry for component "${entry.componentId}" in design-tokens/dist/tokens.ts.`
+      `Missing generated recipeMap entry for component "${componentId}" in design-tokens/dist/tokens.ts.`
     );
   }
 
   for (const field of REQUIRED_FIELDS) {
-    assertRequiredField(artifactRecipe, field, entry.componentId);
+    assertRequiredField(artifactRecipe, field, componentId);
   }
 
   const contract = artifactRecipe as RecipeContract;
+  if (contract.componentId !== componentId) {
+    throw new Error(`Generated recipeMap identity mismatch for "${componentId}".`);
+  }
 
   return {
-    componentId: entry.componentId,
+    componentId,
     defaults: contract.defaults,
     fallbacks: contract.fallbacks,
     recipeVersion: contract.recipeVersion,
     slots: contract.slots,
-    sourceFile: entry.sourceFile,
+    sourceFile: `${componentId}.recipe.json`,
     states: contract.states,
-    status: entry.status,
     variantAxes: contract.variantAxes,
   };
 }
