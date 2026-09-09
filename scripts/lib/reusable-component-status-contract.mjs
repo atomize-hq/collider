@@ -1,4 +1,4 @@
-export const reusableComponentStatusContractVersion = '1';
+export const reusableComponentStatusContractVersion = '2';
 
 export const reusableComponentStatusRootFields = Object.freeze([
   'statusVersion',
@@ -19,7 +19,7 @@ export const reusableComponentStatusChangeClasses = Object.freeze([
   'other',
 ]);
 
-export const reusableComponentStatusRailKeys = Object.freeze(['ct8b', 'ct9b', 'ct10b', 'ct11b']);
+export const reusableComponentStatusRailKeys = Object.freeze(['ct8b', 'ct9b', 'ct10b']);
 
 export const reusableComponentStatusRailSummaryFields = Object.freeze([
   'contractId',
@@ -82,23 +82,12 @@ export const reusableComponentStatusAllowedUpstreamFields = Object.freeze({
     'generatedAt',
     'statusVersion',
   ]),
-  ct11b: Object.freeze([
-    'artifacts/harness/reusable-component-mapping-status.json#mappingStatusVersion',
-    'artifacts/harness/reusable-component-mapping-status.json#summary',
-    'artifacts/harness/reusable-component-mapping-status.json#components[].state',
-    'artifacts/harness/reusable-component-mapping-status.json#components[].linkState',
-    'artifacts/harness/reusable-component-mapping-status.json#components[].issues',
-    'artifacts/harness/reusable-component-mapping-status.json#components[].drift',
-    'artifacts/harness/reusable-component-mapping-status.json#components[].sourcePaths',
-    'artifacts/harness/reusable-component-mapping-status.json#components[].outputPaths',
-    'storybook/reusable-component-mapping-contract.md#shared-field-boundary',
-  ]),
 });
 
 export const reusableComponentStatusClaimProfileMatrix = Object.freeze({
   'reusable-component-advancement': Object.freeze({
     changeClasses: Object.freeze(['reusable-component-advancement']),
-    readsRails: Object.freeze(['ct8b', 'ct9b', 'ct10b', 'ct11b']),
+    readsRails: Object.freeze(['ct8b', 'ct9b', 'ct10b']),
     enforcementMode: 'informational',
     informationalOnly: false,
     mayPromoteToBlockingInS3: true,

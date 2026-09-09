@@ -1,5 +1,5 @@
 {
-  "statusVersion": "1",
+  "statusVersion": "2",
   "generatedAt": "2026-03-21T20:25:00.000Z",
   "changeClass": "reusable-component-advancement",
   "railSummaries": {
@@ -29,21 +29,12 @@
       "sourceVersionOrRevision": "statusVersion:1|revision:1111111111111111111111111111111111111111",
       "freshness": "stale",
       "outcome": "satisfied"
-    },
-    "ct11b": {
-      "contractId": "CT-11B",
-      "threadId": "THR-07",
-      "sourcePath": "artifacts/harness/reusable-component-mapping-status.json",
-      "claimRelevant": true,
-      "sourceVersionOrRevision": "mappingStatusVersion:1",
-      "freshness": "current",
-      "outcome": "not-applicable"
     }
   },
   "claimProfiles": {
     "reusable-component-advancement": {
       "changeClasses": ["reusable-component-advancement"],
-      "readsRails": ["ct8b", "ct9b", "ct10b", "ct11b"],
+      "readsRails": ["ct8b", "ct9b", "ct10b"],
       "enforcementMode": "informational",
       "informationalOnly": false,
       "mayPromoteToBlockingInS3": true
@@ -81,6 +72,6 @@
     "profileId": "reusable-component-advancement",
     "claimId": "reusable-component-proof-ready"
   },
-  "reasonCodes": ["ct10b-review-informational", "ct10b-review-stale", "ct11b-mapping-retired"],
+  "reasonCodes": ["ct10b-review-informational", "ct10b-review-stale"],
   "enforcementMode": "informational"
 }

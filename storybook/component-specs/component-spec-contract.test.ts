@@ -11,7 +11,7 @@ import {
 
 const thinkingIndicatorSpecPath = path.join(
   repoRoot,
-  'scripts/fixtures/reusable-component-mapping/complete/storybook/component-specs/thinking-indicator.json'
+  'scripts/fixtures/promotion-gate/storybook/component-specs/thinking-indicator.json'
 );
 
 type ComponentSpecFixture = {

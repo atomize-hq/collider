@@ -88,28 +88,6 @@ describe('evaluateReusableComponentPromotionDecision', () => {
     expect(result.advisoryReasons).toContain('ct10b-review-informational');
   });
 
-  it('blocks CI when mapping becomes incomplete for an explicit reusable-component advancement', () => {
-    const workspace = copyBaseWorkspace();
-    replaceWorkspaceFile(
-      workspace,
-      'artifacts/harness/reusable-component-mapping-status.json',
-      'scripts/fixtures/reusable-component-mapping/incomplete-link/artifacts/harness/reusable-component-mapping-status.json'
-    );
-    const status = createReusableComponentStatus({
-      changeClass: 'reusable-component-advancement',
-      now: '2026-03-21T20:30:00.000Z',
-      rootDir: workspace,
-    });
-
-    const result = evaluateReusableComponentPromotionDecision(status, {
-      consumer: 'ci',
-      requestedChangeClass: 'reusable-component-advancement',
-    });
-
-    expect(result.outcome).toBe('block');
-    expect(result.blockingReasons).toContain('mapping-rail-unsatisfied');
-  });
-
   it('blocks CI on stale claim-required review for an explicit reusable-component advancement', () => {
     const workspace = copyBaseWorkspace();
     const chromaticStatus = readJson(
@@ -257,24 +235,18 @@ function copyBaseWorkspace() {
       dest: '.agents/skills/profiles/collider.json',
     },
     {
-      source: 'scripts/fixtures/component-mapping-workspace/storybook/story-inventory.json',
+      source: 'scripts/fixtures/promotion-gate/storybook/story-inventory.json',
       dest: 'storybook/story-inventory.json',
     },
     {
-      source:
-        'scripts/fixtures/reusable-component-mapping/complete/storybook/component-specs/thinking-indicator.json',
+      source: 'scripts/fixtures/promotion-gate/storybook/component-specs/thinking-indicator.json',
       dest: 'storybook/component-specs/thinking-indicator.json',
     },
     {
-      source:
-        'scripts/fixtures/component-mapping-workspace/artifacts/storybook/proof-coverage.json',
+      source: 'scripts/fixtures/promotion-gate/artifacts/storybook/proof-coverage.json',
       dest: 'artifacts/storybook/proof-coverage.json',
     },
     { source: 'artifacts/chromatic/status.json', dest: 'artifacts/chromatic/status.json' },
-    {
-      source: 'artifacts/harness/reusable-component-mapping-status.json',
-      dest: 'artifacts/harness/reusable-component-mapping-status.json',
-    },
   ];
   for (const { source, dest } of filesToCopy) {
     const sourcePath = path.join(repoRoot, source);

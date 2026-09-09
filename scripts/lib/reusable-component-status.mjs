@@ -72,22 +72,16 @@ export function createReusableComponentStatus(options = {}) {
     now,
     rootDir,
   });
-  const ct11b = summarizeCt11b({
-    claimRelevant: relevantRails.has('ct11b'),
-    rootDir,
-  });
 
   const highestEarnedClaim = determineHighestEarnedClaim(changeClass, {
     ct8b,
     ct9b,
     ct10b,
-    ct11b,
   });
   const reasonCodes = collectReasonCodes(changeClass, highestEarnedClaim.claimId, [
     ct8b,
     ct9b,
     ct10b,
-    ct11b,
   ]);
 
   return {
@@ -98,7 +92,6 @@ export function createReusableComponentStatus(options = {}) {
       ct8b: ct8b.summary,
       ct9b: ct9b.summary,
       ct10b: ct10b.summary,
-      ct11b: ct11b.summary,
     },
     claimProfiles: cloneJson(reusableComponentStatusClaimProfileMatrix),
     highestEarnedClaim,
@@ -323,73 +316,9 @@ function summarizeCt10b(context) {
   });
 }
 
-function summarizeCt11b(context) {
-  const base = createSummaryBase(
-    'CT-11B',
-    'THR-07',
-    'artifacts/harness/reusable-component-mapping-status.json',
-    context.claimRelevant
-  );
-  const mapping = readJsonWithValidation(() => {
-    const absPath = path.resolve(
-      context.rootDir,
-      'artifacts/harness/reusable-component-mapping-status.json'
-    );
-    return { absPath, data: JSON.parse(fs.readFileSync(absPath, 'utf8')) };
-  });
-  if (!mapping.ok) {
-    return buildErroredRail(base, mapping, 'ct11b-mapping-missing');
-  }
-
-  const summary = mapping.data.data.summary ?? {};
-  const components = Array.isArray(mapping.data.data.components)
-    ? mapping.data.data.components
-    : [];
-  const invalid = Number(summary.invalidCount ?? 0) > 0;
-  const incomplete = Number(summary.incompleteCount ?? 0) > 0;
-  // Code Connect is retired, so no component carries a mapping and this rail has
-  // nothing to measure. An empty mapping used to read as `satisfied` — a check
-  // reporting a pass it never performed. `not-applicable` says the rail is out of
-  // play instead. The retirement is data-driven, not deleted: the moment a mapping
-  // status carries components again, every branch below resumes on its own.
-  const retired = Number(summary.componentCount ?? 0) === 0;
-  const complete =
-    retired || (Number(summary.completeCount ?? 0) > 0 && Number(summary.componentCount ?? 0) > 0);
-  const stale = components.some((component) => component?.linkState === 'stale');
-  const outcome = !context.claimRelevant
-    ? 'not-applicable'
-    : stale || invalid || incomplete || !complete
-      ? 'unsatisfied'
-      : retired
-        ? 'not-applicable'
-        : 'satisfied';
-
-  return buildRail(base, {
-    freshness: stale ? 'stale' : 'current',
-    outcome,
-    sourceVersionOrRevision: `mappingStatusVersion:${mapping.data.data.mappingStatusVersion ?? unavailableSourceVersion}`,
-    reasonCodes: !context.claimRelevant
-      ? []
-      : stale
-        ? ['ct11b-mapping-stale']
-        : invalid
-          ? ['ct11b-mapping-invalid']
-          : incomplete || !complete
-            ? ['ct11b-mapping-incomplete']
-            : retired
-              ? ['ct11b-mapping-retired']
-              : [],
-  });
-}
-
 function determineHighestEarnedClaim(changeClass, rails) {
   const proofReady = isCurrentSatisfied(rails.ct9b);
   const reviewReady = isCurrentSatisfied(rails.ct10b);
-  // A rail that is out of play must not hold the ladder down the way a failing one
-  // does. With Code Connect retired, treating ct11b's `not-applicable` as a failure
-  // would pin the claim at `reusable-component-reviewed` forever — a rung whose name
-  // says mapping is pending, when it is retired. `unsatisfied` still blocks.
-  const mappingReady = isCurrentSatisfiedOrOutOfPlay(rails.ct11b);
   const paritySatisfied = isCurrentSatisfied(rails.ct8b);
   const parityDeferred =
     rails.ct8b.summary.freshness === 'current' && rails.ct8b.summary.outcome === 'deferred';
@@ -402,16 +331,13 @@ function determineHighestEarnedClaim(changeClass, rails) {
       if (!reviewReady) {
         return { profileId: changeClass, claimId: 'reusable-component-proof-ready' };
       }
-      if (!mappingReady) {
-        return { profileId: changeClass, claimId: 'reusable-component-reviewed' };
-      }
       if (paritySatisfied) {
         return { profileId: changeClass, claimId: 'reusable-component-parity-current' };
       }
       if (parityDeferred) {
         return { profileId: changeClass, claimId: 'reusable-component-status-baseline' };
       }
-      return { profileId: changeClass, claimId: 'reusable-component-mapping-current' };
+      return { profileId: changeClass, claimId: 'reusable-component-reviewed' };
     case 'token-only':
       return {
         profileId: changeClass,
@@ -624,16 +550,6 @@ function isCurrentSatisfied(rail) {
     rail.summary.claimRelevant &&
     rail.summary.freshness === 'current' &&
     rail.summary.outcome === 'satisfied'
-  );
-}
-
-// `not-applicable` is not a pass — it means the rail has nothing to measure, and it
-// stays visible as `not-applicable` in railSummaries so a reader can tell the two
-// apart. It only stops the rail from blocking the claim ladder.
-function isCurrentSatisfiedOrOutOfPlay(rail) {
-  return (
-    isCurrentSatisfied(rail) ||
-    (rail.summary.freshness === 'current' && rail.summary.outcome === 'not-applicable')
   );
 }
 

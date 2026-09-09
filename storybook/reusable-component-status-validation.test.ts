@@ -6,7 +6,6 @@ import { describe, expect, it } from 'vitest';
 
 import { repoRoot } from '../design-tokens/build/paths.mjs';
 import validDocsOnlyStatus from '../scripts/fixtures/reusable-component-status/valid-docs-only-status.json';
-import invalidMappingStatus from '../scripts/fixtures/reusable-component-status/invalid-mapping-reusable-component-status.json';
 import missingProofStatus from '../scripts/fixtures/reusable-component-status/missing-proof-reusable-component-status.json';
 import validOtherStatus from '../scripts/fixtures/reusable-component-status/valid-other-status.json';
 import validProofOnlyStatus from '../scripts/fixtures/reusable-component-status/valid-proof-only-status.json';
@@ -24,7 +23,6 @@ import { runReusableComponentStatusValidation } from '../scripts/lib/reusable-co
 
 const fixedTimes = {
   docsOnly: '2026-03-21T20:15:00.000Z',
-  invalidMapping: '2026-03-21T20:30:00.000Z',
   missingProof: '2026-03-21T20:35:00.000Z',
   other: '2026-03-21T20:20:00.000Z',
   proofOnly: '2026-03-21T20:10:00.000Z',
@@ -84,21 +82,7 @@ describe('createReusableComponentStatus', () => {
     ).toEqual(staleReviewStatus);
   });
 
-  it('surfaces invalid mapping and missing proof through additive reason codes', () => {
-    const invalidMappingWorkspace = copyBaseWorkspace();
-    replaceWorkspaceFile(
-      invalidMappingWorkspace,
-      'artifacts/harness/reusable-component-mapping-status.json',
-      'scripts/fixtures/reusable-component-mapping/invalid-provenance/artifacts/harness/reusable-component-mapping-status.json'
-    );
-    expect(
-      createReusableComponentStatus({
-        changeClass: 'reusable-component-advancement',
-        now: fixedTimes.invalidMapping,
-        rootDir: invalidMappingWorkspace,
-      })
-    ).toEqual(invalidMappingStatus);
-
+  it('surfaces missing proof through additive reason codes', () => {
     const missingProofWorkspace = copyBaseWorkspace();
     writeJson(path.join(missingProofWorkspace, 'artifacts/storybook/proof-coverage.json'), {
       proofCoverageVersion: '1',
@@ -134,17 +118,11 @@ describe('createReusableComponentStatus', () => {
 });
 
 describe('runReusableComponentStatusValidation', () => {
-  it('passes for informational statuses, including invalid mapping carried as status data', async () => {
+  it('passes for informational statuses without claiming review completion', async () => {
     const workspace = copyBaseWorkspace();
-    replaceWorkspaceFile(
-      workspace,
-      'artifacts/harness/reusable-component-mapping-status.json',
-      'scripts/fixtures/reusable-component-mapping/invalid-provenance/artifacts/harness/reusable-component-mapping-status.json'
-    );
-
     const status = createReusableComponentStatus({
       changeClass: 'reusable-component-advancement',
-      now: fixedTimes.invalidMapping,
+      now: fixedTimes.reusable,
       rootDir: workspace,
     });
     await writeReusableComponentStatus(status, { rootDir: workspace });
@@ -152,7 +130,7 @@ describe('runReusableComponentStatusValidation', () => {
     const stdout = createWritableBuffer();
     const stderr = createWritableBuffer();
     const exitCode = await runReusableComponentStatusValidation({
-      now: fixedTimes.invalidMapping,
+      now: fixedTimes.reusable,
       rootDir: workspace,
       stderr,
       stdout,
@@ -248,24 +226,18 @@ function copyBaseWorkspace() {
       dest: '.agents/skills/profiles/collider.json',
     },
     {
-      source: 'scripts/fixtures/component-mapping-workspace/storybook/story-inventory.json',
+      source: 'scripts/fixtures/promotion-gate/storybook/story-inventory.json',
       dest: 'storybook/story-inventory.json',
     },
     {
-      source:
-        'scripts/fixtures/reusable-component-mapping/complete/storybook/component-specs/thinking-indicator.json',
+      source: 'scripts/fixtures/promotion-gate/storybook/component-specs/thinking-indicator.json',
       dest: 'storybook/component-specs/thinking-indicator.json',
     },
     {
-      source:
-        'scripts/fixtures/component-mapping-workspace/artifacts/storybook/proof-coverage.json',
+      source: 'scripts/fixtures/promotion-gate/artifacts/storybook/proof-coverage.json',
       dest: 'artifacts/storybook/proof-coverage.json',
     },
     { source: 'artifacts/chromatic/status.json', dest: 'artifacts/chromatic/status.json' },
-    {
-      source: 'artifacts/harness/reusable-component-mapping-status.json',
-      dest: 'artifacts/harness/reusable-component-mapping-status.json',
-    },
   ];
   for (const { source, dest } of filesToCopy) {
     const sourcePath = path.join(repoRoot, source);

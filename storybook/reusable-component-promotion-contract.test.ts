@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
 import chromaticStatus from '../artifacts/chromatic/status.json';
-import reusableComponentMappingStatus from '../artifacts/harness/reusable-component-mapping-status.json';
 import proofCoverage from '../artifacts/storybook/proof-coverage.json';
 import syncLedger from '../src/figma/sync-ledger.json';
 import reusableComponentStatusReusableFixture from '../scripts/fixtures/reusable-component-status/valid-reusable-component-status.json';
@@ -51,13 +50,12 @@ describe('reusable component promotion contract docs', () => {
     expect(contractDoc).toContain('`promotion.highestEarnedLevel`');
     expect(contractDoc).toContain('`CT-12B` may consume only these repo-owned `CT-10B` fields');
     expect(contractDoc).toContain('`review.requiredForClaim`');
-    expect(contractDoc).toContain('`CT-12B` may consume only these repo-owned `CT-11B` surfaces');
     expect(contractDoc).toContain('may not copy raw upstream payloads into `railSummaries`');
     expect(contractDoc).toContain('may not infer proof readiness from story existence alone');
     expect(contractDoc).toContain('may not re-decide `review.requiredForClaim`');
   });
 
-  it('pins the S3 consumer policy while keeping non-reusable profiles advisory', () => {
+  it('pins the consumer policy while keeping non-reusable profiles advisory', () => {
     expect(policyDoc).toContain('`reusable-component-advancement` is the only profile');
     expect(policyDoc).toContain('`token-only` stays on a narrower informational profile');
     expect(policyDoc).toContain('`docs-only` stays on a narrower informational profile');
@@ -65,20 +63,16 @@ describe('reusable component promotion contract docs', () => {
     expect(policyDoc).toContain('`other` stays on an explicit catch-all informational profile');
     expect(policyDoc).toContain('`review.requiredForClaim` is consumed from `CT-10B`');
     expect(policyDoc).toContain(
-      'Mapping is a current upstream input because `THR-07` is published'
-    );
-    expect(policyDoc).toContain(
       '`ci` may block only when the requested change class is explicitly `reusable-component-advancement`.'
     );
     expect(policyDoc).toContain('`unknown` is allowed only as an advisory input.');
     expect(policyDoc).toContain('`local` is advisory-only.');
-    expect(policyDoc).toContain('Do not treat mapping as deferred planning-only input');
   });
 });
 
 describe('reusable component promotion contract module', () => {
   it('exports the frozen field inventories and enums', () => {
-    expect(reusableComponentStatusContractVersion).toBe('1');
+    expect(reusableComponentStatusContractVersion).toBe('2');
     expect(reusableComponentStatusRootFields).toEqual([
       'statusVersion',
       'generatedAt',
@@ -96,7 +90,7 @@ describe('reusable component promotion contract module', () => {
       'proof-only',
       'other',
     ]);
-    expect(reusableComponentStatusRailKeys).toEqual(['ct8b', 'ct9b', 'ct10b', 'ct11b']);
+    expect(reusableComponentStatusRailKeys).toEqual(['ct8b', 'ct9b', 'ct10b']);
     expect(reusableComponentStatusRailSummaryFields).toEqual([
       'contractId',
       'threadId',
@@ -137,19 +131,13 @@ describe('reusable component promotion contract module', () => {
       'generatedAt',
       'statusVersion',
     ]);
-    expect(reusableComponentStatusAllowedUpstreamFields.ct11b).toContain(
-      'artifacts/harness/reusable-component-mapping-status.json#mappingStatusVersion'
-    );
-    expect(reusableComponentStatusAllowedUpstreamFields.ct11b).toContain(
-      'storybook/reusable-component-mapping-contract.md#shared-field-boundary'
-    );
   });
 
   it('freezes the claim-profile matrix and keeps non-reusable profiles narrow', () => {
     expect(reusableComponentStatusClaimProfileMatrix).toEqual({
       'reusable-component-advancement': {
         changeClasses: ['reusable-component-advancement'],
-        readsRails: ['ct8b', 'ct9b', 'ct10b', 'ct11b'],
+        readsRails: ['ct8b', 'ct9b', 'ct10b'],
         enforcementMode: 'informational',
         informationalOnly: false,
         mayPromoteToBlockingInS3: true,
@@ -200,7 +188,7 @@ describe('reusable component promotion contract fixtures', () => {
     }
   });
 
-  it('keeps non-reusable fixtures informational-only and mapping current in the reusable profile', () => {
+  it('keeps non-reusable fixtures informational-only', () => {
     expect(reusableComponentStatusTokenOnlyFixture.enforcementMode).toBe('informational');
     expect(
       reusableComponentStatusTokenOnlyFixture.claimProfiles['token-only'].informationalOnly
@@ -210,13 +198,6 @@ describe('reusable component promotion contract fixtures', () => {
       'ct9b',
       'ct10b',
     ]);
-    expect(reusableComponentStatusReusableFixture.railSummaries.ct11b.freshness).toBe('current');
-    // Code Connect is retired, so the mapping rail has nothing to measure. It reports
-    // `not-applicable` rather than `satisfied` — an empty mapping is not a passed check.
-    expect(reusableComponentStatusReusableFixture.railSummaries.ct11b.outcome).toBe(
-      'not-applicable'
-    );
-    expect(reusableComponentStatusReusableFixture.reasonCodes).toContain('ct11b-mapping-retired');
   });
 });
 
@@ -225,17 +206,15 @@ describe('reusable component promotion cross-contract provenance', () => {
     const ct8bMarker = `ledgerVersion:${syncLedger.ledgerVersion}|artifactRevision:${syncLedger.artifact.revision}`;
     const ct9bMarker = `inventoryVersion:${storyInventory.inventoryVersion}|proofCoverageVersion:${proofCoverage.proofCoverageVersion}`;
     const ct10bMarker = `statusVersion:${chromaticStatus.statusVersion}|revision:${chromaticStatus.revision.gitSha}`;
-    const ct11bMarker = `mappingStatusVersion:${reusableComponentMappingStatus.mappingStatusVersion}`;
 
     expect(ct8bMarker).toBe(
       'ledgerVersion:3|artifactRevision:dc97a2671dbcc6e2a71873042566f4937b766d9d'
     );
     expect(ct9bMarker).toBe('inventoryVersion:1|proofCoverageVersion:1');
     expect(ct10bMarker).toBe('statusVersion:1|revision:0244cbdf98aa95ccba0ff0f842bf6aa59cada849');
-    expect(ct11bMarker).toBe('mappingStatusVersion:1');
   });
 
-  it('uses current repo-owned proof and mapping surfaces instead of prose-only assumptions', () => {
+  it('uses current repo-owned proof surfaces instead of prose-only assumptions', () => {
     // Story inventory preserves Stage-2 loop order: Message (primitive), Reasoning
     // (interactive), CodeBlock (primitive), then Tool (interactive).
     expect(storyInventory.components.map((component) => component.componentId)).toEqual([
@@ -326,7 +305,6 @@ describe('reusable component promotion cross-contract provenance', () => {
     // March pilot's verdict forward over a component set Chromatic has never seen.
     expect(chromaticStatus.review.diffOutcome).toBe('deferred');
     expect(chromaticStatus.check.conclusion).toBe('skipped');
-    expect(reusableComponentMappingStatus.summary.componentCount).toBe(0);
   });
 });
 

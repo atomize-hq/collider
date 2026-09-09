@@ -1,5 +1,5 @@
 {
-  "statusVersion": "1",
+  "statusVersion": "2",
   "generatedAt": "2026-03-21T20:20:00.000Z",
   "changeClass": "other",
   "railSummaries": {
@@ -29,21 +29,12 @@
       "sourceVersionOrRevision": "statusVersion:1|revision:0244cbdf98aa95ccba0ff0f842bf6aa59cada849",
       "freshness": "current",
       "outcome": "not-applicable"
-    },
-    "ct11b": {
-      "contractId": "CT-11B",
-      "threadId": "THR-07",
-      "sourcePath": "artifacts/harness/reusable-component-mapping-status.json",
-      "claimRelevant": false,
-      "sourceVersionOrRevision": "mappingStatusVersion:1",
-      "freshness": "current",
-      "outcome": "not-applicable"
     }
   },
   "claimProfiles": {
     "reusable-component-advancement": {
       "changeClasses": ["reusable-component-advancement"],
-      "readsRails": ["ct8b", "ct9b", "ct10b", "ct11b"],
+      "readsRails": ["ct8b", "ct9b", "ct10b"],
       "enforcementMode": "informational",
       "informationalOnly": false,
       "mayPromoteToBlockingInS3": true

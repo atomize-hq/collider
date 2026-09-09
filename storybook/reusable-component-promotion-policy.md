@@ -4,31 +4,29 @@
 
 ## Policy Scope
 
-- This document freezes the `S1` change-class claim profiles for reusable-component promotion.
+- This document defines the current change-class claim profiles for reusable-component promotion.
 - This document defines which upstream rails each change class may read at baseline.
-- This document freezes the `S3` consumer ratchets for local, CI, handoff, and release promotion consumers.
+- This document defines the consumer ratchets for local, CI, handoff, and release promotion consumers.
 
 ## Baseline Claim Matrix
 
-- `reusable-component-advancement` is the only profile that may read all four future rails: `ct8b`, `ct9b`, `ct10b`, and `ct11b`.
+- `reusable-component-advancement` is the only profile that may read all three current rails: `ct8b`, `ct9b`, and `ct10b`.
 - `token-only` stays on a narrower informational profile and may read only `ct8b`.
 - `docs-only` stays on a narrower informational profile and may read only `ct9b`.
 - `proof-only` stays on a narrower informational profile and may read only `ct9b` and `ct10b`.
-- `other` stays on an explicit catch-all informational profile with no future-rail requirements in this slice.
+- `other` stays on an explicit catch-all informational profile with no future-rail requirements by default.
 
 ## Change-Class Invariants
 
 - Non-reusable change classes may not inherit the full reusable-component rail set.
 - Informational status remains broader than blocking authority.
-- The reusable-component profile is the only profile that may promote from informational to blocking behavior in `S3`.
-- Narrower change classes remain informational-only in this slice even if one of their narrower rails is stale or unsatisfied.
+- The reusable-component profile is the only profile that may promote from informational to blocking behavior under the consumer rules below.
+- Narrower change classes remain informational-only by default even if one of their narrower rails is stale or unsatisfied.
 
 ## Upstream Boundary Rules
 
 - `review.requiredForClaim` is consumed from `CT-10B`; `CT-12B` may not re-decide that field.
-- Mapping is a current upstream input because `THR-07` is published and `SEAM-9B` is landed basis.
-- Mapping being current now authorizes claim-level consumer ratchets where the named consumer allows them.
-- `CT-12B` summarizes upstream repo-owned contracts. It does not replace or broaden `CT-8B`, `CT-9B`, `CT-10B`, or `CT-11B`.
+- `CT-12B` summarizes upstream repo-owned contracts. It does not replace or broaden `CT-8B`, `CT-9B`, `CT-10B`.
 
 ## Consumer Contexts
 
@@ -47,19 +45,17 @@
 
 - Proof may block only for `reusable-component-advancement`, and only in `ci` or `release`.
 - Review may block only when `CT-10B` is current and `review.requiredForClaim=true`. Informational review must remain advisory even when Chromatic ran successfully.
-- Mapping may block now that `THR-07` is published, but only for `reusable-component-advancement` in `ci` or `release`.
 - Parity remains advisory for `local`, `ci`, and `handoff` while `promotion.parityMode="deferred"`.
 - Release is the only consumer that may turn deferred, stale, or unsatisfied parity into a blocking result.
 
 ## Stale-Trigger Handling
 
-- Any stale `CT-10B` or stale `CT-11B` input must demote the relevant consumer branch back to advisory or explicit blocked state. No consumer may silently carry forward an older blocking entitlement.
+- Any stale `CT-10B` input must demote the relevant consumer branch back to advisory or explicit blocked state. No consumer may silently carry forward an older blocking entitlement.
 - Drift in upstream field boundaries must be surfaced through repo-owned `CT-12B` reason codes and consumer output, not through raw upstream payload inspection.
 - When the requested change class is unknown, stale upstream rails may still be reported, but the result must remain advisory because the heuristic classification is non-authoritative.
 
 ## Forbidden Policy Drift
 
-- Do not broaden reusable-component review, proof, mapping, or parity requirements onto `token-only`, `docs-only`, `proof-only`, or `other` by default.
+- Do not broaden reusable-component review, proof or parity requirements onto `token-only`, `docs-only`, `proof-only`, or `other` by default.
 - Do not treat `CT-10B` execution evidence or vendor UI summaries as claim authority.
-- Do not treat mapping as deferred planning-only input now that `THR-07` is published.
 - Do not let heuristic classification create blocking behavior on its own.
