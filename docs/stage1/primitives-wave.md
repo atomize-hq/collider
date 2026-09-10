@@ -195,7 +195,7 @@ Build in this sequence to unblock composition:
 
 ## Wave 2 preview (not yet scoped)
 
-These come after Wave 1 is verified and Code Connect-mapped:
+These come after the applicable Wave 1 implementation, story and visual checks pass:
 
 - `ToolCallRow` — assistant tool invocation display
 - `ToolResultRow` — tool result / output display
@@ -213,32 +213,12 @@ Each Wave 1 component needs a spec record created at:
 storybook/component-specs/<name>.json
 ```
 
-Follow the shape of the existing `storybook/component-specs/button.json`. Required fields:
+Use the installed product schema and an actual current spec, such as `storybook/component-specs/badge.json`. Relevant fields include:
 
 - `componentId`
 - `tier`
-- `figmaComponentRef` (set when Figma node is confirmed)
-- `validatorKinds` (from component tier policy)
-- `implementedStoryRefs` (filled in as stories are created)
+- `downstreamHooks.figmaComponentRef` (set when Figma node is confirmed)
+- `requiredStoryKinds` (applicable component tier obligations)
+- `ownedStoryRefs` (real story IDs and kinds)
 
 ---
-
-## Code Connect records
-
-Each Wave 1 component needs a CT-11B governance record at:
-
-```
-figma/code-connect/<name>.json
-```
-
-And a native mapping at:
-
-```
-src/components/ai-elements/<name>.figma.tsx
-```
-
-**Retired.** Code Connect is not part of this project's rails; no component carries a
-mapping and none will be created. The bootstrap doc that described this pattern is
-archived at `archive/storybook/code-connect-bootstrap.md`. A component's Figma node is
-recorded in `storybook/component-specs/<id>.json` under
-`downstreamHooks.figmaComponentRef` instead.
