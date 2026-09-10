@@ -1,5 +1,11 @@
 # shadcn v4 Migration — Handoff
 
+> Historical migration handoff. The installed ds-skills source cutover supersedes
+> its tooling paths, baseline format, refresh commands and expected slot failure.
+> See [current source inputs and commands](../src/components/upstream-sources.md).
+> Select now emits its required trigger slot and `just check-contract` is enforced;
+> the remaining shadcn migration is still separate work, not completed by that repair.
+
 **Branch:** `feat/message-stage2-pilot` · **Head:** `8916c0e` · **Tree:** clean · **Preflight:** green
 
 Groundwork for migrating `src/components/ui` from the pre-v4 shadcn style to a v4-shaped,

@@ -55,12 +55,7 @@ export const VariantMatrix: Story = {
         <Button variant="outline">Copy</Button>
       </ButtonGroup>
 
-      {/* The composition the primitive claims to support and currently does not.
-          buttonGroupVariants ships two rules aimed at `[data-slot=select-trigger]`
-          — one rounds the trailing corners, one shrinks the trigger to fit. Only the
-          v4 Select emits that slot; ours emits none, so both rules are inert and the
-          trigger renders full-width with square corners. `just check-contract` reports
-          this as CONTRACT_SLOT_DEAD. */}
+      {/* The trailing trigger must keep its outer corners beside Radix's hidden select. */}
       <ButtonGroup>
         <Button variant="outline">Branch</Button>
         <Select>
@@ -75,21 +70,21 @@ export const VariantMatrix: Story = {
       </ButtonGroup>
     </div>
   ),
-  // KNOWN BROKEN — characterization, not acceptance. This asserts today's defect so the
-  // migration has something that visibly changes. Replace it with the desired-state
-  // assertion in the same commit that migrates Select; a green test encoding the defect
-  // is a sentinel, never proof the composition works.
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: 'Environment' });
     const group = trigger.closest('[data-slot="button-group"]')!;
 
-    // Run buttonGroupVariants' own selector rather than checking an attribute on one
-    // element: this is the query the two CSS rules make, so an empty result IS the
-    // defect. Post-migration it returns the trigger, and the desired-state assertion
-    // then has to prove the resulting width and corner radius, which this cannot.
-    expect(group.querySelectorAll('[data-slot="select-trigger"]')).toHaveLength(0);
-    expect(trigger.getAttribute('data-slot')).toBeNull();
+    expect(group.querySelectorAll('[data-slot="select-trigger"]')).toHaveLength(1);
+    expect(trigger).toHaveAttribute('data-slot', 'select-trigger');
+    const style = getComputedStyle(trigger);
+    expect(parseFloat(style.borderTopRightRadius)).toBeGreaterThan(0);
+    expect(parseFloat(style.borderBottomRightRadius)).toBeGreaterThan(0);
+    expect(parseFloat(style.borderTopLeftRadius)).toBe(0);
+    expect(parseFloat(style.borderBottomLeftRadius)).toBe(0);
+    // Select intentionally has w-full. The group's conditional w-fit selector must
+    // not override an explicit width; slot repair is not a component redesign.
+    expect(trigger).toHaveClass('w-full');
   },
 };
 

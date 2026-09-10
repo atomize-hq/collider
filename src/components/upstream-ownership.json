@@ -1,0 +1,451 @@
+{
+  "ownershipVersion": "1",
+  "libraries": [
+    {
+      "id": "primitives-upstream",
+      "root": "src/components/ui",
+      "role": "migration-target",
+      "ownership": "consumer-owned-copy",
+      "files": [
+        {
+          "file": "accordion.tsx",
+          "item": "accordion",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "alert.tsx",
+          "item": "alert",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "avatar.tsx",
+          "item": "avatar",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "badge.tsx",
+          "item": "badge",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "button.tsx",
+          "item": "button",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "button-group.tsx",
+          "item": "button-group",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "card.tsx",
+          "item": "card",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "carousel.tsx",
+          "item": "carousel",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "collapsible.tsx",
+          "item": "collapsible",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "command.tsx",
+          "item": "command",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "dropdown-menu.tsx",
+          "item": "dropdown-menu",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "hover-card.tsx",
+          "item": "hover-card",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "input.tsx",
+          "item": "input",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "input-group.tsx",
+          "item": "input-group",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "progress.tsx",
+          "item": "progress",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "scroll-area.tsx",
+          "item": "scroll-area",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "select.tsx",
+          "item": "select",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "separator.tsx",
+          "item": "separator",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "spinner.tsx",
+          "item": "spinner",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "switch.tsx",
+          "item": "switch",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "tabs.tsx",
+          "item": "tabs",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "textarea.tsx",
+          "item": "textarea",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "tooltip.tsx",
+          "item": "tooltip",
+          "relationship": "copied-component"
+        }
+      ]
+    },
+    {
+      "id": "conversation-upstream",
+      "root": "src/components/ai-elements",
+      "role": "current-source",
+      "ownership": "consumer-owned-copy",
+      "files": [
+        {
+          "file": "agent.tsx",
+          "item": "agent",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "artifact.tsx",
+          "item": "artifact",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "attachment-parts.tsx",
+          "item": "attachments",
+          "relationship": "local-split"
+        },
+        {
+          "file": "attachments.tsx",
+          "item": "attachments",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "chain-of-thought.tsx",
+          "item": "chain-of-thought",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "checkpoint.tsx",
+          "item": "checkpoint",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "code-block.tsx",
+          "item": "code-block",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "code-block-body.tsx",
+          "item": "code-block",
+          "relationship": "local-split"
+        },
+        {
+          "file": "code-block-highlight.ts",
+          "item": "code-block",
+          "relationship": "local-split"
+        },
+        {
+          "file": "code-block-parts.tsx",
+          "item": "code-block",
+          "relationship": "local-split"
+        },
+        {
+          "file": "code-block-theme.ts",
+          "item": "code-block",
+          "relationship": "local-split"
+        },
+        {
+          "file": "commit.tsx",
+          "item": "commit",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "commit-files.tsx",
+          "item": "commit",
+          "relationship": "local-split"
+        },
+        {
+          "file": "confirmation.tsx",
+          "item": "confirmation",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "context.tsx",
+          "item": "context",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "context-usage.tsx",
+          "item": "context",
+          "relationship": "local-split"
+        },
+        {
+          "file": "environment-variables.tsx",
+          "item": "environment-variables",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "environment-variables-parts.tsx",
+          "item": "environment-variables",
+          "relationship": "local-split"
+        },
+        {
+          "file": "file-tree.tsx",
+          "item": "file-tree",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "file-tree-items.tsx",
+          "item": "file-tree",
+          "relationship": "local-split"
+        },
+        {
+          "file": "image.tsx",
+          "item": "image",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "inline-citation.tsx",
+          "item": "inline-citation",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "inline-citation-carousel.tsx",
+          "item": "inline-citation",
+          "relationship": "local-split"
+        },
+        {
+          "file": "jsx-preview.tsx",
+          "item": "jsx-preview",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "jsx-preview-parts.tsx",
+          "item": "jsx-preview",
+          "relationship": "local-split"
+        },
+        {
+          "file": "message.tsx",
+          "item": "message",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "message-branch.tsx",
+          "item": "message",
+          "relationship": "local-split"
+        },
+        {
+          "file": "open-in-chat.tsx",
+          "item": "open-in-chat",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "open-in-chat-providers.tsx",
+          "item": "open-in-chat",
+          "relationship": "local-split"
+        },
+        {
+          "file": "package-info.tsx",
+          "item": "package-info",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "package-info-parts.tsx",
+          "item": "package-info",
+          "relationship": "local-split"
+        },
+        {
+          "file": "plan.tsx",
+          "item": "plan",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "prompt-input.tsx",
+          "item": "prompt-input",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "prompt-input-actions.tsx",
+          "item": "prompt-input",
+          "relationship": "local-split"
+        },
+        {
+          "file": "prompt-input-context.tsx",
+          "item": "prompt-input",
+          "relationship": "local-split"
+        },
+        {
+          "file": "prompt-input-controls.tsx",
+          "item": "prompt-input",
+          "relationship": "local-split"
+        },
+        {
+          "file": "prompt-input-helpers.ts",
+          "item": "prompt-input",
+          "relationship": "local-split"
+        },
+        {
+          "file": "prompt-input-hooks.ts",
+          "item": "prompt-input",
+          "relationship": "local-split"
+        },
+        {
+          "file": "prompt-input-parts.tsx",
+          "item": "prompt-input",
+          "relationship": "local-split"
+        },
+        {
+          "file": "prompt-input-select.tsx",
+          "item": "prompt-input",
+          "relationship": "local-split"
+        },
+        {
+          "file": "queue.tsx",
+          "item": "queue",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "queue-item.tsx",
+          "item": "queue",
+          "relationship": "local-split"
+        },
+        {
+          "file": "reasoning.tsx",
+          "item": "reasoning",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "sandbox.tsx",
+          "item": "sandbox",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "schema-display.tsx",
+          "item": "schema-display",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "schema-display-parts.tsx",
+          "item": "schema-display",
+          "relationship": "local-split"
+        },
+        {
+          "file": "schema-display-property.tsx",
+          "item": "schema-display",
+          "relationship": "local-split"
+        },
+        {
+          "file": "shimmer.tsx",
+          "item": "shimmer",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "snippet.tsx",
+          "item": "snippet",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "sources.tsx",
+          "item": "sources",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "stack-trace.tsx",
+          "item": "stack-trace",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "stack-trace-frames.tsx",
+          "item": "stack-trace",
+          "relationship": "local-split"
+        },
+        {
+          "file": "stack-trace-header.tsx",
+          "item": "stack-trace",
+          "relationship": "local-split"
+        },
+        {
+          "file": "suggestion.tsx",
+          "item": "suggestion",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "task.tsx",
+          "item": "task",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "terminal.tsx",
+          "item": "terminal",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "terminal-parts.tsx",
+          "item": "terminal",
+          "relationship": "local-split"
+        },
+        {
+          "file": "test-results.tsx",
+          "item": "test-results",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "test-results-suite.tsx",
+          "item": "test-results",
+          "relationship": "local-split"
+        },
+        {
+          "file": "test-results-test.tsx",
+          "item": "test-results",
+          "relationship": "local-split"
+        },
+        {
+          "file": "tool.tsx",
+          "item": "tool",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "web-preview.tsx",
+          "item": "web-preview",
+          "relationship": "copied-component"
+        },
+        {
+          "file": "web-preview-console.tsx",
+          "item": "web-preview",
+          "relationship": "local-split"
+        }
+      ]
+    }
+  ]
+}

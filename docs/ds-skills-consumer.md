@@ -43,8 +43,10 @@ Figma build, serve, verification and ledger/proof commands use the same launcher
 
 Storybook policy/proof, Chromatic and component-evidence commands also use the
 installed product. Review outputs are no longer committed stale snapshots; absent
-current visual review blocks the explicit CI policy. Source-policy, upstream
-baseline and foundations callers are still being cut over. Older extraction
+current visual review blocks the explicit CI policy. Source-policy, static import/slot
+contracts and whole upstream acquisition/check/diff also use the installed product;
+see [consumer source inputs](../src/components/upstream-sources.md). Foundations
+callers are still being cut over. Older extraction
 handoffs are not authority to restore local installers, authored skill copies or
 local token implementations. The full cross-repository scope and evidence live in
 the ds-skills repository's `docs/ds-skills-separation-scope.md` and adjacent progress

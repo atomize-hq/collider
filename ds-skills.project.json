@@ -145,5 +145,39 @@
         }
       }
     }
+  },
+  "sourceChecks": {
+    "policy": {
+      "file": "src/components/upstream-policy.json",
+      "extensions": [".tsx"],
+      "recursive": false,
+      "timeoutMs": 5000
+    },
+    "contract": {
+      "adapter": "ts-named-imports-slots-v1",
+      "providers": [
+        {
+          "id": "primitives",
+          "root": "src/components/ui",
+          "modulePrefix": "@/components/ui",
+          "entrypoint": null
+        }
+      ],
+      "consumers": ["src/components/ai-elements"],
+      "recursive": false,
+      "slots": {
+        "mode": "filename-prefix",
+        "owners": {}
+      }
+    }
+  },
+  "registries": {
+    "definition": "src/components/upstream-registries.json",
+    "evidence": {
+      "file": "src/components/upstream-evidence.json",
+      "sha256": "fca151b9f36c4049de8b46ce180eeb0819f31a4a93879d3bada5f0bf869f94f3"
+    },
+    "candidate": ".codex-artifacts/upstream/candidate.json",
+    "lockPath": ".codex-artifacts/locks/upstream-capture.lock"
   }
 }

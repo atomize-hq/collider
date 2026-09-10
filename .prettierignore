@@ -16,3 +16,6 @@ archive/
 .claude/schemas/
 .claude/templates/
 .ds-skills/project.mjs
+
+# Exact-byte accepted registry evidence; installed registry checks validate its pin.
+src/components/upstream-evidence.json

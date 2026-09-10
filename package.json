@@ -19,9 +19,9 @@
     "validate:storybook-tier-policy": "node .ds-skills/project.mjs storybook policy validate --config ds-skills.project.json",
     "validate:storybook-story-inventory": "node .ds-skills/project.mjs storybook policy validate --config ds-skills.project.json",
     "validate:storybook-proof-structure": "node .ds-skills/project.mjs storybook proof validate --config ds-skills.project.json",
-    "validate:upstream-policy": "node scripts/validate-upstream-policy.mjs",
-    "validate:consumer-contract": "node scripts/validate-consumer-contract.mjs",
-    "baseline:upstream": "node scripts/fetch-upstream-baseline.mjs",
+    "validate:upstream-policy": "node .ds-skills/project.mjs sources policy check --config ds-skills.project.json",
+    "validate:consumer-contract": "node .ds-skills/project.mjs sources contract check --config ds-skills.project.json",
+    "baseline:upstream": "node .ds-skills/project.mjs registries capture --config ds-skills.project.json",
     "baseline:rail": "node .ds-skills/project.mjs figma baseline --config figma/token-sync.config.json --artifact design-tokens/dist/figma/tokens.json --out figma",
     "generate:storybook-proof-coverage": "node .ds-skills/project.mjs storybook proof build --config ds-skills.project.json",
     "generate:reusable-component-status": "node .ds-skills/project.mjs components status build --config ds-skills.project.json",
@@ -57,7 +57,9 @@
     "cargo:clippy": "cd src-tauri && cargo clippy -- -D warnings",
     "cargo:test": "cd src-tauri && cargo nextest run --no-tests=pass",
     "cargo:deny": "cargo deny --manifest-path src-tauri/Cargo.toml check",
-    "cargo:machete": "cd src-tauri && cargo machete"
+    "cargo:machete": "cd src-tauri && cargo machete",
+    "baseline:upstream:check": "node .ds-skills/project.mjs registries check --config ds-skills.project.json",
+    "baseline:upstream:diff": "node .ds-skills/project.mjs registries diff --config ds-skills.project.json"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": [
