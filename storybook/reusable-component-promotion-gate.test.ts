@@ -231,8 +231,8 @@ function copyBaseWorkspace() {
     // ledger, and the CLI reads Collider's vocabulary from the profile.
     { source: 'src/figma/publish-proof.json', dest: 'src/figma/publish-proof.json' },
     {
-      source: '.agents/skills/profiles/collider.json',
-      dest: '.agents/skills/profiles/collider.json',
+      source: 'src/figma/validation-profile.json',
+      dest: 'src/figma/validation-profile.json',
     },
     {
       source: 'scripts/fixtures/promotion-gate/storybook/story-inventory.json',

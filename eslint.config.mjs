@@ -8,13 +8,11 @@ const eslintConfig = defineConfig([
   globalIgnores([
     'node_modules/**',
     '.next/**',
-    // Vendored ai-elements registry payload: 80 upstream demo components and
-    // their references, copied byte-for-byte so a re-sync is a clean diff. Same
-    // policy .prettierignore applies to them, and the same one this config
-    // applies to the vendored components in src/components/ai-elements. The
-    // rest of .agents/ is ours and is linted.
-    '.agents/skills/ai-elements/references/**',
-    '.agents/skills/ai-elements/scripts/**',
+    // Receipt-sealed installed product outputs are checked by ds-skills, not rewritten here.
+    '.agents/skills/**',
+    '.agents/schemas/**',
+    '.agents/templates/**',
+    '.ds-skills/project.mjs',
     '.claude/**',
     'out/**',
     'src-tauri/**',

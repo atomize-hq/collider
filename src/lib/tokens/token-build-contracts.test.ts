@@ -1,11 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { preflightBuildArtifacts } from '../../../scripts/lib/token-build-preflight.mjs';
-import { loadBuildGraph } from '../../../scripts/lib/token-build-graph.mjs';
-import { generateTypedTokenModule } from '../../../scripts/lib/token-artifacts.mjs';
 
 const repoRoot = process.cwd();
 const stagedCssArtifactPath = path.join(repoRoot, 'design-tokens/dist/css/tokens.css');
@@ -23,7 +19,17 @@ beforeAll(() => {
 describe('token build contracts', () => {
   it('exports the stable typed surface and mirrors the current recipe payload', async () => {
     const generated = await import('../../../design-tokens/dist/tokens');
-    const graph = loadBuildGraph();
+    const recipes = Object.fromEntries(
+      fs
+        .readdirSync(path.join(repoRoot, 'design-tokens/src/recipes'))
+        .filter((file) => file.endsWith('.recipe.json'))
+        .map((file) => [
+          file.slice(0, -'.recipe.json'.length),
+          JSON.parse(
+            fs.readFileSync(path.join(repoRoot, 'design-tokens/src/recipes', file), 'utf8')
+          ),
+        ])
+    );
     const typedSource = fs.readFileSync(typedArtifactPath, 'utf8');
 
     expect(Object.keys(generated).sort()).toEqual([
@@ -37,7 +43,7 @@ describe('token build contracts', () => {
     );
     expect(typedSource).toContain('export type TokenId = keyof typeof tokenMap;');
     expect(typedSource).toContain('export type RecipeComponentId = keyof typeof recipeMap;');
-    expect(generated.recipeMap).toEqual(graph.recipeMap);
+    expect(generated.recipeMap).toEqual(recipes);
   });
 
   it('carries every non-default theme in the typed module, as a diff of tokenMap', async () => {
@@ -97,7 +103,7 @@ describe('token build contracts', () => {
     // have no consumers and would otherwise bury the design-system variables in
     // Figma's picker. They must stay in runtime css, because withholding them
     // there would remove public token IDs and become a CHANGE_POLICY migration
-    // event. See `figmaExcludedFamilies` in scripts/lib/token-build-graph.mjs.
+    // event. See `tokens.figma.excludedFamilies` in ds-skills.project.json.
     for (const family of ['tailwind-colors', 'tailwind-variables', 'font']) {
       expect(figma).not.toHaveProperty(family);
       expect(runtimeCss).toContain(`--${family}-`);
@@ -159,11 +165,15 @@ describe('token build contracts', () => {
   });
 
   it('reports the public runtime css path in build:tokens json mode', () => {
-    const result = execFileSync('node', ['design-tokens/build/build-tokens.mjs', '--json'], {
-      cwd: repoRoot,
-      encoding: 'utf8',
-      stdio: 'pipe',
-    });
+    const result = execFileSync(
+      'node',
+      ['.ds-skills/project.mjs', 'tokens', 'build', '--config', 'ds-skills.project.json', '--json'],
+      {
+        cwd: repoRoot,
+        encoding: 'utf8',
+        stdio: 'pipe',
+      }
+    );
     const payload = JSON.parse(result) as {
       ok: boolean;
       artifacts: Array<{ id: string; path: string; status: string }>;
@@ -172,74 +182,13 @@ describe('token build contracts', () => {
     expect(payload.ok).toBe(true);
     expect(payload.artifacts).toContainEqual(
       expect.objectContaining({
-        id: 'runtime-css',
+        id: 'runtimeCss',
         path: 'src/lib/tokens/tokens.css',
         status: 'unchanged',
       })
     );
   });
-
-  it('changes only the recipe section when recipe source data changes', async () => {
-    const graph = loadBuildGraph();
-    const originalSource = await generateTypedTokenModule(graph);
-    const modifiedGraph = {
-      ...graph,
-      recipeMap: {
-        'synthetic-test': {
-          componentId: 'synthetic-test',
-          recipeVersion: '1',
-          variantAxes: [{ name: 'state', values: ['a', 'b'] }],
-          defaults: { state: 'a', variants: { state: 'a' } },
-          slots: {},
-          states: {},
-          fallbacks: { missingVariantBehavior: 'use-defaults', stateFallbacks: {} },
-        },
-      },
-    };
-    const modifiedSource = await generateTypedTokenModule(modifiedGraph);
-
-    expect(extractConstSection(originalSource, 'tokenMap')).toBe(
-      extractConstSection(modifiedSource, 'tokenMap')
-    );
-    expect(extractConstSection(originalSource, 'recipeMap')).not.toBe(
-      extractConstSection(modifiedSource, 'recipeMap')
-    );
-  });
-
-  it('flags runtime css publication targets that are not writable files', () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'token-preflight-'));
-    const blockingDirectory = path.join(tempRoot, 'runtime-css');
-    fs.mkdirSync(blockingDirectory);
-
-    const diagnostics = preflightBuildArtifacts({
-      repoRoot,
-      artifacts: [
-        {
-          id: 'runtime-css',
-          kind: 'css',
-          relPath: 'src/lib/tokens/tokens.css',
-          absPath: blockingDirectory,
-        },
-      ],
-    });
-
-    fs.rmSync(tempRoot, { recursive: true, force: true });
-
-    expect(diagnostics).toEqual([
-      expect.objectContaining({
-        code: 'ARTIFACT_PATH_UNWRITABLE',
-        path: 'src/lib/tokens/tokens.css',
-        rule: 'CT-5',
-      }),
-    ]);
-  });
 });
-
-function extractConstSection(source: string, exportName: string) {
-  const start = source.indexOf(`export const ${exportName} = `);
-  const end = source.indexOf(' as const;', start);
-  return source.slice(start, end + ' as const;'.length);
-}
 
 function expectObjectKeysSorted(value: unknown) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {

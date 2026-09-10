@@ -41,8 +41,10 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
-      - name: Set up ds-skills
-        uses: ./.github/actions/setup-ds-skills
+      - name: Install pinned ds-skills and verify project discovery
+        run: |
+          echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
+          DS_SKILLS_PREFIX="$RUNNER_TEMP/ds-skills" node .ds-skills/project.mjs --install
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -70,6 +72,11 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Install pinned ds-skills and verify project discovery
+        run: |
+          echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
+          DS_SKILLS_PREFIX="$RUNNER_TEMP/ds-skills" node .ds-skills/project.mjs --install
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -95,6 +102,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install pinned ds-skills and verify project discovery
+        run: |
+          echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
+          DS_SKILLS_PREFIX="$RUNNER_TEMP/ds-skills" node .ds-skills/project.mjs --install
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
@@ -143,6 +155,11 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Install pinned ds-skills and verify project discovery
+        run: |
+          echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
+          DS_SKILLS_PREFIX="$RUNNER_TEMP/ds-skills" node .ds-skills/project.mjs --install
+
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
 
@@ -160,9 +177,6 @@ jobs:
         uses: taiki-e/install-action@v2
         with:
           tool: just,nextest
-
-      - name: Set up ds-skills
-        uses: ./.github/actions/setup-ds-skills
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -193,6 +207,11 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Install pinned ds-skills and verify project discovery
+        run: |
+          echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
+          DS_SKILLS_PREFIX="$RUNNER_TEMP/ds-skills" node .ds-skills/project.mjs --install
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -218,6 +237,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install pinned ds-skills and verify project discovery
+        run: |
+          echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
+          DS_SKILLS_PREFIX="$RUNNER_TEMP/ds-skills" node .ds-skills/project.mjs --install
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -254,6 +278,11 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install pinned ds-skills and verify project discovery
+        run: |
+          echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
+          DS_SKILLS_PREFIX="$RUNNER_TEMP/ds-skills" node .ds-skills/project.mjs --install
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -309,8 +338,10 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
-      - name: Set up ds-skills
-        uses: ./.github/actions/setup-ds-skills
+      - name: Install pinned ds-skills and verify project discovery
+        run: |
+          echo "DS_SKILLS_PREFIX=$RUNNER_TEMP/ds-skills" >> "$GITHUB_ENV"
+          DS_SKILLS_PREFIX="$RUNNER_TEMP/ds-skills" node .ds-skills/project.mjs --install
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

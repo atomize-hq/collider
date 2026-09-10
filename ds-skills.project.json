@@ -64,7 +64,7 @@
         "config": "figma/token-sync.config.json",
         "baseline": "figma/token-rail.baseline.json",
         "ledger": "src/figma/sync-ledger.json",
-        "profile": ".agents/skills/profiles/collider.json",
+        "profile": "src/figma/validation-profile.json",
         "proof": "src/figma/publish-proof.json"
       }
     }

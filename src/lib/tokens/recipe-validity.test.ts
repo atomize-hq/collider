@@ -1,9 +1,12 @@
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import badge from '../../../design-tokens/src/recipes/badge.recipe.json';
-import { runTokenValidation } from '../../../scripts/lib/token-validation.mjs';
+import project from '../../../ds-skills.project.json';
+
+const repoRoot = path.resolve(__dirname, '../../..');
 
 type Recipe = {
   recipeVersion: string;
@@ -28,12 +31,52 @@ function example(): Recipe {
 function validate(recipes: Recipe[]) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'recipe-validity-'));
   workdirs.push(dir);
+  fs.cpSync(path.join(repoRoot, project.tokens.sourceDir), path.join(dir, 'tokens'), {
+    recursive: true,
+  });
+  fs.mkdirSync(path.join(dir, 'recipes'));
   for (const recipe of recipes) {
-    fs.writeFileSync(path.join(dir, `${recipe.componentId}.recipe.json`), JSON.stringify(recipe));
+    fs.writeFileSync(
+      path.join(dir, 'recipes', `${recipe.componentId}.recipe.json`),
+      JSON.stringify(recipe)
+    );
   }
-  // Exercise the actual token gate, with real token sources and isolated recipes.
-  // A negative must reach its named rule, not fail because this component is new.
-  return runTokenValidation({ recipeGlob: path.join(dir, '*.recipe.json') });
+  // Intrinsic validation uses the installed CLI and actual Collider token sources.
+  // Build, readiness and publication are deliberately separate concerns.
+  fs.writeFileSync(
+    path.join(dir, 'project.json'),
+    JSON.stringify({
+      projectVersion: project.projectVersion,
+      tokens: {
+        format: project.tokens.format,
+        sourceDir: 'tokens',
+        recipesDir: 'recipes',
+        extensionsNamespace: project.tokens.extensionsNamespace,
+        themes: { registry: 'tokens/themes/registry.json', directory: 'tokens/themes' },
+        figma: project.tokens.figma,
+      },
+    })
+  );
+  const result = spawnSync(
+    process.execPath,
+    [
+      path.join(repoRoot, '.ds-skills/project.mjs'),
+      'tokens',
+      'validate',
+      '--config',
+      path.join(dir, 'project.json'),
+      '--root',
+      dir,
+      '--json',
+    ],
+    { cwd: repoRoot, encoding: 'utf8' }
+  );
+  expect(result.error).toBeUndefined();
+  expect([0, 1], result.stderr).toContain(result.status);
+  const report = JSON.parse(result.stdout);
+  expect(report.command).toBe('tokens validate');
+  expect(report.ok).toBe(result.status === 0);
+  return { ok: report.ok, diagnostics: report.diagnostics };
 }
 
 describe('recipe validity through the token gate', () => {
@@ -158,8 +201,7 @@ describe('recipe validity through the token gate', () => {
     expect(result.ok).toBe(false);
     expect(result.diagnostics).toEqual([
       expect.objectContaining({
-        code: 'INVALID_RECIPE_SHAPE',
-        rule: 'CT-3',
+        code: 'TOKEN_RECIPE',
         message: expect.stringMatching(message),
       }),
     ]);
@@ -173,9 +215,8 @@ describe('recipe validity through the token gate', () => {
     expect(result.ok).toBe(false);
     expect(result.diagnostics).toEqual([
       expect.objectContaining({
-        code: 'BROKEN_TOKEN_REFERENCE',
-        rule: 'CT-1',
-        message: expect.stringContaining('unknown CT-1 token reference'),
+        code: 'TOKEN_RECIPE',
+        message: expect.stringContaining('[token-inventory] unknown token reference'),
       }),
     ]);
   });

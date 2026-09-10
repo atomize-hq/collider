@@ -1,290 +1,126 @@
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { describe, expect, it } from 'vitest';
-import { repoRoot } from '../../../design-tokens/build/paths.mjs';
-import {
-  governanceSteps,
-  governanceUsage,
-  runTokenGovernance,
-  runTokenGovernanceCli,
-} from '../../../scripts/lib/token-governance.mjs';
-import { runtimeCssManualEditExitCode } from '../../../scripts/lib/token-runtime-css-drift-guard.mjs';
+import { afterEach, describe, expect, it } from 'vitest';
+import project from '../../../ds-skills.project.json';
 
-describe('runTokenGovernance', () => {
-  it('runs the full governance chain in order on success', () => {
-    const calls: string[] = [];
-    const exitCode = runTokenGovernance({
-      runScript(scriptName: string) {
-        calls.push(scriptName);
-        return 0;
-      },
-      runRuntimeCssDriftGuard() {
-        calls.push('runtime-css-drift-guard');
-        return { ok: true, exitCode: 0 };
-      },
-      runNodeScript(args: string[]) {
-        calls.push(args[0]);
-        return 0;
-      },
+const repoRoot = path.resolve(__dirname, '../../..');
+const launcher = '.ds-skills/project.mjs';
+const expectedSteps = [
+  'tokens validate',
+  'tokens guard',
+  'tokens build',
+  'tokens runtime check',
+  'tokens artifacts check',
+  'figma verify',
+  'ledger validate',
+  'ledger parity',
+  'proof validate',
+];
+const temporary: string[] = [];
+
+function run(config = 'ds-skills.project.json') {
+  const result = spawnSync(
+    process.execPath,
+    [launcher, 'tokens', 'govern', '--config', config, '--root', repoRoot, '--json'],
+    { cwd: repoRoot, encoding: 'utf8' }
+  );
+  expect(result.error).toBeUndefined();
+  expect(result.signal).toBeNull();
+  return result;
+}
+
+function candidateConfig(missing = false) {
+  const parent = path.join(repoRoot, '.codex-artifacts');
+  fs.mkdirSync(parent, { recursive: true });
+  const root = fs.mkdtempSync(path.join(parent, 'token-gate-test-'));
+  temporary.push(root);
+  const config = structuredClone(project);
+  const baseline = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, config.tokens.governance.publication.baseline), 'utf8')
+  );
+  // Change a real expectation, not the evaluator or the release installation.
+  baseline.summary.leafCount += 1;
+  const target = path.join(root, 'baseline.json');
+  if (!missing) fs.writeFileSync(target, JSON.stringify(baseline));
+  config.tokens.governance.publication.baseline = path.relative(repoRoot, target);
+  const configPath = path.join(root, 'project.json');
+  fs.writeFileSync(configPath, JSON.stringify(config));
+  return path.relative(repoRoot, configPath);
+}
+
+afterEach(() => {
+  for (const root of temporary.splice(0)) fs.rmSync(root, { recursive: true, force: true });
+});
+
+describe('installed Collider token governance', () => {
+  it('evaluates all nine real configured checks without claiming observed remote publication', () => {
+    const result = run();
+    expect(result.status, result.stderr).toBe(0);
+    const report = JSON.parse(result.stdout);
+    expect(report.command).toBe('tokens govern');
+    expect(report.ok).toBe(true);
+    expect(report.steps.map((step: { id: string }) => step.id)).toEqual(expectedSteps);
+    expect(report.capabilities).toEqual({
+      manualEditGuard: true,
+      runtimeChecks: true,
+      publication: true,
     });
+    expect(report.failedStep).toBeNull();
+    expect(report.scope).toContain('not observed remote synchronization');
+  });
 
-    expect(exitCode).toBe(0);
-    expect(calls).toEqual([
-      'validate:tokens',
-      'runtime-css-drift-guard',
-      'build:tokens',
-      'scripts/validate-token-runtime-compatibility.mjs',
-      'scripts/validate-token-artifacts.mjs',
-      'figma:verify',
+  it('rejects a corrupted Figma expectation at an evaluated gate and stops before ledger checks', () => {
+    const result = run(candidateConfig());
+    expect(result.status, result.stderr).toBe(1);
+    const report = JSON.parse(result.stdout);
+    expect(report.ok).toBe(false);
+    expect(report.failedStep).toBe('figma verify');
+    expect(report.steps.map((step: { id: string }) => step.id)).toEqual(expectedSteps.slice(0, 6));
+    expect(report.steps.at(-1).result.errors.join('\n')).toContain('leafCount');
+  });
+
+  it('distinguishes missing publication inputs from evaluated nonconformance', () => {
+    const result = run(candidateConfig(true));
+    expect(result.status).toBe(2);
+    expect(result.stdout).toBe('');
+    expect(result.stderr).toContain('baseline.json');
+  });
+
+  it('routes token and publication commands through the installed product', () => {
+    const { scripts } = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
+    expect(scripts['govern:tokens']).toBe(
+      `node ${launcher} tokens govern --config ds-skills.project.json`
+    );
+    expect(scripts['validate:tokens']).toBe(
+      `node ${launcher} tokens validate --config ds-skills.project.json`
+    );
+    expect(scripts['build:tokens']).toBe(
+      `node ${launcher} tokens build --config ds-skills.project.json`
+    );
+    for (const command of [
       'validate:sync-ledger',
       'validate:figma-parity',
       'validate:publish-proof',
-    ]);
-  });
-
-  it('short-circuits when validation fails', () => {
-    const calls: string[] = [];
-    const exitCode = runTokenGovernance({
-      runScript(scriptName: string) {
-        calls.push(scriptName);
-        return scriptName === 'validate:tokens' ? 1 : 0;
-      },
-      runRuntimeCssDriftGuard() {
-        calls.push('runtime-css-drift-guard');
-        return { ok: true, exitCode: 0 };
-      },
-      runNodeScript(args: string[]) {
-        calls.push(args[0]);
-        return 0;
-      },
-    });
-
-    expect(exitCode).toBe(1);
-    expect(calls).toEqual(['validate:tokens']);
-  });
-
-  it('fails on direct runtime css edits before build can overwrite them', () => {
-    const calls: string[] = [];
-    const stderr = createWritableBuffer();
-    const exitCode = runTokenGovernance({
-      stderr,
-      runScript(scriptName: string) {
-        calls.push(scriptName);
-        return 0;
-      },
-      runRuntimeCssDriftGuard() {
-        calls.push('runtime-css-drift-guard');
-        return {
-          ok: false,
-          exitCode: runtimeCssManualEditExitCode,
-          message:
-            'Direct edits to src/lib/tokens/tokens.css are not allowed after cutover. Recover by running `pnpm build:tokens` to regenerate from canonical sources.',
-        };
-      },
-      runNodeScript(args: string[]) {
-        calls.push(args[0]);
-        return 0;
-      },
-    });
-
-    expect(exitCode).toBe(runtimeCssManualEditExitCode);
-    expect(calls).toEqual(['validate:tokens', 'runtime-css-drift-guard']);
-    expect(stderr.read()).toContain('`pnpm build:tokens`');
-  });
-
-  it('preserves build failure exit code', () => {
-    const calls: string[] = [];
-    const exitCode = runTokenGovernance({
-      runScript(scriptName: string) {
-        calls.push(scriptName);
-        return scriptName === 'build:tokens' ? 2 : 0;
-      },
-      runRuntimeCssDriftGuard() {
-        calls.push('runtime-css-drift-guard');
-        return { ok: true, exitCode: 0 };
-      },
-      runNodeScript(args: string[]) {
-        calls.push(args[0]);
-        return 0;
-      },
-    });
-
-    expect(exitCode).toBe(2);
-    expect(calls).toEqual(['validate:tokens', 'runtime-css-drift-guard', 'build:tokens']);
-  });
-
-  it('runs compatibility before freshness and preserves the first failing node-script exit code', () => {
-    const calls: string[] = [];
-    const exitCode = runTokenGovernance({
-      runScript(scriptName: string) {
-        calls.push(scriptName);
-        return 0;
-      },
-      runRuntimeCssDriftGuard() {
-        calls.push('runtime-css-drift-guard');
-        return { ok: true, exitCode: 0 };
-      },
-      runNodeScript(args: string[]) {
-        calls.push(args[0]);
-        return args[0] === 'scripts/validate-token-runtime-compatibility.mjs' ? 2 : 0;
-      },
-    });
-
-    expect(exitCode).toBe(2);
-    expect(calls).toEqual([
-      'validate:tokens',
-      'runtime-css-drift-guard',
-      'build:tokens',
-      'scripts/validate-token-runtime-compatibility.mjs',
-    ]);
-  });
-
-  it('propagates a required-parity failure after the shared ledger gate', () => {
-    const calls: string[] = [];
-    const exitCode = runTokenGovernance({
-      runScript(scriptName: string) {
-        calls.push(scriptName);
-        return scriptName === 'validate:figma-parity' ? 1 : 0;
-      },
-      runRuntimeCssDriftGuard() {
-        calls.push('runtime-css-drift-guard');
-        return { ok: true, exitCode: 0 };
-      },
-      runNodeScript(args: string[]) {
-        calls.push(args[0]);
-        return 0;
-      },
-    });
-
-    expect(exitCode).toBe(1);
-    // Stops at parity: validate:publish-proof is the next step and must not run.
-    expect(calls).toEqual([
-      'validate:tokens',
-      'runtime-css-drift-guard',
-      'build:tokens',
-      'scripts/validate-token-runtime-compatibility.mjs',
-      'scripts/validate-token-artifacts.mjs',
       'figma:verify',
-      'validate:sync-ledger',
-      'validate:figma-parity',
-    ]);
-  });
-});
-
-describe('runTokenGovernanceCli', () => {
-  it('fails fast on unsupported args', () => {
-    const stderr = createWritableBuffer();
-    const exitCode = runTokenGovernanceCli({
-      args: ['--json'],
-      stderr,
-      runGovernance() {
-        throw new Error('should not run');
-      },
-    });
-
-    expect(exitCode).toBe(1);
-    expect(stderr.read()).toBe(`${governanceUsage}\n`);
+    ]) {
+      expect(scripts[command]).toMatch(/^node \.ds-skills\/project\.mjs /);
+    }
   });
 
-  it('maps unexpected orchestration failures to exit code 3', () => {
-    const stderr = createWritableBuffer();
-    const exitCode = runTokenGovernanceCli({
-      args: [],
-      stderr,
-      runGovernance() {
-        throw new Error('boom');
-      },
-    });
-
-    expect(exitCode).toBe(3);
-    expect(stderr.read()).toBe('[UNEXPECTED_RUNTIME_FAILURE] boom\n');
-  });
-});
-
-describe('governance package contract', () => {
-  it('exposes the seam-owned govern:tokens entrypoint', () => {
-    const packageJson = JSON.parse(
-      fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8')
-    ) as {
-      scripts?: Record<string, string>;
-    };
-
-    expect(packageJson.scripts?.['govern:tokens']).toBe('node scripts/govern-tokens.mjs');
-    // Every rail step is an invocation of the pinned CLI and nothing else. The
-    // literal is asserted because that is the whole of Collider's ownership here:
-    // if one of these grows an argument that carries policy, it belongs upstream.
-    expect(packageJson.scripts?.['validate:sync-ledger']).toBe(
-      'node scripts/ds-skills.mjs ledger validate --ledger src/figma/sync-ledger.json ' +
-        '--profile .agents/skills/profiles/collider.json'
-    );
-    expect(packageJson.scripts?.['validate:figma-parity']).toBe(
-      'node scripts/ds-skills.mjs ledger parity --ledger src/figma/sync-ledger.json ' +
-        '--profile .agents/skills/profiles/collider.json'
-    );
-    expect(packageJson.scripts?.['validate:publish-proof']).toBe(
-      'node scripts/ds-skills.mjs proof validate --proof src/figma/publish-proof.json ' +
-        '--profile .agents/skills/profiles/collider.json'
-    );
-    expect(packageJson.scripts?.['figma:verify']).toBe(
-      'node scripts/ds-skills.mjs figma verify --config figma/token-sync.config.json ' +
-        '--expect figma/token-rail.baseline.json --artifact design-tokens/dist/figma/tokens.json'
-    );
-  });
-
-  it('exposes the ordered post-cutover governance steps', () => {
-    expect(governanceSteps.map((step) => step.id)).toEqual([
-      'validate:tokens',
-      'runtime-css-drift-guard',
-      'build:tokens',
-      'runtime-compatibility',
-      'artifact-freshness',
-      'figma:verify',
-      'validate:sync-ledger',
-      'validate:figma-parity',
-      'validate:publish-proof',
-    ]);
-  });
-
-  it('runs govern:tokens first in just preflight before downstream checks', () => {
+  it('keeps token governance first in preflight without weakening subsequent gates', () => {
     const justfile = fs.readFileSync(path.join(repoRoot, 'justfile'), 'utf8');
-    const preflightRecipe = extractRecipe(justfile, 'preflight');
-    const orderedCommands = [
+    const block = justfile.match(/^preflight:\n((?:    .*\n)+)/m)?.[1];
+    expect(block).toBeDefined();
+    const commands = [
       'pnpm govern:tokens',
       'just storybook-proof',
       'just check',
       'just loc',
       'just test-all',
     ];
-
-    expect(preflightRecipe).toContain('▶ step 1/5 — token governance');
-    expect(preflightRecipe).toContain('▶ step 5/5 — automated tests');
-    expectCommandOrder(preflightRecipe, orderedCommands);
+    const indexes = commands.map((command) => block!.indexOf(command));
+    expect(indexes.every((index) => index >= 0)).toBe(true);
+    expect(indexes).toEqual([...indexes].sort((left, right) => left - right));
   });
 });
-
-function createWritableBuffer() {
-  let buffer = '';
-
-  return {
-    write(chunk: string | Uint8Array) {
-      buffer += typeof chunk === 'string' ? chunk : Buffer.from(chunk).toString('utf8');
-    },
-    read() {
-      return buffer;
-    },
-  };
-}
-
-function extractRecipe(justfile: string, recipeName: string) {
-  const recipeMatch = justfile.match(new RegExp(`^${recipeName}:\\n((?:    .*\\n)+)`, 'm'));
-
-  expect(recipeMatch?.[1]).toBeDefined();
-  return recipeMatch![1];
-}
-
-function expectCommandOrder(block: string, commands: string[]) {
-  const indexes = commands.map((command) => block.indexOf(command));
-
-  expect(indexes.every((index) => index >= 0)).toBe(true);
-  expect(indexes).toEqual([...indexes].sort((left, right) => left - right));
-}

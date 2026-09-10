@@ -1,8 +1,0 @@
-{
-  "color": {
-    "neutral": {
-      "950": { "$value": "#171717", "$type": "color" },
-      "900": { "$value": "#202020", "$type": "color" }
-    },
-    "white": { "$value": "#ffffff", "$type": "color" }
-  }

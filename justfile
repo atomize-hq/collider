@@ -71,21 +71,18 @@ figma-token-server:
 # is never executed — not even to read its version.
 #
 # Provisioning is explicit and one-time. `just preflight` acquires nothing: if
-# the release is missing it fails and tells you to run the install recipe, so a
-# network outage can never turn into a failing push.
+# the release is missing it fails and tells you to run the install recipe.
+# An already verified installation does not need the network for local gates.
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Install the pinned ds-skills release and point skill discovery at it
-# (idempotent; the install is a no-op when already present)
+# Install the pinned product and receipt-checked copies on both skill surfaces
+# (explicit upgrades refuse edited or unowned files)
 ds-skills-install:
     pnpm ds-skills:install
-    pnpm ds-skills:link
 
-# Verify the pinned release is present and correctly identified — acquires nothing
+# Verify the sealed release, launcher and discovery assets — acquires nothing
 ds-skills-check:
     pnpm ds-skills:check
-    node scripts/ds-skills.mjs skills
-    pnpm ds-skills:link:check
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers

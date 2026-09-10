@@ -6,7 +6,7 @@ import {
   defaultChromaticStatusMaxAgeMinutes,
   evaluateChromaticStatus,
 } from './chromatic-status-validator.mjs';
-import { readDsSkillsResult } from './ds-skills-cli.mjs';
+import { readPinnedResult } from '../../.ds-skills/project.mjs';
 import { validateComponentSpec } from './storybook-component-spec.mjs';
 import {
   defaultStorybookProofCoveragePath,
@@ -46,7 +46,7 @@ const unavailableSourceVersion = 'unavailable';
 // files opened here. They match the `validate:sync-ledger` script exactly; the
 // same ledger and the same profile answer both callers.
 const defaultSyncLedgerPath = 'src/figma/sync-ledger.json';
-const defaultRailProfilePath = '.agents/skills/profiles/collider.json';
+const defaultRailProfilePath = 'src/figma/validation-profile.json';
 
 export function createReusableComponentStatus(options = {}) {
   const rootDir = path.resolve(options.rootDir ?? repoRoot);
@@ -177,10 +177,23 @@ export function validateReusableComponentStatusArtifact(data) {
  */
 function summarizeCt8b(context) {
   const base = createSummaryBase('CT-8B', 'THR-05', defaultSyncLedgerPath, context.claimRelevant);
-  const read = readDsSkillsResult(
-    ['ledger', 'validate', '--ledger', defaultSyncLedgerPath, '--profile', defaultRailProfilePath],
-    { cwd: context.rootDir }
-  );
+  let read;
+  try {
+    const { result } = readPinnedResult(
+      [
+        'ledger',
+        'validate',
+        '--ledger',
+        path.resolve(context.rootDir, defaultSyncLedgerPath),
+        '--profile',
+        path.resolve(context.rootDir, defaultRailProfilePath),
+      ],
+      'ledger validate'
+    );
+    read = { ok: true, result };
+  } catch (error) {
+    read = { ok: false, errors: [error instanceof Error ? error.message : String(error)] };
+  }
   // An unavailable CLI, an unreadable ledger and an unparseable result are all
   // "no answer", and all report as errored — never as a satisfied rail.
   if (!read.ok || read.result.rail === null) {

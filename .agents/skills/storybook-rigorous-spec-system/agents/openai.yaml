@@ -1,0 +1,4 @@
+interface:
+  display_name: "Storybook Spec System"
+  short_description: "Govern story contracts and actual execution evidence"
+  default_prompt: "Use $storybook-rigorous-spec-system to govern the configured Storybook baseline, applicable story contracts and actual verification."
