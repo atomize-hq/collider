@@ -1,7 +1,12 @@
-# Component Specs
+# Collider component specs
 
-`storybook/component-specs/<component-id>.json` is the repo-owned `CT-9B` component-spec surface.
+These JSON files are consumer-owned contracts for actual component source and story
+references. `ds-skills.project.json` selects this directory, the story inventory and
+tier policy. Structural validation, reference checks and coverage generation belong
+to the installed ds-skills release; there are no local seam-owned validators.
 
-- `S1b` owns the field names and structural validation rules for each component spec file.
-- `S1c` owns the allowed `tier` values and the required-kind matrix that later constrains those fields.
-- `S3a` owns repo-wide multi-file validation, referential integrity, and coverage reporting across component specs and the story inventory.
+Use `pnpm govern:storybook-proof` and the installed
+[Storybook workflow](../../.agents/skills/storybook-rigorous-spec-system/SKILL.md).
+A spec's Figma node reference is distinct from token publication. Static coverage
+is not executed interaction testing or current visual approval; see
+[component evidence](../reusable-component-promotion-contract.md).
