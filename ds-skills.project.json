@@ -186,5 +186,27 @@
     "presentation": "figma/foundations/presentation.json",
     "output": "build/foundations/foundations.run.js",
     "lockPath": ".codex-artifacts/locks/foundations.lock"
+  },
+  "libraries": {
+    "definition": "design-system/libraries.json",
+    "evidence": {
+      "file": "design-system/library-evidence.json",
+      "sha256": "49c49755773240082c998a1aaa40d9706de4169bcc2db8b6060343c2d561e13c"
+    },
+    "candidate": ".codex-artifacts/libraries/candidate.json",
+    "lockPath": ".codex-artifacts/locks/library-evidence.lock"
+  },
+  "curation": {
+    "definition": "design-system/curation.json",
+    "candidate": ".codex-artifacts/curation/candidate.json",
+    "accepted": {
+      "file": "design-system/curation-bundle.json",
+      "sha256": "6dd9bf87fafc68ac100dde5fd78ac4ffa30151db6dfe0ddbc7bb1cc06f3b7b50"
+    },
+    "review": {
+      "file": "design-system/curation-review.json",
+      "sha256": "c2d393139b0233ccd801416e206549195ddcec5c2e9a6f666dbda97e9f25c729"
+    },
+    "lockPath": ".codex-artifacts/locks/curation.lock"
   }
 }

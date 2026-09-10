@@ -27,6 +27,9 @@ The product owns skill instructions, examples, schemas, templates, installation,
 resolution and token tooling. To change them, change and release ds-skills, then
 review the resulting pin and installed-output diff here. Custom library guidance
 also belongs to the product's curation workflow, not manually authored skill trees.
+Collider now installs [two focused custom library skills](../design-system/README.md)
+from pinned owned-source evidence; their review is explicitly author self-review.
+`just ds-skills-check` verifies both core and custom discovery assets.
 
 ## Consumer-owned inputs and behavior
 

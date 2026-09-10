@@ -16,6 +16,11 @@ archive/
 .claude/schemas/
 .claude/templates/
 .ds-skills/project.mjs
+.ds-skills/curation.json
 
 # Exact-byte accepted registry evidence; installed registry checks validate its pin.
 src/components/upstream-evidence.json
+
+# Exact-byte reviewed custom library evidence/bundle; checked by installed curation.
+design-system/library-evidence.json
+design-system/curation-bundle.json

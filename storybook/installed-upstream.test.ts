@@ -12,7 +12,16 @@ beforeEach(() => {
   fs.cpSync(path.join(repoRoot, 'src/components'), path.join(root, 'src/components'), {
     recursive: true,
   });
-  writeJson(root, 'ds-skills.project.json', project);
+  // Registry checks also validate configured library source inputs.
+  fs.cpSync(path.join(repoRoot, 'design-system'), path.join(root, 'design-system'), {
+    recursive: true,
+  });
+  for (const relative of ['package.json', 'tsconfig.json', 'AGENTS.md'])
+    fs.copyFileSync(path.join(repoRoot, relative), path.join(root, relative));
+  fs.copyFileSync(
+    path.join(repoRoot, 'ds-skills.project.json'),
+    path.join(root, 'ds-skills.project.json')
+  );
 });
 afterEach(() => fs.rmSync(root, { recursive: true, force: true }));
 

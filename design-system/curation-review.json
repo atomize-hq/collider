@@ -1,0 +1,11 @@
+{
+  "reviewVersion": "1",
+  "bundleSha256": "6dd9bf87fafc68ac100dde5fd78ac4ffa30151db6dfe0ddbc7bb1cc06f3b7b50",
+  "decision": "approved",
+  "reviewer": {
+    "kind": "agent",
+    "id": "Codex /root - author self-review"
+  },
+  "reviewedAt": "2026-09-10T13:40:42.534Z",
+  "notes": "Author self-review only, not independent or user approval. Reviewed all 18 guidance sections and both worked examples against captured owned source, manifests, policy and license evidence. Both examples typecheck and pass four actual dark/light Storybook cases in an isolated no-hardlinks Collider checkout. The initial duplicate Copy action accessible name was corrected in the example, not by weakening the assertion. This approves local candidate installation only; repository-required independent review, final public release/pins and landing remain outstanding. Selection is eight owned primitive exports and fourteen owned conversation exports, not the entire catalogs. No production application source or Figma content was changed."
+}

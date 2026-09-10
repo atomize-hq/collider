@@ -56,7 +56,7 @@ storybook-proof:
 reusable-component-promotion profile consumer:
     pnpm govern:reusable-component-promotion --profile {{quote(profile)}} --consumer {{quote(consumer)}}
 
-# Build the repo-owned Figma token sync plugin
+# Build the installed product's Figma token sync plugin for this consumer
 figma-plugin-build:
     pnpm figma:plugin:build
 
@@ -83,6 +83,8 @@ ds-skills-install:
 # Verify the sealed release, launcher and discovery assets — acquires nothing
 ds-skills-check:
     pnpm ds-skills:check
+    node .ds-skills/project.mjs curation check --config ds-skills.project.json
+    node .ds-skills/project.mjs curation installed check --config ds-skills.project.json
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers
@@ -150,7 +152,7 @@ check-rs:
     pnpm cargo:clippy
 
 # Fast full check: TS + upstream policy + Rust
-check: check-ts check-upstream check-contract check-rs
+check: ds-skills-check check-ts check-upstream check-contract check-rs
 
 # ══════════════════════════════════════════════════════════════════════════════
 # LOC — lines-of-code guards via tokei (code lines only; blanks + comments excluded)

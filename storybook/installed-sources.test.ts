@@ -130,7 +130,9 @@ describe('Collider source contracts through the independently installed product'
       );
     }
     const justfile = fs.readFileSync(path.join(repoRoot, 'justfile'), 'utf8');
-    expect(justfile).toContain('check: check-ts check-upstream check-contract check-rs');
+    expect(justfile).toContain(
+      'check: ds-skills-check check-ts check-upstream check-contract check-rs'
+    );
     expect(justfile).toContain('pnpm baseline:upstream:check');
     const workflow = fs.readFileSync(path.join(repoRoot, '.github/workflows/ci.yml'), 'utf8');
     const quality = workflow.split('\n  quality:')[1].split('\n  test-all:')[0];
