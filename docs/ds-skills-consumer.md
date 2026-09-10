@@ -1,11 +1,13 @@
 # Collider's installed ds-skills boundary
 
-Status: local separation candidate; public release and final landing pending.
+Status: pinned public-release integration.
 
-Collider pins the product in `ds-skills.release.json`. The current
-`v0.0.0-p8-stream` candidate was independently acquired and verified locally;
-it is **not available as a public GitHub release**. A fresh machine needs an
-operator-provided verified release mirror until the final pin is published.
+Collider pins the published `v0.5.2` product in `ds-skills.release.json`. It was
+independently acquired from the public release and its core/custom installed
+integrity checks passed. A fresh machine can acquire the reviewed public pin;
+an operator-provided mirror is optional, not required. This records installation
+integrity, not a claim that component readiness, repository CI, or landing
+requirements have been satisfied.
 Do not substitute an ambient executable or a sibling source checkout.
 
 ## Installation and checking

@@ -59,5 +59,7 @@ interaction, Reasoning disclosure and Tool status/result display. The examples w
 read back from installed guidance before a second successful run. No production
 component or story was changed to make this proof pass.
 
-Independent review and final release/pins remain pending. Curated skill approval
+The published v0.5.2 pin and installed core/custom integrity checks are verified.
+Those checks do not establish component readiness or satisfy repository review, CI,
+and landing requirements. Curated skill approval
 is not recipe validity, component readiness, visual review or Figma publication.
