@@ -64,14 +64,23 @@ describe('installed Collider story and readiness integration', () => {
     expect(failed.diagnostics.join('\n')).toContain('tier');
   });
 
-  it('keeps missing visual review visible and blocks the same explicit CI policy', () => {
+  it('keeps missing visual review visible in built and checked evidence', () => {
     const generated = report(['components', 'status', 'build']);
     expect(generated.report.statusVersion).toBe('3');
     expect(generated.report.evidence['story-coverage'].state).toBe('satisfied');
     expect(generated.report.evidence['visual-review'].state).toBe('unavailable');
     expect(generated.report.evidence['figma-publication'].state).toBe('satisfied');
     report(['components', 'status', 'check']);
-    expect(promote('component-review', 'ci', 1).decision.requirementsSatisfied).toBe(false);
+  });
+
+  it('blocks missing visual review under the explicit CI policy', () => {
+    const blocked = promote('component-review', 'ci', 1);
+    expect(blocked.decision.requirementsSatisfied).toBe(false);
+    expect(blocked.decision.unmet).toContain('visual-review');
+    expect(blocked.report.evidence['visual-review'].state).toBe('unavailable');
+  });
+
+  it('allows the explicit reference policy without claiming visual approval', () => {
     expect(promote('reference', 'docs').decision.requirementsSatisfied).toBe(true);
   });
 
