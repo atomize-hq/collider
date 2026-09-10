@@ -19,9 +19,10 @@ A production change requires reviewed canonical source and actual post-sync chec
 
 ## Separation verification
 
-First use an explicitly selected disposable Figma file. Configure an isolated
-consumer copy with that file's actual targets and separate evidence outputs. Confirm
-the team/file identity before mutation. Do not redirect production records to the
+The user backed up the open Collider file and authorized its use on 2026-09-10.
+Use a separately named test collection and dedicated test page in that file.
+Configure an isolated consumer copy with those actual targets and separate evidence
+outputs. Confirm the file identity before mutation. Do not redirect production records to the
 test, fabricate passed fields, or mark an unexecuted check as successful.
 
 Build and serve through the independently installed pinned product. In native Figma,
