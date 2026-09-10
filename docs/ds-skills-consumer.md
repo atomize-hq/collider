@@ -3,7 +3,7 @@
 Status: local separation candidate; public release and final landing pending.
 
 Collider pins the product in `ds-skills.release.json`. The current
-`v0.0.0-p6-skills-final` candidate was independently acquired and verified locally;
+`v0.0.0-p8-stream` candidate was independently acquired and verified locally;
 it is **not available as a public GitHub release**. A fresh machine needs an
 operator-provided verified release mirror until the final pin is published.
 Do not substitute an ambient executable or a sibling source checkout.
@@ -41,7 +41,9 @@ validity, runtime/artifact checks and the existing publication attestations. A
 passing local attestation check is **not** evidence of a new live Figma publication.
 Figma build, serve, verification and ledger/proof commands use the same launcher.
 
-The remaining Storybook/Chromatic, component-status, source-policy, upstream
+Storybook policy/proof, Chromatic and component-evidence commands also use the
+installed product. Review outputs are no longer committed stale snapshots; absent
+current visual review blocks the explicit CI policy. Source-policy, upstream
 baseline and foundations callers are still being cut over. Older extraction
 handoffs are not authority to restore local installers, authored skill copies or
 local token implementations. The full cross-repository scope and evidence live in

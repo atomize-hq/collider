@@ -68,5 +68,82 @@
         "proof": "src/figma/publish-proof.json"
       }
     }
+  },
+  "storybook": {
+    "format": "csf-policy-v1",
+    "inventory": "storybook/story-inventory.json",
+    "tierPolicy": "storybook/component-tier-policy.json",
+    "versionPolicy": ".storybook/storybook-version-policy.json",
+    "proof": {
+      "adapter": "csf-ts-v1",
+      "storyRoots": ["src", "storybook/stories"],
+      "componentSpecs": "storybook/component-specs",
+      "generatedArtifactKeys": ["tokenDocs", "recipeDocs", "runtimeParity"],
+      "coverage": "artifacts/storybook/proof-coverage.json",
+      "lockPath": ".codex-artifacts/locks/storybook-proof.lock",
+      "formatting": {
+        "printWidth": 100,
+        "tabWidth": 2,
+        "useTabs": false
+      }
+    },
+    "chromatic": {
+      "status": "artifacts/chromatic/status.json",
+      "lockPath": ".codex-artifacts/locks/review-restore.lock",
+      "checkName": "chromatic-review",
+      "requiredForClaim": true,
+      "maxAgeMinutes": 1440,
+      "maxFutureSkewSeconds": 60,
+      "restore": {
+        "apiBase": "https://api.github.com",
+        "repository": "atomize-hq/collider",
+        "workflow": "ci.yml",
+        "artifactPrefix": "chromatic-status-",
+        "entry": "status.json",
+        "tokenEnv": "GH_TOKEN",
+        "maxPages": 10
+      },
+      "publish": {
+        "provider": "chromatic-node-v15",
+        "buildDir": "storybook-static",
+        "tokenEnv": "CHROMATIC_PROJECT_TOKEN",
+        "repository": "atomize-hq/collider",
+        "timeoutSeconds": 1200,
+        "mode": "review"
+      }
+    }
+  },
+  "components": {
+    "report": "artifacts/harness/reusable-component-status.json",
+    "lockPath": ".codex-artifacts/locks/component-evidence.lock",
+    "maxAgeMinutes": 60,
+    "profiles": {
+      "reference": {
+        "requirements": ["story-coverage"],
+        "consumers": {
+          "docs": "blocking"
+        }
+      },
+      "component-review": {
+        "requirements": ["story-coverage", "visual-review"],
+        "consumers": {
+          "ci": "blocking",
+          "local": "advisory",
+          "handoff": "blocking"
+        }
+      },
+      "publication-record": {
+        "requirements": ["figma-publication"],
+        "consumers": {
+          "release": "blocking"
+        }
+      },
+      "release": {
+        "requirements": ["story-coverage", "visual-review", "figma-publication"],
+        "consumers": {
+          "release": "blocking"
+        }
+      }
+    }
   }
 }

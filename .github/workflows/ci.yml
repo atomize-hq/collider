@@ -17,6 +17,7 @@ env:
   NODE_VERSION: '22'
   PNPM_VERSION: '10.11.1'
   CARGO_TERM_COLOR: always
+  REVIEW_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
 # Token drift belongs in the governance job.
 # Downstream jobs must consume pnpm govern:tokens through that single shared entrypoint
@@ -28,6 +29,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REVIEW_SHA }}
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -59,6 +62,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REVIEW_SHA }}
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -90,6 +95,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REVIEW_SHA }}
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -142,6 +149,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REVIEW_SHA }}
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -194,6 +203,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REVIEW_SHA }}
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -225,6 +236,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REVIEW_SHA }}
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -252,7 +265,7 @@ jobs:
       - name: Upload Storybook static build
         uses: actions/upload-artifact@v4
         with:
-          name: storybook-static-${{ github.sha }}
+          name: storybook-static-${{ env.REVIEW_SHA }}
           path: storybook-static
           if-no-files-found: error
 
@@ -265,6 +278,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: ${{ env.REVIEW_SHA }}
           fetch-depth: 0
 
       - name: Set up pnpm
@@ -290,7 +304,7 @@ jobs:
       - name: Download Storybook static build
         uses: actions/download-artifact@v4
         with:
-          name: storybook-static-${{ github.sha }}
+          name: storybook-static-${{ env.REVIEW_SHA }}
           path: storybook-static
 
       - name: Publish branch-aware Chromatic review
@@ -298,24 +312,36 @@ jobs:
         continue-on-error: true
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-        run: pnpm chromatic:review
+          REVIEW_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import { readPinnedResult } from './.ds-skills/project.mjs';
+          const { status, result } = readPinnedResult(
+            ['chromatic', 'review', 'publish', '--config', 'ds-skills.project.json', '--branch', process.env.REVIEW_BRANCH],
+            'chromatic review publish'
+          );
+          if (['written', 'unchanged'].includes(result.artifactStatus)) {
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'current_status=true\n');
+          }
+          process.stdout.write(JSON.stringify(result) + '\n');
+          process.exitCode = status;
+          JS
 
-      - name: Validate chromatic review status artifact
-        if: always()
-        env:
-          CHROMATIC_STATUS_EXPECTED_GIT_SHA: ${{ github.sha }}
-        run: pnpm validate:chromatic-status
+      - name: Validate current invocation's review status
+        if: ${{ always() && steps.publish_chromatic_review.outputs.current_status == 'true' }}
+        run: pnpm validate:chromatic-status --sha "$REVIEW_SHA"
 
-      - name: Upload chromatic review status artifact
-        if: always()
+      - name: Upload current invocation's review status
+        if: ${{ always() && steps.publish_chromatic_review.outputs.current_status == 'true' }}
         uses: actions/upload-artifact@v4
         with:
-          name: chromatic-status-${{ github.sha }}
+          name: chromatic-status-${{ env.REVIEW_SHA }}
           path: artifacts/chromatic/status.json
           if-no-files-found: error
 
-      - name: Fail on chromatic review publication error
-        if: ${{ always() && steps.publish_chromatic_review.outcome == 'failure' }}
+      - name: Require a completed current publication
+        if: ${{ always() && (steps.publish_chromatic_review.outcome != 'success' || steps.publish_chromatic_review.outputs.current_status != 'true') }}
         run: exit 1
 
   reusable-component-promotion:
@@ -325,6 +351,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.REVIEW_SHA }}
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -349,18 +377,22 @@ jobs:
       - name: Download chromatic review status artifact
         uses: actions/download-artifact@v4
         with:
-          name: chromatic-status-${{ github.sha }}
+          name: chromatic-status-${{ env.REVIEW_SHA }}
           path: artifacts/chromatic
 
-      - name: Run reusable component promotion gate
-        env:
-          REUSABLE_COMPONENT_PROMOTION_CONSUMER: ci
-          REUSABLE_COMPONENT_PROMOTION_CHANGE_CLASS: unknown
-        run: pnpm govern:reusable-component-promotion
+      - name: Generate current static story coverage
+        run: pnpm govern:storybook-proof
+
+      - name: Record current component evidence
+        run: pnpm generate:reusable-component-status
+
+      - name: Enforce the explicit component review policy
+        run: pnpm govern:reusable-component-promotion --profile component-review --consumer ci
 
       - name: Upload reusable component promotion artifact
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: reusable-component-status-${{ github.sha }}
+          name: reusable-component-status-${{ env.REVIEW_SHA }}
           path: artifacts/harness/reusable-component-status.json
           if-no-files-found: error

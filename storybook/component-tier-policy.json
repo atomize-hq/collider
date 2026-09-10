@@ -1,5 +1,5 @@
 {
-  "policyVersion": "1",
+  "policyVersion": "2",
   "tierOrder": ["primitive", "interactive", "workflow"],
   "tiers": {
     "primitive": {
@@ -101,5 +101,6 @@
       ],
       "consumerScope": ["THR-02", "THR-04", "THR-08"]
     }
-  }
+  },
+  "consumerIds": ["THR-02", "THR-04", "THR-08"]
 }

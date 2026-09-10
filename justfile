@@ -53,8 +53,8 @@ storybook-proof:
     pnpm govern:storybook-proof
 
 # Manual reusable-component promotion gate (consumer policy stays outside preflight for now)
-reusable-component-promotion:
-    pnpm govern:reusable-component-promotion
+reusable-component-promotion profile consumer:
+    pnpm govern:reusable-component-promotion --profile {{quote(profile)}} --consumer {{quote(consumer)}}
 
 # Build the repo-owned Figma token sync plugin
 figma-plugin-build:

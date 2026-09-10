@@ -76,3 +76,6 @@ figma/plugins/collider-token-sync/code.js.map
 figma/plugins/collider-token-sync/ui.html
 figma/plugins/collider-token-sync/manifest.json
 
+
+# Revision-bound review output; never restore a committed stale review as evidence.
+/artifacts/chromatic/status.json

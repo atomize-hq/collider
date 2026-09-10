@@ -22,10 +22,8 @@
   ],
   "configFiles": [".storybook/main.ts", ".storybook/preview.ts"],
   "validationCommands": [
-    "node scripts/validate-storybook-version-policy.mjs .storybook/storybook-version-policy.json",
-    "node scripts/validate-storybook-tier-policy.mjs storybook/component-tier-policy.json",
-    "node scripts/validate-storybook-story-inventory.mjs storybook/story-inventory.json",
-    "node scripts/validate-storybook-proof-structure.mjs"
+    "node .ds-skills/project.mjs storybook policy validate --config ds-skills.project.json",
+    "node .ds-skills/project.mjs storybook proof validate --config ds-skills.project.json"
   ],
   "notes": [
     "Keep all Storybook packages on the same exact release line.",

@@ -1,8 +1,8 @@
 {
   "installationVersion": "2",
-  "release": "v0.0.0-p6-skills-final",
-  "sourceCommit": "bba67dfa9625c3d3d8dbda9625eff86e9d2e691d",
-  "pinSha256": "def95b97527c1d493737f500e343dba61ee81d518ddbdbd82d33d8c1c0df35ba",
+  "release": "v0.0.0-p8-stream",
+  "sourceCommit": "676db71cc1bb654e768bf8a5c38ad64dd85aadd5",
+  "pinSha256": "2be942739a7b6bc0c5ef603d3dabdae0149bc79a563768398fd3a17f3c47a16a",
   "files": {
     ".agents/schemas/README.md": {
       "sha256": "be0b97c0d036c69461fab0f85a4b3dfc8c34d456e2710b5405f1754e707abf57",
