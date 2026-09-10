@@ -46,7 +46,8 @@ installed product. Review outputs are no longer committed stale snapshots; absen
 current visual review blocks the explicit CI policy. Source-policy, static import/slot
 contracts and whole upstream acquisition/check/diff also use the installed product;
 see [consumer source inputs](../src/components/upstream-sources.md). Foundations
-callers are still being cut over. Older extraction
+[model and presentation data](../figma/foundations/README.md) also use installed
+build/check commands; no authored renderer or token tooling remains here. Older extraction
 handoffs are not authority to restore local installers, authored skill copies or
 local token implementations. The full cross-repository scope and evidence live in
 the ds-skills repository's `docs/ds-skills-separation-scope.md` and adjacent progress

@@ -1,0 +1,219 @@
+{
+  "rendererVersion": "1",
+  "pageId": "2419:17",
+  "collectionId": "VariableCollectionId:2019:334",
+  "ownerId": "collider-foundations",
+  "fonts": {
+    "body": {
+      "family": "Poppins",
+      "style": "Regular"
+    },
+    "code": {
+      "family": "Roboto Mono",
+      "style": "Regular"
+    },
+    "heading": {
+      "family": "Poppins",
+      "style": "SemiBold"
+    }
+  },
+  "roles": {
+    "background": "semantic/color/background/base",
+    "text": "semantic/color/text/primary",
+    "muted": "semantic/color/text/secondary",
+    "accent": "accent/primary",
+    "border": "semantic/color/border/default",
+    "fontSize": "type/size/xs",
+    "titleSize": "type/size/2xl",
+    "sectionSize": "type/size/2xs",
+    "cornerRadius": "radius/md",
+    "rowGap": "spacing/2",
+    "sectionGap": "spacing/14",
+    "padding": "spacing/16"
+  },
+  "width": 1120,
+  "sampleFontSize": 14,
+  "scales": {
+    "layout.container": 0.6
+  },
+  "frames": [
+    {
+      "id": "colour-dark",
+      "name": "Foundations \u00b7 Colour \u00b7 Dark",
+      "description": "Variable-bound swatches for the explicitly pinned frame mode. Foregrounds use their own paired surfaces; decorative-border and status-strip ratios are informational. Displayed values and ratios are generated static text, not live calculations. Mode: dark.",
+      "mode": "dark",
+      "sections": [
+        "semantic.color.background",
+        "semantic.color.border",
+        "semantic.color.text",
+        "semantic.color.interaction",
+        "semantic.color.status-strip",
+        "accent"
+      ],
+      "x": 8800,
+      "y": 0,
+      "targetId": null
+    },
+    {
+      "id": "type-dark",
+      "name": "Foundations \u00b7 Type \u00b7 Dark",
+      "description": "Two families: Poppins for UI, Roboto Mono for code and numerals. Samples below are live text at the token\u2019s real size and weight, so this frame is a specimen, not a table of numbers. Role aliases at the bottom record the usage vocabulary inherited from Collider-Old. Mode: dark.",
+      "mode": "dark",
+      "sections": [
+        "type.font",
+        "type.size",
+        "type.role",
+        "type.leading",
+        "type.tracking",
+        "type.weight"
+      ],
+      "x": 10400,
+      "y": 0,
+      "targetId": null
+    },
+    {
+      "id": "space-&-shape-dark",
+      "name": "Foundations \u00b7 Space & Shape \u00b7 Dark",
+      "description": "Raw scales first, usage-named aliases second \u2014 the hybrid model set in Phase 1b. New components pick from the scale; the alias blocks record the vocabulary that formalised atoms already use. Bars and boxes below are drawn at their real value. Mode: dark.",
+      "mode": "dark",
+      "sections": [
+        "spacing",
+        "spacing.gap",
+        "spacing.padding",
+        "radius",
+        "radius.role",
+        "shape.border.width",
+        "shape.opacity",
+        "shape.role"
+      ],
+      "x": 12000,
+      "y": 0,
+      "targetId": null
+    },
+    {
+      "id": "elevation-dark",
+      "name": "Foundations \u00b7 Elevation \u00b7 Dark",
+      "description": "CSS drop-shadow specimens derived from each selected mode, not bindable effect variables. Symmetric padding preserves the full effect reach. Rebuild after token changes; light-mode tuning remains a design question, not an automatic pass. Mode: dark.",
+      "mode": "dark",
+      "sections": ["elevation.level", "elevation.role"],
+      "x": 13600,
+      "y": 0,
+      "targetId": null
+    },
+    {
+      "id": "motion-dark",
+      "name": "Foundations \u00b7 Motion \u00b7 Dark",
+      "description": "Duration bars use the actual duration values at 1ms = 1px. Easing strings and each role's duration/easing pair are recorded as values; this is not an animation preview. Mode: dark.",
+      "mode": "dark",
+      "sections": [
+        "motion.duration",
+        "motion.easing",
+        "motion.role.appear",
+        "motion.role.dismiss",
+        "motion.role.hover"
+      ],
+      "x": 15200,
+      "y": 0,
+      "targetId": null
+    },
+    {
+      "id": "layout-dark",
+      "name": "Foundations \u00b7 Layout \u00b7 Dark",
+      "description": "Container bars use a labeled 60% display scale; gutter specimens retain actual token widths. These represent app layout constraints, not documentation frame geometry. Mode: dark.",
+      "mode": "dark",
+      "sections": ["layout.container", "layout.gutter"],
+      "x": 16800,
+      "y": 0,
+      "targetId": null
+    },
+    {
+      "id": "colour-light",
+      "name": "Foundations \u00b7 Colour \u00b7 Light",
+      "description": "Variable-bound swatches for the explicitly pinned frame mode. Foregrounds use their own paired surfaces; decorative-border and status-strip ratios are informational. Displayed values and ratios are generated static text, not live calculations. Mode: light.",
+      "mode": "light",
+      "sections": [
+        "semantic.color.background",
+        "semantic.color.border",
+        "semantic.color.text",
+        "semantic.color.interaction",
+        "semantic.color.status-strip",
+        "accent"
+      ],
+      "x": 8800,
+      "y": 16000,
+      "targetId": null
+    },
+    {
+      "id": "type-light",
+      "name": "Foundations \u00b7 Type \u00b7 Light",
+      "description": "Two families: Poppins for UI, Roboto Mono for code and numerals. Samples below are live text at the token\u2019s real size and weight, so this frame is a specimen, not a table of numbers. Role aliases at the bottom record the usage vocabulary inherited from Collider-Old. Mode: light.",
+      "mode": "light",
+      "sections": [
+        "type.font",
+        "type.size",
+        "type.role",
+        "type.leading",
+        "type.tracking",
+        "type.weight"
+      ],
+      "x": 10400,
+      "y": 16000,
+      "targetId": null
+    },
+    {
+      "id": "space-&-shape-light",
+      "name": "Foundations \u00b7 Space & Shape \u00b7 Light",
+      "description": "Raw scales first, usage-named aliases second \u2014 the hybrid model set in Phase 1b. New components pick from the scale; the alias blocks record the vocabulary that formalised atoms already use. Bars and boxes below are drawn at their real value. Mode: light.",
+      "mode": "light",
+      "sections": [
+        "spacing",
+        "spacing.gap",
+        "spacing.padding",
+        "radius",
+        "radius.role",
+        "shape.border.width",
+        "shape.opacity",
+        "shape.role"
+      ],
+      "x": 12000,
+      "y": 16000,
+      "targetId": null
+    },
+    {
+      "id": "elevation-light",
+      "name": "Foundations \u00b7 Elevation \u00b7 Light",
+      "description": "CSS drop-shadow specimens derived from each selected mode, not bindable effect variables. Symmetric padding preserves the full effect reach. Rebuild after token changes; light-mode tuning remains a design question, not an automatic pass. Mode: light.",
+      "mode": "light",
+      "sections": ["elevation.level", "elevation.role"],
+      "x": 13600,
+      "y": 16000,
+      "targetId": null
+    },
+    {
+      "id": "motion-light",
+      "name": "Foundations \u00b7 Motion \u00b7 Light",
+      "description": "Duration bars use the actual duration values at 1ms = 1px. Easing strings and each role's duration/easing pair are recorded as values; this is not an animation preview. Mode: light.",
+      "mode": "light",
+      "sections": [
+        "motion.duration",
+        "motion.easing",
+        "motion.role.appear",
+        "motion.role.dismiss",
+        "motion.role.hover"
+      ],
+      "x": 15200,
+      "y": 16000,
+      "targetId": null
+    },
+    {
+      "id": "layout-light",
+      "name": "Foundations \u00b7 Layout \u00b7 Light",
+      "description": "Container bars use a labeled 60% display scale; gutter specimens retain actual token widths. These represent app layout constraints, not documentation frame geometry. Mode: light.",
+      "mode": "light",
+      "sections": ["layout.container", "layout.gutter"],
+      "x": 16800,
+      "y": 16000,
+      "targetId": null
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "modelVersion": "1",
+  "extensionsNamespace": "com.atomizehq.collider",
+  "defaultTheme": "dark",
+  "modes": [
+    {
+      "id": "dark",
+      "label": "Dark"
+    },
+    {
+      "id": "light",
+      "label": "Light"
+    }
+  ],
+  "units": {
+    "rootFontPx": 16,
+    "emReferencePx": 10
+  },
+  "sections": [
+    {
+      "id": "semantic.color.background",
+      "label": "BACKGROUND & SURFACE",
+      "description": "Page grounds and layered surfaces. `base` is the app ground \u2014 everything else in this file sits on it. No ratio column: a ground measured against itself says nothing.",
+      "kind": "color",
+      "prefix": "semantic.color.background",
+      "include": "direct",
+      "metric": "none",
+      "against": null,
+      "metrics": {},
+      "pairs": {}
+    },
+    {
+      "id": "semantic.color.border",
+      "label": "BORDER",
+      "description": "Hairlines and dividers, measured against `background/base`. Ratio only, no verdict \u2014 WCAG 1.4.11 exempts purely decorative dividers, so a low number here is a design choice rather than a defect. Judge it by eye against the swatch.",
+      "kind": "color",
+      "prefix": "semantic.color.border",
+      "include": "direct",
+      "metric": "info",
+      "against": "semantic.color.background.base",
+      "metrics": {},
+      "pairs": {}
+    },
+    {
+      "id": "semantic.color.text",
+      "label": "TEXT",
+      "description": "The reading ladder, measured against `background/base`. The bar is 4.5:1 for body copy and 3:1 for large text.",
+      "kind": "color",
+      "prefix": "semantic.color.text",
+      "include": "direct",
+      "metric": "text",
+      "against": "semantic.color.background.base",
+      "metrics": {},
+      "pairs": {}
+    },
+    {
+      "id": "semantic.color.interaction",
+      "label": "INTERACTION",
+      "description": "Focus and selection affordances, measured against `background/base`. These DO answer to 1.4.11 at 3:1 \u2014 a focus ring is a UI component indicator, not decoration.",
+      "kind": "color",
+      "prefix": "semantic.color.interaction",
+      "include": "direct",
+      "metric": "ui",
+      "against": "semantic.color.background.base",
+      "metrics": {},
+      "pairs": {}
+    },
+    {
+      "id": "semantic.color.status-strip",
+      "label": "STATUS STRIP",
+      "description": "Run-state strip fills against `background/base`. Ratio only: whether these need 3:1 depends on whether the strip is the sole carrier of the state or is paired with a label, which varies by component.",
+      "kind": "color",
+      "prefix": "semantic.color.status-strip",
+      "include": "direct",
+      "metric": "info",
+      "against": "semantic.color.background.base",
+      "metrics": {},
+      "pairs": {}
+    },
+    {
+      "id": "accent",
+      "label": "ACCENT",
+      "description": "The single accent rail \u2014 one name carrying a value per mode. `sidebar-primary` is the only value that actually differs between modes. Each `-foreground` is measured against its own accent surface, not against the page ground.",
+      "kind": "color",
+      "prefix": "accent",
+      "include": "direct",
+      "metric": "info",
+      "against": "semantic.color.background.base",
+      "metrics": {
+        "accent.primary-foreground": "text",
+        "accent.sidebar-primary-foreground": "text"
+      },
+      "pairs": {
+        "accent.primary-foreground": "accent.primary",
+        "accent.sidebar-primary-foreground": "accent.sidebar-primary"
+      }
+    },
+    {
+      "id": "type.font",
+      "label": "FONT FAMILIES",
+      "description": "The role layer reads these as --font-sans and --font-mono.",
+      "kind": "font",
+      "prefix": "type.font",
+      "include": "direct"
+    },
+    {
+      "id": "type.size",
+      "label": "SIZE RAMP",
+      "description": "Seven steps, 2pt-tuned for Collider. Each line is set at its own token size.",
+      "kind": "size",
+      "prefix": "type.size",
+      "include": "direct"
+    },
+    {
+      "id": "type.role",
+      "label": "ROLE ALIASES",
+      "description": "Usage-named aliases onto the size ramp, carried over from Collider-Old. New work picks from the ramp; this block grows as atoms formalise.",
+      "kind": "size",
+      "prefix": "type.role",
+      "include": "direct"
+    },
+    {
+      "id": "type.leading",
+      "label": "LEADING",
+      "description": "Line-height multipliers shown on wrapped text at the configured sample font size. A leading variable binds as pixels, so the multiplier is converted to percent rather than bound.",
+      "kind": "leading",
+      "prefix": "type.leading",
+      "include": "direct"
+    },
+    {
+      "id": "type.tracking",
+      "label": "TRACKING",
+      "description": "Letter-spacing. `wide` is what the small uppercase section headers on this page use. Tracking is authored in em and Figma would bind it as a raw percentage, so it is resolved against each sample\u2019s own size rather than bound.",
+      "kind": "tracking",
+      "prefix": "type.tracking",
+      "include": "direct"
+    },
+    {
+      "id": "spacing",
+      "label": "SPACING SCALE",
+      "description": "20 steps from 0 to 128px. Bars are drawn at the token\u2019s actual width.",
+      "kind": "dimension",
+      "prefix": "spacing",
+      "include": "direct"
+    },
+    {
+      "id": "spacing.gap",
+      "label": "GAP ROLE ALIASES",
+      "description": "Usage-named steps inherited from Collider-Old atoms.",
+      "kind": "dimension",
+      "prefix": "spacing.gap",
+      "include": "direct"
+    },
+    {
+      "id": "spacing.padding",
+      "label": "PADDING ROLE ALIASES",
+      "description": "Usage-named padding steps inherited from Collider atoms; direct token-width specimens.",
+      "kind": "dimension",
+      "prefix": "spacing.padding",
+      "include": "direct"
+    },
+    {
+      "id": "radius",
+      "label": "RADIUS",
+      "description": "Corner radii drawn on specimen boxes. Full radius clamps to a pill at the displayed size.",
+      "kind": "radius",
+      "prefix": "radius",
+      "include": "direct"
+    },
+    {
+      "id": "radius.role",
+      "label": "RADIUS ROLE ALIASES",
+      "description": "Usage-named values from Collider tokens; specimens reflect the explicit frame mode.",
+      "kind": "radius",
+      "prefix": "radius.role",
+      "include": "direct"
+    },
+    {
+      "id": "shape.border.width",
+      "label": "BORDER WIDTHS",
+      "description": "Tailwind v4 defaults `border` to currentColor; the role bridge restores the semantic colour.",
+      "kind": "border",
+      "prefix": "shape.border.width",
+      "include": "direct"
+    },
+    {
+      "id": "shape.opacity",
+      "label": "OPACITY",
+      "description": "Applied to a solid accent fill on the page ground. An opacity variable binds as a percentage, so 0.7 would land as 0.7% \u2014 the value is read from the token and applied, not bound.",
+      "kind": "opacity",
+      "prefix": "shape.opacity",
+      "include": "direct"
+    },
+    {
+      "id": "shape.role",
+      "label": "OPACITY ROLE ALIASES",
+      "description": "Usage-named values from Collider tokens; specimens reflect the explicit frame mode.",
+      "kind": "opacity",
+      "prefix": "shape.role",
+      "include": "direct"
+    },
+    {
+      "id": "elevation.level",
+      "label": "LEVELS",
+      "description": "The raw shadow ramp, drawn on cards using the configured page-ground role. Padding includes the full effect reach; CSS strings are derived effects, not variable-bound shadows.",
+      "kind": "shadow",
+      "prefix": "elevation.level",
+      "include": "direct"
+    },
+    {
+      "id": "elevation.role",
+      "label": "ROLE ALIASES",
+      "description": "Which surface uses which level.",
+      "kind": "shadow",
+      "prefix": "elevation.role",
+      "include": "direct"
+    },
+    {
+      "id": "motion.duration",
+      "label": "DURATIONS",
+      "description": "Usage-named values from Collider tokens; specimens reflect the explicit frame mode.",
+      "kind": "duration",
+      "prefix": "motion.duration",
+      "include": "direct"
+    },
+    {
+      "id": "motion.easing",
+      "label": "EASING",
+      "description": "Usage-named values from Collider tokens; specimens reflect the explicit frame mode.",
+      "kind": "value",
+      "prefix": "motion.easing",
+      "include": "direct"
+    },
+    {
+      "id": "layout.container",
+      "label": "CONTAINERS",
+      "description": "Max content widths for route shells and reading columns.",
+      "kind": "dimension",
+      "prefix": "layout.container",
+      "include": "direct"
+    },
+    {
+      "id": "layout.gutter",
+      "label": "GUTTERS",
+      "description": "Usage-named values from Collider tokens; specimens reflect the explicit frame mode.",
+      "kind": "dimension",
+      "prefix": "layout.gutter",
+      "include": "direct"
+    },
+    {
+      "id": "type.weight",
+      "label": "WEIGHTS",
+      "description": "Poppins ships all four. Roboto Mono is used at 400 and 500 only. Figma names a weight as a font style rather than a number, so these samples cannot bind type/weight \u2014 the style is matched by hand.",
+      "kind": "weight",
+      "prefix": "type.weight",
+      "include": "direct",
+      "weightStyles": {
+        "400": "Regular",
+        "500": "Medium",
+        "600": "SemiBold",
+        "700": "Bold"
+      }
+    },
+    {
+      "id": "motion.role.appear",
+      "label": "APPEAR ROLE",
+      "description": "Paired duration and easing for appear. Both source leaves are shown together as values, not a preview of the animation.",
+      "kind": "value",
+      "prefix": "motion.role.appear",
+      "include": "direct"
+    },
+    {
+      "id": "motion.role.dismiss",
+      "label": "DISMISS ROLE",
+      "description": "Paired duration and easing for dismiss. Both source leaves are shown together as values, not a preview of the animation.",
+      "kind": "value",
+      "prefix": "motion.role.dismiss",
+      "include": "direct"
+    },
+    {
+      "id": "motion.role.hover",
+      "label": "HOVER ROLE",
+      "description": "Paired duration and easing for hover. Both source leaves are shown together as values, not a preview of the animation.",
+      "kind": "value",
+      "prefix": "motion.role.hover",
+      "include": "direct"
+    }
+  ]
+}

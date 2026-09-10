@@ -179,5 +179,12 @@
     },
     "candidate": ".codex-artifacts/upstream/candidate.json",
     "lockPath": ".codex-artifacts/locks/upstream-capture.lock"
+  },
+  "foundations": {
+    "artifact": "design-tokens/dist/figma/tokens.json",
+    "model": "figma/foundations/model.json",
+    "presentation": "figma/foundations/presentation.json",
+    "output": "build/foundations/foundations.run.js",
+    "lockPath": ".codex-artifacts/locks/foundations.lock"
   }
 }
