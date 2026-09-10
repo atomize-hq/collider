@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useEffect, useState } from 'react';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 
 import {
   Terminal,
@@ -87,7 +87,8 @@ const StreamingDemo = () => {
       if (cancelled) {
         return;
       }
-      setOutput((prev) => (prev ? `${prev}\n${lines[index]}` : lines[index]));
+      const line = lines[index];
+      setOutput((prev) => (prev ? `${prev}\n${line}` : line));
       index += 1;
       if (index < lines.length) {
         window.setTimeout(tick, 220);
@@ -197,6 +198,13 @@ export const StreamingTransition: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await canvas.findByText(/streaming…/i);
+    await waitFor(() => {
+      expect(canvas.queryByText(/streaming…/i)).not.toBeInTheDocument();
+      const output = canvas.getByRole('group', { name: 'Terminal output' }).textContent;
+      const plainOutput = STREAMING_OUTPUT.replace(/\u001b\[[0-9;]*m/g, '');
+      expect(output).toBe(plainOutput);
+      expect(output).not.toContain('undefined');
+    });
   },
 };
 
