@@ -46,8 +46,11 @@ describe('Collider current reviewed custom skills', () => {
       'node .ds-skills/project.mjs curation installed check --config ds-skills.project.json'
     );
     const review = readJson(root, project.curation.review.file);
-    expect(review.reviewer.id).toBe('Codex /root - author self-review');
-    expect(review.notes).toContain('not independent or user approval');
+    expect(review.bundleSha256).toBe(
+      'e3c11636c724f8e0c7c0e135a7b7de16577ac711b2f3b89b412defb8f718ef77'
+    );
+    expect(review.reviewer.id).toBe('Codex /root/release_gate_review - independent review');
+    expect(review.notes).toContain('not new live Figma or final CI/landing proof');
   });
 
   it('installs both actual selected library guides identically on both discovery surfaces', () => {

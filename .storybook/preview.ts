@@ -1,6 +1,8 @@
 import '../src/app/globals.css';
 
 import type { Preview } from '@storybook/nextjs-vite';
+import isChromatic from 'chromatic/isChromatic';
+import { MotionGlobalConfig } from 'motion/react';
 import { createElement, type CSSProperties } from 'react';
 
 import {
@@ -8,6 +10,11 @@ import {
   storybookDefaultThemeId,
   storybookThemeItems,
 } from '../src/lib/tokens/storybookTheme';
+
+// Chromatic cannot pause JavaScript-driven infinite animations. Capture their
+// static frame there only; production and local Storybook retain real motion.
+// https://www.chromatic.com/docs/animations/#javascript-animations
+MotionGlobalConfig.skipAnimations = isChromatic();
 
 const previewSurfaceStyle: CSSProperties = {
   background: 'var(--color-background-base)',

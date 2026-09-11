@@ -1,11 +1,11 @@
 {
   "reviewVersion": "1",
-  "bundleSha256": "6dd9bf87fafc68ac100dde5fd78ac4ffa30151db6dfe0ddbc7bb1cc06f3b7b50",
+  "bundleSha256": "e3c11636c724f8e0c7c0e135a7b7de16577ac711b2f3b89b412defb8f718ef77",
   "decision": "approved",
   "reviewer": {
     "kind": "agent",
-    "id": "Codex /root - author self-review"
+    "id": "Codex /root/release_gate_review - independent review"
   },
-  "reviewedAt": "2026-09-10T13:40:42.534Z",
-  "notes": "Author self-review only, not independent or user approval. Reviewed all 18 guidance sections and both worked examples against captured owned source, manifests, policy and license evidence. Both examples typecheck and pass four actual dark/light Storybook cases in an isolated no-hardlinks Collider checkout. The initial duplicate Copy action accessible name was corrected in the example, not by weakening the assertion. This approves local candidate installation only; repository-required independent review, final public release/pins and landing remain outstanding. Selection is eight owned primitive exports and fourteen owned conversation exports, not the entire catalogs. No production application source or Figma content was changed."
+  "reviewedAt": "2026-09-11T01:13:54.599Z",
+  "notes": "Independent exact-bundle provenance refresh review approved. Only captured package.json adds direct chromatic 13.3.5 for Storybook capture detection; selected libraries/APIs, all authored guidance and both previously typechecked/runtime-tested examples are unchanged. Six package citations advance their source hash and full-file end line 144 to 145. Generated skill changes are provenance and package excerpts only. This records candidate installation review, not new live Figma or final CI/landing proof."
 }

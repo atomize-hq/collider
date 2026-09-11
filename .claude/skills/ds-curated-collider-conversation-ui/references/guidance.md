@@ -58,7 +58,7 @@ Evidence:
 - "conversation:src/components/ai-elements/message.tsx" lines 1–116, SHA-256 965d6a54b9e65b45f0350c87976504cb9ffd5fe271605bcb4a9f30e09c1b17d2
 - "conversation:src/components/ai-elements/reasoning.tsx" lines 1–208, SHA-256 296bcd2b368bcb82293580faecb4b24de691183b3399af79f0a528558fa31313
 - "conversation:src/components/ai-elements/tool.tsx" lines 1–156, SHA-256 321bfed87f872eabe4fcd57872209e167051b6a791f05cd92c009809e664df9d
-- "conversation:package.json" lines 1–144, SHA-256 f146b3f86f2cd9b0036f5a2e33ba6149acccdf647685c327a041c4b62ca56c5f
+- "conversation:package.json" lines 1–145, SHA-256 ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354
 
 ## Distinguish SDK-facing display types from application transport
 
@@ -69,7 +69,7 @@ These files are client components and import React types/hooks, Streamdown and A
 Evidence:
 - "conversation:src/components/ai-elements/message.tsx" lines 1–116, SHA-256 965d6a54b9e65b45f0350c87976504cb9ffd5fe271605bcb4a9f30e09c1b17d2
 - "conversation:src/components/ai-elements/tool.tsx" lines 1–156, SHA-256 321bfed87f872eabe4fcd57872209e167051b6a791f05cd92c009809e664df9d
-- "conversation:package.json" lines 1–144, SHA-256 f146b3f86f2cd9b0036f5a2e33ba6149acccdf647685c327a041c4b62ca56c5f
+- "conversation:package.json" lines 1–145, SHA-256 ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354
 
 ## Preserve local splits and Apache attribution
 
@@ -100,7 +100,7 @@ Run app typecheck, the installed source checks and Message/Reasoning/Tool storie
 
 
 Evidence:
-- "conversation:package.json" lines 1–144, SHA-256 f146b3f86f2cd9b0036f5a2e33ba6149acccdf647685c327a041c4b62ca56c5f
+- "conversation:package.json" lines 1–145, SHA-256 ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354
 - "conversation:src/components/ai-elements/message.stories.tsx" lines 1–58, SHA-256 2184e704da92c139115b187e10b99195f7b015fe8644d9f89ff3f51c289e8184
 - "conversation:src/components/ai-elements/reasoning.stories.tsx" lines 1–164, SHA-256 405634d5ab23bd6fdd7b5739e5a9705179292eb6a3d21b4c9e72d5b4641f8b35
 - "conversation:src/components/ai-elements/tool.stories.tsx" lines 1–240, SHA-256 eb66be8b9bc9bb66863c39c43935536f40e0d7e61e5684f78a128180c420c145
