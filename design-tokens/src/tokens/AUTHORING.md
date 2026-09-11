@@ -1,148 +1,60 @@
 # Canonical Token Authoring Guide
 
-`design-tokens/src/tokens/**` is the canonical authoring surface for scalar token data under `CT-1`. The files in this directory define the repo-owned token source consumed by downstream seams.
+`design-tokens/src/tokens/**` is the canonical scalar-token source. The source loader
+reads every `<family>.tokens.json` file, validates its filename-derived family, and
+builds canonical IDs from that family plus the nested object path. This guide records
+the current file contract; it does not replace the validator or authorize a taxonomy
+change.
 
-This guide is limited to token authoring boundaries:
+## Current file ownership
 
-- what belongs in each canonical token file,
-- which cross-file references are allowed,
-- which concerns are explicitly out of scope for token files.
+| Family file                                                                                                     | Current domain                                      |
+| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `accent.tokens.json`, `core.tokens.json`, `semantic.tokens.json`                                                | Color primitives, accents, and runtime-facing roles |
+| `type.tokens.json`, `font.tokens.json`                                                                          | Typography families and font declarations           |
+| `spacing.tokens.json`, `radius.tokens.json`, `shape.tokens.json`, `layout.tokens.json`, `elevation.tokens.json` | Space, geometry, layout, and elevation values/roles |
+| `motion.tokens.json`                                                                                            | Duration, easing, and motion roles                  |
+| `tailwind-colors.tokens.json`, `tailwind-variables.tokens.json`                                                 | Tailwind compatibility inputs                       |
 
-This guide does not define validator behavior, CI enforcement, runtime traceability examples, or rename/removal policy. Use `design-tokens/src/tokens/CHANGE_POLICY.md` for public token-ID and theme-ID change rules. Runtime CSS such as `src/lib/tokens/tokens.css` is generated output, not canonical input. Component recipes belong under `design-tokens/src/recipes/**`, not under `design-tokens/src/tokens/**`.
+`themes/registry.json` is the theme registry contract. A theme file can override an
+existing canonical path for its declared theme; it does not create a new unreviewed
+family. Use `CHANGE_POLICY.md` for rename/removal and theme-ID changes.
 
-## Canonical File Ownership
+## Placement and references
 
-| File                      | Ownership                         | Allowed content                                                                          | Excluded content                                                                   |
-| ------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `core.tokens.json`        | Raw scalar primitives             | Base color values and other primitive scalar values that can be reused without UI intent | Component meaning, runtime CSS variable names, theme-selection policy, recipe data |
-| `semantic.tokens.json`    | Runtime-facing meaning and intent | Canonical semantic tokens that describe how the UI uses values                           | Raw-value ownership, runtime CSS variable names, recipe data                       |
-| `motion.tokens.json`      | Motion primitives                 | Duration, easing, and other motion-specific scalar values                                | Color semantics, recipe/state data, runtime CSS references                         |
-| `themes/registry.json`    | Theme registry contract           | Supported theme IDs, default theme, fallback semantics                                   | Theme-owned token values, public token IDs outside registry semantics              |
-| `themes/dark.tokens.json` | Required v1 theme values          | Theme-specific values for existing canonical token paths under theme ID `dark`           | New public family prefixes, undeclared theme IDs, recipe data                      |
+- Put scalar data in the existing filename-derived family that owns its domain. Do
+  not collapse valid files into `core`, `semantic`, or `motion` solely to satisfy
+  historical documentation.
+- Every leaf needs the DTCG type/value shape accepted by the source validator. Use
+  the existing family style as the local example.
+- A `{family.path}` reference must resolve to a declared canonical token ID. The
+  validator checks declared references, including references retained by theme
+  overrides; do not substitute runtime CSS variables or guessed paths.
+- Runtime CSS names, generated artifact paths, component recipes, slot names,
+  variants, and state matrices are not token-source identifiers.
 
-## File-Boundary Rules
+## Current motion examples
 
-### `core.tokens.json`
-
-- Owns raw values only.
-- Must not encode component meaning, runtime variable names, theme-selection policy, or recipe data.
-- Must not reference `semantic`, `motion`, theme registry entries, runtime CSS, or recipes.
-
-Example:
+`motion.tokens.json` currently owns real duration, easing, and role data:
 
 ```json
 {
-  "color": {
-    "neutral": {
-      "950": {
-        "$value": "#171717",
-        "$type": "color"
-      }
+  "duration": { "instant": { "$value": "80ms", "$type": "duration" } },
+  "role": {
+    "hover": {
+      "duration": { "$value": "{motion.duration.instant}", "$type": "duration" },
+      "easing": { "$value": "{motion.easing.out}", "$type": "string" }
     }
   }
 }
 ```
 
-Canonical token ID: `core.color.neutral.950`
+These are current examples, not a new naming decision. The canonical IDs include
+`motion.duration.instant`, `motion.easing.out`, and `motion.role.hover.duration`.
 
-### `semantic.tokens.json`
+## Exclusions
 
-- Owns runtime-facing meaning and intent.
-- May reference `core` tokens by DTCG reference string.
-- Must not reference runtime CSS variables or recipe manifests.
-- Must not become a second source of raw scalar ownership.
-
-Example:
-
-```json
-{
-  "color": {
-    "text": {
-      "secondary": {
-        "$value": "{core.color.neutral.500}",
-        "$type": "color"
-      }
-    }
-  }
-}
-```
-
-Canonical token ID: `semantic.color.text.secondary`
-
-Allowed reference: `{core.color.neutral.500}`
-
-### `motion.tokens.json`
-
-- Owns motion values only.
-- Must not introduce color semantics, recipe/state data, or runtime CSS references.
-- This guide does not use the current motion file to introduce fresh taxonomy decisions; it only establishes file ownership and scalar-only scope.
-
-Example from the current file:
-
-```json
-{
-  "placeholder": {
-    "durationQuick": {
-      "$value": "150ms",
-      "$type": "duration"
-    }
-  }
-}
-```
-
-This entry belongs in `motion.tokens.json` because it is a scalar motion value. It does not authorize new naming or taxonomy decisions beyond motion ownership.
-
-### `themes/registry.json` and `themes/<theme>.tokens.json`
-
-- `themes/registry.json` is the only source of truth for supported theme IDs, default theme selection, and fallback semantics.
-- Theme files must use a registry-declared theme ID.
-- Theme files must not create a fourth public family prefix. Public token IDs remain `core`, `semantic`, or `motion`.
-- Theme files may publish theme-specific values for existing canonical token paths.
-- Theme files must not invent new public IDs or declare theme IDs outside `themes/registry.json`.
-
-Example from `themes/dark.tokens.json`:
-
-```json
-{
-  "$extensions": {
-    "com.atomizehq.collider": {
-      "themeId": "dark"
-    }
-  },
-  "semantic": {
-    "color": {
-      "text": {
-        "secondary": {
-          "$value": "{core.color.neutral.500}",
-          "$type": "color"
-        }
-      }
-    }
-  }
-}
-```
-
-This example is theme-owned because it publishes a theme-specific semantic value tied to theme ID `dark`, which must also exist in `themes/registry.json`.
-
-## Reference Matrix
-
-| Source file                  | Allowed references                                                    | Prohibited references                                              |
-| ---------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `core.tokens.json`           | None                                                                  | `semantic`, `motion`, `themes/registry.json`, runtime CSS, recipes |
-| `semantic.tokens.json`       | `core` via DTCG reference strings                                     | runtime CSS, recipes, theme registry declarations                  |
-| `motion.tokens.json`         | None for v1 guidance beyond self-owned scalar motion values           | runtime CSS, recipes, color semantics                              |
-| `themes/<theme>.tokens.json` | Existing canonical token paths and canonical core values where needed | new public IDs, undeclared theme IDs, recipe manifests             |
-
-## Explicit Exclusions
-
-Token files must not contain or define:
-
-- component IDs,
-- slot names,
-- variant definitions,
-- state matrices,
-- recipe-only defaults or fallbacks,
-- runtime CSS variable names as source identifiers,
-- generated artifact paths as authoring inputs.
-
-When a maintainer needs recipe modeling, runtime traceability, or change-control guidance, they should use the seam-owned docs for those concerns instead of expanding token files beyond scalar canonical data.
+Token files must not become source for component IDs, slot names, variant definitions,
+state matrices, recipe-only defaults/fallbacks, runtime CSS variable names, or
+generated artifact paths. Put recipe modeling under `design-tokens/src/recipes/**` and
+consult seam-owned docs for runtime traceability.

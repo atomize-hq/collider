@@ -1,7 +1,7 @@
 # Collider backlog
 
-Current separation work is governed by the scope and progress record in ds-skills,
-not the superseded extraction task list. Historical backlog details remain in Git
+Current consumer operation is governed by the public ds-skills release contracts and
+this repository's reviewed pin, not the superseded extraction task list. Historical backlog details remain in Git
 at `3f5c8c024237dff8ffb73782c06337a75c001383`. Preserve the decisions below; remeasure
 before implementation rather than treating old counts or CI observations as current.
 
@@ -29,13 +29,18 @@ not restore committed stale review snapshots, automatically accept baselines, or
 make a required job advisory to get a green result. Check snapshot budget before
 publication; real changes require review by an authorized reviewer.
 
-## BL-3 / BL-4 — Product separation is in progress, not remotely landed
+## BL-3 / BL-4 — Maintain the public consumer boundary
 
 Reusable tooling and all skill authoring belong to ds-skills. Collider holds inputs,
-pinned installed outputs and thin invocations. The private candidate is locally
-installed, but final public release, both-consumer proof, independent review and
-normal merges remain required. See [consumer boundary](ds-skills-consumer.md).
-Do not restore a Git/SSH package dependency, local resolver or mirrored skill source.
+pinned installed outputs, and thin invocations. The pin in `ds-skills.release.json`
+is public operational authority only after its matching immutable tag/assets are
+published and verified and the pin/core/custom installations are rebound to that
+exact published identity. Until then, the staged pin and release-tagged links are
+prospective, not public install targets. The original separation landed
+with ds-skills v0.5.3 and Collider PR2; later upgrades must bind the actual immutable
+published release record and pass current review, CI, and landing gates. See the
+[consumer boundary](ds-skills-consumer.md). Do not restore a Git/SSH package
+dependency, local resolver, or mirrored skill source.
 
 ## BL-5 — Remeasure the remaining application tooling typecheck gap
 

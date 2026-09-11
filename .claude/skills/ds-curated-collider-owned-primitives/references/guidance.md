@@ -52,7 +52,7 @@ Import from @/components/ui/button, badge, select and button-group. These are lo
 
 Evidence:
 - "primitives:tsconfig.json" lines 1–34, SHA-256 92d6951ebc9df1109cb1127a3615eec69251a2807df8d09043e8a5a7ef5a3226
-- "primitives:package.json" lines 1–145, SHA-256 ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354
+- "primitives:package.json" lines 1–145, SHA-256 d5f1cdfa8598623c116b741bd4257941435955dddfa154228f8db8f7dd700de9
 - "primitives:src/components/upstream-ownership.json" lines 1–451, SHA-256 8afc752a3392442a63b9c43e63a4741cd82018c1bb79ae1326e25efb22e09cfd
 
 ## Use the actual app toolchain and declaration limits
@@ -62,7 +62,7 @@ The captured manifest declares React ^19.2.4, Next ^16.1.7 and Tailwind ^4.2.1; 
 
 
 Evidence:
-- "primitives:package.json" lines 1–145, SHA-256 ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354
+- "primitives:package.json" lines 1–145, SHA-256 d5f1cdfa8598623c116b741bd4257941435955dddfa154228f8db8f7dd700de9
 - "primitives:tsconfig.json" lines 1–34, SHA-256 92d6951ebc9df1109cb1127a3615eec69251a2807df8d09043e8a5a7ef5a3226
 - "primitives:src/components/ui/select.tsx" lines 1–153, SHA-256 65b9546988b8296647fa35d51dc119eaf1202e63d8a5820c40702717c140524e
 
@@ -95,10 +95,10 @@ After changes, run pnpm validate:upstream-policy, pnpm validate:consumer-contrac
 
 
 Evidence:
-- "primitives:package.json" lines 1–145, SHA-256 ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354
+- "primitives:package.json" lines 1–145, SHA-256 d5f1cdfa8598623c116b741bd4257941435955dddfa154228f8db8f7dd700de9
 - "primitives:src/components/ui/select.stories.tsx" lines 1–131, SHA-256 30d4f8719db573cc5d0caa41d80f158d5e2d7f2ee7d07505f70552d806104c47
 - "primitives:src/components/ui/button-group.stories.tsx" lines 1–99, SHA-256 c56cf2921a519eab21f563aa8a122aec8f0adde4683587de7bba550d5b112b14
-- "primitives:AGENTS.md" lines 1–19, SHA-256 0be7beb97c51b43bd65bb0f967cb89dd9bf5a8780030bc9dca0136c7709953e8
+- "primitives:AGENTS.md" lines 1–19, SHA-256 f6e4b341009b9b09591fc01b5b7941ddb0359f784e1c37933a1a7626fd8ee4f5
 
 ## Do not infer primitives that have not migrated
 

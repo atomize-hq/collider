@@ -1,7 +1,7 @@
 {
   "curationVersion": "1",
   "namespace": "collider",
-  "evidenceSha256": "19d718e61da9eaea94d372b2874c561893b8ee04a86db30337dc4a87ead5d3f3",
+  "evidenceSha256": "1e8926fe2ea0dbf25cc2b7d1a9dc78f78fd51f897b312ad930a307e652175a1a",
   "skills": [
     {
       "id": "owned-primitives",
@@ -161,7 +161,7 @@
             {
               "library": "primitives",
               "file": "package.json",
-              "sha256": "ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354",
+              "sha256": "d5f1cdfa8598623c116b741bd4257941435955dddfa154228f8db8f7dd700de9",
               "start": 1,
               "end": 145
             },
@@ -184,7 +184,7 @@
             {
               "library": "primitives",
               "file": "package.json",
-              "sha256": "ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354",
+              "sha256": "d5f1cdfa8598623c116b741bd4257941435955dddfa154228f8db8f7dd700de9",
               "start": 1,
               "end": 145
             },
@@ -274,7 +274,7 @@
             {
               "library": "primitives",
               "file": "package.json",
-              "sha256": "ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354",
+              "sha256": "d5f1cdfa8598623c116b741bd4257941435955dddfa154228f8db8f7dd700de9",
               "start": 1,
               "end": 145
             },
@@ -295,7 +295,7 @@
             {
               "library": "primitives",
               "file": "AGENTS.md",
-              "sha256": "0be7beb97c51b43bd65bb0f967cb89dd9bf5a8780030bc9dca0136c7709953e8",
+              "sha256": "f6e4b341009b9b09591fc01b5b7941ddb0359f784e1c37933a1a7626fd8ee4f5",
               "start": 1,
               "end": 19
             }
@@ -588,7 +588,7 @@
             {
               "library": "conversation",
               "file": "package.json",
-              "sha256": "ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354",
+              "sha256": "d5f1cdfa8598623c116b741bd4257941435955dddfa154228f8db8f7dd700de9",
               "start": 1,
               "end": 145
             }
@@ -618,7 +618,7 @@
             {
               "library": "conversation",
               "file": "package.json",
-              "sha256": "ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354",
+              "sha256": "d5f1cdfa8598623c116b741bd4257941435955dddfa154228f8db8f7dd700de9",
               "start": 1,
               "end": 145
             }
@@ -694,7 +694,7 @@
             {
               "library": "conversation",
               "file": "package.json",
-              "sha256": "ecefc9bf779f562b8893b27f7b9784ec31a4dc56a5da94dbd8c0626389b70354",
+              "sha256": "d5f1cdfa8598623c116b741bd4257941435955dddfa154228f8db8f7dd700de9",
               "start": 1,
               "end": 145
             },
@@ -722,7 +722,7 @@
             {
               "library": "conversation",
               "file": "AGENTS.md",
-              "sha256": "0be7beb97c51b43bd65bb0f967cb89dd9bf5a8780030bc9dca0136c7709953e8",
+              "sha256": "f6e4b341009b9b09591fc01b5b7941ddb0359f784e1c37933a1a7626fd8ee4f5",
               "start": 1,
               "end": 19
             }

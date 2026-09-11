@@ -23,9 +23,12 @@ was captured from the actual owned files, not obtained by executing source comma
 is the project-specific output of the product-owned agent curation workflow:
 reviewable prose, worked examples, selected API references and source citations.
 It is not another hand-maintained core skill implementation. `curation-bundle.json`
-is the deterministic accepted output; `curation-review.json` records **author
-self-review**, not independent or user approval. All four pins belong to the root
-`ds-skills.project.json`; never format the sealed evidence/bundle files.
+is the deterministic accepted output. `curation-review.json` records an
+**independent exact-bundle source-evidence/citation refresh review** of the
+accepted `bba45037…` bundle, not author self-review or user approval. Its scope is
+limited: it is not new runtime/example execution, Figma publication, final CI, or
+landing proof. All four pins belong to the root `ds-skills.project.json`; never format
+the sealed evidence/bundle files.
 
 The product owns curation instructions, validators, rendering and installation.
 To change project guidance, rerun that workflow against current selected evidence,
@@ -53,13 +56,14 @@ Use `node .ds-skills/project.mjs` with `--config ds-skills.project.json`:
 Edited outputs are refused, not overwritten. Missing owned output requires explicit
 installation. A source change invalidates its dependent guidance until reviewed.
 
-Both worked examples have been typechecked and run in actual dark/light Storybook
-cases in an isolated Collider checkout, including labeled action callbacks, Select
-interaction, Reasoning disclosure and Tool status/result display. The examples were
-read back from installed guidance before a second successful run. No production
-component or story was changed to make this proof pass.
+Both worked examples were previously typechecked and run in actual dark/light
+Storybook cases in an isolated Collider checkout, including labeled action callbacks,
+Select interaction, Reasoning disclosure, and Tool status/result display. They were
+unchanged by the independent source-evidence/citation refresh above; do not misstate that
+refresh as a new execution receipt. No production component or story was changed for
+that prior proof.
 
-The published v0.5.3 pin and installed core/custom integrity checks are verified.
-Those checks do not establish component readiness or satisfy repository review, CI,
-and landing requirements. Curated skill approval
-is not recipe validity, component readiness, visual review or Figma publication.
+The release pin is recorded in `ds-skills.release.json`; verify current core/custom
+integrity through the commands above. These checks do not establish component
+readiness or satisfy repository review, CI, or landing requirements. Curated-skill
+approval is not recipe validity, component readiness, visual review, or Figma publication.

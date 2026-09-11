@@ -131,9 +131,15 @@ Demonstrates the animated transition in isolation so it can be reviewed without 
 
 Rules:
 
-- Use `play` to trigger the animation
-- Use `chromatic: { pauseAnimationAtEnd: true }` so the snapshot captures the final state
-- Name the story to describe the transition (e.g., `AppearAnimation`, `CollapseTransition`)
+- Use `play` to trigger the animation and assert the intended behavior/end state.
+- `chromatic: { pauseAnimationAtEnd: true }` is a **CSS-animation capture option**;
+  use it only when that capture policy is appropriate. It is not proof that motion
+  behavior executed and it does not disable JavaScript motion.
+- JavaScript-driven capture is controlled globally only for Chromatic via
+  `MotionGlobalConfig.skipAnimations = isChromatic()` in `.storybook/preview.ts`.
+  Local Storybook and production retain motion.
+- Name the story to describe the transition (for example, `AppearAnimation` or
+  `CollapseTransition`).
 
 ---
 
@@ -182,14 +188,17 @@ Rules:
 
 **Required for:** all tiers
 
-The autodocs-powered documentation page. Not a hand-authored MDX page — this is the `autodocs` tag enabling automatic prop table + story embeds.
+The explicit CSF `Docs` export required by the component proof inventory. This
+repository does not configure `@storybook/addon-docs`, so an `autodocs` tag is neither
+the required contract nor evidence of a Docs surface.
 
 Rules:
 
-- `tags: ['autodocs']` must be in the component's `Meta`
-- Props must have meaningful TypeScript types (no `any`)
-- Key props should have JSDoc descriptions
-- At least the `default` story must be embeddable in the docs page
+- Export a named `Docs` CSF story that matches the proof inventory requirement.
+- Props must have meaningful TypeScript types (no `any`), and key props should have
+  JSDoc descriptions where the component API needs explanation.
+- Keep the `default` story independently usable; a frozen Docs/capture story is not a
+  substitute for required interaction or motion assertions.
 
 ---
 

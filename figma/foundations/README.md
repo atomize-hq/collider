@@ -57,7 +57,17 @@ The connected `use_figma` MCP adapter explicitly does not support `setPluginData
 it is **not** a supported execution context for this generated script. Its read-only
 discovery above is not a render test. Use a compatible native/plugin evaluation
 context; do not strip the ownership guard or paste the script into an incompatible
-adapter. Native execution and live rendered-page review remain pending.
+adapter.
+
+Isolated native execution/property verification on 2026-09-10 succeeded with 12 roots
+and 284 specimens. The public [Foundations contract](https://github.com/atomize-hq/ds-skills/blob/v0.5.4/src/foundations/README.md)
+defines the manual integration boundary and required ownership-capable context.
+That tagged link is prospective until the matching immutable tag/assets are
+published and verified and Collider's pin/core/custom installations are rebound to
+that exact published identity; an unpublished staged pin is not public operational
+authority. The isolated verification was not a production migration, a live production-page render
+review, library publication, or authorization to mutate production content. Production
+Foundations migration and its live rendered-page review remain unperformed.
 
 Token plugin build/serve/publication and ledger/proof verification are separate
 installed capabilities. A fresh foundations script is not token publication evidence.

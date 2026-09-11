@@ -1,6 +1,6 @@
 # Current Collider documentation
 
-This is the maintained entry point during the ds-skills separation. The original
+This is the maintained entry point for Collider as a ds-skills consumer. The original
 `docs/README.md` and `docs/session-handoff-2026-09-08.md` are protected user work:
 kept byte-for-byte, not current execution authority. Their old links and instructions
 may reference removed files; consult Git for that history, not for today's workflow.
@@ -29,6 +29,12 @@ names and proposed APIs are historical observations; verify actual source/specs 
 the current installed status before claiming readiness. No plan overrides AGENTS.md.
 [Historical records](../archive/README.md) explains how to retrieve removed plans.
 
-The cross-repository authority is `docs/ds-skills-separation-scope.md` in the
-`atomize-hq/ds-skills` repository, with its adjacent plan, inventory and progress log.
-Local candidate tests do not mean final release, live verification or merge completion.
+Normal cross-repository authority is the public ds-skills release contract and the
+immutable release record selected by `ds-skills.release.json` only after the matching
+tag/assets are published and verified and the pin/core/custom installations are
+rebound to that exact published identity. Until then, a staged pin and its
+release-tagged links are prospective, not public operational authority. Use the
+[consumer boundary](ds-skills-consumer.md) for Collider's pin and integration inputs.
+Restricted author history and audit provenance are not operational documentation and
+must not be inferred to be published. A release candidate or local test does not prove
+release, live verification, CI, or merge completion.

@@ -47,10 +47,12 @@ describe('Collider current reviewed custom skills', () => {
     );
     const review = readJson(root, project.curation.review.file);
     expect(review.bundleSha256).toBe(
-      'e3c11636c724f8e0c7c0e135a7b7de16577ac711b2f3b89b412defb8f718ef77'
+      'bba45037a54e79310641bcdfaa2741499c4227957324fc3b0f9887d7c22b36ef'
     );
-    expect(review.reviewer.id).toBe('Codex /root/release_gate_review - independent review');
-    expect(review.notes).toContain('not new live Figma or final CI/landing proof');
+    expect(review.reviewer.id).toBe('Codex /root/curation_acceptance - independent review');
+    expect(review.notes).toContain(
+      'not new runtime/example execution, Figma publication, final CI or landing proof'
+    );
   });
 
   it('installs both actual selected library guides identically on both discovery surfaces', () => {
