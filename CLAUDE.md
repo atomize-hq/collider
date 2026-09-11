@@ -9,7 +9,7 @@ Next.js + Tailwind + Tauri (Rust) desktop app with Storybook.
 - `just test-all` — unit + storybook + Rust tests
 - `just sweep` — deep analysis before PR/merge (superset of preflight + coverage + knip + cargo-deny + cargo-machete + e2e)
 - `just fmt` — auto-format everything
-- `just loc` — LOC guards (TSX/TS max 300, Rust max 400 code lines per file)
+- `just loc` — executable LOC guards (currently TSX/TS 300, Rust 400); also satisfy the stricter TSX-200 requirement in AGENTS.md
 
 ## Standards
 
@@ -18,35 +18,22 @@ Next.js + Tailwind + Tauri (Rust) desktop app with Storybook.
 - LOC limits are enforced — keep files small and focused.
 - A pre-push hook runs `just preflight`, which mirrors CI — if it passes locally, CI passes. (Bypass with `git push --no-verify` only when you know why.)
 
-## Upstream components
+## Installed design-system workflows
 
-`src/components/ui` (shadcn) and `src/components/ai-elements` (ai-elements) are vendored
-by copy, so the CLI that installed a file can also silently overwrite it.
+Start with [current documentation](docs/current.md) and the installed
+[stack orchestrator](.agents/skills/stack-orchestrator/SKILL.md). Skill authoring,
+reusable tooling and curation belong to ds-skills; do not edit managed output files.
 
-- **`shadcn add --overwrite` is never the upgrade path.** It reverts the focus-ring policy,
-  the destructive-fill fix, and the hover-card portal without touching a test.
-- Intentional divergences and the upstream API we depend on are recorded in
-  [`src/components/upstream-policy.json`](src/components/upstream-policy.json) and enforced
-  by `just check`. That file is the answer to "why does this differ from upstream?".
-- Adding a deliberate deviation means adding an entry. A failing rule is either a real
-  regression or a deviation that has become obsolete — decide which, don't delete to go green.
-- [`src/components/upstream-baseline.json`](src/components/upstream-baseline.json) pins the
-  registry payload hashes we last compared against, so a finding is reproducible instead of
-  true-on-the-day-it-was-measured. Refresh with `pnpm baseline:upstream` when adopting an
-  upstream revision; `just check` reads the file, never the network.
-- The ai-elements registry is `https://elements.ai-sdk.dev/api/registry/<name>.json`, as
-  recorded in [`docs/ai-elements-inventory.md`](docs/ai-elements-inventory.md). Do not use
-  `registry.ai-sdk.dev` — it answers, and serves a **subset**, so the components it lacks
-  come back 404 and read as deleted upstream when they are not.
-- All 63 vendored ai-elements files trace to a live upstream component: 33 tracked, 30 our
-  own LOC splits, 0 orphaned.
-- `just check-contract` checks what ai-elements needs from `src/components/ui`: every
-  imported export still exists, and every `[data-slot=x]` a component styles is one some
-  component emits. Not in `just check` yet — see the justfile for why.
+## Owned component sources
 
-### shadcn registry vintage
+`src/components/ui` and `src/components/ai-elements` are copied, Collider-owned source.
+Do not run an overwrite installer over them. The actual policy, ownership/split map,
+accepted upstream snapshot and capture/diff/check commands are documented in
+[src/components/upstream-sources.md](src/components/upstream-sources.md).
+`just check` enforces installed source policy and import/slot contracts. Fix an
+actual regression or review an obsolete rule; do not delete rules just to pass.
 
-Primitives are on the pre-v4 `new-york` style (`components.json`), authored for React 18 +
-Tailwind 3, while the app runs React 19 + Tailwind 4. A migration to the v4-shaped baseline
-is planned; the baseline file already pins `new-york-v4` as the target. Do not migrate
-components piecemeal — a mixed vintage is what produced both known structural defects.
+The newer primitive snapshot is a migration target, not a claim that components have
+already migrated. Use [the migration context](docs/shadcn-v4-migration-handoff.md)
+and current source before a bounded application change. Current curated guidance
+covers the explicit [library selections](design-system/README.md), not every module.

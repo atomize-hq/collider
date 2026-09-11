@@ -14,6 +14,11 @@ schema_version: '2'
 ledger_schema_ref: CT-7B
 ---
 
+> Historical state/permission record, preserved as evidence of its original revision.
+> It does not authorize the current branch or define current execution procedures.
+> Use [current consumer policy](../../docs/stage1/sync-policy.md) and the installed
+> product; old evaluator paths and claimed states below are historical observations.
+
 # CT-14B — Deterministic Figma Rail State (Plugin)
 
 ## Purpose

@@ -23,7 +23,7 @@ The live pipeline today:
 ```
 design-tokens/src/tokens/*.tokens.json
     │
-    ▼  pnpm build:tokens (node design-tokens/build/build-tokens.mjs)
+    ▼  pnpm build:tokens (installed ds-skills compiler)
     │
 design-tokens/dist/tokens.ts + dist/css/tokens.css + dist/figma/tokens.json
     │

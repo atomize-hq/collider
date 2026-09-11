@@ -1,0 +1,359 @@
+{
+  "definitionVersion": "1",
+  "libraries": [
+    {
+      "id": "primitives",
+      "source": {
+        "kind": "local-source-v1",
+        "version": "collider-owned-source-observation-2026-09-10",
+        "manifest": null,
+        "package": null,
+        "revision": {
+          "mode": "content",
+          "commit": null
+        },
+        "files": [
+          {
+            "path": "src/components/ui/button.tsx",
+            "role": "source"
+          },
+          {
+            "path": "src/components/ui/button.stories.tsx",
+            "role": "test"
+          },
+          {
+            "path": "src/components/ui/badge.tsx",
+            "role": "source"
+          },
+          {
+            "path": "src/components/ui/badge.stories.tsx",
+            "role": "test"
+          },
+          {
+            "path": "src/components/ui/select.tsx",
+            "role": "source"
+          },
+          {
+            "path": "src/components/ui/select.stories.tsx",
+            "role": "test"
+          },
+          {
+            "path": "src/components/ui/button-group.tsx",
+            "role": "source"
+          },
+          {
+            "path": "src/components/ui/button-group.stories.tsx",
+            "role": "test"
+          },
+          {
+            "path": "package.json",
+            "role": "convention"
+          },
+          {
+            "path": "tsconfig.json",
+            "role": "convention"
+          },
+          {
+            "path": "src/components/upstream-policy.json",
+            "role": "convention"
+          },
+          {
+            "path": "src/components/upstream-ownership.json",
+            "role": "convention"
+          },
+          {
+            "path": "AGENTS.md",
+            "role": "convention"
+          }
+        ]
+      },
+      "components": [
+        {
+          "id": "button",
+          "kind": "component",
+          "source": "src/components/ui/button.tsx",
+          "exportName": "Button",
+          "importSpecifier": "@/components/ui/button"
+        },
+        {
+          "id": "badge",
+          "kind": "component",
+          "source": "src/components/ui/badge.tsx",
+          "exportName": "Badge",
+          "importSpecifier": "@/components/ui/badge"
+        },
+        {
+          "id": "select",
+          "kind": "component",
+          "source": "src/components/ui/select.tsx",
+          "exportName": "Select",
+          "importSpecifier": "@/components/ui/select"
+        },
+        {
+          "id": "selecttrigger",
+          "kind": "component",
+          "source": "src/components/ui/select.tsx",
+          "exportName": "SelectTrigger",
+          "importSpecifier": "@/components/ui/select"
+        },
+        {
+          "id": "selectvalue",
+          "kind": "component",
+          "source": "src/components/ui/select.tsx",
+          "exportName": "SelectValue",
+          "importSpecifier": "@/components/ui/select"
+        },
+        {
+          "id": "selectcontent",
+          "kind": "component",
+          "source": "src/components/ui/select.tsx",
+          "exportName": "SelectContent",
+          "importSpecifier": "@/components/ui/select"
+        },
+        {
+          "id": "selectitem",
+          "kind": "component",
+          "source": "src/components/ui/select.tsx",
+          "exportName": "SelectItem",
+          "importSpecifier": "@/components/ui/select"
+        },
+        {
+          "id": "buttongroup",
+          "kind": "component",
+          "source": "src/components/ui/button-group.tsx",
+          "exportName": "ButtonGroup",
+          "importSpecifier": "@/components/ui/button-group"
+        }
+      ],
+      "ownership": "copied-source",
+      "capabilities": ["presentational", "interactive", "token-styled"],
+      "relationships": [],
+      "deviations": [
+        {
+          "id": "button-semantic-variants",
+          "text": "Collider retains a dedicated destructive surface, readable text-info links and icon-sm sizing.",
+          "evidence": [
+            {
+              "file": "src/components/ui/button.tsx",
+              "start": 11,
+              "end": 30
+            }
+          ]
+        },
+        {
+          "id": "badge-status-variants",
+          "text": "The owned Badge includes tonal success, warning and error treatments alongside a dedicated solid destructive surface.",
+          "evidence": [
+            {
+              "file": "src/components/ui/badge.tsx",
+              "start": 10,
+              "end": 24
+            }
+          ]
+        }
+      ],
+      "conventions": [],
+      "license": {
+        "status": "licensed",
+        "spdx": "MIT",
+        "file": "design-system/licenses/primitives-MIT.txt",
+        "attribution": "shadcn (2023); Collider local modifications",
+        "redistribution": "project-only"
+      }
+    },
+    {
+      "id": "conversation",
+      "source": {
+        "kind": "local-source-v1",
+        "version": "collider-owned-source-observation-2026-09-10",
+        "manifest": null,
+        "package": null,
+        "revision": {
+          "mode": "content",
+          "commit": null
+        },
+        "files": [
+          {
+            "path": "src/components/ai-elements/message.tsx",
+            "role": "source"
+          },
+          {
+            "path": "src/components/ai-elements/message.stories.tsx",
+            "role": "test"
+          },
+          {
+            "path": "src/components/ai-elements/reasoning.tsx",
+            "role": "source"
+          },
+          {
+            "path": "src/components/ai-elements/reasoning.stories.tsx",
+            "role": "test"
+          },
+          {
+            "path": "src/components/ai-elements/tool.tsx",
+            "role": "source"
+          },
+          {
+            "path": "src/components/ai-elements/tool.stories.tsx",
+            "role": "test"
+          },
+          {
+            "path": "package.json",
+            "role": "convention"
+          },
+          {
+            "path": "tsconfig.json",
+            "role": "convention"
+          },
+          {
+            "path": "src/components/upstream-policy.json",
+            "role": "convention"
+          },
+          {
+            "path": "src/components/upstream-ownership.json",
+            "role": "convention"
+          },
+          {
+            "path": "AGENTS.md",
+            "role": "convention"
+          }
+        ]
+      },
+      "components": [
+        {
+          "id": "message",
+          "kind": "component",
+          "source": "src/components/ai-elements/message.tsx",
+          "exportName": "Message",
+          "importSpecifier": "@/components/ai-elements/message"
+        },
+        {
+          "id": "messagecontent",
+          "kind": "component",
+          "source": "src/components/ai-elements/message.tsx",
+          "exportName": "MessageContent",
+          "importSpecifier": "@/components/ai-elements/message"
+        },
+        {
+          "id": "messageactions",
+          "kind": "component",
+          "source": "src/components/ai-elements/message.tsx",
+          "exportName": "MessageActions",
+          "importSpecifier": "@/components/ai-elements/message"
+        },
+        {
+          "id": "messageaction",
+          "kind": "component",
+          "source": "src/components/ai-elements/message.tsx",
+          "exportName": "MessageAction",
+          "importSpecifier": "@/components/ai-elements/message"
+        },
+        {
+          "id": "messageresponse",
+          "kind": "component",
+          "source": "src/components/ai-elements/message.tsx",
+          "exportName": "MessageResponse",
+          "importSpecifier": "@/components/ai-elements/message"
+        },
+        {
+          "id": "messagetoolbar",
+          "kind": "component",
+          "source": "src/components/ai-elements/message.tsx",
+          "exportName": "MessageToolbar",
+          "importSpecifier": "@/components/ai-elements/message"
+        },
+        {
+          "id": "reasoning",
+          "kind": "component",
+          "source": "src/components/ai-elements/reasoning.tsx",
+          "exportName": "Reasoning",
+          "importSpecifier": "@/components/ai-elements/reasoning"
+        },
+        {
+          "id": "reasoningtrigger",
+          "kind": "component",
+          "source": "src/components/ai-elements/reasoning.tsx",
+          "exportName": "ReasoningTrigger",
+          "importSpecifier": "@/components/ai-elements/reasoning"
+        },
+        {
+          "id": "reasoningcontent",
+          "kind": "component",
+          "source": "src/components/ai-elements/reasoning.tsx",
+          "exportName": "ReasoningContent",
+          "importSpecifier": "@/components/ai-elements/reasoning"
+        },
+        {
+          "id": "tool",
+          "kind": "component",
+          "source": "src/components/ai-elements/tool.tsx",
+          "exportName": "Tool",
+          "importSpecifier": "@/components/ai-elements/tool"
+        },
+        {
+          "id": "toolheader",
+          "kind": "component",
+          "source": "src/components/ai-elements/tool.tsx",
+          "exportName": "ToolHeader",
+          "importSpecifier": "@/components/ai-elements/tool"
+        },
+        {
+          "id": "toolcontent",
+          "kind": "component",
+          "source": "src/components/ai-elements/tool.tsx",
+          "exportName": "ToolContent",
+          "importSpecifier": "@/components/ai-elements/tool"
+        },
+        {
+          "id": "toolinput",
+          "kind": "component",
+          "source": "src/components/ai-elements/tool.tsx",
+          "exportName": "ToolInput",
+          "importSpecifier": "@/components/ai-elements/tool"
+        },
+        {
+          "id": "tooloutput",
+          "kind": "component",
+          "source": "src/components/ai-elements/tool.tsx",
+          "exportName": "ToolOutput",
+          "importSpecifier": "@/components/ai-elements/tool"
+        }
+      ],
+      "ownership": "copied-source",
+      "capabilities": [
+        "conversation-rendering",
+        "streaming-markdown",
+        "disclosure",
+        "tool-result-display"
+      ],
+      "relationships": [
+        {
+          "library": "primitives",
+          "kind": "composes",
+          "description": "Owned conversation components import Button, Badge and other UI primitives; callers own application actions."
+        }
+      ],
+      "deviations": [],
+      "conventions": [
+        {
+          "id": "caller-action-handlers",
+          "text": "MessageAction forwards caller-supplied Button props and supplies accessible hidden label text; it is not an action executor.",
+          "evidence": [
+            {
+              "file": "src/components/ai-elements/message.tsx",
+              "start": 56,
+              "end": 90
+            }
+          ]
+        }
+      ],
+      "license": {
+        "status": "licensed",
+        "spdx": "Apache-2.0",
+        "file": "design-system/licenses/ai-elements-Apache-2.0.txt",
+        "attribution": "Vercel, Inc. (2023); Collider local modifications",
+        "redistribution": "project-only"
+      }
+    }
+  ]
+}

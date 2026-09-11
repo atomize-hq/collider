@@ -53,10 +53,10 @@ storybook-proof:
     pnpm govern:storybook-proof
 
 # Manual reusable-component promotion gate (consumer policy stays outside preflight for now)
-reusable-component-promotion:
-    pnpm govern:reusable-component-promotion
+reusable-component-promotion profile consumer:
+    pnpm govern:reusable-component-promotion --profile {{quote(profile)}} --consumer {{quote(consumer)}}
 
-# Build the repo-owned Figma token sync plugin
+# Build the installed product's Figma token sync plugin for this consumer
 figma-plugin-build:
     pnpm figma:plugin:build
 
@@ -71,21 +71,20 @@ figma-token-server:
 # is never executed — not even to read its version.
 #
 # Provisioning is explicit and one-time. `just preflight` acquires nothing: if
-# the release is missing it fails and tells you to run the install recipe, so a
-# network outage can never turn into a failing push.
+# the release is missing it fails and tells you to run the install recipe.
+# An already verified installation does not need the network for local gates.
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Install the pinned ds-skills release and point skill discovery at it
-# (idempotent; the install is a no-op when already present)
+# Install the pinned product and receipt-checked copies on both skill surfaces
+# (explicit upgrades refuse edited or unowned files)
 ds-skills-install:
     pnpm ds-skills:install
-    pnpm ds-skills:link
 
-# Verify the pinned release is present and correctly identified — acquires nothing
+# Verify the sealed release, launcher and discovery assets — acquires nothing
 ds-skills-check:
     pnpm ds-skills:check
-    node scripts/ds-skills.mjs skills
-    pnpm ds-skills:link:check
+    node .ds-skills/project.mjs curation check --config ds-skills.project.json
+    node .ds-skills/project.mjs curation installed check --config ds-skills.project.json
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DEV — start local servers
@@ -132,23 +131,15 @@ check-ts:
     @echo "── eslint ────────────────────────────────────"
     pnpm exec eslint .
 
-# Upstream policy: our intentional deviations from shadcn / ai-elements are still
-# in place, and the upstream API we depend on has not been refactored away.
-# No network — pattern-matches the working tree, finishes in milliseconds.
+# Consumer-owned invariants and static imports/slots, evaluated by installed ds-skills.
+# Offline checks do not establish upstream freshness, runtime behavior or publication.
 check-upstream:
     @echo "── upstream policy ───────────────────────────"
     pnpm validate:upstream-policy
+    pnpm baseline:upstream:check
 
-# Check what ai-elements needs from src/components/ui: every imported export still
-# exists, and every `[data-slot=x]` a component styles is emitted by the component that
-# OWNS that slot name — not merely declared somewhere in the tree, which any file could
-# satisfy by accident.
-#
-# NOT in `check` yet — it currently reports one real defect. `button-group.tsx` styles
-# `[data-slot=select-trigger]`, which only the v4 Select emits; our pre-v4 Select
-# declares no slots, so those two rules have never once matched. The shadcn v4 migration
-# resolves it, and wiring this into `check` is that migration's acceptance criterion.
-# Run `pnpm validate:consumer-contract --report` for the full API surface.
+# Slot owners are derived from selected source; no stored API mirror or enrollment.
+# Use `pnpm validate:consumer-contract --json` for the evaluated API/slot report.
 check-contract:
     @echo "── consumer contract ─────────────────────────"
     pnpm validate:consumer-contract
@@ -161,7 +152,7 @@ check-rs:
     pnpm cargo:clippy
 
 # Fast full check: TS + upstream policy + Rust
-check: check-ts check-upstream check-rs
+check: ds-skills-check check-ts check-upstream check-contract check-rs
 
 # ══════════════════════════════════════════════════════════════════════════════
 # LOC — lines-of-code guards via tokei (code lines only; blanks + comments excluded)

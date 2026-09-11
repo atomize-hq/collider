@@ -1,32 +1,21 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-  // Real code roots. src/components + src/lib are the design-system and token
-  // library surface — consumed incrementally by pages, stories, the Figma plugin,
-  // and build scripts — so they are treated as entry points rather than dead code
-  // while the app is still being assembled. scripts/, design-tokens/build/ and
-  // storybook/ are non-src roots knip must know about so the dependencies they use
-  // are not falsely reported as unused. figma/plugins/ is not among them: the
-  // plugin's TypeScript moved into the rail package at extraction, and what is left
-  // there is build output.
+  // Application/library roots remain intentional public entrypoints while the app
+  // is assembled. Reusable design-system tooling is installed, not authored here.
+  // The sole remaining local script is the application-wide LOC guard. Generated
+  // plugin output and the removed token-build tree are not source entrypoints.
   entry: [
     'src/app/**/*.{ts,tsx}',
     'src/components/**/*.{ts,tsx}',
     'src/lib/**/*.{ts,tsx}',
-    'scripts/**/*.mjs',
-    'design-tokens/build/**/*.mjs',
+    'scripts/validate-loc.mjs',
     'storybook/**/*.{ts,tsx}',
     '.storybook/**/*.{ts,tsx}',
   ],
-  project: [
-    'src/**/*.{ts,tsx}',
-    'scripts/**/*.mjs',
-    'design-tokens/**/*.mjs',
-    'storybook/**/*.{ts,tsx}',
-  ],
-  // Duplicate exports are intentional backward-compat aliases (e.g. the
-  // component-mapping "completeness" names alias the older "status" names during
-  // an in-progress rename). Report them, but don't fail the gate on style.
+  project: ['src/**/*.{ts,tsx}', 'storybook/**/*.{ts,tsx}'],
+  // Duplicate-export findings are advisory under the current engineering policy.
+  // Entrypoint and diagnostic policy are audited separately from tool removal.
   rules: {
     duplicates: 'warn',
   },
@@ -38,16 +27,6 @@ const config: KnipConfig = {
     // config was dead weight under Tailwind v4, which has no `@config`
     // directive here and never loaded it.
     'tailwindcss',
-    // Planned UI stack installed ahead of the components that will import it.
-    // Remove from here (or from package.json) as each one gets wired up.
-    'lucide-react',
-    'motion',
-    'streamdown',
-    '@streamdown/cjk',
-    '@streamdown/code',
-    '@streamdown/math',
-    '@streamdown/mermaid',
-    '@radix-ui/react-use-controllable-state',
   ],
 };
 

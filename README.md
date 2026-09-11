@@ -36,6 +36,12 @@ Desktop IDE shell for Atomize HQ. Built on Next.js 16 + Tauri 2 — React render
 
 ## Setup
 
+Design-system tooling and skills are installed from a reviewed ds-skills release.
+Start with [current consumer documentation](docs/current.md) and
+[the installation contract](docs/ds-skills-consumer.md) before running
+token, Figma or governance commands. The current separation-branch pin is a private
+candidate, not a published release.
+
 ```bash
 pnpm install
 pnpm exec playwright install chromium

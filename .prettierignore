@@ -6,14 +6,21 @@ node_modules/
 src-tauri/target/
 src-tauri/gen/
 pnpm-lock.yaml
-scripts/fixtures/token-validation/invalid-json/design-tokens/src/tokens/core.tokens.json
 archive/
 
-# Vendored skill payload: 48 component references and 80 runnable demos copied
-# from the ai-elements registry. Left byte-for-byte as upstream ships them so a
-# re-sync is a clean diff — the same policy the eslint config applies to the
-# vendored components in src/components/ai-elements. SKILL.md is ours and is
-# formatted normally.
-.agents/skills/ai-elements/references/
-.agents/skills/ai-elements/scripts/
+# Receipt-sealed installed product assets. Verify with just ds-skills-check.
+.agents/skills/*/
+.agents/schemas/
+.agents/templates/
+.claude/skills/
+.claude/schemas/
+.claude/templates/
+.ds-skills/project.mjs
+.ds-skills/curation.json
 
+# Exact-byte accepted registry evidence; installed registry checks validate its pin.
+src/components/upstream-evidence.json
+
+# Exact-byte reviewed custom library evidence/bundle; checked by installed curation.
+design-system/library-evidence.json
+design-system/curation-bundle.json

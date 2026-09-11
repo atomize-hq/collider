@@ -34,20 +34,17 @@ export default defineConfig({
         test: {
           name: 'unit',
           environment: 'node',
-          include: [
-            'src/**/*.test.{ts,tsx}',
-            'storybook/**/*.test.{ts,tsx}',
-            // The skill pack's own code. A leading-dot directory is not matched
-            // by a `**` glob, so it has to be named.
-            '.agents/**/*.test.mjs',
-          ],
+          include: ['src/**/*.test.{ts,tsx}', 'storybook/**/*.test.{ts,tsx}'],
           exclude: ['node_modules', 'src-tauri'],
         },
       },
       // Storybook component tests — browser via Playwright
       {
         extends: true,
-        plugins: [storybookTest({ configDir: path.resolve(__dirname, '.storybook') })],
+        plugins: [
+          storybookTest({ configDir: path.resolve(__dirname, '.storybook') }),
+          storybookCache('dark'),
+        ],
         test: {
           name: 'storybook',
           // Vitest defaults `testTimeout` to 15s in browser mode and 5s elsewhere,
@@ -77,7 +74,10 @@ export default defineConfig({
       // gates only half the token system.
       {
         extends: true,
-        plugins: [storybookTest({ configDir: path.resolve(__dirname, '.storybook') })],
+        plugins: [
+          storybookTest({ configDir: path.resolve(__dirname, '.storybook') }),
+          storybookCache('light'),
+        ],
         test: {
           name: 'storybook-light',
           // Same budget, same reason as the `storybook` project above.
@@ -94,3 +94,16 @@ export default defineConfig({
     ],
   },
 });
+
+// Storybook 10.2.19 derives its optimizer cache from configDir alone. These two
+// concurrent browser projects share configDir, but must not write the same cache.
+// A post hook overrides the addon's config hook; assertions and timeouts stay intact.
+function storybookCache(theme: 'dark' | 'light') {
+  return {
+    name: `collider-storybook-${theme}-cache`,
+    enforce: 'post' as const,
+    config: () => ({
+      cacheDir: path.resolve(__dirname, `node_modules/.cache/collider-storybook-${theme}`),
+    }),
+  };
+}

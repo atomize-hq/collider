@@ -1,0 +1,259 @@
+{
+  "registryVersion": "1",
+  "registries": [
+    {
+      "id": "primitives-upstream",
+      "version": "new-york-v4-observed",
+      "index": null,
+      "items": [
+        {
+          "name": "accordion",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/accordion.json"
+        },
+        {
+          "name": "alert",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/alert.json"
+        },
+        {
+          "name": "avatar",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/avatar.json"
+        },
+        {
+          "name": "badge",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/badge.json"
+        },
+        {
+          "name": "button",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/button.json"
+        },
+        {
+          "name": "button-group",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/button-group.json"
+        },
+        {
+          "name": "card",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/card.json"
+        },
+        {
+          "name": "carousel",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/carousel.json"
+        },
+        {
+          "name": "collapsible",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/collapsible.json"
+        },
+        {
+          "name": "command",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/command.json"
+        },
+        {
+          "name": "dropdown-menu",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/dropdown-menu.json"
+        },
+        {
+          "name": "hover-card",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/hover-card.json"
+        },
+        {
+          "name": "input",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/input.json"
+        },
+        {
+          "name": "input-group",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/input-group.json"
+        },
+        {
+          "name": "progress",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/progress.json"
+        },
+        {
+          "name": "scroll-area",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/scroll-area.json"
+        },
+        {
+          "name": "select",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/select.json"
+        },
+        {
+          "name": "separator",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/separator.json"
+        },
+        {
+          "name": "spinner",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/spinner.json"
+        },
+        {
+          "name": "switch",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/switch.json"
+        },
+        {
+          "name": "tabs",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/tabs.json"
+        },
+        {
+          "name": "textarea",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/textarea.json"
+        },
+        {
+          "name": "tooltip",
+          "url": "https://ui.shadcn.com/r/styles/new-york-v4/tooltip.json"
+        }
+      ],
+      "documents": [
+        {
+          "id": "license",
+          "url": "https://raw.githubusercontent.com/shadcn-ui/ui/main/LICENSE.md"
+        }
+      ]
+    },
+    {
+      "id": "conversation-upstream",
+      "version": "explicit-observation-2026-09-10",
+      "index": "https://elements.ai-sdk.dev/api/registry/registry.json",
+      "items": [
+        {
+          "name": "agent",
+          "url": "https://elements.ai-sdk.dev/api/registry/agent.json"
+        },
+        {
+          "name": "artifact",
+          "url": "https://elements.ai-sdk.dev/api/registry/artifact.json"
+        },
+        {
+          "name": "attachments",
+          "url": "https://elements.ai-sdk.dev/api/registry/attachments.json"
+        },
+        {
+          "name": "chain-of-thought",
+          "url": "https://elements.ai-sdk.dev/api/registry/chain-of-thought.json"
+        },
+        {
+          "name": "checkpoint",
+          "url": "https://elements.ai-sdk.dev/api/registry/checkpoint.json"
+        },
+        {
+          "name": "code-block",
+          "url": "https://elements.ai-sdk.dev/api/registry/code-block.json"
+        },
+        {
+          "name": "commit",
+          "url": "https://elements.ai-sdk.dev/api/registry/commit.json"
+        },
+        {
+          "name": "confirmation",
+          "url": "https://elements.ai-sdk.dev/api/registry/confirmation.json"
+        },
+        {
+          "name": "context",
+          "url": "https://elements.ai-sdk.dev/api/registry/context.json"
+        },
+        {
+          "name": "environment-variables",
+          "url": "https://elements.ai-sdk.dev/api/registry/environment-variables.json"
+        },
+        {
+          "name": "file-tree",
+          "url": "https://elements.ai-sdk.dev/api/registry/file-tree.json"
+        },
+        {
+          "name": "image",
+          "url": "https://elements.ai-sdk.dev/api/registry/image.json"
+        },
+        {
+          "name": "inline-citation",
+          "url": "https://elements.ai-sdk.dev/api/registry/inline-citation.json"
+        },
+        {
+          "name": "jsx-preview",
+          "url": "https://elements.ai-sdk.dev/api/registry/jsx-preview.json"
+        },
+        {
+          "name": "message",
+          "url": "https://elements.ai-sdk.dev/api/registry/message.json"
+        },
+        {
+          "name": "open-in-chat",
+          "url": "https://elements.ai-sdk.dev/api/registry/open-in-chat.json"
+        },
+        {
+          "name": "package-info",
+          "url": "https://elements.ai-sdk.dev/api/registry/package-info.json"
+        },
+        {
+          "name": "plan",
+          "url": "https://elements.ai-sdk.dev/api/registry/plan.json"
+        },
+        {
+          "name": "prompt-input",
+          "url": "https://elements.ai-sdk.dev/api/registry/prompt-input.json"
+        },
+        {
+          "name": "queue",
+          "url": "https://elements.ai-sdk.dev/api/registry/queue.json"
+        },
+        {
+          "name": "reasoning",
+          "url": "https://elements.ai-sdk.dev/api/registry/reasoning.json"
+        },
+        {
+          "name": "sandbox",
+          "url": "https://elements.ai-sdk.dev/api/registry/sandbox.json"
+        },
+        {
+          "name": "schema-display",
+          "url": "https://elements.ai-sdk.dev/api/registry/schema-display.json"
+        },
+        {
+          "name": "shimmer",
+          "url": "https://elements.ai-sdk.dev/api/registry/shimmer.json"
+        },
+        {
+          "name": "snippet",
+          "url": "https://elements.ai-sdk.dev/api/registry/snippet.json"
+        },
+        {
+          "name": "sources",
+          "url": "https://elements.ai-sdk.dev/api/registry/sources.json"
+        },
+        {
+          "name": "stack-trace",
+          "url": "https://elements.ai-sdk.dev/api/registry/stack-trace.json"
+        },
+        {
+          "name": "suggestion",
+          "url": "https://elements.ai-sdk.dev/api/registry/suggestion.json"
+        },
+        {
+          "name": "task",
+          "url": "https://elements.ai-sdk.dev/api/registry/task.json"
+        },
+        {
+          "name": "terminal",
+          "url": "https://elements.ai-sdk.dev/api/registry/terminal.json"
+        },
+        {
+          "name": "test-results",
+          "url": "https://elements.ai-sdk.dev/api/registry/test-results.json"
+        },
+        {
+          "name": "tool",
+          "url": "https://elements.ai-sdk.dev/api/registry/tool.json"
+        },
+        {
+          "name": "web-preview",
+          "url": "https://elements.ai-sdk.dev/api/registry/web-preview.json"
+        }
+      ],
+      "documents": [
+        {
+          "id": "license",
+          "url": "https://raw.githubusercontent.com/vercel/ai-elements/main/LICENSE"
+        },
+        {
+          "id": "license-terms",
+          "url": "https://www.apache.org/licenses/LICENSE-2.0.txt"
+        }
+      ]
+    }
+  ]
+}

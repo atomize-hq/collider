@@ -1,71 +1,54 @@
-# Figma Sync Policy
+# Collider token publication
 
-This directory documents Collider's live Figma convergence posture under `CT-7B` and `CT-8B`.
+Canonical values live in `design-tokens/src/tokens/`. The installed ds-skills product
+builds `design-tokens/dist/figma/tokens.json`, generates the Figma plugin and serves
+its artifact. Collider owns configuration, target identity and publication records,
+not plugin implementation. See [installed boundary](../../docs/ds-skills-consumer.md).
 
-## Canonical Source
+## Configured inputs
 
-- The repo remains the only canonical source of token values.
-- `design-tokens/src/**` is the editable source tree.
-- `design-tokens/dist/figma/tokens.json` is the only approved Figma-facing artifact.
-- Figma consumes repo-approved values. It does not author canonical values.
+- `figma/token-sync.config.json`: collection `Collider Tokens`, plugin identity
+  `Collider Token Sync`, artifact URL and namespace.
+- `ds-skills.project.json`: installed capability configuration.
+- `src/figma/validation-profile.json`: Collider artifact/destination vocabulary.
+- `publish-proof.json`: recorded token publication attempt.
+- `sync-ledger.json`: version 3 ledger with a SHA-bound publication proof.
 
-## Publish Rail (`CT-7B`)
+The recorded production target is `23PLdynlRYoBYQx9teoC8A`. Do not use it for an
+unreviewed migration smoke. [Operator inputs](plugin-setup.md) describe isolation.
 
-- `plugin-import-manual` is the default proof rail for current convergence work.
-- The repo-owned Figma plugin (`Collider Token Sync`) is the canonical implementation of `plugin-import-manual`.
-- The Enterprise-only rail (Figma Variables REST API) is **retired**. It was seat-gated and never ran to success; its publish mode, script and `just` recipe were removed. It is not a deferred option.
-- `tokens-studio-carried` is optional temporary carriage only. It is never a permanent required rail.
-- No Figma write-back or bidirectional sync is allowed by this policy.
-- The plugin's read-only `Check Drift` action is the sanctioned way to observe Figma-side change. It
-  compares the file against the artifact and reports differences; it never writes token sources.
-  A change made in Figma is re-made in `design-tokens/src/tokens/` and published forward.
+## Build, serve and verify
 
-## Verification Ledger (`CT-8B`)
+```sh
+pnpm build:tokens
+pnpm figma:plugin:build
+pnpm figma:tokens:serve
+```
 
-- `src/figma/sync-ledger.json` is the machine-readable v2 ledger for the current branch.
-- `pnpm validate:sync-ledger` validates the ledger contract, checks its `publication` binding against the publish proof, and prints the evaluated state for the current artifact revision.
-- `pnpm validate:figma-parity` reads the same ledger for required-parity checks.
-- `pnpm validate:publish-proof` validates the proof on its own.
+Import the generated `figma/plugins/collider-token-sync/manifest.json` into native
+Figma. Verify its actual local path and the open destination before running it.
+Load the configured artifact, use **Check Drift** for a read-only comparison, then
+**Sync Variables** only for an authorized target/change. Sync re-reads variables to
+verify its result. The workflow updates existing matching IDs; do not delete and
+recreate production collections or discard bindings to obtain a passing check.
 
-All three run the pinned `ds-skills` release; Collider owns the invocation and none of the policy.
+The token server records posted drift results at `artifacts/figma/drift-report.json`
+with artifact SHA and repo revision. Check those identities and the actual destination;
+a stale report or a successful fetch alone is not live publication evidence. No
+write-back into token source is authorized. Reconcile desired Figma changes into
+canonical source and publish forward after review.
 
-- This README is operator guidance only. The JSON ledger and validator define the contract.
-- Evaluated states are `declared`, `verified-current`, `verified-stale`, `blocked-exception`, and `incomplete`.
-- Only `verified-current` is publish-valid for the active revision. Carrier-only Tokens Studio usage may still be `verified-current`, but it never becomes the permanent required rail.
-- `verification.materializationStatus` is an operator claim. `artifacts/figma/drift-report.json` is
-  the measurement that backs it: the plugin's `Check Drift` action posts its result to the local
-  token server, which stamps the artifact SHA-256 and repo revision it was measured against. Treat a
-  report whose `repoRevision` or `artifactSha256` no longer matches the current build as expired.
+```sh
+pnpm validate:publish-proof
+pnpm validate:sync-ledger
+pnpm validate:figma-parity
+```
 
-## Current Posture
+These commands validate records and their binding through the pinned product. They
+do not read live Figma or establish visual parity for all components. The existing
+proof records an earlier publication at `dc97a2671dbcc6e2a71873042566f4937b766d9d`;
+its preservation during separation is not a newly executed smoke.
 
-- The live ledger is `promotion.parityMode="required"` at `highestEarnedLevel="E-promotion-complete"`,
-  with `verification.materializationStatus="passed"` for artifact revision `dc97a26`.
-- Deferred parity may still earn `D-publish-valid` when the current artifact revision is materialized successfully.
-- Parity is enforced against the ledger's own consistency, not against a live read of Figma. Run
-  `Check Drift` to measure the file itself and record `artifacts/figma/drift-report.json`.
-
-## Operational Rules
-
-- Treat plugin settings as a transport detail, not a source-of-truth switch.
-- Canonical token changes still go through repo PRs.
-- Record any unresolved parity blockers in `exceptions`.
-- Keep parity-policy decisions centralized in `src/figma/parity-policy.md` instead of duplicating them across runbooks.
-
-## Plugin Operator Flow
-
-1. Build the plugin bundle:
-   `pnpm figma:plugin:build`
-2. Import the plugin into Figma from:
-   `figma/plugins/collider-token-sync/manifest.json`
-3. Serve the artifact locally (optional but recommended):
-   `pnpm figma:tokens:serve`
-4. In the pilot file, run the plugin and load the artifact from:
-   `http://localhost:4173/design-tokens/dist/figma/tokens.json`
-5. **Check Drift** first — read-only, and it tells you whether a sync is even needed or whether
-   someone changed something in Figma that has to be reconciled into the canonical source first.
-6. **Sync Variables** to write the artifact into the file. The sync verifies itself by re-reading the
-   file and running the same comparison, so a partial write cannot report success.
-
-Both actions run against the artifact loaded in step 4, so a stale fetch produces a stale verdict.
-Re-fetch after every `pnpm build:tokens`.
+See [proof inputs](publish-proof-contract.md), [parity policy](parity-policy.md) and
+[foundations generation](../../figma/foundations/README.md). Component readiness and
+recipe validity are [separate](../../docs/stage1/sync-policy.md).

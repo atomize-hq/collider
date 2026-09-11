@@ -11,6 +11,7 @@ const onRestore = fn();
 type DemoProps = {
   label?: string;
   triggerLabel?: string;
+  triggerIcon?: React.ReactNode;
   tooltip?: string;
   icon?: React.ReactNode;
   onClick?: () => void;
@@ -19,6 +20,7 @@ type DemoProps = {
 const Demo = ({
   label = 'Saved · 2m ago',
   triggerLabel = 'Restore',
+  triggerIcon,
   tooltip,
   icon,
   onClick,
@@ -27,9 +29,14 @@ const Demo = ({
     <div style={{ width: 320 }}>
       <Checkpoint>
         <CheckpointIcon>{icon}</CheckpointIcon>
-        <span className="text-sm">{label}</span>
-        <CheckpointTrigger tooltip={tooltip} onClick={onClick}>
-          {triggerLabel}
+        <span className="shrink-0 text-sm whitespace-nowrap">{label}</span>
+        <CheckpointTrigger
+          aria-label={triggerIcon ? triggerLabel : undefined}
+          size={triggerIcon ? 'icon-sm' : 'sm'}
+          tooltip={tooltip}
+          onClick={onClick}
+        >
+          {triggerIcon ?? triggerLabel}
         </CheckpointTrigger>
       </Checkpoint>
     </div>
@@ -47,6 +54,23 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => <Demo tooltip="Restore this checkpoint" />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const label = canvas.getByText('Saved · 2m ago');
+    const trigger = canvas.getByRole('button', { name: 'Restore' });
+    const row = label.parentElement!;
+    const separator = row.lastElementChild!;
+    const lineHeight = Number.parseFloat(getComputedStyle(label).lineHeight);
+    await expect(Number.isFinite(lineHeight)).toBe(true);
+    await expect(label.getBoundingClientRect().height).toBeLessThanOrEqual(lineHeight + 1);
+    await expect(separator.getBoundingClientRect().width).toBeGreaterThan(0);
+    await expect(trigger.getBoundingClientRect().right).toBeLessThanOrEqual(
+      separator.getBoundingClientRect().left
+    );
+    await expect(separator.getBoundingClientRect().right).toBeLessThanOrEqual(
+      row.getBoundingClientRect().right + 1
+    );
+  },
 };
 
 export const VariantMatrix: Story = {
@@ -65,12 +89,19 @@ export const VariantMatrix: Story = {
       {/* Icon-only trigger */}
       <Demo
         label="Auto-saved draft"
-        triggerLabel=""
+        triggerLabel="Discard checkpoint"
+        triggerIcon={<TrashIcon />}
         tooltip="Discard checkpoint"
         icon={<TrashIcon className="size-4 shrink-0" />}
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const discard = canvas.getByRole('button', { name: 'Discard checkpoint' });
+    await expect(discard).toBeVisible();
+    await expect(discard.querySelector('svg')).toBeVisible();
+  },
 };
 
 export const ClickAction: Story = {

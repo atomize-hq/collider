@@ -1,4 +1,0 @@
-interface:
-  display_name: 'AI Elements + Plate Builder'
-  short_description: 'Build AI chat and editor hybrid workspace surfaces'
-  default_prompt: 'Use $ai-elements-plate-builder to design or implement an AI-native workspace surface with AI Elements and Plate, keeping native behavior and transport outside the UI library layer.'

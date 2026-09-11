@@ -1,0 +1,66 @@
+{
+  "curatedInstallationVersion": "1",
+  "release": "v0.5.3",
+  "sourceCommit": "9e9e8e83369736de2f90a75b498d5fd12f600731",
+  "pinSha256": "875a2c48118c5e4674aa67d0eee28624cd373a00593d450e342083fbfbbf44e0",
+  "config": "ds-skills.project.json",
+  "configSha256": "a12aabb97438ccf0d8a2451f3f7b40123fe6856f33911c0b61129abb30c133e8",
+  "bundleSha256": "e3c11636c724f8e0c7c0e135a7b7de16577ac711b2f3b89b412defb8f718ef77",
+  "reviewSha256": "643979bd3408bf90b7616a57275e3058010fa8a6be93a5d2243d3eeac7c1df35",
+  "evidenceSha256": "19d718e61da9eaea94d372b2874c561893b8ee04a86db30337dc4a87ead5d3f3",
+  "namespace": "collider",
+  "skills": [
+    "ds-curated-collider-conversation-ui",
+    "ds-curated-collider-owned-primitives"
+  ],
+  "files": {
+    ".agents/skills/ds-curated-collider-conversation-ui/SKILL.md": {
+      "sha256": "610c0be820680aeb1920d053dd3e5a7200f7172751cb89f74be40189db3500d1",
+      "executable": false
+    },
+    ".agents/skills/ds-curated-collider-conversation-ui/references/evidence.json": {
+      "sha256": "aa84664d28ec6983ac1e715dd10fb16442fad59c774a363b249e4d984cfdab4c",
+      "executable": false
+    },
+    ".agents/skills/ds-curated-collider-conversation-ui/references/guidance.md": {
+      "sha256": "a296e327e29eddd7c780862dfde4ff25e0aa754fc8e4f3a9dc9297fc3f78d594",
+      "executable": false
+    },
+    ".agents/skills/ds-curated-collider-owned-primitives/SKILL.md": {
+      "sha256": "378af1849b261ee784d892b1fe5eb20a00a42f6b6e1d6fedb29e14c2f7d0a143",
+      "executable": false
+    },
+    ".agents/skills/ds-curated-collider-owned-primitives/references/evidence.json": {
+      "sha256": "bb62c7cf285bd9244e14e23e06adda841ee803b2d895d5ec5d6b83c4e8e4d3fd",
+      "executable": false
+    },
+    ".agents/skills/ds-curated-collider-owned-primitives/references/guidance.md": {
+      "sha256": "177689d6e3a4ba61376e42782ce2101687ff91af4d922a797ca27a3e614c8ee5",
+      "executable": false
+    },
+    ".claude/skills/ds-curated-collider-conversation-ui/SKILL.md": {
+      "sha256": "610c0be820680aeb1920d053dd3e5a7200f7172751cb89f74be40189db3500d1",
+      "executable": false
+    },
+    ".claude/skills/ds-curated-collider-conversation-ui/references/evidence.json": {
+      "sha256": "aa84664d28ec6983ac1e715dd10fb16442fad59c774a363b249e4d984cfdab4c",
+      "executable": false
+    },
+    ".claude/skills/ds-curated-collider-conversation-ui/references/guidance.md": {
+      "sha256": "a296e327e29eddd7c780862dfde4ff25e0aa754fc8e4f3a9dc9297fc3f78d594",
+      "executable": false
+    },
+    ".claude/skills/ds-curated-collider-owned-primitives/SKILL.md": {
+      "sha256": "378af1849b261ee784d892b1fe5eb20a00a42f6b6e1d6fedb29e14c2f7d0a143",
+      "executable": false
+    },
+    ".claude/skills/ds-curated-collider-owned-primitives/references/evidence.json": {
+      "sha256": "bb62c7cf285bd9244e14e23e06adda841ee803b2d895d5ec5d6b83c4e8e4d3fd",
+      "executable": false
+    },
+    ".claude/skills/ds-curated-collider-owned-primitives/references/guidance.md": {
+      "sha256": "177689d6e3a4ba61376e42782ce2101687ff91af4d922a797ca27a3e614c8ee5",
+      "executable": false
+    }
+  }
+}

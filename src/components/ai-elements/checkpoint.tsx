@@ -17,7 +17,7 @@ export const Checkpoint = ({ className, children, ...props }: CheckpointProps) =
     {...props}
   >
     {children}
-    <Separator />
+    <Separator className="min-w-0 flex-1" />
   </div>
 );
 

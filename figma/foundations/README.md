@@ -1,95 +1,65 @@
-# Foundations page builders
+# Collider foundations specimens
 
-Generates the **Foundations** page in the Collider Figma file (`23PLdynlRYoBYQx9teoC8A`)
-from `design-tokens/dist/figma/tokens.json`.
+The foundations implementation belongs to the installed ds-skills product. Collider
+supplies only its resolved token artifact, specimen model and presentation data.
 
-## Why this is generated
+## Build and check
 
-The page is a _specimen_ surface, not a static mockup. Swatches, type samples and
-scale bars are **variable-bound**, so they follow Figma's mode switcher for free.
-But names, hex values and contrast ratios are baked as static text — **a contrast
-ratio cannot be variable-bound**, so both modes are printed side by side.
-
-That means the page goes stale the moment a token value changes. Regenerating is
-cheap; hand-maintaining 176 annotated rows is not.
-
-## Usage
-
-```
-pnpm build:tokens            # artifact must be current
-pnpm figma:foundations:build # writes build/foundations/*.run.js
+```sh
+pnpm build:tokens
+pnpm figma:foundations:build
+pnpm figma:foundations:check
 ```
 
-Then, with Figma open on the remote-debug port
-(`open -a Figma --args --remote-debugging-port=9222`):
+The build writes one self-contained `build/foundations/foundations.run.js`. Check
+compares it with current inputs and the pinned renderer without changing it. Neither
+command executes Figma code, publishes tokens, verifies a live render or proves
+component readiness. The output remains ignored generated data, not authored code.
 
-```
-figma-use eval --json --timeout 180000 "$(cat build/foundations/color.run.js)"
-figma-use eval --json --timeout 180000 "$(cat build/foundations/type.run.js)"
-figma-use eval --json --timeout 180000 "$(cat build/foundations/rest.run.js)"
-```
+`model.json` selects 142 non-core token leaves across 29 sections, including all six
+motion-role duration/easing leaves that were absent from the initial extraction
+probe. The 34 raw core palette leaves remain publication inputs, not extra specimen
+rows. All 176 variables are still required in the configured publication collection.
+`presentation.json` lays out six specimen families in each of dark and light modes.
+The former combined-mode reference becomes 12 explicitly mode-pinned groups; it is
+not a claim of pixel-identical rendering or an already completed live migration.
 
-Each run is **idempotent** — `shell()` removes any existing frame of the same
-name before rebuilding, so re-running replaces rather than duplicates.
+Color pairing and informational-versus-text/UI metrics are consumer data. Typography,
+spacing, shape, shadows, motion and layout remain specimens rather than only color
+swatches. Derived font styles, opacity fractions, line-height/letter-spacing, CSS
+effects and display-scaled geometry are not falsely described as direct bindings.
+Contrast labels describe configured token pairs, not component accessibility proof.
 
-## Files
+## Figma targets and safe first execution
 
-| File             | Builds                                                                                                                 |
-| ---------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `lib-frame.js`   | Shared helpers — `frame`, `txt`, `shell`, `section`, `bindFill`/`bindStroke`. Injected into each builder as `__LIB__`. |
-| `build-color.js` | `Foundations · Colour`                                                                                                 |
-| `build-type.js`  | `Foundations · Type`                                                                                                   |
-| `build-rest.js`  | `Space & Shape`, `Elevation`, `Motion`, `Layout`                                                                       |
+Read-only discovery on 2026-09-10 confirmed the Collider design file
+`23PLdynlRYoBYQx9teoC8A`, Foundations page `2419:17`, and 176-variable
+`Collider Tokens` collection `VariableCollectionId:2019:334`, with dark/light modes.
+Poppins and Roboto Mono styles used by this presentation were available. Recheck
+these facts before running a script; IDs and available fonts can change.
 
-## Binding discipline
+The six existing legacy frames are **not owned by the new renderer**. Their IDs are
+not accepted as replacement targets. New frame targets are null and their planned
+positions start at x=8800, beyond the last observed legacy edge at x=8248. Recheck
+that space before a real run. Do not remove old frames by name, delete collections,
+recreate variables or adopt unowned content to make a check pass.
 
-Colour was never the whole job. **Every numeric field with a token behind it is
-bound**, not merely set to the matching number — a literal that agrees with the
-scale today drifts silently the next time the scale moves. Pass a token name
-where the helpers take a size, gap, padding, radius, stroke weight or bar width,
-and `bindVar` throws if that token does not exist.
+First execute through a supported Figma Plugin API evaluation context against an
+**isolated test destination**, with its own explicit page/collection targets and
+published test variables. Retarget a separate consumer config; do not rewrite the
+production publication ledger to describe the test. Verify the resulting specimen
+content and rendering, preserve returned root IDs, and only then review a canonical
+presentation update. Replacement requires those exact renderer-owned root IDs in
+`targetId` and the same plugin context for its ownership markers.
 
-Specimens bind to **the very token they document**, so a row cannot show a value
-that disagrees with its own label. 99 of 139 rows do; the other 40 cannot, for
-five structural reasons worth knowing before you try:
+The renderer uses standard plugin-data ownership and guarded preparation/replacement.
+The connected `use_figma` MCP adapter explicitly does not support `setPluginData`, so
+it is **not** a supported execution context for this generated script. Its read-only
+discovery above is not a render test. Use a compatible native/plugin evaluation
+context; do not strip the ownership guard or paste the script into an incompatible
+adapter. Native execution and live rendered-page review remain pending.
 
-| Family                              | Why it cannot bind                                                        |
-| ----------------------------------- | ------------------------------------------------------------------------- |
-| `type/weight/*`                     | Figma names a weight as a font _style_ ("Bold"), not a number.            |
-| `type/leading/*`, `type/tracking/*` | Bound leading is PIXELS (1.5 → 1.5px); tracking is authored in `em`.      |
-| `shape/opacity/*`, `shape/role/*`   | A bound opacity is a **percentage** — 0.7 lands as 0.7%.                  |
-| `elevation/*`, `motion/easing/*`    | String tokens; Figma has no bindable effect or easing field.              |
-| `layout/container/*`, `spacing/0`   | Bars drawn at 60% to fit the column; a zero-width rectangle cannot exist. |
-
-Where a value cannot bind it is still **read from the token** with `varNum` and
-applied, never retyped — and the section blurb on the page says so, so the page
-does not look silently unbound. Artboard and column widths stay literal on
-purpose: `layout/container/*` describes app shells, so binding documentation
-layout to it would be a false claim.
-
-## Gotchas worth keeping
-
-- **`figma-use eval` resolves a returned promise.** Top-level `await` breaks the
-  bridge, but `return Promise.all([...]).then(...)` works — which is the only way
-  to `loadFontAsync` before creating text.
-- **Width is the primary axis for a horizontal frame, the counter axis for a
-  vertical one.** Pinning the wrong one fixes the _height_ and locks every row to
-  Figma's default 100px.
-- **Wipe by the same name you create.** The wipe used to live in each builder and
-  drifted from `shell()` (`Color` vs `Colour`), silently leaving a duplicate.
-- Elevation tokens are CSS strings, not Figma effect variables, so those cards
-  carry a hand-parsed effect and do **not** follow the mode switcher. The frame
-  says so on its face.
-- **A parser that returns `null` on failure hides a total failure.** The first
-  shadow regex required a literal `p` on the x offset, but every elevation token
-  starts with a bare `0`, so nothing matched — and the `null` path meant all ten
-  cards shipped with no effect and no error. `parseShadow` now throws on
-  unparsable input, and the builder asserts that every non-`none` token produced
-  a shadow before it returns.
-- **A shadow paints outside its node's box, and a Figma frame clips by default.**
-  Once the effects rendered, the row hugged the card exactly and sheared off
-  everything past level/1. Each card sits in a `stage` padded by the furthest
-  reach of any elevation token — `blur + spread ± offset`, measured from the
-  tokens rather than guessed. Keep that padding **symmetric on the vertical**: a
-  shadow reaches further below than above, and padding each side to its exact
-  reach pushes the card off the row's centre and leaves every label 12px low.
+Token plugin build/serve/publication and ledger/proof verification are separate
+installed capabilities. A fresh foundations script is not token publication evidence.
+Product-owned generation, runtime limits, failure/rollback semantics and supported
+APIs are documented with ds-skills; no local template implementation is retained.

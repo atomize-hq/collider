@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect, within } from 'storybook/test';
 
+import { GeneratedRecipeDocs, assertRecipeDocs } from '../recipe-docs-panel';
 import { getTokenDocsModel, type TokenDocsEntry } from '../proof-surface-data';
 
 const tokenDocsModel = getTokenDocsModel();
@@ -37,6 +38,8 @@ function GeneratedTokenDocs() {
           <strong>{tokenDocsModel.totalTokens}</strong>
         </p>
       </header>
+
+      <GeneratedRecipeDocs style={heroStyle} paragraphStyle={ledeStyle} />
 
       <section style={groupGridStyle}>
         {tokenDocsModel.groups.map((group) => (
@@ -101,6 +104,7 @@ export const TokenRegistry: Story = {
     const swatch = await canvas.findByTestId(`token-swatch-${toTestId(firstColorToken.id)}`);
 
     expect(heading.textContent).toContain('Generated token registry');
+    await assertRecipeDocs(canvasElement);
     expect(firstTokenRow.textContent).toContain(firstColorToken.id);
     expect(firstTokenRow.textContent).toContain(firstColorToken.value);
     expect(window.getComputedStyle(swatch).backgroundColor).toBe(

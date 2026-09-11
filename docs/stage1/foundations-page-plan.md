@@ -1,3 +1,6 @@
+> Historical design plan. Token migrations and renderer paths below are not current
+> execution instructions. Use [current foundations data and generation](../../figma/foundations/README.md).
+
 # Stage 1 — Foundations Page Plan
 
 **Date:** 2026-09-01
@@ -58,7 +61,7 @@ Steps:
 
 1. Flatten `accent.tokens.json` to `accent.primary`, `accent.primary-foreground`, `accent.sidebar-primary`, `accent.sidebar-primary-foreground`, holding the **dark** values (dark is `defaultThemeId`).
 2. Add an `accent` block to `themes/light.tokens.json`. Today that is **one line** — `sidebar-primary: #155dfc`. Everything else is already identical across the two subtrees.
-3. Delete the two `--primary` lines from the `[data-theme='light']` block in [globals.css:70](../../src/app/globals.css:70). The base bridge then follows the theme for free like every other role. **Leave `--destructive-foreground`** — that one is a genuine exception (following `text/primary` drops it to 2.79:1 on light's `#c10007`).
+3. Delete the two `--primary` lines from the `[data-theme='light']` block in [globals.css:70](../../src/app/globals.css). The base bridge then follows the theme for free like every other role. **Leave `--destructive-foreground`** — that one is a genuine exception (following `text/primary` drops it to 2.79:1 on light's `#c10007`).
 4. Add 8 entries to `migrations/runtime-css-aliases.json` — this is a token-ID removal and therefore a CHANGE_POLICY migration event.
 
 Result: 177 → 173 variables. The 4 seed bindings repoint to `accent/primary`.
@@ -235,7 +238,7 @@ Phase 0 before Phase 2 is the whole point of the "fix first" decision: every fra
 - Role bridge: [src/app/globals.css](../../src/app/globals.css).
 - Change policy: `design-tokens/src/tokens/CHANGE_POLICY.md` (the live surface). Its
   original derivation is archived at
-  `archive/docs/figma-ci-sync/threaded-seams/seam-1-canonical-token-source/slice-3-conformance-and-change-control/subslice-3-token-and-theme-change-policy.md`.
+  `design-tokens/src/tokens/CHANGE_POLICY.md`.
 - Ledger + proof: `src/figma/sync-ledger.json`, `src/figma/publish-proof.json`.
 - Figma file: **Collider** `23PLdynlRYoBYQx9teoC8A`; Primitives page `401:1040`, canvas `401:1042`.
 

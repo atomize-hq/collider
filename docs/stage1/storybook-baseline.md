@@ -165,7 +165,7 @@ parameters: {
 },
 ```
 
-This is the durable link between the Storybook story and the Figma library component. It is required before a component can be considered Code Connect-ready.
+This is the durable link between the Storybook story and the Figma library component. A node link alone does not prove current visual review or component readiness. See the configured profiles in `ds-skills.project.json`.
 
 ---
 

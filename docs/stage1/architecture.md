@@ -1,3 +1,6 @@
+> Historical Stage 1 architecture context. Current ownership and execution are in
+> [consumer documentation](../current.md); verify planned directories against the tree.
+
 # Architecture
 
 **Status:** Stage 1 — baseline locked
@@ -7,18 +10,17 @@
 
 ## Stack
 
-| Layer             | Technology                                         | Version        |
-| ----------------- | -------------------------------------------------- | -------------- |
-| UI framework      | Next.js App Router                                 | ^16.1.7        |
-| Styling           | Tailwind CSS v4                                    | 4.2.1          |
-| Desktop shell     | Tauri                                              | v2.10.3        |
-| Language          | TypeScript (strict)                                | 5.9.3          |
-| Package manager   | pnpm                                               | 10.11.1        |
-| Build tool        | Turbopack (dev) / Next.js build                    | —              |
-| Test runner       | Vitest + Playwright                                | 4.1.0 / 1.58.2 |
-| Component surface | Storybook                                          | 10.2.19        |
-| Design tokens     | Style Dictionary + Tokens Studio                   | 5.3.3 / 2.0.3  |
-| Design mapping    | Code Connect mappings + Figma operational surfaces | 1.4.2          |
+| Layer             | Technology                         | Version        |
+| ----------------- | ---------------------------------- | -------------- |
+| UI framework      | Next.js App Router                 | ^16.1.7        |
+| Styling           | Tailwind CSS v4                    | 4.2.1          |
+| Desktop shell     | Tauri                              | v2.10.3        |
+| Language          | TypeScript (strict)                | 5.9.3          |
+| Package manager   | pnpm                               | 10.11.1        |
+| Build tool        | Turbopack (dev) / Next.js build    | —              |
+| Test runner       | Vitest + Playwright                | 4.1.0 / 1.58.2 |
+| Component surface | Storybook                          | 10.2.19        |
+| Design tokens     | Installed ds-skills token compiler | pinned release |
 
 ---
 
@@ -72,12 +74,10 @@ src/
 storybook/
 ├── stories/                Story files (also src/**/*.stories.tsx)
 ├── component-specs/        Per-component spec JSON records
-├── connect/                Code Connect output records
 ├── story-specs/            [EMPTY — story spec records to land here]
 └── *.json / *.md           Governance contracts, policy, taxonomy
 
-figma/
-└── code-connect/           CT-11B Code Connect JSON records (per component)
+figma/                     Consumer plugin configuration and foundations data
 
 design-tokens/
 ├── src/tokens/             Authoring source (Tokens Studio JSON)
@@ -101,7 +101,7 @@ design-tokens/
 
 The app owns transport, streaming, and history. AI Elements owns rendering these shapes. Do not spread raw vendor or ad-hoc implementations across `src/app/` or `src/features/`.
 
-If/when an upstream `ai-elements` library is added as a dependency, the wrappers in `src/components/ai-elements/` are the translation layer between the library API and the Collider design system (tokens, variants, Code Connect mapping).
+If/when an upstream `ai-elements` library is added as a dependency, the wrappers in `src/components/ai-elements/` are the translation layer between the library API and the Collider design system (tokens, variants and application models).
 
 ### Plate — owns rich editing and document structure
 
@@ -117,7 +117,7 @@ Plate is not yet planned for the first primitives wave. When the editor feature 
 
 - Neither AI Elements nor Plate handles transport, persistence, or Tauri commands. That belongs to `src/bridge/` and `src/features/`.
 - Every AI Elements and Plate wrapper must have a Storybook story before it enters the round-trip loop.
-- Both sets of wrappers are mapped to Figma library components via Code Connect when those library components are defined.
+- Component specs record actual design-node references under `downstreamHooks.figmaComponentRef`; token publication remains independent.
 
 ---
 
@@ -129,4 +129,4 @@ Before any new route, layout, or feature is introduced:
 - [ ] Does not call Node.js APIs directly (use `src/bridge/` instead)
 - [ ] Tauri command calls are gated behind the bridge adapter
 - [ ] Storybook story can render without a live Tauri process
-- [ ] LOC limits respected (TSX/TS ≤300, Rust ≤400 code lines)
+- [ ] Applicable AGENTS.md LOC limits and executable guards pass; historical limits do not override current instructions

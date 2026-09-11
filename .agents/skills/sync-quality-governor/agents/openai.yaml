@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sync Quality Governor"
+  short_description: "Reconcile drift using independent evidence scopes"
+  default_prompt: "Use $sync-quality-governor to audit the requested claim against actual source, component, runtime and publication evidence."

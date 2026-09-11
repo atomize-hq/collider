@@ -2,14 +2,17 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { beforeAll, describe, it } from 'vitest';
-import {
-  distRoot,
-  generatedFileBanner,
+import project from '../../../ds-skills.project.json';
+
+const repoRoot = path.resolve(__dirname, '../../..');
+const distRoot = path.join(repoRoot, 'design-tokens/dist');
+const runtimeCssPath = path.join(repoRoot, project.tokens.build.outputs.runtimeCss);
+const runtimeInventoryPath = path.join(
   repoRoot,
-  runtimeCssPath,
-  runtimeInventoryPath,
-  toRepoRelative,
-} from '../../../design-tokens/build/paths.mjs';
+  project.tokens.build.runtime.compatibility.inventory
+);
+const generatedFileBanner = `/* ${project.tokens.build.banner} */`;
+const toRepoRelative = (file: string) => path.relative(repoRoot, file).split(path.sep).join('/');
 
 type RuntimeInventory = {
   entries: Array<{ legacyVar: string }>;

@@ -1,0 +1,284 @@
+{
+  "installationVersion": "2",
+  "release": "v0.5.3",
+  "sourceCommit": "9e9e8e83369736de2f90a75b498d5fd12f600731",
+  "pinSha256": "875a2c48118c5e4674aa67d0eee28624cd373a00593d450e342083fbfbbf44e0",
+  "files": {
+    ".agents/schemas/README.md": {
+      "sha256": "be0b97c0d036c69461fab0f85a4b3dfc8c34d456e2710b5405f1754e707abf57",
+      "executable": false
+    },
+    ".agents/schemas/component-recipe.schema.json": {
+      "sha256": "cbc62a78390748fa19b0206a82f38f1bd88a52f0238b60ca697820f339eff878",
+      "executable": false
+    },
+    ".agents/schemas/storybook-component-spec.schema.json": {
+      "sha256": "a62448e66af38eb03a0124ef7e2aa683027aeeb2179c05aa8b4118b21987e4cb",
+      "executable": false
+    },
+    ".agents/schemas/storybook-story-inventory.schema.json": {
+      "sha256": "52b96e2567e2dbf0e8d824e3fa2c5c8fe2ed5dccff39930592799054766226ee",
+      "executable": false
+    },
+    ".agents/schemas/storybook-tier-policy.schema.json": {
+      "sha256": "1ca56a08a8921a5899f5a2faf1b4230b2564e6141568b17e490c20391f5342ab",
+      "executable": false
+    },
+    ".agents/schemas/storybook-version-policy.schema.json": {
+      "sha256": "17bc5f3dd5ed5cf8f1b25959d525f3f4f160d958c95270463f26cb51cab87d22",
+      "executable": false
+    },
+    ".agents/schemas/sync-ledger.schema.json": {
+      "sha256": "e5c1c8cba4417fbae4c408d9c231533f8aaa633163e64fe6b91b86a791047ef7",
+      "executable": false
+    },
+    ".agents/skills/curate-component-libraries/SKILL.md": {
+      "sha256": "5cbcbcc218b6f3b11dbad39bf0fa27c2cbd13bf4b898e5634ad88aaeebdd0054",
+      "executable": false
+    },
+    ".agents/skills/curate-component-libraries/references/contract.md": {
+      "sha256": "342eac46fad7dcd9cf98f1042b0ad3eb7c17724a70d72ee19e2e17e09166bb7e",
+      "executable": false
+    },
+    ".agents/skills/interactive-workspace-builder/SKILL.md": {
+      "sha256": "d76e9c417d928f24f70bb5c4877f20817c3ddccb630da23c536a38497a7cb670",
+      "executable": false
+    },
+    ".agents/skills/interactive-workspace-builder/references/ownership-and-transitions.md": {
+      "sha256": "296427a15c6fad9096d3232d398220e40d076be4289583ee043f42db8ef4ccdb",
+      "executable": false
+    },
+    ".agents/skills/library-component-builder/SKILL.md": {
+      "sha256": "26307ddf00934190333b54ae4398a3358610c6fc252001b6bb8bbcc501d731dd",
+      "executable": false
+    },
+    ".agents/skills/stack-orchestrator/SKILL.md": {
+      "sha256": "8916335e205310fe90e3fdfd6c6948e033ed00d4193b9ea8ecc0e76904bb8888",
+      "executable": false
+    },
+    ".agents/skills/stack-orchestrator/agents/openai.yaml": {
+      "sha256": "20bfe00f44fb25e93c3e2398867c8ee5b48c11a5822637f09ecbb671a97b8966",
+      "executable": false
+    },
+    ".agents/skills/stack-orchestrator/references/project-contract.md": {
+      "sha256": "68e8ae1ecea6acf560d25ec3f8beb461a983fc549902f69287e2c8370916ce38",
+      "executable": false
+    },
+    ".agents/skills/stage-1-foundation-primitives-system/SKILL.md": {
+      "sha256": "363df98d8ac03b2e3d587632148eb56950050da25177eb9c80d188d32d3b0128",
+      "executable": false
+    },
+    ".agents/skills/stage-1-foundation-primitives-system/agents/openai.yaml": {
+      "sha256": "03305ebb544ccce3e07a9874f3e5977bf8bd860cc6e8024a47489fc1bb7ac959",
+      "executable": false
+    },
+    ".agents/skills/stage-2-component-roundtrip-loop/SKILL.md": {
+      "sha256": "b54228c8e22d3694c0f2e36312ebbf1e5da622716893a1ada1bd4d657492b855",
+      "executable": false
+    },
+    ".agents/skills/stage-2-component-roundtrip-loop/agents/openai.yaml": {
+      "sha256": "29858d4a603f02637a5c7924633773862eaa91211a7cbcc8c44de277e94e048a",
+      "executable": false
+    },
+    ".agents/skills/stage-3-organism-layout-assembler/SKILL.md": {
+      "sha256": "4253e930f3e16c25293b148a86cabebf81deff9184536ed81d5c9846508f6b6c",
+      "executable": false
+    },
+    ".agents/skills/stage-3-organism-layout-assembler/agents/openai.yaml": {
+      "sha256": "2f321708b5725261c9118e6efbb4b9c2a1ed850b0f980521c9e9400ffe993b87",
+      "executable": false
+    },
+    ".agents/skills/storybook-rigorous-spec-system/SKILL.md": {
+      "sha256": "8fde97d457b7e745e46faf89f3b7d9f3cbc50ab7e0d1cae746c50de2475b1639",
+      "executable": false
+    },
+    ".agents/skills/storybook-rigorous-spec-system/agents/openai.yaml": {
+      "sha256": "31fba2ede513f930aa1560f7b7e1b2f67e93f4361f7962ef7eeacfc577b699d7",
+      "executable": false
+    },
+    ".agents/skills/storybook-rigorous-spec-system/references/storybook-decision-matrix.md": {
+      "sha256": "652270bb8e50ba735214138ccbc4698034ff421938136e33a5f3068b2b8e85e4",
+      "executable": false
+    },
+    ".agents/skills/sync-quality-governor/SKILL.md": {
+      "sha256": "7cc263dc2bb05a096caf763ff7f2a333f3c7a3a87610d1bc20131dc75c07715c",
+      "executable": false
+    },
+    ".agents/skills/sync-quality-governor/agents/openai.yaml": {
+      "sha256": "fbd9f38fc6236d4e50f8e0e0eda3f42991ad9254492ca89dd87d4a3f896587d2",
+      "executable": false
+    },
+    ".agents/templates/composition-plan.template.json": {
+      "sha256": "f157459d9acb0f39faa0bad2740469b51aff1df8583b8315c3b85bd2db6145ca",
+      "executable": false
+    },
+    ".agents/templates/foundation-baseline.template.md": {
+      "sha256": "977d433be74691e50714b79b70c3d23a61a4e9ce9c400af2d5e013040bc820ad",
+      "executable": false
+    },
+    ".agents/templates/storybook-component-spec.template.json": {
+      "sha256": "d644a7ecc9064471d37d3b800f833fb4e5fdfa469c4f8f6773d3f3da69ed252f",
+      "executable": false
+    },
+    ".agents/templates/storybook-story-inventory.template.json": {
+      "sha256": "dd2b63aa410c67ec5cf6d0ae7b343751835e2740dd6875ddb0a979f1f95879c1",
+      "executable": false
+    },
+    ".agents/templates/storybook-story-taxonomy.template.md": {
+      "sha256": "a8af73abad54f05dae1aa2723dc51c41e8ac863d1e857032d5c0ed35f37036a0",
+      "executable": false
+    },
+    ".agents/templates/storybook-tier-policy.template.json": {
+      "sha256": "1747823216f2350cef305df260620398f31c8722cc8518e0bfd9edcd8d50bea4",
+      "executable": false
+    },
+    ".agents/templates/storybook-version-policy.template.json": {
+      "sha256": "2a7be8b1134c53b2ca0d587954508fcec8e8b99ccc532b6b7442a02fe393ae73",
+      "executable": false
+    },
+    ".agents/templates/sync-ledger.template.json": {
+      "sha256": "9c884a0ef358ff441da5e5688dbddfea5bffd9f345b9927e8ba5907a5690f9b1",
+      "executable": false
+    },
+    ".claude/schemas/README.md": {
+      "sha256": "be0b97c0d036c69461fab0f85a4b3dfc8c34d456e2710b5405f1754e707abf57",
+      "executable": false
+    },
+    ".claude/schemas/component-recipe.schema.json": {
+      "sha256": "cbc62a78390748fa19b0206a82f38f1bd88a52f0238b60ca697820f339eff878",
+      "executable": false
+    },
+    ".claude/schemas/storybook-component-spec.schema.json": {
+      "sha256": "a62448e66af38eb03a0124ef7e2aa683027aeeb2179c05aa8b4118b21987e4cb",
+      "executable": false
+    },
+    ".claude/schemas/storybook-story-inventory.schema.json": {
+      "sha256": "52b96e2567e2dbf0e8d824e3fa2c5c8fe2ed5dccff39930592799054766226ee",
+      "executable": false
+    },
+    ".claude/schemas/storybook-tier-policy.schema.json": {
+      "sha256": "1ca56a08a8921a5899f5a2faf1b4230b2564e6141568b17e490c20391f5342ab",
+      "executable": false
+    },
+    ".claude/schemas/storybook-version-policy.schema.json": {
+      "sha256": "17bc5f3dd5ed5cf8f1b25959d525f3f4f160d958c95270463f26cb51cab87d22",
+      "executable": false
+    },
+    ".claude/schemas/sync-ledger.schema.json": {
+      "sha256": "e5c1c8cba4417fbae4c408d9c231533f8aaa633163e64fe6b91b86a791047ef7",
+      "executable": false
+    },
+    ".claude/skills/curate-component-libraries/SKILL.md": {
+      "sha256": "5cbcbcc218b6f3b11dbad39bf0fa27c2cbd13bf4b898e5634ad88aaeebdd0054",
+      "executable": false
+    },
+    ".claude/skills/curate-component-libraries/references/contract.md": {
+      "sha256": "342eac46fad7dcd9cf98f1042b0ad3eb7c17724a70d72ee19e2e17e09166bb7e",
+      "executable": false
+    },
+    ".claude/skills/interactive-workspace-builder/SKILL.md": {
+      "sha256": "d76e9c417d928f24f70bb5c4877f20817c3ddccb630da23c536a38497a7cb670",
+      "executable": false
+    },
+    ".claude/skills/interactive-workspace-builder/references/ownership-and-transitions.md": {
+      "sha256": "296427a15c6fad9096d3232d398220e40d076be4289583ee043f42db8ef4ccdb",
+      "executable": false
+    },
+    ".claude/skills/library-component-builder/SKILL.md": {
+      "sha256": "26307ddf00934190333b54ae4398a3358610c6fc252001b6bb8bbcc501d731dd",
+      "executable": false
+    },
+    ".claude/skills/stack-orchestrator/SKILL.md": {
+      "sha256": "8916335e205310fe90e3fdfd6c6948e033ed00d4193b9ea8ecc0e76904bb8888",
+      "executable": false
+    },
+    ".claude/skills/stack-orchestrator/agents/openai.yaml": {
+      "sha256": "20bfe00f44fb25e93c3e2398867c8ee5b48c11a5822637f09ecbb671a97b8966",
+      "executable": false
+    },
+    ".claude/skills/stack-orchestrator/references/project-contract.md": {
+      "sha256": "68e8ae1ecea6acf560d25ec3f8beb461a983fc549902f69287e2c8370916ce38",
+      "executable": false
+    },
+    ".claude/skills/stage-1-foundation-primitives-system/SKILL.md": {
+      "sha256": "363df98d8ac03b2e3d587632148eb56950050da25177eb9c80d188d32d3b0128",
+      "executable": false
+    },
+    ".claude/skills/stage-1-foundation-primitives-system/agents/openai.yaml": {
+      "sha256": "03305ebb544ccce3e07a9874f3e5977bf8bd860cc6e8024a47489fc1bb7ac959",
+      "executable": false
+    },
+    ".claude/skills/stage-2-component-roundtrip-loop/SKILL.md": {
+      "sha256": "b54228c8e22d3694c0f2e36312ebbf1e5da622716893a1ada1bd4d657492b855",
+      "executable": false
+    },
+    ".claude/skills/stage-2-component-roundtrip-loop/agents/openai.yaml": {
+      "sha256": "29858d4a603f02637a5c7924633773862eaa91211a7cbcc8c44de277e94e048a",
+      "executable": false
+    },
+    ".claude/skills/stage-3-organism-layout-assembler/SKILL.md": {
+      "sha256": "4253e930f3e16c25293b148a86cabebf81deff9184536ed81d5c9846508f6b6c",
+      "executable": false
+    },
+    ".claude/skills/stage-3-organism-layout-assembler/agents/openai.yaml": {
+      "sha256": "2f321708b5725261c9118e6efbb4b9c2a1ed850b0f980521c9e9400ffe993b87",
+      "executable": false
+    },
+    ".claude/skills/storybook-rigorous-spec-system/SKILL.md": {
+      "sha256": "8fde97d457b7e745e46faf89f3b7d9f3cbc50ab7e0d1cae746c50de2475b1639",
+      "executable": false
+    },
+    ".claude/skills/storybook-rigorous-spec-system/agents/openai.yaml": {
+      "sha256": "31fba2ede513f930aa1560f7b7e1b2f67e93f4361f7962ef7eeacfc577b699d7",
+      "executable": false
+    },
+    ".claude/skills/storybook-rigorous-spec-system/references/storybook-decision-matrix.md": {
+      "sha256": "652270bb8e50ba735214138ccbc4698034ff421938136e33a5f3068b2b8e85e4",
+      "executable": false
+    },
+    ".claude/skills/sync-quality-governor/SKILL.md": {
+      "sha256": "7cc263dc2bb05a096caf763ff7f2a333f3c7a3a87610d1bc20131dc75c07715c",
+      "executable": false
+    },
+    ".claude/skills/sync-quality-governor/agents/openai.yaml": {
+      "sha256": "fbd9f38fc6236d4e50f8e0e0eda3f42991ad9254492ca89dd87d4a3f896587d2",
+      "executable": false
+    },
+    ".claude/templates/composition-plan.template.json": {
+      "sha256": "f157459d9acb0f39faa0bad2740469b51aff1df8583b8315c3b85bd2db6145ca",
+      "executable": false
+    },
+    ".claude/templates/foundation-baseline.template.md": {
+      "sha256": "977d433be74691e50714b79b70c3d23a61a4e9ce9c400af2d5e013040bc820ad",
+      "executable": false
+    },
+    ".claude/templates/storybook-component-spec.template.json": {
+      "sha256": "d644a7ecc9064471d37d3b800f833fb4e5fdfa469c4f8f6773d3f3da69ed252f",
+      "executable": false
+    },
+    ".claude/templates/storybook-story-inventory.template.json": {
+      "sha256": "dd2b63aa410c67ec5cf6d0ae7b343751835e2740dd6875ddb0a979f1f95879c1",
+      "executable": false
+    },
+    ".claude/templates/storybook-story-taxonomy.template.md": {
+      "sha256": "a8af73abad54f05dae1aa2723dc51c41e8ac863d1e857032d5c0ed35f37036a0",
+      "executable": false
+    },
+    ".claude/templates/storybook-tier-policy.template.json": {
+      "sha256": "1747823216f2350cef305df260620398f31c8722cc8518e0bfd9edcd8d50bea4",
+      "executable": false
+    },
+    ".claude/templates/storybook-version-policy.template.json": {
+      "sha256": "2a7be8b1134c53b2ca0d587954508fcec8e8b99ccc532b6b7442a02fe393ae73",
+      "executable": false
+    },
+    ".claude/templates/sync-ledger.template.json": {
+      "sha256": "9c884a0ef358ff441da5e5688dbddfea5bffd9f345b9927e8ba5907a5690f9b1",
+      "executable": false
+    },
+    ".ds-skills/project.mjs": {
+      "sha256": "80f0fb9289e37ce7d2727a0da8ea3508a94d15e464ae66ba23aec917cc1c8b40",
+      "executable": false
+    }
+  }
+}
