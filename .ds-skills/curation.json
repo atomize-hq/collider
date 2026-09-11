@@ -1,8 +1,8 @@
 {
   "curatedInstallationVersion": "1",
-  "release": "v0.5.2",
-  "sourceCommit": "e0ebb44d3fc0310154353c1b04bac47201fee762",
-  "pinSha256": "d01daf27305aa7de7b7fedf98b8e808ede1f1b3bf4e98d2b3c50d027f080327a",
+  "release": "v0.5.3",
+  "sourceCommit": "9e9e8e83369736de2f90a75b498d5fd12f600731",
+  "pinSha256": "875a2c48118c5e4674aa67d0eee28624cd373a00593d450e342083fbfbbf44e0",
   "config": "ds-skills.project.json",
   "configSha256": "2a62d0015c430ca2d50b68afe80c16e9fae685d6dfc453710789b40bbe9c47b4",
   "bundleSha256": "6dd9bf87fafc68ac100dde5fd78ac4ffa30151db6dfe0ddbc7bb1cc06f3b7b50",

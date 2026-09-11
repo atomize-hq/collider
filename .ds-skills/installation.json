@@ -1,8 +1,8 @@
 {
   "installationVersion": "2",
-  "release": "v0.5.2",
-  "sourceCommit": "e0ebb44d3fc0310154353c1b04bac47201fee762",
-  "pinSha256": "d01daf27305aa7de7b7fedf98b8e808ede1f1b3bf4e98d2b3c50d027f080327a",
+  "release": "v0.5.3",
+  "sourceCommit": "9e9e8e83369736de2f90a75b498d5fd12f600731",
+  "pinSha256": "875a2c48118c5e4674aa67d0eee28624cd373a00593d450e342083fbfbbf44e0",
   "files": {
     ".agents/schemas/README.md": {
       "sha256": "be0b97c0d036c69461fab0f85a4b3dfc8c34d456e2710b5405f1754e707abf57",

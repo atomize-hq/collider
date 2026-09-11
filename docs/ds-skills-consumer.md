@@ -2,7 +2,7 @@
 
 Status: pinned public-release integration.
 
-Collider pins the published `v0.5.2` product in `ds-skills.release.json`. It was
+Collider pins the published `v0.5.3` product in `ds-skills.release.json`. It was
 independently acquired from the public release and its core/custom installed
 integrity checks passed. A fresh machine can acquire the reviewed public pin;
 an operator-provided mirror is optional, not required. This records installation
