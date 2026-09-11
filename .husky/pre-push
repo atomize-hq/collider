@@ -1,4 +1,7 @@
 #!/bin/sh
 # Mirror CI before every push: token governance + storybook proof + static
-# checks + LOC guards + full test suite. Bypass in a pinch with `git push --no-verify`.
+# checks + LOC guards + full test suite. Clear Git's repository-local variables
+# so fixture Git commands run against their own repository, not this worktree.
+local_git_env=$(git rev-parse --local-env-vars) || exit $?
+unset $local_git_env
 just preflight
