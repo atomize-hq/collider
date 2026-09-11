@@ -37,7 +37,7 @@
     "figma:plugin:build": "node .ds-skills/project.mjs figma plugin build --config figma/token-sync.config.json --out figma/plugins/collider-token-sync",
     "figma:verify": "node .ds-skills/project.mjs figma verify --config figma/token-sync.config.json --expect figma/token-rail.baseline.json --artifact design-tokens/dist/figma/tokens.json",
     "figma:foundations:build": "node .ds-skills/project.mjs foundations build --config ds-skills.project.json",
-    "figma:tokens:serve": "node .ds-skills/project.mjs figma serve --config figma/token-sync.config.json --artifact design-tokens/dist/figma/tokens.json",
+    "figma:tokens:serve": "node .ds-skills/project.mjs figma serve --config figma/token-sync.config.json --artifact design-tokens/dist/figma/tokens.json --drift-out .codex-artifacts/figma/drift-report.json",
     "validate:figma-parity": "node .ds-skills/project.mjs ledger parity --ledger src/figma/sync-ledger.json --profile src/figma/validation-profile.json",
     "govern:tokens": "node .ds-skills/project.mjs tokens govern --config ds-skills.project.json",
     "prepare": "husky",

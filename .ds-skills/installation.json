@@ -1,8 +1,8 @@
 {
   "installationVersion": "2",
-  "release": "v0.5.3",
-  "sourceCommit": "9e9e8e83369736de2f90a75b498d5fd12f600731",
-  "pinSha256": "875a2c48118c5e4674aa67d0eee28624cd373a00593d450e342083fbfbbf44e0",
+  "release": "v0.5.4",
+  "sourceCommit": "e7654c7100272cacb10ed620866889fbb4c32385",
+  "pinSha256": "d7acaf7fa7ff6c9077fc1367ed3ecf9a5436f90e737e93c3afefc5bb1450c506",
   "files": {
     ".agents/schemas/README.md": {
       "sha256": "be0b97c0d036c69461fab0f85a4b3dfc8c34d456e2710b5405f1754e707abf57",
@@ -133,11 +133,11 @@
       "executable": false
     },
     ".agents/templates/storybook-version-policy.template.json": {
-      "sha256": "2a7be8b1134c53b2ca0d587954508fcec8e8b99ccc532b6b7442a02fe393ae73",
+      "sha256": "6b320e01606d1919cb47eba35b7bb8b3d2cef978101d1b80e0c1cd1384c32b64",
       "executable": false
     },
     ".agents/templates/sync-ledger.template.json": {
-      "sha256": "9c884a0ef358ff441da5e5688dbddfea5bffd9f345b9927e8ba5907a5690f9b1",
+      "sha256": "e13b1d9584cec32bb6044abf54f8b855aba6285cb28e53d3f7c9ca00db93a249",
       "executable": false
     },
     ".claude/schemas/README.md": {
@@ -269,11 +269,11 @@
       "executable": false
     },
     ".claude/templates/storybook-version-policy.template.json": {
-      "sha256": "2a7be8b1134c53b2ca0d587954508fcec8e8b99ccc532b6b7442a02fe393ae73",
+      "sha256": "6b320e01606d1919cb47eba35b7bb8b3d2cef978101d1b80e0c1cd1384c32b64",
       "executable": false
     },
     ".claude/templates/sync-ledger.template.json": {
-      "sha256": "9c884a0ef358ff441da5e5688dbddfea5bffd9f345b9927e8ba5907a5690f9b1",
+      "sha256": "e13b1d9584cec32bb6044abf54f8b855aba6285cb28e53d3f7c9ca00db93a249",
       "executable": false
     },
     ".ds-skills/project.mjs": {

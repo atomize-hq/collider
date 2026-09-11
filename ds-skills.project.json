@@ -191,7 +191,7 @@
     "definition": "design-system/libraries.json",
     "evidence": {
       "file": "design-system/library-evidence.json",
-      "sha256": "19d718e61da9eaea94d372b2874c561893b8ee04a86db30337dc4a87ead5d3f3"
+      "sha256": "1e8926fe2ea0dbf25cc2b7d1a9dc78f78fd51f897b312ad930a307e652175a1a"
     },
     "candidate": ".codex-artifacts/libraries/candidate.json",
     "lockPath": ".codex-artifacts/locks/library-evidence.lock"
@@ -201,11 +201,11 @@
     "candidate": ".codex-artifacts/curation/candidate.json",
     "accepted": {
       "file": "design-system/curation-bundle.json",
-      "sha256": "e3c11636c724f8e0c7c0e135a7b7de16577ac711b2f3b89b412defb8f718ef77"
+      "sha256": "bba45037a54e79310641bcdfaa2741499c4227957324fc3b0f9887d7c22b36ef"
     },
     "review": {
       "file": "design-system/curation-review.json",
-      "sha256": "643979bd3408bf90b7616a57275e3058010fa8a6be93a5d2243d3eeac7c1df35"
+      "sha256": "f447282f93d13ce5afb6e5e3d8d55d811a82478f6f2f1fd29738ccd9852a6fe0"
     },
     "lockPath": ".codex-artifacts/locks/curation.lock"
   }

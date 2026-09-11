@@ -55,19 +55,20 @@ Token build runs the compiler bundled in the pinned ds-skills release. Run `pnpm
 
 All day-to-day commands go through `just`. Never call `pnpm` scripts directly for the standard lifecycle.
 
-| Command                      | Purpose                                                |
-| ---------------------------- | ------------------------------------------------------ |
-| `just check`                 | Fast lint / format / typecheck (TS + Rust)             |
-| `just fmt`                   | Auto-format everything                                 |
-| `just test-all`              | Unit + Storybook + Rust tests                          |
-| `just preflight`             | **Run before every push.** Checks + LOC guards + tests |
-| `just sweep`                 | Deep analysis (preflight + coverage + e2e)             |
-| `just loc`                   | LOC guards only                                        |
-| `pnpm storybook`             | Storybook dev server (port 6006)                       |
-| `pnpm tauri:dev`             | Tauri desktop dev (starts Next.js + Tauri)             |
-| `pnpm build:tauri`           | Static-export build for Tauri bundle                   |
-| `pnpm build:tokens`          | Rebuild design tokens from source                      |
-| `pnpm figma:connect:publish` | Publish to Figma Dev Mode (token required)             |
+| Command                   | Purpose                                                                                |
+| ------------------------- | -------------------------------------------------------------------------------------- |
+| `just check`              | Fast lint / format / typecheck (TS + Rust)                                             |
+| `just fmt`                | Auto-format everything                                                                 |
+| `just test-all`           | Unit + Storybook + Rust tests                                                          |
+| `just preflight`          | **Run before every push.** Checks + LOC guards + tests                                 |
+| `just sweep`              | Deep analysis complement; run with preflight before PR/merge                           |
+| `just loc`                | LOC guards only                                                                        |
+| `pnpm storybook`          | Storybook dev server (port 6006)                                                       |
+| `pnpm tauri:dev`          | Tauri desktop dev (starts Next.js + Tauri)                                             |
+| `pnpm build:tauri`        | Static-export build for Tauri bundle                                                   |
+| `pnpm build:tokens`       | Rebuild design tokens from source                                                      |
+| `pnpm figma:plugin:build` | Build the configured development-plugin manifest; see `src/figma/plugin-setup.md`      |
+| `pnpm figma:tokens:serve` | Serve the built artifact through the pinned product and record configured drift output |
 
 ---
 
@@ -75,8 +76,12 @@ All day-to-day commands go through `just`. Never call `pnpm` scripts directly fo
 
 - `just preflight` must pass locally before every push. No exceptions.
 - Pre-commit hooks (Husky + lint-staged) run ESLint + Prettier on staged files.
-- Husky hooks mirror CI. Local pass = CI pass.
-- LOC guards are enforced in `just preflight`: TSX/TS ≤300, Rust ≤400 code lines.
+- Husky runs the required local `just preflight` gate. CI additionally builds and
+  actionably enforces external visual-review/promotion work, so a local pass is not a CI
+  success guarantee.
+- `just sweep` complements, rather than replaces, `just preflight`; run both before
+  opening a PR or merging.
+- LOC guards are enforced in `just preflight`: TSX ≤200, TS ≤300, Rust ≤400 code lines.
 
 ---
 

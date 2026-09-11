@@ -34,15 +34,15 @@ Do not add Storybook packages from outside the locked version line without a del
 
 ## Story file conventions
 
-| Concern                                | Convention                                                   |
-| -------------------------------------- | ------------------------------------------------------------ |
-| File extension                         | `.stories.tsx` only (never `.js`, `.jsx`)                    |
-| Location (component stories)           | `src/components/<subdir>/<Name>.stories.tsx`                 |
-| Location (foundation/contract stories) | `storybook/stories/**/*.stories.tsx`                         |
-| Default export                         | `Meta` typed with the component                              |
-| Story exports                          | Named exports typed as `StoryObj`                            |
-| Story naming                           | PascalCase names (`Default`, `WithStreaming`, `StateMatrix`) |
-| Tags                                   | Use `tags: ['autodocs']` on `Meta` for public components     |
+| Concern                                | Convention                                                         |
+| -------------------------------------- | ------------------------------------------------------------------ |
+| File extension                         | `.stories.tsx` only (never `.js`, `.jsx`)                          |
+| Location (component stories)           | `src/components/<subdir>/<Name>.stories.tsx`                       |
+| Location (foundation/contract stories) | `storybook/stories/**/*.stories.tsx`                               |
+| Default export                         | `Meta` typed with the component                                    |
+| Story exports                          | Named exports typed as `StoryObj`                                  |
+| Story naming                           | PascalCase names (`Default`, `WithStreaming`, `StateMatrix`)       |
+| Docs proof                             | Export explicit named `Docs` CSF story required by proof inventory |
 
 ---
 
@@ -136,11 +136,15 @@ Run a11y checks as part of `pnpm test:storybook`.
 
 ---
 
-## Docs / autodocs policy
+## Docs proof policy
 
-- Use `tags: ['autodocs']` on Meta for all design-system components.
-- Autodocs generates the API table from controls/props. Keep prop types clean and documented with JSDoc.
-- Do not write manual MDX docs unless there is a compelling reason — autodocs is the baseline.
+- Export an explicit named `Docs` CSF story wherever the component proof inventory
+  requires docs. The configured addon list does not include `@storybook/addon-docs`,
+  so `tags: ['autodocs']` is not a required or sufficient proof mechanism.
+- Keep props cleanly typed and document meaningful public props with JSDoc where
+  explanation is needed.
+- The `Docs` export is a documented/captured surface, not a replacement for
+  executable interaction, accessibility, or motion assertions.
 
 ---
 
@@ -178,8 +182,12 @@ Add a motion story when:
 
 Motion stories should:
 
-- Use the `play` function to trigger the transition
-- Disable Chromatic snapshot on the in-flight frame (`chromatic: { pauseAnimationAtEnd: true }`)
-- Verify the end state with assertions
+- Use the `play` function to trigger the transition and verify the intended end
+  state with assertions.
+- `chromatic: { pauseAnimationAtEnd: true }` controls **CSS-animation capture**; it
+  does not prove behavior or disable JavaScript animation.
+- `.storybook/preview.ts` uses `MotionGlobalConfig.skipAnimations = isChromatic()` for
+  JavaScript-driven Chromatic captures only. Do not disable production/local Storybook
+  motion, and do not count a frozen capture as a motion-behavior assertion.
 
 Motion is optional for Wave 1 components except `ThinkingIndicator` (which is entirely about motion).

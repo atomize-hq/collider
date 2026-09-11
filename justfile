@@ -8,8 +8,8 @@ default:
 
 # ══════════════════════════════════════════════════════════════════════════════
 # PREFLIGHT — mandatory gate before every push
-# Mirrors what CI enforces: token governance + Storybook proof gate + static checks + LOC guards + full test suite.
-# If this passes locally, CI should pass too.
+# Local token/proof/static/LOC/test gate; CI additionally builds and enforces external
+# visual review and promotion. A local pass does not guarantee CI success.
 #   just preflight
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -75,10 +75,11 @@ figma-token-server:
 # An already verified installation does not need the network for local gates.
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Install the pinned product and receipt-checked copies on both skill surfaces
-# (explicit upgrades refuse edited or unowned files)
+# Install core discovery, then the separately accepted custom curation on both surfaces.
+# Explicit upgrades refuse edited/unowned outputs; stale acceptance must be reviewed first.
 ds-skills-install:
     pnpm ds-skills:install
+    node .ds-skills/project.mjs curation install --config ds-skills.project.json
 
 # Verify the sealed release, launcher and discovery assets — acquires nothing
 ds-skills-check:
@@ -157,31 +158,22 @@ check: ds-skills-check check-ts check-upstream check-contract check-rs
 # ══════════════════════════════════════════════════════════════════════════════
 # LOC — lines-of-code guards via tokei (code lines only; blanks + comments excluded)
 #   Rust  src-tauri/src/**/*.rs   max 400 code lines
-#   TSX   src/**/*.tsx            max 300 code lines
+#   TSX   src/**/*.tsx            max 200 code lines
 #   TS    src/**/*.ts             max 300 code lines
 #   test and story files are excluded from the TS check
 #
-# TSX and TS share one limit. They used to differ (TSX 200 / TS 300) on the
-# theory that components decompose cheaply and logic modules don't, so you
-# tighten the side where splitting is a free win. The theory is sound; the
-# numbers never matched this repo. TSX is 84 of the 94 guarded files and carried
-# every near-limit case, while nothing among the 10 TS files came within 50
-# lines of 300 — so the split squeezed the large population and never once fired
-# on the small one. It also produced splits that were guard artifacts rather
-# than seams: prompt-input-helpers.ts (62) and prompt-input-select.tsx (57)
-# exist because something had to give at 200, not because a boundary was there.
-#
-# validate-loc.mjs still takes both limits, so the split can be reintroduced
-# without a script change.
+# The normal recipe enforces the existing AGENTS policy without relaxing it.
+# Its focused regression test checks both exact limits and their first failing values.
 # ══════════════════════════════════════════════════════════════════════════════
 
 # Check Rust file sizes via tokei (max 400 code lines)
 loc-rs:
     tokei --files --output json src-tauri/src | node scripts/validate-loc.mjs rs 400
 
-# Check TS/TSX file sizes via tokei (max 300 code lines — excludes tests + stories)
+# Check TSX <=200 and TS <=300 code lines (excludes tests + stories).
 loc-ts:
-    tokei --files --output json src | node scripts/validate-loc.mjs ts 300 300
+    node --test scripts/validate-loc.test.mjs
+    tokei --files --output json src | node scripts/validate-loc.mjs ts 200 300
 
 # Check all file sizes: Rust + TS
 loc: loc-rs loc-ts
@@ -236,7 +228,8 @@ e2e-ui:
 
 # ══════════════════════════════════════════════════════════════════════════════
 # SWEEP — deep, thorough analysis (slow, run before PR/merge)
-# Superset of preflight: adds coverage, knip, cargo-deny, machete, e2e.
+# Complement to preflight: coverage, knip, cargo-deny, machete and e2e.
+# Does not replace preflight token/proof/install/upstream/contract checks; both are required.
 # ══════════════════════════════════════════════════════════════════════════════
 
 # Deep TS sweep: format + types + lint + coverage + knip

@@ -16,7 +16,7 @@ Desktop IDE shell for Atomize HQ. Built on Next.js 16 + Tauri 2 — React render
 | Browser/component tests | `@vitest/browser` + Playwright           |
 | E2E tests               | Playwright 1.58                          |
 | Formatter               | Prettier 3 + prettier-plugin-tailwindcss |
-| Linter                  | ESLint 10                                |
+| Linter                  | ESLint 9                                 |
 | Dead code               | Knip                                     |
 | Rust tests              | cargo-nextest                            |
 | Rust lints              | Clippy, cargo-deny, cargo-machete        |
@@ -36,11 +36,17 @@ Desktop IDE shell for Atomize HQ. Built on Next.js 16 + Tauri 2 — React render
 
 ## Setup
 
-Design-system tooling and skills are installed from a reviewed ds-skills release.
-Start with [current consumer documentation](docs/current.md) and
-[the installation contract](docs/ds-skills-consumer.md) before running
-token, Figma or governance commands. The current separation-branch pin is a private
-candidate, not a published release.
+Design-system tooling and skills use the release selected in
+`ds-skills.release.json` only after its immutable public tag/assets are published
+and verified and the pin/core/custom installations are rebound to that identity.
+An unpublished staged pin and its release-tagged guide links are prospective, not
+public operational authority. Start with [current consumer
+documentation](docs/current.md) and [the installation contract](docs/ds-skills-consumer.md)
+before running token, Figma, or governance commands. The pin names the exact
+release, source commit, and asset digests; do not substitute an ambient executable.
+The original public separation landed in [Collider PR2](https://github.com/atomize-hq/collider/pull/2)
+with [ds-skills v0.5.3](https://github.com/atomize-hq/ds-skills/releases/tag/v0.5.3);
+that is historical landing evidence, not the current pin or a fresh CI result.
 
 ```bash
 pnpm install
@@ -75,11 +81,9 @@ src/
   app/              Next.js App Router pages + global styles
   components/
     ai-elements/    AI-specific UI components
-    editor/         Code/content editor components
-    system/         Design-system primitives
-  bridge/           Tauri IPC bindings (TS → Rust)
-  lib/tokens/       Design token CSS variables
-  features/         Feature-scoped modules
+    ui/             Collider-owned primitive components
+  figma/            Consumer Figma configuration and operator inputs
+  lib/tokens/       Runtime token integration
 
 src-tauri/          Rust crate (Tauri backend)
   src/              lib.rs, main.rs
@@ -87,7 +91,7 @@ src-tauri/          Rust crate (Tauri backend)
   deny.toml         cargo-deny license + advisory policy
 
 storybook/
-  stories/          Standalone stories
+  stories/          Contract and generated-token stories
   component-specs/  Repo-owned component proof contracts
 ```
 
@@ -98,7 +102,7 @@ storybook/
 ### Pre-push gate
 
 ```bash
-just preflight    # token governance + check + LOC guards + test-all — mirrors what CI enforces
+just preflight    # required local token/proof/static/LOC/test pre-push gate; CI has additional build and external-review work
 ```
 
 ### Token governance shortcut
@@ -120,7 +124,7 @@ just check-rs     # Rust only
 ```bash
 just loc          # Rust + TS/TSX
 just loc-rs       # Rust only  (max 400 code lines per file)
-just loc-ts       # TS/TSX only (max 300 code lines — excludes tests + stories)
+just loc-ts       # TSX max 200, TS max 300 code lines — excludes tests + stories
 ```
 
 ### Tests
@@ -149,7 +153,21 @@ just test-watch   # Vitest unit in watch mode
 
 ### Deep sweep — run before opening a PR
 
-`just sweep` is the required deep gate before any PR or merge — a superset of `just preflight` that adds V8 coverage, knip, cargo-deny, cargo-machete, and Playwright e2e.
+`just sweep` is the required deep gate before any PR or merge. It complements—not
+supersedes—`just preflight`: sweep adds coverage, knip, cargo-deny,
+cargo-machete, and Playwright e2e, while preflight retains token, proof, installed
+output, upstream-policy, and consumer-contract checks. Run both. Neither local gate
+proves CI or external visual-review/promotion success.
+
+| Check                                                                 | Preflight | Sweep | CI  |
+| --------------------------------------------------------------------- | --------- | ----- | --- |
+| Token governance, Storybook proof generation                          | Yes       | No    | Yes |
+| Core/custom installation, upstream policy/evidence, consumer contract | Yes       | No    | Yes |
+| Format, typecheck, lint/clippy, LOC                                   | Yes       | Yes   | Yes |
+| Unit, both Storybook themes, Rust tests                               | Yes       | Yes   | Yes |
+| Coverage, knip, cargo-deny, cargo-machete, e2e                        | No        | Yes   | No  |
+| Next.js and static Storybook builds                                   | No        | No    | Yes |
+| Current external Chromatic review and component promotion             | No        | No    | Yes |
 
 ```bash
 just sweep        # Everything: sweep-ts + sweep-rs + storybook + e2e
@@ -186,18 +204,18 @@ Husky runs on **commit** (`.husky/pre-commit`):
 
 …and on **push** (`.husky/pre-push`):
 
-3. **`just preflight`** — token governance + Storybook proof + `just check` + LOC guards + `just test-all`, mirroring CI. Bypass with `git push --no-verify` only when you know why.
+3. **`just preflight`** — token governance + Storybook proof + `just check` + LOC guards + `just test-all`. It is required before push, but CI additionally builds and enforces external visual-review/promotion operations; a local pass is not a CI guarantee. Do not bypass required gates.
 
 ---
 
 ## Key Config Files
 
-| File                   | Purpose                                                |
-| ---------------------- | ------------------------------------------------------ |
-| `vitest.config.ts`     | Two projects: `unit` (Node) + `storybook` (browser)    |
-| `playwright.config.ts` | E2E config — chromium, `pnpm dev` web server           |
-| `knip.config.ts`       | Dead export / unused dependency analysis               |
-| `src-tauri/deny.toml`  | Allowed licenses + advisory ignore list                |
-| `rust-toolchain.toml`  | Pins stable Rust channel                               |
-| `.prettierrc`          | Formatter — singleQuote, 100 cols, TW v4 class sorting |
-| `justfile`             | All task recipes (`just --list`)                       |
+| File                   | Purpose                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------- |
+| `vitest.config.ts`     | Three projects: `unit` (Node), `storybook` (dark browser), `storybook-light` |
+| `playwright.config.ts` | E2E config — chromium, `pnpm dev` web server                                 |
+| `knip.config.ts`       | Dead export / unused dependency analysis                                     |
+| `src-tauri/deny.toml`  | Allowed licenses + advisory ignore list                                      |
+| `rust-toolchain.toml`  | Pins stable Rust channel                                                     |
+| `.prettierrc`          | Formatter — singleQuote, 100 cols, TW v4 class sorting                       |
+| `justfile`             | All task recipes (`just --list`)                                             |

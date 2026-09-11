@@ -1,11 +1,11 @@
 {
   "reviewVersion": "1",
-  "bundleSha256": "e3c11636c724f8e0c7c0e135a7b7de16577ac711b2f3b89b412defb8f718ef77",
+  "bundleSha256": "bba45037a54e79310641bcdfaa2741499c4227957324fc3b0f9887d7c22b36ef",
   "decision": "approved",
   "reviewer": {
     "kind": "agent",
-    "id": "Codex /root/release_gate_review - independent review"
+    "id": "Codex /root/curation_acceptance - independent review"
   },
-  "reviewedAt": "2026-09-11T01:13:54.599Z",
-  "notes": "Independent exact-bundle provenance refresh review approved. Only captured package.json adds direct chromatic 13.3.5 for Storybook capture detection; selected libraries/APIs, all authored guidance and both previously typechecked/runtime-tested examples are unchanged. Six package citations advance their source hash and full-file end line 144 to 145. Generated skill changes are provenance and package excerpts only. This records candidate installation review, not new live Figma or final CI/landing proof."
+  "reviewedAt": "2026-09-11T18:52:14.000Z",
+  "notes": "Independent exact-bundle source-evidence/citation refresh review: both skills, all guidance and examples, 22 selected APIs, all 67 citations and embedded excerpts. Captured changes are AGENTS.md gate documentation and package.json drift-recording alias; authored guidance/examples and API source bytes are unchanged. This attests curated guidance/provenance only, not new runtime/example execution, Figma publication, final CI or landing proof. Release upgrades must reproduce this exact bundle before retaining acceptance."
 }
