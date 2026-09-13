@@ -32,7 +32,7 @@ Load the configured artifact, use **Check Drift** for a read-only comparison, th
 verify its result. The workflow updates existing matching IDs; do not delete and
 recreate production collections or discard bindings to obtain a passing check.
 
-The token server records posted drift results at `artifacts/figma/drift-report.json`
+The token server records posted drift results at `.codex-artifacts/figma/drift-report.json`
 with artifact SHA and repo revision. Check those identities and the actual destination;
 a stale report or a successful fetch alone is not live publication evidence. No
 write-back into token source is authorized. Reconcile desired Figma changes into
