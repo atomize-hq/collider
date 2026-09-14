@@ -3,7 +3,7 @@ import '../src/app/globals.css';
 import type { Preview } from '@storybook/nextjs-vite';
 import isChromatic from 'chromatic/isChromatic';
 import { MotionGlobalConfig } from 'motion/react';
-import { createElement, type CSSProperties } from 'react';
+import { createElement, type CSSProperties, type ReactNode, useEffect } from 'react';
 
 import {
   resolveStorybookThemeId,
@@ -22,6 +22,21 @@ const previewSurfaceStyle: CSSProperties = {
   minHeight: '100vh',
   padding: '1.5rem',
 };
+
+function StorybookThemeBoundary({ children, themeId }: { children?: ReactNode; themeId: string }) {
+  useEffect(() => {
+    const root = document.documentElement;
+    const previousTheme = root.getAttribute('data-theme');
+    root.setAttribute('data-theme', themeId);
+
+    return () => {
+      if (previousTheme === null) root.removeAttribute('data-theme');
+      else root.setAttribute('data-theme', previousTheme);
+    };
+  }, [themeId]);
+
+  return createElement('div', { 'data-theme': themeId, style: previewSurfaceStyle }, children);
+}
 
 const preview: Preview = {
   globalTypes: {
@@ -42,14 +57,7 @@ const preview: Preview = {
     (Story, context) => {
       const themeId = resolveStorybookThemeId(context.globals.theme);
 
-      return createElement(
-        'div',
-        {
-          'data-theme': themeId,
-          style: previewSurfaceStyle,
-        },
-        createElement(Story)
-      );
+      return createElement(StorybookThemeBoundary, { themeId }, createElement(Story));
     },
   ],
   parameters: {

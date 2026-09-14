@@ -102,6 +102,14 @@ export const Focus: Story = {
     trigger.focus();
 
     await expect(trigger).toHaveFocus();
-    await expect(await within(document.body).findByRole('tooltip')).toBeVisible();
+    const tooltip = await within(document.body).findByRole('tooltip');
+    await expect(tooltip).toBeVisible();
+
+    const themeSurface = canvasElement.querySelector<HTMLElement>('[data-theme]');
+    await expect(themeSurface).not.toBeNull();
+    const tooltipStyle = getComputedStyle(tooltip);
+    const themeStyle = getComputedStyle(themeSurface as HTMLElement);
+    await expect(tooltipStyle.backgroundColor).toBe(themeStyle.color);
+    await expect(tooltipStyle.color).toBe(themeStyle.backgroundColor);
   },
 };

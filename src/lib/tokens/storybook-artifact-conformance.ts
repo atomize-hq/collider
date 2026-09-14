@@ -122,14 +122,16 @@ export function createRuntimeCssParityDiagnostics(
   options: {
     checks?: RuntimeCssParityCheck[];
     document?: Document;
+    themeId?: string;
   } = {}
 ) {
   const diagnostics: StorybookArtifactConformanceDiagnostic[] = [];
   const doc = options.document ?? document;
   const checks = options.checks ?? defaultRuntimeCssParityChecks;
+  const themeId = options.themeId ?? artifact.themeRegistry.defaultThemeId;
 
   for (const check of checks) {
-    const token = artifact.tokenMap[check.tokenId];
+    const token = resolveGeneratedTokenEntry(artifact, check.tokenId, themeId);
     if (!token || typeof token.value !== 'string' || token.value.length === 0) {
       diagnostics.push(createMissingFieldDiagnostic(`tokenMap.${check.tokenId}.value`));
       continue;
