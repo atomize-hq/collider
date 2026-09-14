@@ -1,0 +1,33 @@
+{
+  "specVersion": "1",
+  "componentId": "collapsible",
+  "tier": "interactive",
+  "requiredStoryKinds": ["default", "state-matrix", "actions", "keyboard", "focus", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-collapsible--default", "kinds": ["default"] },
+    { "storyId": "primitives-collapsible--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "primitives-collapsible--toggle-action", "kinds": ["actions"] },
+    { "storyId": "primitives-collapsible--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "primitives-collapsible--focus", "kinds": ["focus"] },
+    { "storyId": "primitives-collapsible--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/collapsible.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2718-24",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-collapsible--default",
+      "primitives-collapsible--state-matrix",
+      "primitives-collapsible--toggle-action",
+      "primitives-collapsible--keyboard",
+      "primitives-collapsible--focus",
+      "primitives-collapsible--docs"
+    ]
+  }
+}

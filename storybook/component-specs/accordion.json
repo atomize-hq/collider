@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "accordion",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "variant-matrix",
+    "state-matrix",
+    "actions",
+    "keyboard",
+    "focus",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-accordion--default", "kinds": ["default"] },
+    { "storyId": "primitives-accordion--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-accordion--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "primitives-accordion--value-action", "kinds": ["actions"] },
+    { "storyId": "primitives-accordion--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "primitives-accordion--focus", "kinds": ["focus"] },
+    { "storyId": "primitives-accordion--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/accordion.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2720-28",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-accordion--default",
+      "primitives-accordion--variant-matrix",
+      "primitives-accordion--state-matrix",
+      "primitives-accordion--value-action",
+      "primitives-accordion--keyboard",
+      "primitives-accordion--focus",
+      "primitives-accordion--docs"
+    ]
+  }
+}

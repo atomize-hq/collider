@@ -37,7 +37,7 @@ describe('installed Collider story and readiness integration', () => {
     report(['storybook', 'policy', 'validate'], 0, [], repoRoot);
     const proof = report(['storybook', 'proof', 'check'], 0, [], repoRoot);
     expect(proof.scope).toBe('static-story-reference-coverage');
-    expect(proof.coverage.summary).toEqual({ componentCount: 45, readyCount: 45, failingCount: 0 });
+    expect(proof.coverage.summary).toEqual({ componentCount: 50, readyCount: 50, failingCount: 0 });
   });
 
   it('rejects a removed real story and preserves previous coverage on invalid structure', () => {

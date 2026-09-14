@@ -1291,6 +1291,78 @@
         { "kind": "variant-matrix", "storyId": "primitives-separator--variant-matrix" },
         { "kind": "docs", "storyId": "primitives-separator--docs" }
       ]
+    },
+    {
+      "componentId": "alert",
+      "validatorKinds": ["default", "variant-matrix", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-alert--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-alert--variant-matrix" },
+        { "kind": "docs", "storyId": "primitives-alert--docs" }
+      ]
+    },
+    {
+      "componentId": "avatar",
+      "validatorKinds": ["default", "variant-matrix", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-avatar--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-avatar--variant-matrix" },
+        { "kind": "docs", "storyId": "primitives-avatar--docs" }
+      ]
+    },
+    {
+      "componentId": "collapsible",
+      "validatorKinds": ["default", "state-matrix", "actions", "keyboard", "focus", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-collapsible--default" },
+        { "kind": "state-matrix", "storyId": "primitives-collapsible--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-collapsible--toggle-action" },
+        { "kind": "keyboard", "storyId": "primitives-collapsible--keyboard" },
+        { "kind": "focus", "storyId": "primitives-collapsible--focus" },
+        { "kind": "docs", "storyId": "primitives-collapsible--docs" }
+      ]
+    },
+    {
+      "componentId": "accordion",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-accordion--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-accordion--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-accordion--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-accordion--value-action" },
+        { "kind": "keyboard", "storyId": "primitives-accordion--keyboard" },
+        { "kind": "focus", "storyId": "primitives-accordion--focus" },
+        { "kind": "docs", "storyId": "primitives-accordion--docs" }
+      ]
+    },
+    {
+      "componentId": "tabs",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-tabs--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-tabs--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-tabs--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-tabs--value-action" },
+        { "kind": "keyboard", "storyId": "primitives-tabs--keyboard" },
+        { "kind": "focus", "storyId": "primitives-tabs--focus" },
+        { "kind": "docs", "storyId": "primitives-tabs--docs" }
+      ]
     }
   ]
 }
