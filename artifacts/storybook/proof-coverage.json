@@ -1,7 +1,7 @@
 {
   "proofCoverageVersion": "2",
   "scope": "static-story-reference-coverage",
-  "summary": { "componentCount": 39, "readyCount": 39, "failingCount": 0 },
+  "summary": { "componentCount": 45, "readyCount": 45, "failingCount": 0 },
   "components": [
     {
       "componentId": "agent",
@@ -449,6 +449,35 @@
       "missingKinds": []
     },
     {
+      "componentId": "input",
+      "tier": "interactive",
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      },
+      "requiredKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "status": "ready",
+      "missingKinds": []
+    },
+    {
       "componentId": "jsx-preview",
       "tier": "primitive",
       "generatedArtifactRefs": {
@@ -542,6 +571,19 @@
         "motion",
         "docs"
       ],
+      "status": "ready",
+      "missingKinds": []
+    },
+    {
+      "componentId": "progress",
+      "tier": "primitive",
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      },
+      "requiredKinds": ["default", "variant-matrix", "docs"],
+      "implementedKinds": ["default", "variant-matrix", "docs"],
       "status": "ready",
       "missingKinds": []
     },
@@ -706,6 +748,19 @@
       "missingKinds": []
     },
     {
+      "componentId": "separator",
+      "tier": "primitive",
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      },
+      "requiredKinds": ["default", "variant-matrix", "docs"],
+      "implementedKinds": ["default", "variant-matrix", "docs"],
+      "status": "ready",
+      "missingKinds": []
+    },
+    {
       "componentId": "snippet",
       "tier": "primitive",
       "generatedArtifactRefs": {
@@ -748,6 +803,19 @@
       "missingKinds": []
     },
     {
+      "componentId": "spinner",
+      "tier": "primitive",
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      },
+      "requiredKinds": ["default", "variant-matrix", "docs"],
+      "implementedKinds": ["default", "variant-matrix", "docs"],
+      "status": "ready",
+      "missingKinds": []
+    },
+    {
       "componentId": "stack-trace",
       "tier": "interactive",
       "generatedArtifactRefs": {
@@ -786,6 +854,35 @@
       },
       "requiredKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
       "implementedKinds": ["default", "variant-matrix", "actions", "keyboard", "focus", "docs"],
+      "status": "ready",
+      "missingKinds": []
+    },
+    {
+      "componentId": "switch",
+      "tier": "interactive",
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      },
+      "requiredKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
       "status": "ready",
       "missingKinds": []
     },
@@ -873,6 +970,19 @@
         "motion",
         "docs"
       ],
+      "status": "ready",
+      "missingKinds": []
+    },
+    {
+      "componentId": "textarea",
+      "tier": "interactive",
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      },
+      "requiredKinds": ["default", "state-matrix", "actions", "keyboard", "focus", "docs"],
+      "implementedKinds": ["default", "state-matrix", "actions", "keyboard", "focus", "docs"],
       "status": "ready",
       "missingKinds": []
     },

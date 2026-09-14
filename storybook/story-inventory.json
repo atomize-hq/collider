@@ -1210,6 +1210,87 @@
         { "kind": "focus", "storyId": "primitives-command--focus" },
         { "kind": "docs", "storyId": "primitives-command--docs" }
       ]
+    },
+    {
+      "componentId": "input",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-input--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-input--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-input--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-input--change-action" },
+        { "kind": "keyboard", "storyId": "primitives-input--keyboard" },
+        { "kind": "focus", "storyId": "primitives-input--focus" },
+        { "kind": "docs", "storyId": "primitives-input--docs" }
+      ]
+    },
+    {
+      "componentId": "textarea",
+      "validatorKinds": ["default", "state-matrix", "actions", "keyboard", "focus", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-textarea--default" },
+        { "kind": "state-matrix", "storyId": "primitives-textarea--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-textarea--change-action" },
+        { "kind": "keyboard", "storyId": "primitives-textarea--keyboard" },
+        { "kind": "focus", "storyId": "primitives-textarea--focus" },
+        { "kind": "docs", "storyId": "primitives-textarea--docs" }
+      ]
+    },
+    {
+      "componentId": "switch",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-switch--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-switch--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-switch--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-switch--checked-action" },
+        { "kind": "keyboard", "storyId": "primitives-switch--keyboard" },
+        { "kind": "focus", "storyId": "primitives-switch--focus" },
+        { "kind": "docs", "storyId": "primitives-switch--docs" }
+      ]
+    },
+    {
+      "componentId": "progress",
+      "validatorKinds": ["default", "variant-matrix", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-progress--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-progress--variant-matrix" },
+        { "kind": "docs", "storyId": "primitives-progress--docs" }
+      ]
+    },
+    {
+      "componentId": "spinner",
+      "validatorKinds": ["default", "variant-matrix", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-spinner--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-spinner--variant-matrix" },
+        { "kind": "docs", "storyId": "primitives-spinner--docs" }
+      ]
+    },
+    {
+      "componentId": "separator",
+      "validatorKinds": ["default", "variant-matrix", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-separator--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-separator--variant-matrix" },
+        { "kind": "docs", "storyId": "primitives-separator--docs" }
+      ]
     }
   ]
 }

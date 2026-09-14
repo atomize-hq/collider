@@ -1,0 +1,27 @@
+{
+  "specVersion": "1",
+  "componentId": "progress",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-progress--default", "kinds": ["default"] },
+    { "storyId": "primitives-progress--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-progress--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/progress.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2705-12",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-progress--default",
+      "primitives-progress--variant-matrix",
+      "primitives-progress--docs"
+    ]
+  }
+}

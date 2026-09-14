@@ -1,0 +1,33 @@
+{
+  "specVersion": "1",
+  "componentId": "textarea",
+  "tier": "interactive",
+  "requiredStoryKinds": ["default", "state-matrix", "actions", "keyboard", "focus", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-textarea--default", "kinds": ["default"] },
+    { "storyId": "primitives-textarea--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "primitives-textarea--change-action", "kinds": ["actions"] },
+    { "storyId": "primitives-textarea--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "primitives-textarea--focus", "kinds": ["focus"] },
+    { "storyId": "primitives-textarea--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/textarea.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2702-12",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-textarea--default",
+      "primitives-textarea--state-matrix",
+      "primitives-textarea--change-action",
+      "primitives-textarea--keyboard",
+      "primitives-textarea--focus",
+      "primitives-textarea--docs"
+    ]
+  }
+}
