@@ -27,7 +27,7 @@
   },
   "downstreamHooks": {
     "codeEntrypoint": "src/components/ui/select.tsx",
-    "figmaComponentRef": null,
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2642-34",
     "supportedVariantsSource": null,
     "slotNamesSource": null,
     "exampleStoryIds": [

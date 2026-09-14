@@ -30,7 +30,7 @@
   },
   "downstreamHooks": {
     "codeEntrypoint": "src/components/ui/button-group.tsx",
-    "figmaComponentRef": null,
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2643-49",
     "supportedVariantsSource": null,
     "slotNamesSource": null,
     "exampleStoryIds": [

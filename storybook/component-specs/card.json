@@ -15,7 +15,7 @@
   },
   "downstreamHooks": {
     "codeEntrypoint": "src/components/ui/card.tsx",
-    "figmaComponentRef": null,
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2640-38",
     "supportedVariantsSource": null,
     "slotNamesSource": null,
     "exampleStoryIds": [
