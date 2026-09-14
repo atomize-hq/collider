@@ -1090,6 +1090,63 @@
         { "kind": "variant-matrix", "storyId": "primitives-badge--variant-matrix" },
         { "kind": "docs", "storyId": "primitives-badge--docs" }
       ]
+    },
+    {
+      "componentId": "card",
+      "validatorKinds": ["default", "variant-matrix", "docs"],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-card--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-card--variant-matrix" },
+        { "kind": "docs", "storyId": "primitives-card--docs" }
+      ]
+    },
+    {
+      "componentId": "select",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-select--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-select--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-select--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-select--selection-action" },
+        { "kind": "keyboard", "storyId": "primitives-select--keyboard" },
+        { "kind": "focus", "storyId": "primitives-select--focus" },
+        { "kind": "docs", "storyId": "primitives-select--docs" }
+      ]
+    },
+    {
+      "componentId": "button-group",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-buttongroup--default" },
+        {
+          "kind": "variant-matrix",
+          "storyId": "primitives-buttongroup--variant-matrix"
+        },
+        {
+          "kind": "state-matrix",
+          "storyId": "primitives-buttongroup--state-matrix"
+        },
+        { "kind": "actions", "storyId": "primitives-buttongroup--selection-action" },
+        { "kind": "keyboard", "storyId": "primitives-buttongroup--keyboard" },
+        { "kind": "focus", "storyId": "primitives-buttongroup--focus" },
+        { "kind": "docs", "storyId": "primitives-buttongroup--docs" }
+      ]
     }
   ]
 }
