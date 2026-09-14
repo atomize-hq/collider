@@ -41,6 +41,8 @@ unchanged.
 - The directory-wide `focus-visible:focus-ring` policy replaces upstream
   accent-derived focus rings. Invalid controls retain their destructive border and
   ring treatment.
+- Scroll Area's viewport is explicitly keyboard focusable so keyboard scrolling
+  and its visible focus treatment are available without an additional wrapper.
 - Collider continues to use the individually declared `@radix-ui/react-*`
   packages rather than the aggregate upstream import.
 

@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "scroll-area",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "variant-matrix",
+    "state-matrix",
+    "actions",
+    "keyboard",
+    "focus",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-scrollarea--default", "kinds": ["default"] },
+    { "storyId": "primitives-scrollarea--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-scrollarea--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "primitives-scrollarea--scroll-action", "kinds": ["actions"] },
+    { "storyId": "primitives-scrollarea--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "primitives-scrollarea--focus", "kinds": ["focus"] },
+    { "storyId": "primitives-scrollarea--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/scroll-area.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2744-59",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-scrollarea--default",
+      "primitives-scrollarea--variant-matrix",
+      "primitives-scrollarea--state-matrix",
+      "primitives-scrollarea--scroll-action",
+      "primitives-scrollarea--keyboard",
+      "primitives-scrollarea--focus",
+      "primitives-scrollarea--docs"
+    ]
+  }
+}

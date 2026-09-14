@@ -1426,6 +1426,48 @@
         { "kind": "focus", "storyId": "primitives-inputgroup--focus" },
         { "kind": "docs", "storyId": "primitives-inputgroup--docs" }
       ]
+    },
+    {
+      "componentId": "scroll-area",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-scrollarea--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-scrollarea--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-scrollarea--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-scrollarea--scroll-action" },
+        { "kind": "keyboard", "storyId": "primitives-scrollarea--keyboard" },
+        { "kind": "focus", "storyId": "primitives-scrollarea--focus" },
+        { "kind": "docs", "storyId": "primitives-scrollarea--docs" }
+      ]
+    },
+    {
+      "componentId": "carousel",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-carousel--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-carousel--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-carousel--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-carousel--selection-action" },
+        { "kind": "keyboard", "storyId": "primitives-carousel--keyboard" },
+        { "kind": "focus", "storyId": "primitives-carousel--focus" },
+        { "kind": "docs", "storyId": "primitives-carousel--docs" }
+      ]
     }
   ]
 }
