@@ -1,11 +1,11 @@
 {
   "reviewVersion": "1",
-  "bundleSha256": "bba45037a54e79310641bcdfaa2741499c4227957324fc3b0f9887d7c22b36ef",
+  "bundleSha256": "58bf0b249aeab174c04dd8c1ee2cbb30af47afcb99ed5344f6af6bf62ad6894b",
   "decision": "approved",
   "reviewer": {
     "kind": "agent",
-    "id": "Codex /root/curation_acceptance - independent review"
+    "id": "Codex /root/curation_review - independent exact-bundle review"
   },
-  "reviewedAt": "2026-09-11T18:52:14.000Z",
-  "notes": "Independent exact-bundle source-evidence/citation refresh review: both skills, all guidance and examples, 22 selected APIs, all 67 citations and embedded excerpts. Captured changes are AGENTS.md gate documentation and package.json drift-recording alias; authored guidance/examples and API source bytes are unchanged. This attests curated guidance/provenance only, not new runtime/example execution, Figma publication, final CI or landing proof. Release upgrades must reproduce this exact bundle before retaining acceptance."
+  "reviewedAt": "2026-09-14T03:39:39.000Z",
+  "notes": "Independent exact-bundle review of both generated skills, all prose and examples, ownership, license, limitations, 67 citations and ranges, and 22 selected component references. All 26 captured source files matched their pinned evidence hashes; curation validate passed and both examples parsed as TSX. No findings. This attests the curated guidance and provenance only; Figma publication, final CI, and landing proof remain separate gates."
 }

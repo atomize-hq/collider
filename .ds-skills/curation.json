@@ -4,10 +4,10 @@
   "sourceCommit": "e7654c7100272cacb10ed620866889fbb4c32385",
   "pinSha256": "d7acaf7fa7ff6c9077fc1367ed3ecf9a5436f90e737e93c3afefc5bb1450c506",
   "config": "ds-skills.project.json",
-  "configSha256": "a2f508a9f8f61f53d582f6ef005f44e38575195fd77568fda9ce0c8931b123b8",
-  "bundleSha256": "bba45037a54e79310641bcdfaa2741499c4227957324fc3b0f9887d7c22b36ef",
-  "reviewSha256": "f447282f93d13ce5afb6e5e3d8d55d811a82478f6f2f1fd29738ccd9852a6fe0",
-  "evidenceSha256": "1e8926fe2ea0dbf25cc2b7d1a9dc78f78fd51f897b312ad930a307e652175a1a",
+  "configSha256": "6c53fd3e048022fe02f36a968f127c3611217e6e8fd5a1dd42f3cbc6203e5402",
+  "bundleSha256": "58bf0b249aeab174c04dd8c1ee2cbb30af47afcb99ed5344f6af6bf62ad6894b",
+  "reviewSha256": "429ba8931eda9a002b9d2ad7df1e7462677badf8ac87c8e8ac55c8e1c073713b",
+  "evidenceSha256": "3b9eb4e8364c8c0c89b76a18d0f47f2d7e312e020fba8dae9373f4d97c022082",
   "namespace": "collider",
   "skills": [
     "ds-curated-collider-conversation-ui",
@@ -15,51 +15,51 @@
   ],
   "files": {
     ".agents/skills/ds-curated-collider-conversation-ui/SKILL.md": {
-      "sha256": "7f4922b1a9cfe23fa8eb01906ecd6671af55ff9924a725110561ff9039cce491",
+      "sha256": "e94b9c08abb4ac66090c618c6c3a7dc52f6ddc39be1f4e539e287ce44fbff0c3",
       "executable": false
     },
     ".agents/skills/ds-curated-collider-conversation-ui/references/evidence.json": {
-      "sha256": "8cc64d99f670c19cc911e87bb679c66e5265a08ac1ba844206c864091b960738",
+      "sha256": "93e10b2ca475f6fa7302c5c7e57619a127744f8ebaab72ace988d2b9ca307420",
       "executable": false
     },
     ".agents/skills/ds-curated-collider-conversation-ui/references/guidance.md": {
-      "sha256": "0989c938bb217721e3fdac7886b03a2374f84db0f516ba2046717b84a5648faa",
+      "sha256": "5d37a75b4b63f2f2e5af7b336b3d8e33d1b38926d0b56769d14574d27526d3f8",
       "executable": false
     },
     ".agents/skills/ds-curated-collider-owned-primitives/SKILL.md": {
-      "sha256": "41328f54319bcb31edf0ef058ac89dfeea5ea4ad2e1046013e51c4292ea5dce5",
+      "sha256": "6e9b7884ad8da38bea249614f2b46fb1b06a25730a6ec6012a4fbe8e1961101e",
       "executable": false
     },
     ".agents/skills/ds-curated-collider-owned-primitives/references/evidence.json": {
-      "sha256": "b912340ce1c407ab1bea3a265a24251e704547ee448879930562266d278a7a83",
+      "sha256": "c119f650e02e917c7e83890f1f838889b4d52e5099f0bc90b783f9fac695a9a9",
       "executable": false
     },
     ".agents/skills/ds-curated-collider-owned-primitives/references/guidance.md": {
-      "sha256": "a59d6e8a2c9db4ac58bda92b5177397ffec4c58a3b1eb6cdc25e16f1b0178b4d",
+      "sha256": "977c1ca5702f9287abf4224684f8df2cae9362561d9cf8a898e97affadb1d20e",
       "executable": false
     },
     ".claude/skills/ds-curated-collider-conversation-ui/SKILL.md": {
-      "sha256": "7f4922b1a9cfe23fa8eb01906ecd6671af55ff9924a725110561ff9039cce491",
+      "sha256": "e94b9c08abb4ac66090c618c6c3a7dc52f6ddc39be1f4e539e287ce44fbff0c3",
       "executable": false
     },
     ".claude/skills/ds-curated-collider-conversation-ui/references/evidence.json": {
-      "sha256": "8cc64d99f670c19cc911e87bb679c66e5265a08ac1ba844206c864091b960738",
+      "sha256": "93e10b2ca475f6fa7302c5c7e57619a127744f8ebaab72ace988d2b9ca307420",
       "executable": false
     },
     ".claude/skills/ds-curated-collider-conversation-ui/references/guidance.md": {
-      "sha256": "0989c938bb217721e3fdac7886b03a2374f84db0f516ba2046717b84a5648faa",
+      "sha256": "5d37a75b4b63f2f2e5af7b336b3d8e33d1b38926d0b56769d14574d27526d3f8",
       "executable": false
     },
     ".claude/skills/ds-curated-collider-owned-primitives/SKILL.md": {
-      "sha256": "41328f54319bcb31edf0ef058ac89dfeea5ea4ad2e1046013e51c4292ea5dce5",
+      "sha256": "6e9b7884ad8da38bea249614f2b46fb1b06a25730a6ec6012a4fbe8e1961101e",
       "executable": false
     },
     ".claude/skills/ds-curated-collider-owned-primitives/references/evidence.json": {
-      "sha256": "b912340ce1c407ab1bea3a265a24251e704547ee448879930562266d278a7a83",
+      "sha256": "c119f650e02e917c7e83890f1f838889b4d52e5099f0bc90b783f9fac695a9a9",
       "executable": false
     },
     ".claude/skills/ds-curated-collider-owned-primitives/references/guidance.md": {
-      "sha256": "a59d6e8a2c9db4ac58bda92b5177397ffec4c58a3b1eb6cdc25e16f1b0178b4d",
+      "sha256": "977c1ca5702f9287abf4224684f8df2cae9362561d9cf8a898e97affadb1d20e",
       "executable": false
     }
   }

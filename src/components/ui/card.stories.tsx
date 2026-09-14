@@ -50,12 +50,6 @@ export const VariantMatrix: Story = {
         </CardHeader>
       </Card>
 
-      {/* CardAction is a Collider back-port of a v4-only subcomponent, added because
-          ai-elements' plan.tsx composes it. This is the story that shows why it is not
-          yet equivalent: our pre-v4 CardHeader is `flex flex-col`, and tailwind-merge
-          keeps `flex-col` when a caller adds `justify-between`, so an action lands BELOW
-          the title instead of beside it. The v4 CardHeader is a grid with no flex-col,
-          which is why the same ai-elements code lays out correctly there. */}
       <Card>
         <CardHeader className="flex items-start justify-between">
           <div>
@@ -70,7 +64,7 @@ export const VariantMatrix: Story = {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Until the v4 migration lands, the action wraps to its own row.
+            The action shares the header row without displacing the description.
           </p>
         </CardContent>
       </Card>
@@ -91,21 +85,12 @@ export const VariantMatrix: Story = {
       </Card>
     </div>
   ),
-  // KNOWN BROKEN — characterization, not acceptance. See the ButtonGroup story for why.
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-
-    // Pins the defect: the action renders BELOW the title because CardHeader forces a
-    // column, so its top edge clears the title's bottom edge. The desired state is the
-    // opposite relation — action top ABOVE title bottom, i.e. the two overlap
-    // vertically because they share a row — so the migration replaces this with
-    // `toBeLessThan`, with tolerance for baseline differences.
     const title = canvas.getByText('Header with an action');
     const action = canvas.getByRole('button', { name: 'Edit' });
 
-    expect(action.getBoundingClientRect().top).toBeGreaterThan(
-      title.getBoundingClientRect().bottom
-    );
+    expect(action.getBoundingClientRect().top).toBeLessThan(title.getBoundingClientRect().bottom);
   },
 };
 

@@ -62,10 +62,10 @@ describe('Collider whole upstream snapshot and owned-copy provenance', () => {
         expect(registry.items.some((i: { name: string }) => i.name === file.item)).toBe(true);
       }
     }
-    expect(splitCount).toBe(30);
-    // The newer style is a comparison target, not a claim the app has migrated to it.
+    expect(splitCount).toBe(32);
+    // The reconciled primitives remain Collider-owned; the pinned v4 source is reference evidence.
     expect(ownership.libraries.map((l: { role: string }) => l.role)).toEqual([
-      'migration-target',
+      'upstream-reference',
       'current-source',
     ]);
   });

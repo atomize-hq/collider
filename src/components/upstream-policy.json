@@ -1,7 +1,7 @@
 {
   "policyVersion": "1",
   "upstream": {
-    "primitives": "https://ui.shadcn.com/r/styles/new-york",
+    "primitives": "https://ui.shadcn.com/r/styles/new-york-v4",
     "aiElements": "https://elements.ai-sdk.dev/api/registry"
   },
   "invariants": [

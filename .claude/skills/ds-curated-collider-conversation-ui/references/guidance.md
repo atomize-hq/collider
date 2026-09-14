@@ -78,7 +78,7 @@ Collider owns these copied display modules. The provenance map records separate 
 
 
 Evidence:
-- "conversation:src/components/upstream-ownership.json" lines 1–451, SHA-256 8afc752a3392442a63b9c43e63a4741cd82018c1bb79ae1326e25efb22e09cfd
+- "conversation:src/components/upstream-ownership.json" lines 1–461, SHA-256 c8568a6d4ecfdd971913448524921e5f40fe4160bd51fd55be38ada6a5f649fc
 - "conversation:design-system/licenses/ai-elements-Apache-2.0.txt" lines 1–216, SHA-256 a2acbf68dc5c6373b1830893d09759f13d17bb53e67868510faae2f3aa4cced2
 - "conversation:src/components/ai-elements/message.tsx" lines 1–116, SHA-256 965d6a54b9e65b45f0350c87976504cb9ffd5fe271605bcb4a9f30e09c1b17d2
 
@@ -89,7 +89,7 @@ The policy deliberately retains UIMessage/ToolUIPart declarations, Streamdown re
 
 
 Evidence:
-- "conversation:src/components/upstream-policy.json" lines 1–172, SHA-256 c8c8bc71ebe0bffc819cdb2ff16a3d9502fcecd7980996a66f0ed92af1e41612
+- "conversation:src/components/upstream-policy.json" lines 1–172, SHA-256 7a7be3eea8aa008075705857303e364b267bd39aa386e0388acde77a64d6fe5d
 - "conversation:src/components/ai-elements/reasoning.tsx" lines 1–208, SHA-256 296bcd2b368bcb82293580faecb4b24de691183b3399af79f0a528558fa31313
 - "conversation:src/components/ai-elements/message.tsx" lines 1–116, SHA-256 965d6a54b9e65b45f0350c87976504cb9ffd5fe271605bcb4a9f30e09c1b17d2
 

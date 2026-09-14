@@ -69,7 +69,7 @@ describe('Collider source contracts through the independently installed product'
 
   it('does not let another component impersonate the Select slot owner', () => {
     change('src/components/ui/select.tsx', 'data-slot="select-trigger"', '');
-    change('src/components/ui/button.tsx', '<Comp ', '<Comp data-slot="select-trigger" ');
+    change('src/components/ui/button.tsx', '<Comp\n', '<Comp data-slot="select-trigger"\n');
     expect(check('contract', 1).errors.join('\n')).toContain('[CONTRACT_SLOT_DEAD]');
   });
 

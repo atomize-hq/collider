@@ -4,7 +4,7 @@
     {
       "id": "primitives-upstream",
       "root": "src/components/ui",
-      "role": "migration-target",
+      "role": "upstream-reference",
       "ownership": "consumer-owned-copy",
       "files": [
         {
@@ -48,6 +48,11 @@
           "relationship": "copied-component"
         },
         {
+          "file": "carousel-context.ts",
+          "item": "carousel",
+          "relationship": "local-split"
+        },
+        {
           "file": "collapsible.tsx",
           "item": "collapsible",
           "relationship": "copied-component"
@@ -61,6 +66,11 @@
           "file": "dropdown-menu.tsx",
           "item": "dropdown-menu",
           "relationship": "copied-component"
+        },
+        {
+          "file": "dropdown-menu-parts.tsx",
+          "item": "dropdown-menu",
+          "relationship": "local-split"
         },
         {
           "file": "hover-card.tsx",
