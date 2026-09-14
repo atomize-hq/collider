@@ -1,0 +1,59 @@
+{
+  "specVersion": "1",
+  "componentId": "hover-card",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "variant-matrix",
+    "state-matrix",
+    "keyboard",
+    "focus",
+    "workflow",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    {
+      "storyId": "primitives-hovercard--default",
+      "kinds": ["default"]
+    },
+    {
+      "storyId": "primitives-hovercard--variant-matrix",
+      "kinds": ["variant-matrix", "workflow"]
+    },
+    {
+      "storyId": "primitives-hovercard--state-matrix",
+      "kinds": ["state-matrix"]
+    },
+    {
+      "storyId": "primitives-hovercard--keyboard",
+      "kinds": ["keyboard"]
+    },
+    {
+      "storyId": "primitives-hovercard--focus",
+      "kinds": ["focus"]
+    },
+    {
+      "storyId": "primitives-hovercard--docs",
+      "kinds": ["docs"]
+    }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/hover-card.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2662-20",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-hovercard--default",
+      "primitives-hovercard--variant-matrix",
+      "primitives-hovercard--state-matrix",
+      "primitives-hovercard--keyboard",
+      "primitives-hovercard--focus",
+      "primitives-hovercard--docs"
+    ]
+  }
+}

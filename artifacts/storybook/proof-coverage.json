@@ -1,7 +1,7 @@
 {
   "proofCoverageVersion": "2",
   "scope": "static-story-reference-coverage",
-  "summary": { "componentCount": 36, "readyCount": 36, "failingCount": 0 },
+  "summary": { "componentCount": 39, "readyCount": 39, "failingCount": 0 },
   "components": [
     {
       "componentId": "agent",
@@ -84,6 +84,35 @@
       },
       "requiredKinds": ["default", "variant-matrix", "docs"],
       "implementedKinds": ["default", "variant-matrix", "docs"],
+      "status": "ready",
+      "missingKinds": []
+    },
+    {
+      "componentId": "button",
+      "tier": "interactive",
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      },
+      "requiredKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
       "status": "ready",
       "missingKinds": []
     },
@@ -183,6 +212,35 @@
       },
       "requiredKinds": ["default", "variant-matrix", "state-matrix", "actions", "async", "docs"],
       "implementedKinds": ["default", "variant-matrix", "state-matrix", "actions", "async", "docs"],
+      "status": "ready",
+      "missingKinds": []
+    },
+    {
+      "componentId": "command",
+      "tier": "interactive",
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      },
+      "requiredKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
       "status": "ready",
       "missingKinds": []
     },
@@ -314,6 +372,35 @@
         "focus",
         "workflow",
         "motion",
+        "docs"
+      ],
+      "status": "ready",
+      "missingKinds": []
+    },
+    {
+      "componentId": "hover-card",
+      "tier": "interactive",
+      "generatedArtifactRefs": {
+        "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+        "recipeDocs": null,
+        "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+      },
+      "requiredKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "docs"
+      ],
+      "implementedKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
         "docs"
       ],
       "status": "ready",

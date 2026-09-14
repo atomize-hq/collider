@@ -1147,6 +1147,69 @@
         { "kind": "focus", "storyId": "primitives-buttongroup--focus" },
         { "kind": "docs", "storyId": "primitives-buttongroup--docs" }
       ]
+    },
+    {
+      "componentId": "button",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-button--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-button--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-button--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-button--selection-action" },
+        { "kind": "keyboard", "storyId": "primitives-button--keyboard" },
+        { "kind": "focus", "storyId": "primitives-button--focus" },
+        { "kind": "docs", "storyId": "primitives-button--docs" }
+      ]
+    },
+    {
+      "componentId": "hover-card",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "keyboard",
+        "focus",
+        "workflow",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-hovercard--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-hovercard--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-hovercard--state-matrix" },
+        { "kind": "keyboard", "storyId": "primitives-hovercard--keyboard" },
+        { "kind": "focus", "storyId": "primitives-hovercard--focus" },
+        { "kind": "workflow", "storyId": "primitives-hovercard--variant-matrix" },
+        { "kind": "docs", "storyId": "primitives-hovercard--docs" }
+      ]
+    },
+    {
+      "componentId": "command",
+      "validatorKinds": [
+        "default",
+        "variant-matrix",
+        "state-matrix",
+        "actions",
+        "keyboard",
+        "focus",
+        "docs"
+      ],
+      "implementedStoryRefs": [
+        { "kind": "default", "storyId": "primitives-command--default" },
+        { "kind": "variant-matrix", "storyId": "primitives-command--variant-matrix" },
+        { "kind": "state-matrix", "storyId": "primitives-command--state-matrix" },
+        { "kind": "actions", "storyId": "primitives-command--selection-action" },
+        { "kind": "keyboard", "storyId": "primitives-command--keyboard" },
+        { "kind": "focus", "storyId": "primitives-command--focus" },
+        { "kind": "docs", "storyId": "primitives-command--docs" }
+      ]
     }
   ]
 }
