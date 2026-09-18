@@ -23,6 +23,7 @@ says otherwise.
 | [`stage1/ds-phase-2-plan.md`](./stage1/ds-phase-2-plan.md)                   | The buildout plan that audit produced.                                                                   |
 | [`stage1/foundations-page-plan.md`](./stage1/foundations-page-plan.md)       | The Figma Foundations page. Regenerate with `pnpm figma:foundations:build`; never hand-edit.             |
 | [`collider_frontend_landing_guide.md`](./collider_frontend_landing_guide.md) | The Substrate ownership boundary. Architectural rather than procedural, so it does not decay.            |
+| [`agent-native/README.md`](./agent-native/README.md)                         | Packet 1 Agent Native research, adjudication, and non-authorizing proof planning.                        |
 
 ## Superseded, kept in place
 

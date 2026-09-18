@@ -1,0 +1,179 @@
+{
+  "status": "non-normative research; no dependency or implementation selection",
+  "repository": "get-bb/bb",
+  "revision": "41e7132e817306e43f68f91bde0a6b9f79af99de",
+  "research_date": "2026-09-15",
+  "repository_code_executed": false,
+  "tests_executed": false,
+  "primary_sources": [
+    {
+      "id": "B00",
+      "path": "Snapshot commit",
+      "evidence_level": "Metadata",
+      "url": "https://github.com/get-bb/bb/commit/41e7132e817306e43f68f91bde0a6b9f79af99de",
+      "use": "Inspection boundary; not a claim that every later upstream change is included."
+    },
+    {
+      "id": "B01",
+      "path": "README.md",
+      "evidence_level": "Repository contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/README.md",
+      "use": "Programmable product direction; development-runtime split; remote-development trust warning."
+    },
+    {
+      "id": "B02",
+      "path": "docs/system-overview.md",
+      "evidence_level": "Repository contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/system-overview.md",
+      "use": "Server/daemon/client/CLI responsibilities; Project, Thread, Environment, Host."
+    },
+    {
+      "id": "B03",
+      "path": "docs/repository-overview.md",
+      "evidence_level": "Repository contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/repository-overview.md",
+      "use": "Package/process map; Electron and Expo are implementation choices."
+    },
+    {
+      "id": "B04",
+      "path": "docs/provider-bridge-protocol.md",
+      "evidence_level": "Protocol contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/provider-bridge-protocol.md",
+      "use": "Semantic grammar; native-to-normalized IDs; timeline invariants; capabilities; conformance; typed installation boundary."
+    },
+    {
+      "id": "B05",
+      "path": "docs/provider-plugin-api.md",
+      "evidence_level": "Public API contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/provider-plugin-api.md",
+      "use": "Provider declaration/handshake; narrow core vocabulary; extension kinds; declarative presentation; interaction lifecycle; steerMode limitation."
+    },
+    {
+      "id": "B06",
+      "path": "packages/plugin-sdk/README.md",
+      "evidence_level": "SDK contract/test guidance",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/packages/plugin-sdk/README.md",
+      "use": "Public entrypoints; full-trust scripts; placement targets; fake-host and frontend test fidelity limits."
+    },
+    {
+      "id": "B07",
+      "path": "packages/plugin-sdk/src/app-contract.ts",
+      "evidence_level": "Type declarations inspected",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/packages/plugin-sdk/src/app-contract.ts",
+      "use": "Bounded props; host-owned actions; Original fallback; explicit file sources; panel restoration parameters."
+    },
+    {
+      "id": "B08",
+      "path": "plugins/bb-guide/skills/bb-plugin-authoring/references/backend-foundation.md",
+      "evidence_level": "Authoring contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/plugins/bb-guide/skills/bb-plugin-authoring/references/backend-foundation.md",
+      "use": "Candidate-safe registration limits; settings/secrets; durable storage; typed host RPC; worker leases and lifetimes; ephemeral signals."
+    },
+    {
+      "id": "B09",
+      "path": "plugins/bb-guide/skills/bb-plugin-authoring/references/backend-ui-lifecycle.md",
+      "evidence_level": "Authoring contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/plugins/bb-guide/skills/bb-plugin-authoring/references/backend-ui-lifecycle.md",
+      "use": "Send-time mention resolution; staged backend replacement; LIFO cleanup; bounded drains; stale API objects."
+    },
+    {
+      "id": "B10",
+      "path": "apps/app/src/lib/plugin-frontend.ts",
+      "evidence_level": "Implementation inspected",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/apps/app/src/lib/plugin-frontend.ts",
+      "use": "Hash/generation state; reconciliation; content-script disposal; CSS lifetime; diagnostics; shared host runtime."
+    },
+    {
+      "id": "B11",
+      "path": "docs/plugin-sidebar-thread-list.md",
+      "evidence_level": "Implemented API reference",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/plugin-sidebar-thread-list.md",
+      "use": "Host chrome versus replacement; user preference retained on provider loss; safe original fallback; host action/data hooks."
+    },
+    {
+      "id": "B12",
+      "path": "packages/client-core/src/timeline/timeline-merge.ts",
+      "evidence_level": "Implementation inspected",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/packages/client-core/src/timeline/timeline-merge.ts",
+      "use": "prependOlderTimelineRows; mergeLoadedTimelineWithLatest; stale-cursor recovery; recursive child merging; row-reference preservation."
+    },
+    {
+      "id": "B13",
+      "path": "docs/timeline-pagination.md",
+      "evidence_level": "Current pagination contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/timeline-pagination.md",
+      "use": "Opaque cursors, grouping/display versions, partial groups, snapshot limits, best-effort edited-history behavior."
+    },
+    {
+      "id": "B14",
+      "path": "docs/timeline-pagination-verification.md",
+      "evidence_level": "Project-reported verification",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/timeline-pagination-verification.md",
+      "use": "Paired endpoint/client corpus methodology; performance limits; unchanged-history parity versus edit limitations. Not reproduced here."
+    },
+    {
+      "id": "B15",
+      "path": "packages/db/src/data/events.ts",
+      "evidence_level": "Implementation inspected",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/packages/db/src/data/events.ts",
+      "use": "Normalized stored events, scope fields, retained output, insertion rules, deleteThreadEventSuffixInTransaction."
+    },
+    {
+      "id": "B16",
+      "path": "apps/app/src/hooks/realtime-cache-effects.ts",
+      "evidence_level": "Implementation inspected",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/apps/app/src/hooks/realtime-cache-effects.ts",
+      "use": "Per-entity invalidation, visibility deferral, terminal flush, reconnect repair hooks."
+    },
+    {
+      "id": "B17",
+      "path": "apps/app/src/lib/plugin-frontend-reload.test.ts",
+      "evidence_level": "Test source inspected, not run",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/apps/app/src/lib/plugin-frontend-reload.test.ts",
+      "use": "Registration replacement, CSS publication/lifetime, generations, content-script and rendering regression cases."
+    },
+    {
+      "id": "B18",
+      "path": "docs/environment-provisioning.md",
+      "evidence_level": "Current lifecycle contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/environment-provisioning.md",
+      "use": "Durable reservation, attempt fencing, claimPath, cancel/cleanup ordering, restart, uncertain dispatched start."
+    },
+    {
+      "id": "B19",
+      "path": "apps/server/src/services/plugins/plugin-runtime.ts",
+      "evidence_level": "Implementation inspected",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/apps/server/src/services/plugins/plugin-runtime.ts",
+      "use": "Keyed lifecycle/operation locks; mutable module generations; build/status handling; artifact registry; bounded lifecycle settings."
+    },
+    {
+      "id": "B20",
+      "path": "plugins/bb-guide/skills/bb-plugin-authoring/SKILL.md",
+      "evidence_level": "Agent-authoring instructions",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/plugins/bb-guide/skills/bb-plugin-authoring/SKILL.md",
+      "use": "Agent-created TypeScript plugins, source/type grounding, build/reload loop, experimental API audit, contract validation."
+    },
+    {
+      "id": "B21",
+      "path": "docs/cli-guide-and-skill.md",
+      "evidence_level": "Contributor contract",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/cli-guide-and-skill.md",
+      "use": "Keep CLI, agent skills, and configuration references synchronized; owner-defined environment lifecycle hooks."
+    },
+    {
+      "id": "B22",
+      "path": "docs/VISION.md",
+      "evidence_level": "Design intention",
+      "url": "https://github.com/get-bb/bb/blob/41e7132e817306e43f68f91bde0a6b9f79af99de/docs/VISION.md",
+      "use": "Users and agents as operators; extensibility without forking; local usability and remote-capable boundaries."
+    }
+  ],
+  "comparison_sources": {
+    "deep-seek-harness-deep-research-report.md": "f119ed4f83e215916c32da87688cf0fc73b2e1702aacba5b074ae6c02447dc24",
+    "00-collider-v1-glossary(1).md": "4c651ab332d8b9ed85e0cc00fd710d7d3d2fe815b4cc5b7fbf915195b8d86bb2",
+    "01-collider-v1-foundations(1).md": "0e927421893515cab65a1be277d10aae036d55ffa79b13d7280549b891c04bec",
+    "02-collider-v1-open-architecture-questions(1).md": "92923baea89a66e16c7b13aab8532cae7d5d9316bc7820d9ea3b165767414638"
+  },
+  "deepwiki_role": "Targeted reconnaissance; load-bearing claims checked against pinned source. No exposed deep-mode parameter used.",
+  "canonical_files_modified": false
+}

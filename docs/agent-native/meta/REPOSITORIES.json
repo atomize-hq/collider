@@ -1,0 +1,42 @@
+{
+  "status": "adjudication-pinned source references; not automatically current heads",
+  "repositories": [
+    {
+      "name": "Substrate",
+      "repository": "https://github.com/atomize-hq/substrate",
+      "branch_used_by_corrected_research": "feat/runtime-refactor-e3-ac1-projection-authority-correction",
+      "adjudication_pin": "92e87a0092b091f2cef5cf8ccfdc1431e7895b8f",
+      "role": "execution/control-plane authority and future supported frontend boundary"
+    },
+    {
+      "name": "Unified Agent API",
+      "repository": "https://github.com/atomize-hq/unified-agent-api",
+      "branch_used_by_corrected_research": "staging",
+      "adjudication_pin": "117995663435eaae89c952563c250045c6aade95",
+      "note": "Substrate manifest inspected by adjudication consumes exact UAA release =0.3.7; staging/release byte equivalence was not established.",
+      "role": "provider-neutral Rust agent runtime API consumed by Substrate"
+    },
+    {
+      "name": "Collider",
+      "repository": "https://github.com/atomize-hq/collider",
+      "branch_used_by_corrected_research": "main",
+      "adjudication_pin": "36ed748eaf613316339fd2d518906a40093294ef",
+      "role": "Tauri + React frontend scaffold; target frontend is Tauri + React + TypeScript + Vite"
+    },
+    {
+      "name": "Agent Native",
+      "repository": "https://github.com/BuilderIO/agent-native",
+      "branch_used_by_corrected_research": "main",
+      "adjudication_pin": "c884b5cbe616fe8674586d23c7345d9661de81f5",
+      "historical_original_report_pin": "92e6aec8b26b68e870384009af2a4d40cc68e41d",
+      "historical_prior_inspection_anchor": "02608a482f053f00c7e1fdb78738c28a60c59143",
+      "role": "frontend/controller/Toolkit candidate under C-OQ-027"
+    },
+    {
+      "name": "BB",
+      "repository": "https://github.com/get-bb/bb",
+      "research_pin": "41e7132e817306e43f68f91bde0a6b9f79af99de",
+      "role": "non-normative provider/activity/lifecycle reference"
+    }
+  ]
+}

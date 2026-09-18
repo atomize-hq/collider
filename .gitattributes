@@ -1,0 +1,3 @@
+# Checksum-sealed Agent Native Packet 1 evidence retains verified Markdown whitespace.
+# Bundle integrity is enforced by docs/agent-native/meta/VERIFY-BUNDLE.py and SHA256SUMS.
+docs/agent-native/** -whitespace

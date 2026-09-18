@@ -24,3 +24,7 @@ src/components/upstream-evidence.json
 # Exact-byte reviewed custom library evidence/bundle; checked by installed curation.
 design-system/library-evidence.json
 design-system/curation-bundle.json
+
+# Checksum-sealed Agent Native Packet 1 evidence. Preserve verified bundle bytes;
+# validate from its root with `python3 meta/VERIFY-BUNDLE.py` and SHA256SUMS.
+docs/agent-native/
