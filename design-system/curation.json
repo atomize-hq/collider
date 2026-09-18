@@ -1,7 +1,7 @@
 {
   "curationVersion": "1",
   "namespace": "collider",
-  "evidenceSha256": "1e8926fe2ea0dbf25cc2b7d1a9dc78f78fd51f897b312ad930a307e652175a1a",
+  "evidenceSha256": "3b9eb4e8364c8c0c89b76a18d0f47f2d7e312e020fba8dae9373f4d97c022082",
   "skills": [
     {
       "id": "owned-primitives",
@@ -10,35 +10,35 @@
       "sections": [
         {
           "id": "api",
-          "title": "Use the owned primitive API, not the migration target",
+          "title": "Use the owned new-york-v4 primitive API",
           "category": "api",
-          "text": "Button accepts native button props, variant/size and asChild. Its selected sizes include icon-sm; link styling is text-info and destructive styling uses bg-destructive-surface. Badge is a div, not a button: choose success, warning or error for tonal status, destructive for the solid surface. Select is the Radix root; compose SelectTrigger with SelectValue and SelectContent with SelectItem. SelectTrigger now declares select-trigger. ButtonGroup arranges children horizontally by default or vertically through orientation. This skill selects these eight exports only; other primitive modules are not covered merely because they share a directory.",
+          "text": "Button accepts native button props, variant/size and asChild. Its sizes include xs, icon-xs, icon-sm and icon-lg; link styling is text-info and destructive styling uses bg-destructive-surface. Badge renders a span by default and supports asChild: choose success, warning or error for tonal status, and destructive for the solid surface. Select wraps the Radix root and emits owned data slots; compose SelectTrigger with SelectValue and SelectContent with SelectItem. ButtonGroup arranges children horizontally by default or vertically through orientation. This skill selects these eight exports only; other primitive modules are not covered merely because they share a directory.",
           "citations": [
             {
               "library": "primitives",
               "file": "src/components/ui/button.tsx",
-              "sha256": "51ea3f742b01f9740f89546839b4d89a8651cd33717cb720d9d2f4c6633a6cbf",
+              "sha256": "ea0c6eac89cd0bad459a8a7b8ca787ef35c63feda33eb93f4c9b92e3db52e1ee",
               "start": 1,
-              "end": 54
+              "end": 61
             },
             {
               "library": "primitives",
               "file": "src/components/ui/badge.tsx",
-              "sha256": "79e6dd7a5bbc7bd04a4742cf3a9aa4541c2aa9450211659e54f5bdcbd79715bb",
+              "sha256": "cbf1413547e95ac4bc01bae55434444ba4d2b6b66def55ebd97276294459028c",
               "start": 1,
-              "end": 38
+              "end": 48
             },
             {
               "library": "primitives",
               "file": "src/components/ui/select.tsx",
-              "sha256": "65b9546988b8296647fa35d51dc119eaf1202e63d8a5820c40702717c140524e",
+              "sha256": "4a53f247e592c2767343f8e20675e8e842039ecc97e57b818f910cab25960c67",
               "start": 1,
-              "end": 153
+              "end": 174
             },
             {
               "library": "primitives",
               "file": "src/components/ui/button-group.tsx",
-              "sha256": "3f75d0234185fa8686a5f93ad515ea1ed282dbb62211233ed470a3b230ec3dfb",
+              "sha256": "10a5f6fdbd8f19082982acb56b32b9e289da64c9fdd965f834c04f0eaf231c63",
               "start": 1,
               "end": 78
             }
@@ -87,21 +87,21 @@
             {
               "library": "primitives",
               "file": "src/components/ui/button.tsx",
-              "sha256": "51ea3f742b01f9740f89546839b4d89a8651cd33717cb720d9d2f4c6633a6cbf",
+              "sha256": "ea0c6eac89cd0bad459a8a7b8ca787ef35c63feda33eb93f4c9b92e3db52e1ee",
               "start": 1,
-              "end": 54
+              "end": 61
             },
             {
               "library": "primitives",
               "file": "src/components/ui/select.tsx",
-              "sha256": "65b9546988b8296647fa35d51dc119eaf1202e63d8a5820c40702717c140524e",
+              "sha256": "4a53f247e592c2767343f8e20675e8e842039ecc97e57b818f910cab25960c67",
               "start": 1,
-              "end": 153
+              "end": 174
             },
             {
               "library": "primitives",
               "file": "src/components/ui/button-group.tsx",
-              "sha256": "3f75d0234185fa8686a5f93ad515ea1ed282dbb62211233ed470a3b230ec3dfb",
+              "sha256": "10a5f6fdbd8f19082982acb56b32b9e289da64c9fdd965f834c04f0eaf231c63",
               "start": 1,
               "end": 78
             }
@@ -117,16 +117,16 @@
             {
               "library": "primitives",
               "file": "src/components/ui/badge.tsx",
-              "sha256": "79e6dd7a5bbc7bd04a4742cf3a9aa4541c2aa9450211659e54f5bdcbd79715bb",
+              "sha256": "cbf1413547e95ac4bc01bae55434444ba4d2b6b66def55ebd97276294459028c",
               "start": 1,
-              "end": 38
+              "end": 48
             },
             {
               "library": "primitives",
               "file": "src/components/ui/button.tsx",
-              "sha256": "51ea3f742b01f9740f89546839b4d89a8651cd33717cb720d9d2f4c6633a6cbf",
+              "sha256": "ea0c6eac89cd0bad459a8a7b8ca787ef35c63feda33eb93f4c9b92e3db52e1ee",
               "start": 1,
-              "end": 54
+              "end": 61
             },
             {
               "library": "primitives",
@@ -149,7 +149,7 @@
           "id": "installation",
           "title": "Import the committed copies without a registry overwrite",
           "category": "installation",
-          "text": "Import from @/components/ui/button, badge, select and button-group. These are local source modules, not a runtime shadcn package. The root manifest contains their Radix, React and class-variance-authority dependencies; use the project's normal dependency installation, not an installer embedded in evidence. Upstream provenance marks the newer primitive registry as a migration target: do not run an overwrite command or replace these files while merely installing skills.",
+          "text": "Import from @/components/ui/button, badge, select and button-group. These are local source modules, not a runtime shadcn package. The root manifest contains their Radix, React and class-variance-authority dependencies; use the project's normal dependency installation, not an installer embedded in evidence. The pinned new-york-v4 registry is comparison evidence for the reconciled owned copies: do not run an overwrite command or replace these files while merely installing skills.",
           "citations": [
             {
               "library": "primitives",
@@ -168,9 +168,9 @@
             {
               "library": "primitives",
               "file": "src/components/upstream-ownership.json",
-              "sha256": "8afc752a3392442a63b9c43e63a4741cd82018c1bb79ae1326e25efb22e09cfd",
+              "sha256": "c8568a6d4ecfdd971913448524921e5f40fe4160bd51fd55be38ada6a5f649fc",
               "start": 1,
-              "end": 451
+              "end": 461
             }
           ],
           "components": []
@@ -179,7 +179,7 @@
           "id": "compatibility",
           "title": "Use the actual app toolchain and declaration limits",
           "category": "compatibility",
-          "text": "The captured manifest declares React ^19.2.4, Next ^16.1.7 and Tailwind ^4.2.1; these are declaration ranges, not independently asserted exact resolved versions. The owned controls use individual @radix-ui/react-* packages and React.forwardRef. The configured @/* alias resolves to src. Typecheck examples in this actual app: the static source contract enumerates declarations/slots, not transitive module resolution or runtime behavior. Do not infer compatibility with the separate new-york-v4 migration target.",
+          "text": "The captured manifest declares React ^19.2.4, Next ^16.1.7 and Tailwind ^4.2.1; these are declaration ranges, not independently asserted exact resolved versions. The owned controls use individually declared @radix-ui/react-* packages; Button and Badge use Radix Slot for asChild, and React 19 passes ref through component props without the old forwardRef wrappers. The configured @/* alias resolves to src. Typecheck examples in this actual app: static source contracts do not establish transitive module resolution or runtime behavior in another consumer.",
           "citations": [
             {
               "library": "primitives",
@@ -198,9 +198,9 @@
             {
               "library": "primitives",
               "file": "src/components/ui/select.tsx",
-              "sha256": "65b9546988b8296647fa35d51dc119eaf1202e63d8a5820c40702717c140524e",
+              "sha256": "4a53f247e592c2767343f8e20675e8e842039ecc97e57b818f910cab25960c67",
               "start": 1,
-              "end": 153
+              "end": 174
             }
           ],
           "components": []
@@ -221,16 +221,16 @@
             {
               "library": "primitives",
               "file": "src/components/upstream-policy.json",
-              "sha256": "c8c8bc71ebe0bffc819cdb2ff16a3d9502fcecd7980996a66f0ed92af1e41612",
+              "sha256": "7a7be3eea8aa008075705857303e364b267bd39aa386e0388acde77a64d6fe5d",
               "start": 1,
               "end": 172
             },
             {
               "library": "primitives",
               "file": "src/components/upstream-ownership.json",
-              "sha256": "8afc752a3392442a63b9c43e63a4741cd82018c1bb79ae1326e25efb22e09cfd",
+              "sha256": "c8568a6d4ecfdd971913448524921e5f40fe4160bd51fd55be38ada6a5f649fc",
               "start": 1,
-              "end": 451
+              "end": 461
             }
           ],
           "components": []
@@ -244,23 +244,23 @@
             {
               "library": "primitives",
               "file": "src/components/upstream-policy.json",
-              "sha256": "c8c8bc71ebe0bffc819cdb2ff16a3d9502fcecd7980996a66f0ed92af1e41612",
+              "sha256": "7a7be3eea8aa008075705857303e364b267bd39aa386e0388acde77a64d6fe5d",
               "start": 1,
               "end": 172
             },
             {
               "library": "primitives",
               "file": "src/components/ui/button-group.tsx",
-              "sha256": "3f75d0234185fa8686a5f93ad515ea1ed282dbb62211233ed470a3b230ec3dfb",
+              "sha256": "10a5f6fdbd8f19082982acb56b32b9e289da64c9fdd965f834c04f0eaf231c63",
               "start": 1,
               "end": 78
             },
             {
               "library": "primitives",
               "file": "src/components/ui/select.tsx",
-              "sha256": "65b9546988b8296647fa35d51dc119eaf1202e63d8a5820c40702717c140524e",
+              "sha256": "4a53f247e592c2767343f8e20675e8e842039ecc97e57b818f910cab25960c67",
               "start": 1,
-              "end": 153
+              "end": 174
             }
           ],
           "components": []
@@ -304,30 +304,30 @@
         },
         {
           "id": "limitations",
-          "title": "Do not infer primitives that have not migrated",
+          "title": "Do not infer unselected primitives or readiness",
           "category": "limitations",
-          "text": "Only the selected owned exports are covered. The upstream provenance's migration-target label is not an assertion that these copies use newer upstream props, slots or dependencies. asChild does not supply an accessible name; Badge remains a div; Button does not choose submit semantics for you. A source-conformant control is not automatically a recipe, a ready component or a published Figma component.",
+          "text": "Only the selected owned exports are covered. Their reconciliation with the pinned new-york-v4 source does not extend this skill to other modules in the same directory. asChild does not supply an accessible name; Badge has no button or live-region semantics; Button does not choose submit semantics for you. A source-conformant control is not automatically a recipe, a ready component or a published Figma component.",
           "citations": [
             {
               "library": "primitives",
               "file": "src/components/ui/button.tsx",
-              "sha256": "51ea3f742b01f9740f89546839b4d89a8651cd33717cb720d9d2f4c6633a6cbf",
+              "sha256": "ea0c6eac89cd0bad459a8a7b8ca787ef35c63feda33eb93f4c9b92e3db52e1ee",
               "start": 1,
-              "end": 54
+              "end": 61
             },
             {
               "library": "primitives",
               "file": "src/components/ui/badge.tsx",
-              "sha256": "79e6dd7a5bbc7bd04a4742cf3a9aa4541c2aa9450211659e54f5bdcbd79715bb",
+              "sha256": "cbf1413547e95ac4bc01bae55434444ba4d2b6b66def55ebd97276294459028c",
               "start": 1,
-              "end": 38
+              "end": 48
             },
             {
               "library": "primitives",
               "file": "src/components/upstream-ownership.json",
-              "sha256": "8afc752a3392442a63b9c43e63a4741cd82018c1bb79ae1326e25efb22e09cfd",
+              "sha256": "c8568a6d4ecfdd971913448524921e5f40fe4160bd51fd55be38ada6a5f649fc",
               "start": 1,
-              "end": 451
+              "end": 461
             }
           ],
           "components": []
@@ -343,28 +343,28 @@
             {
               "library": "primitives",
               "file": "src/components/ui/button.tsx",
-              "sha256": "51ea3f742b01f9740f89546839b4d89a8651cd33717cb720d9d2f4c6633a6cbf",
+              "sha256": "ea0c6eac89cd0bad459a8a7b8ca787ef35c63feda33eb93f4c9b92e3db52e1ee",
               "start": 1,
-              "end": 54
+              "end": 61
             },
             {
               "library": "primitives",
               "file": "src/components/ui/badge.tsx",
-              "sha256": "79e6dd7a5bbc7bd04a4742cf3a9aa4541c2aa9450211659e54f5bdcbd79715bb",
+              "sha256": "cbf1413547e95ac4bc01bae55434444ba4d2b6b66def55ebd97276294459028c",
               "start": 1,
-              "end": 38
+              "end": 48
             },
             {
               "library": "primitives",
               "file": "src/components/ui/select.tsx",
-              "sha256": "65b9546988b8296647fa35d51dc119eaf1202e63d8a5820c40702717c140524e",
+              "sha256": "4a53f247e592c2767343f8e20675e8e842039ecc97e57b818f910cab25960c67",
               "start": 1,
-              "end": 153
+              "end": 174
             },
             {
               "library": "primitives",
               "file": "src/components/ui/button-group.tsx",
-              "sha256": "3f75d0234185fa8686a5f93ad515ea1ed282dbb62211233ed470a3b230ec3dfb",
+              "sha256": "10a5f6fdbd8f19082982acb56b32b9e289da64c9fdd965f834c04f0eaf231c63",
               "start": 1,
               "end": 78
             }
@@ -634,9 +634,9 @@
             {
               "library": "conversation",
               "file": "src/components/upstream-ownership.json",
-              "sha256": "8afc752a3392442a63b9c43e63a4741cd82018c1bb79ae1326e25efb22e09cfd",
+              "sha256": "c8568a6d4ecfdd971913448524921e5f40fe4160bd51fd55be38ada6a5f649fc",
               "start": 1,
-              "end": 451
+              "end": 461
             },
             {
               "library": "conversation",
@@ -664,7 +664,7 @@
             {
               "library": "conversation",
               "file": "src/components/upstream-policy.json",
-              "sha256": "c8c8bc71ebe0bffc819cdb2ff16a3d9502fcecd7980996a66f0ed92af1e41612",
+              "sha256": "7a7be3eea8aa008075705857303e364b267bd39aa386e0388acde77a64d6fe5d",
               "start": 1,
               "end": 172
             },

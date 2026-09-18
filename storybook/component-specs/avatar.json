@@ -1,0 +1,27 @@
+{
+  "specVersion": "1",
+  "componentId": "avatar",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-avatar--default", "kinds": ["default"] },
+    { "storyId": "primitives-avatar--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-avatar--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/avatar.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2717-50",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-avatar--default",
+      "primitives-avatar--variant-matrix",
+      "primitives-avatar--docs"
+    ]
+  }
+}

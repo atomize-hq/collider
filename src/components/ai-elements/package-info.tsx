@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowRightIcon, MinusIcon, PackageIcon, PlusIcon } from 'lucide-react';
-import type { HTMLAttributes, ReactNode } from 'react';
+import type { ComponentProps, HTMLAttributes, ReactNode } from 'react';
 import { createContext, useContext, useMemo } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -54,7 +54,7 @@ export const PackageInfoName = ({ className, children, ...props }: PackageInfoNa
   );
 };
 
-export type PackageInfoChangeTypeBadgeProps = HTMLAttributes<HTMLDivElement>;
+export type PackageInfoChangeTypeBadgeProps = ComponentProps<typeof Badge>;
 
 export const PackageInfoChangeTypeBadge = ({
   className,

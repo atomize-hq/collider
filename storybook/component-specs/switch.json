@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "switch",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "variant-matrix",
+    "state-matrix",
+    "actions",
+    "keyboard",
+    "focus",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-switch--default", "kinds": ["default"] },
+    { "storyId": "primitives-switch--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-switch--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "primitives-switch--checked-action", "kinds": ["actions"] },
+    { "storyId": "primitives-switch--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "primitives-switch--focus", "kinds": ["focus"] },
+    { "storyId": "primitives-switch--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/switch.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2704-18",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-switch--default",
+      "primitives-switch--variant-matrix",
+      "primitives-switch--state-matrix",
+      "primitives-switch--checked-action",
+      "primitives-switch--keyboard",
+      "primitives-switch--focus",
+      "primitives-switch--docs"
+    ]
+  }
+}

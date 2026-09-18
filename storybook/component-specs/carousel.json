@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "carousel",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "variant-matrix",
+    "state-matrix",
+    "actions",
+    "keyboard",
+    "focus",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-carousel--default", "kinds": ["default"] },
+    { "storyId": "primitives-carousel--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-carousel--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "primitives-carousel--selection-action", "kinds": ["actions"] },
+    { "storyId": "primitives-carousel--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "primitives-carousel--focus", "kinds": ["focus"] },
+    { "storyId": "primitives-carousel--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/carousel.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2744-111",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-carousel--default",
+      "primitives-carousel--variant-matrix",
+      "primitives-carousel--state-matrix",
+      "primitives-carousel--selection-action",
+      "primitives-carousel--keyboard",
+      "primitives-carousel--focus",
+      "primitives-carousel--docs"
+    ]
+  }
+}

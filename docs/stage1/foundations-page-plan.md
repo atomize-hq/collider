@@ -240,7 +240,7 @@ Phase 0 before Phase 2 is the whole point of the "fix first" decision: every fra
   original derivation is archived at
   `design-tokens/src/tokens/CHANGE_POLICY.md`.
 - Ledger + proof: `src/figma/sync-ledger.json`, `src/figma/publish-proof.json`.
-- Figma file: **Collider** `23PLdynlRYoBYQx9teoC8A`; Primitives page `401:1040`, canvas `401:1042`.
+- Figma file: **Collider** `23PLdynlRYoBYQx9teoC8A`; AI Elements Reference page `401:1040` (formerly Primitives), canvas `401:1042`.
 
 ---
 

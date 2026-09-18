@@ -1,0 +1,27 @@
+{
+  "specVersion": "1",
+  "componentId": "card",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-card--default", "kinds": ["default"] },
+    { "storyId": "primitives-card--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-card--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/card.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2640-38",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-card--default",
+      "primitives-card--variant-matrix",
+      "primitives-card--docs"
+    ]
+  }
+}

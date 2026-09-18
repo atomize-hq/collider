@@ -27,11 +27,11 @@ const SOURCES = [
     quote: 'The bridge lives in globals.css, not tokens.css — it is hand-authored.',
   },
   {
-    url: 'https://example.com/figma-primitives',
-    title: 'Primitives page — Figma',
+    url: 'https://example.com/figma-ai-elements-reference',
+    title: 'AI Elements Reference — Figma',
     description:
-      'The single live Figma page hosting the ai-elements component seeds bound to token variables.',
-    quote: 'Only page present: Primitives (401:1040), canvas 401:1042.',
+      'The Figma reference page hosting the ai-elements component seeds bound to token variables.',
+    quote: 'AI Elements Reference page 401:1040, canvas 401:1042.',
   },
   {
     url: 'https://example.com/ai-elements-registry',

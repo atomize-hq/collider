@@ -10,7 +10,7 @@ says otherwise.
 | [`backlog.md`](./backlog.md)                                                 | Deferred work with a decision already made. Scoped and agreed, not scheduled.                            |
 | [`ai-elements-inventory.md`](./ai-elements-inventory.md)                     | Per-component status across the ai-elements set. The planning surface — prefer it over any derived list. |
 | [`ai-elements-loop-handoff.md`](./ai-elements-loop-handoff.md)               | How to run a Stage-2 component loop. Written for an agent picking the work up cold.                      |
-| [`shadcn-v4-migration-handoff.md`](./shadcn-v4-migration-handoff.md)         | The in-flight shadcn pre-v4 → v4 primitive migration. Groundwork landed, no component migrated yet.      |
+| [`shadcn-v4-migration-handoff.md`](./shadcn-v4-migration-handoff.md)         | Completion record for the Collider-owned `new-york-v4` primitive reconciliation.                         |
 | [`stage1/sync-policy.md`](./stage1/sync-policy.md)                           | What counts as drift, the stage gates, and who owns which artifact. Revised 2026-09-03.                  |
 | [`stage1/architecture.md`](./stage1/architecture.md)                         | Layer boundaries.                                                                                        |
 | [`stage1/native-boundary.md`](./stage1/native-boundary.md)                   | What may cross into Tauri.                                                                               |

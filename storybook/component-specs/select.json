@@ -1,0 +1,43 @@
+{
+  "specVersion": "1",
+  "componentId": "select",
+  "tier": "interactive",
+  "requiredStoryKinds": [
+    "default",
+    "variant-matrix",
+    "state-matrix",
+    "actions",
+    "keyboard",
+    "focus",
+    "docs"
+  ],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-select--default", "kinds": ["default"] },
+    { "storyId": "primitives-select--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-select--state-matrix", "kinds": ["state-matrix"] },
+    { "storyId": "primitives-select--selection-action", "kinds": ["actions"] },
+    { "storyId": "primitives-select--keyboard", "kinds": ["keyboard"] },
+    { "storyId": "primitives-select--focus", "kinds": ["focus"] },
+    { "storyId": "primitives-select--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/select.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2642-34",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-select--default",
+      "primitives-select--variant-matrix",
+      "primitives-select--state-matrix",
+      "primitives-select--selection-action",
+      "primitives-select--keyboard",
+      "primitives-select--focus",
+      "primitives-select--docs"
+    ]
+  }
+}

@@ -47,11 +47,13 @@ describe('Collider current reviewed custom skills', () => {
     );
     const review = readJson(root, project.curation.review.file);
     expect(review.bundleSha256).toBe(
-      'bba45037a54e79310641bcdfaa2741499c4227957324fc3b0f9887d7c22b36ef'
+      '58bf0b249aeab174c04dd8c1ee2cbb30af47afcb99ed5344f6af6bf62ad6894b'
     );
-    expect(review.reviewer.id).toBe('Codex /root/curation_acceptance - independent review');
+    expect(review.reviewer.id).toBe(
+      'Codex /root/curation_review - independent exact-bundle review'
+    );
     expect(review.notes).toContain(
-      'not new runtime/example execution, Figma publication, final CI or landing proof'
+      'Figma publication, final CI, and landing proof remain separate'
     );
   });
 

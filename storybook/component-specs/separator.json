@@ -1,0 +1,27 @@
+{
+  "specVersion": "1",
+  "componentId": "separator",
+  "tier": "primitive",
+  "requiredStoryKinds": ["default", "variant-matrix", "docs"],
+  "ownedStoryRefs": [
+    { "storyId": "primitives-separator--default", "kinds": ["default"] },
+    { "storyId": "primitives-separator--variant-matrix", "kinds": ["variant-matrix"] },
+    { "storyId": "primitives-separator--docs", "kinds": ["docs"] }
+  ],
+  "generatedArtifactRefs": {
+    "tokenDocs": "storybook/stories/generated-token-docs.stories.tsx",
+    "recipeDocs": null,
+    "runtimeParity": "storybook/stories/runtime-css-parity.stories.tsx"
+  },
+  "downstreamHooks": {
+    "codeEntrypoint": "src/components/ui/separator.tsx",
+    "figmaComponentRef": "https://www.figma.com/design/23PLdynlRYoBYQx9teoC8A?node-id=2707-6",
+    "supportedVariantsSource": null,
+    "slotNamesSource": null,
+    "exampleStoryIds": [
+      "primitives-separator--default",
+      "primitives-separator--variant-matrix",
+      "primitives-separator--docs"
+    ]
+  }
+}

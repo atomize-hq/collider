@@ -88,9 +88,10 @@ export const BaselineTheme: Story = {
   // default theme, which made this a dark-only proof; it now carries
   // `themeOverrides`, so the same story proves parity in both.
   play: async ({ canvasElement, globals }) => {
+    const themeId = resolveStorybookThemeId(globals.theme);
     const { artifact, diagnostics } = await loadGeneratedTokenArtifact();
     if (artifact) {
-      diagnostics.push(...createRuntimeCssParityDiagnostics(artifact));
+      diagnostics.push(...createRuntimeCssParityDiagnostics(artifact, { themeId }));
     }
     assertNoConformanceDiagnostics(diagnostics);
     if (!artifact) {
@@ -101,7 +102,6 @@ export const BaselineTheme: Story = {
     const panel = await canvas.findByTestId('runtime-panel');
     const copy = await canvas.findByTestId('runtime-copy');
     const rootStyles = window.getComputedStyle(document.documentElement);
-    const themeId = resolveStorybookThemeId(globals.theme);
     const expectedPanelBackground = resolveGeneratedTokenStyleValue(
       artifact,
       'semantic.color.background.surface',
