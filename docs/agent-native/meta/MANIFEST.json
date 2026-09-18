@@ -1,0 +1,165 @@
+{
+  "bundle_id": "collider-agent-native-canonical-bundle-v2-2026-09-16",
+  "created_utc": "2026-09-17T04:00:18.957804+00:00",
+  "status": "post-adjudication canonical handoff; no implementation or adoption authorization",
+  "canonical_documents": [
+    "canonical/00-collider-v1-glossary.md",
+    "canonical/01-collider-v1-foundations.md",
+    "canonical/02-collider-v1-open-architecture-questions.md"
+  ],
+  "proof_spec": "proof/agentkit-owner-boundary-proof-spec.md",
+  "open_question_ids": [
+    "C-OQ-001",
+    "C-OQ-002",
+    "C-OQ-003",
+    "C-OQ-004",
+    "C-OQ-005",
+    "C-OQ-006",
+    "C-OQ-007",
+    "C-OQ-008",
+    "C-OQ-009",
+    "C-OQ-010",
+    "C-OQ-011",
+    "C-OQ-012",
+    "C-OQ-013",
+    "C-OQ-014",
+    "C-OQ-015",
+    "C-OQ-016",
+    "C-OQ-017",
+    "C-OQ-018",
+    "C-OQ-019",
+    "C-OQ-020",
+    "C-OQ-021",
+    "C-OQ-022",
+    "C-OQ-023",
+    "C-OQ-024",
+    "C-OQ-025",
+    "C-OQ-026",
+    "C-OQ-027"
+  ],
+  "open_question_count": 27,
+  "foundation_invariant_count": 57,
+  "missing_evidence": {
+    "file": "agent-native-collider-evidence-ledger.json",
+    "reported_sha256": "986d97563886b5d6c491f16f7e5857fabe71e4ace54d52b4a43b7c3453da4535",
+    "original_bytes_available": false,
+    "replacement_created": false,
+    "record": "adjudication/MISSING-EVIDENCE.md"
+  },
+  "files": [
+    {
+      "path": "START-HERE.md",
+      "role": "handoff instructions",
+      "size_bytes": 4395,
+      "sha256": "9505341058dde312d7bb823487ca5469748b5d5abb72d5fe9ad50f1c1298e095"
+    },
+    {
+      "path": "PROOF-KICKOFF.md",
+      "role": "minimal future-session kickoff text",
+      "size_bytes": 957,
+      "sha256": "06913649cdd1e11b3364c3aeb68ef570b9154e07ff856a117884cd9687dec438"
+    },
+    {
+      "path": "canonical/00-collider-v1-glossary.md",
+      "role": "canonical terminology authority",
+      "size_bytes": 94984,
+      "sha256": "6ea4d8651176f901bb6a77e3f964e1125bbd3681ca7bf8282908be4e59e42852"
+    },
+    {
+      "path": "canonical/01-collider-v1-foundations.md",
+      "role": "canonical product/architecture foundations",
+      "size_bytes": 77705,
+      "sha256": "6a32874cd28bbec5347fbdb79b9f63ea4b3f8206357eee4fa4b446e39309b54a"
+    },
+    {
+      "path": "canonical/02-collider-v1-open-architecture-questions.md",
+      "role": "current non-normative open-question register, post-adjudication update",
+      "size_bytes": 71970,
+      "sha256": "dfac1ea399908053e40ad647042067060d8585cc05d0f9f9f2f314e9b24a9cff"
+    },
+    {
+      "path": "research/deep-seek-harness-deep-research-report.md",
+      "role": "non-normative DeepSeek/Cordis research",
+      "size_bytes": 54753,
+      "sha256": "f119ed4f83e215916c32da87688cf0fc73b2e1702aacba5b074ae6c02447dc24"
+    },
+    {
+      "path": "research/bb-deepseek-collider-architecture-report.md",
+      "role": "non-normative BB research",
+      "size_bytes": 66629,
+      "sha256": "7978ed1bd250409cb6008b0b3cc19c7cb2f0e00517fd96f7d8882280cc9e92f4"
+    },
+    {
+      "path": "research/bb-research-source-ledger.json",
+      "role": "BB research evidence ledger",
+      "size_bytes": 9922,
+      "sha256": "0d962846839ac4bcf4dcd05d718ed0f507e43bb91c6418d2e49a07f83f66910f"
+    },
+    {
+      "path": "research/agent-native-original-evaluation.md",
+      "role": "historical Agent Native evaluation",
+      "size_bytes": 63372,
+      "sha256": "1808a087f5df379d376c2fdb0d810efbc7dd9a29929f6d5cd926dbd505263b97"
+    },
+    {
+      "path": "research/agent-native-evaluation-brief-v2.md",
+      "role": "corrected Agent Native evaluation research brief",
+      "size_bytes": 27915,
+      "sha256": "189822dda602529f25000a25d34f305dafe04ae4b83285a1c9832b9c2029d6b8"
+    },
+    {
+      "path": "research/corrected-agent-native-evaluation.md",
+      "role": "corrected Agent Native evaluation report",
+      "size_bytes": 57077,
+      "sha256": "2e23d0d698e5023483292828648dbfda7a08d408f88b5cc06de8bf6697f180f8"
+    },
+    {
+      "path": "adjudication/adjudication-result.md",
+      "role": "bounded adjudication narrative",
+      "size_bytes": 37721,
+      "sha256": "cd380fc7b9924cc59e62caf5996c51466374f69008d8c52bca41bf9f31867d8f"
+    },
+    {
+      "path": "adjudication/adjudication-decision-coverage.md",
+      "role": "adjudication recommendation/stop coverage matrix",
+      "size_bytes": 24994,
+      "sha256": "470a7a8db471a5d58c28257c7fa4ee2c46a85fe07642b2c8300856d67485f428"
+    },
+    {
+      "path": "adjudication/adjudication-check-record.md",
+      "role": "adjudication source/integrity check record",
+      "size_bytes": 50330,
+      "sha256": "6a11b148c6433ee278469c0a90af4115291d55fa398c32e66ec572169a8c6848"
+    },
+    {
+      "path": "adjudication/MISSING-EVIDENCE.md",
+      "role": "missing original corrected-evaluation ledger record",
+      "size_bytes": 930,
+      "sha256": "ad3ec2b330318d35f9ff49dbbc5cd4960b6f3c28fca6eb38da72e50950285518"
+    },
+    {
+      "path": "proof/agentkit-owner-boundary-proof-spec.md",
+      "role": "non-normative owner-boundary and staged proof specification",
+      "size_bytes": 23290,
+      "sha256": "c6bc06ff99d3d8aa3e397c77f856b2ad2ff89c37d77e6897b86099a16c0b278c"
+    },
+    {
+      "path": "meta/INPUTS.md",
+      "role": "bundle authority/input guide",
+      "size_bytes": 2519,
+      "sha256": "7e107f88040ab21659b66e5058e9f3135658ad6b85ca2848819d8ce76a1998cb"
+    },
+    {
+      "path": "meta/BUNDLE-NOTES.md",
+      "role": "bundle delta and evidence notes",
+      "size_bytes": 1320,
+      "sha256": "5430b523441eb3ad4127535413336e673c105e6ae900e984a47aa7ae34673cf2"
+    },
+    {
+      "path": "meta/REPOSITORIES.json",
+      "role": "pinned repository/source reference metadata",
+      "size_bytes": 1967,
+      "sha256": "d123ee0708948f7ddc86f0357a24c693b53fdf7c4eed310fdc5df459016e66e1"
+    }
+  ]
+}
